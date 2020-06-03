@@ -16,33 +16,36 @@ class HeroesAndBandits
 	}
 	
 	void Init(){
-		for ( int i = 0; i < GetHeroesAndBanditsConfig().Zones.Count(); i++ )
+		if (GetHeroesAndBanditsConfig().Zones) //Check if Zones are defined before loading
 		{
-	    	habPrint("Loading Zone " + GetHeroesAndBanditsConfig().Zones.Get(i).Name , "Verbose");
-			string name = GetHeroesAndBanditsConfig().Zones.Get(i).Name;
-			int x = GetHeroesAndBanditsConfig().Zones.Get(i).X;
-			int z = GetHeroesAndBanditsConfig().Zones.Get(i).Z;
-			float minHumanity = GetHeroesAndBanditsConfig().Zones.Get(i).MinHumanity;
-			float maxHumanity = GetHeroesAndBanditsConfig().Zones.Get(i).MaxHumanity;
-			int warningRadius = GetHeroesAndBanditsConfig().Zones.Get(i).WarningRadius;
-			int killRadius = GetHeroesAndBanditsConfig().Zones.Get(i).KillRadius;
-			string warningMessage = GetHeroesAndBanditsConfig().Zones.Get(i).WarningMessage;
-			bool overrideSafeZone = GetHeroesAndBanditsConfig().Zones.Get(i).OverrideSafeZone;
-			Zones.Insert(new ref HeroesAndBanditsZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage, overrideSafeZone));
-			if (GetHeroesAndBanditsConfig().Zones.Get(j).Guards){
-				for ( int j = 0; j < GetHeroesAndBanditsConfig().Zones.Get(j).Guards.Count(); j++ )
-				{	
-					float guardX = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).X;
-					float guardY = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Y; 
-					float guardZ = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Z; 
-					float orientation = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Orientation; 
-					string skin = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Skin; 
-					string weaponInHands = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHands; 
-					string weaponInHandsMag = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsMag; 
-					TStringArray weaponInHandsAttachments = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsAttachments; 
-					TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
-					Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
-		    		Zones.Get(i).Guards.Get(j).Spawn();
+			for ( int i = 0; i < GetHeroesAndBanditsConfig().Zones.Count(); i++ )
+			{
+		    	habPrint("Loading Zone " + GetHeroesAndBanditsConfig().Zones.Get(i).Name , "Verbose");
+				string name = GetHeroesAndBanditsConfig().Zones.Get(i).Name;
+				int x = GetHeroesAndBanditsConfig().Zones.Get(i).X;
+				int z = GetHeroesAndBanditsConfig().Zones.Get(i).Z;
+				float minHumanity = GetHeroesAndBanditsConfig().Zones.Get(i).MinHumanity;
+				float maxHumanity = GetHeroesAndBanditsConfig().Zones.Get(i).MaxHumanity;
+				int warningRadius = GetHeroesAndBanditsConfig().Zones.Get(i).WarningRadius;
+				int killRadius = GetHeroesAndBanditsConfig().Zones.Get(i).KillRadius;
+				string warningMessage = GetHeroesAndBanditsConfig().Zones.Get(i).WarningMessage;
+				bool overrideSafeZone = GetHeroesAndBanditsConfig().Zones.Get(i).OverrideSafeZone;
+				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage, overrideSafeZone));
+				if (GetHeroesAndBanditsConfig().Zones.Get(j).Guards){
+					for ( int j = 0; j < GetHeroesAndBanditsConfig().Zones.Get(j).Guards.Count(); j++ )
+					{	
+						float guardX = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).X;
+						float guardY = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Y; 
+						float guardZ = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Z; 
+						float orientation = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Orientation; 
+						string skin = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Skin; 
+						string weaponInHands = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHands; 
+						string weaponInHandsMag = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsMag; 
+						TStringArray weaponInHandsAttachments = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsAttachments; 
+						TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
+						Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
+			    		Zones.Get(i).Guards.Get(j).Spawn();
+					}
 				}
 			}
 		}
@@ -338,6 +341,10 @@ class HeroesAndBandits
 	
 	
 	void CheckPlayersEnterZones(){
+			if (!Zones) //if no zones Defined exit
+			{
+				return;
+			}
 			habPrint("Checking if Players are in Zones", "Debug");			
 			ref array<Man> players = new array<Man>;
 			GetGame().GetPlayers(players);
@@ -434,7 +441,7 @@ class HeroesAndBanditsZone
 	
 	void FireWeaponClosestGuard(vector playerPostion)
 	{
-		if (!Guards)
+		if (!Guards)//If no guards defined exit
 		{
 			return;
 		}
