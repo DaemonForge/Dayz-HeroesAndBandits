@@ -19,6 +19,8 @@ modded class ZombieBase
 			}else if (killer.IsMeleeWeapon())
 			{
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
+			}else{
+				return;
 			}
 			
 			if (!sourcePlayer){

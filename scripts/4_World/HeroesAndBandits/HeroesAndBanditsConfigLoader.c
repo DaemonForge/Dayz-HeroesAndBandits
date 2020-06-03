@@ -13,21 +13,72 @@ class HeroesAndBanditsConfig
 	
 	ref array< ref habZone > Zones = new ref array< ref habZone >;
 	
+	bool NotifyLevelChange = true;
+	
+    bool KillFeed = true;
+    bool SucideFeed = false;
+	
+	int ZoneCheckTimer = 3;
+	
 	ref array<int> NotificationColor = {200, 0, 200, 200};
-	
-	ref array<int> WarningMessageColor = {200, 255, 0, 0};
-	
-	string WarningMessageImagePath = "HeroesAndBandits/gui/images/DeathWarning.paa";
 	
 	int NotificationMessageTime = 15;
 	
-	int ZoneCheckTimer = 2;
+	string WarningMessageImagePath = "HeroesAndBandits/gui/images/DeathWarning.paa";
 	
-	bool NotifyLevelChange = true;
+	ref array<int> WarningMessageColor = {200, 255, 0, 0};
+	
+	ref array<int> KillFeedMessageColor = {200, 250, 0, 100};
 	
     bool ExceptionLogs = true;
     bool VerboseLogs = false;
     bool DebugLogs = false;
+	
+	/*
+	Bambis
+	SurvivorM_Boris   Male White
+	SurvivorM_Hassan  Male Black
+	SurvivorF_Frida   Female White
+	SurvivorM_Jose    Male Asian
+	SurvivorM_Cyril   Male White
+	SurvivorF_Gabi    Female White
+	
+	Heroes
+	SurvivorM_Indar     Male White
+	SurvivorM_Lewis     Male Black
+	SurvivorF_Linda     Female White
+	SurvivorM_Taiki     Male Asain
+	SurvivorM_Mirek     Male White
+	SurvivorM_Oliver    Male White
+	SurvivorM_Niki      Male White
+	SurvivorM_Rolf      Male White
+	SurvivorF_Irena     Female White
+	SurvivorF_Judy      Female Black
+	SurvivorF_Keiko     Female Asain
+	
+	BanditSkins
+	SurvivorM_Denis    Male White
+	SurvivorM_Kaito    Male Black
+	SurvivorF_Naomi    Female Black
+	SurvivorM_Francis  Male Asain
+	SurvivorM_Elias    Male Black
+	SurvivorM_Manua    Male White
+	SurvivorM_Peter    Male White
+	SurvivorM_Quinn    Male White
+	SurvivorM_Guo      Male White
+	SurvivorM_Seth     Male White
+	SurvivorF_Maria    Female White
+	SurvivorF_Eva      Female White
+	SurvivorF_Helga    Female White
+	
+	*/
+	ref TStringArray BambiSkins = {"SurvivorM_Boris", "SurvivorM_Hassan", "SurvivorF_Frida", "SurvivorM_Jose", "SurvivorM_Cyril", "SurvivorF_Gabi"};
+	
+	ref TStringArray HeroSkins = {"SurvivorM_Indar","SurvivorM_Lewis","SurvivorF_Linda","SurvivorM_Taiki","SurvivorM_Mirek","SurvivorM_Oliver","SurvivorF_Irena","SurvivorF_Judy","SurvivorF_Keiko","SurvivorM_Niki","SurvivorM_Rolf"};
+	
+	ref TStringArray BanditSkins = {"SurvivorM_Peter","SurvivorM_Kaito","SurvivorF_Naomi","SurvivorM_Francis","SurvivorM_Elias","SurvivorM_Manua","SurvivorM_Denis","SurvivorM_Quinn","SurvivorM_Guo","SurvivorM_Seth","SurvivorF_Maria","SurvivorF_Eva", "SurvivorF_Helga"};
+		
+	
 	
 	
     void HeroesAndBanditsConfig()
@@ -102,6 +153,10 @@ class HeroesAndBanditsConfig
 		return ARGB(WarningMessageColor[0], WarningMessageColor[1], WarningMessageColor[2], WarningMessageColor[3]);
 	}
 	
+	int getKillFeedMessageColor(){
+		return ARGB(KillFeedMessageColor[0], KillFeedMessageColor[1], KillFeedMessageColor[2], KillFeedMessageColor[3]);
+	}
+	
 	int getNotificationColor(){
 		return ARGB(NotificationColor[0], NotificationColor[1], NotificationColor[2], NotificationColor[3]);
 	}
@@ -109,7 +164,7 @@ class HeroesAndBanditsConfig
 	void addZone(string name, int x, int z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = ""){
 		habZone tempZone = new ref habZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage);
 		if (tempZone.Name == "Default Zone"){
-			tempZone.Gaurds.Insert(new ref habGuard(x, GetGame().SurfaceY(x, z), z));
+			tempZone.Guards.Insert(new ref habGuard(x, GetGame().SurfaceY(x, z), z));
 		}
 		Zones.Insert(tempZone);
 		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
@@ -141,19 +196,21 @@ class HeroesAndBanditsConfig
 			addAction( "heroSucide", "bandit", 150);
 			addAction( "banditSucide", "hero", 150);
 			addAction( "bambiSucide", "bambi", 0, false);
-			addAction( "heroVshero", "bandit", 200);
-			addAction( "heroVsbambi", "bandit", 400);
+			addAction( "heroVshero", "bandit", 150);
+			addAction( "heroVsbambi", "bandit", 300);
 			addAction( "heroVsbandit", "hero", 250);
-			addAction( "banditVshero", "bandit", 200);
-			addAction( "banditVsbambi", "bandit", 200);
+			addAction( "banditVshero", "bandit", 250);
+			addAction( "banditVsbambi", "bandit", 125);
 			addAction( "banditVsbandit", "bandit", 150);
-			addAction( "bambiVshero", "bandit", 350);
+			addAction( "bambiVshero", "bandit", 250);
 			addAction( "bambiVsbambi", "bandit", 100);
-			addAction( "bambiVsbandit", "hero", 350);
-			addAction( "CombinationLockRaid", "bandit", 250);
+			addAction( "bambiVsbandit", "hero", 300);
+			addAction( "CombinationLockRaid", "bandit", 150);
 			addAction( "FencePartRaid", "bandit", 100);
 			addZone("Default Zone", 11250, 4300, -1000, 1000, 75, 50);
 	}
+	
+
 }
 
 
@@ -190,24 +247,23 @@ class habAction
         Humanity = humanity;
 		NotifiyPlayer = notifiyPlayer;
     }
-	
-	
 }
 
 
 class habZone
 {
     string Name;
-	int X;
-	int Z;
+	float X;
+	float Z;
 	int WarningRadius;
 	string WarningMessage;
 	int KillRadius;
     float MinHumanity;
     float MaxHumanity;
-	ref array< ref habGuard > Gaurds = new ref array< ref habGuard >;
+	bool OverrideSafeZone = false;
+	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	
-    void habZone(string name, int x, int z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "") 
+    void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false) 
 	{
         Name = name;
 		X = x;
@@ -243,17 +299,29 @@ class habZone
 
 class habGuard
 {
-    int X;
-    int Y;
-    int Z;
+    float X;
+    float Y;
+    float Z;
+	float Orientation;
+	string Skin = "";
+	string WeaponInHands = "M4A1";
+	string WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
+	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
+	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
 
-    void habGuard(int x, int y, int z) 
+    void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "") 
 	{
         X = x;
 		Y = y;
         Z = z;
+		Orientation = orientation;
+		if ( skin == ""){
+		 	Skin = GetHeroesAndBanditsConfig().BanditSkins.GetRandomElement();
+		}else {
+			Skin = skin;
+		}
     }
-	
+
 	vector getVector(){
 		return Vector( X, Y, Z );
 	}
