@@ -2,6 +2,15 @@ modded class PlayerBase
 {
 	float m_HeroesAndBandits_WarningSent = -1; //For Zones
 	
+	
+	override void Init()
+	{
+		super.Init();
+		
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_WarningSent");
+		
+	}
+	
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);

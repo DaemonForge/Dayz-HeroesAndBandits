@@ -2,6 +2,7 @@ ref HeroesAndBandits m_HeroesAndBandits;
 ref HeroesAndBanditsConfig m_HeroesAndBanditsConfig
 ref Timer m_HeroesAndBanditsSaveTimer = new Timer();
 ref Timer m_HeroesAndBanditsCheckTimer = new Timer();
+ref Timer m_HeroesAndBanditsReloadTest = new Timer();
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
 class HeroesAndBandits
@@ -30,9 +31,10 @@ class HeroesAndBandits
 				int killRadius = GetHeroesAndBanditsConfig().Zones.Get(i).KillRadius;
 				string warningMessage = GetHeroesAndBanditsConfig().Zones.Get(i).WarningMessage;
 				bool overrideSafeZone = GetHeroesAndBanditsConfig().Zones.Get(i).OverrideSafeZone;
-				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage, overrideSafeZone));
-				if (GetHeroesAndBanditsConfig().Zones.Get(j).Guards){
-					for ( int j = 0; j < GetHeroesAndBanditsConfig().Zones.Get(j).Guards.Count(); j++ )
+				bool godModPlayers = GetHeroesAndBanditsConfig().Zones.Get(i).GodModPlayers;
+				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage, overrideSafeZone, godModPlayers));
+				if (GetHeroesAndBanditsConfig().Zones.Get(i).Guards){
+					for ( int j = 0; j < GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Count(); j++ )
 					{	
 						float guardX = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).X;
 						float guardY = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Y; 
@@ -40,7 +42,8 @@ class HeroesAndBandits
 						float orientation = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Orientation; 
 						string skin = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Skin; 
 						string weaponInHands = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHands; 
-						string weaponInHandsMag = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsMag; 
+						string weaponInHandsMag = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsMag;
+						m_HeroesAndBanditsReloadTest.Run(120, GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j), "ReloadWeapon", NULL, false); //Reload gun 2 minutes after server start
 						TStringArray weaponInHandsAttachments = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsAttachments; 
 						TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
 						Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
@@ -407,9 +410,10 @@ class HeroesAndBanditsZone
     float MinHumanity;
     float MaxHumanity;
 	bool OverrideSafeZone;
+	bool GodModPlayers;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	
-    void HeroesAndBanditsZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage, bool overrideSafeZone) 
+    void HeroesAndBanditsZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage, bool overrideSafeZone, bool godModPlayers) 
 	{
         Name = name;
 		X = x;
@@ -420,6 +424,7 @@ class HeroesAndBanditsZone
 	    MaxHumanity = maxHumanity;
 		WarningMessage = warningMessage;
 		OverrideSafeZone = overrideSafeZone;
+		GodModPlayers = godModPlayers;
     }
 	
 	vector getVector(){
@@ -513,8 +518,6 @@ class HeroesAndBanditsGuard
 				}
 				weaponInHands = Guard.GetHumanInventory().CreateInHands(WeaponInHands);
 				weaponInHands.GetInventory().CreateAttachment("Mag_STANAGCoupled_30Rnd");
-				habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Exception");	
-				Guard.QuickReloadWeapon(Weapon_Base.Cast(weaponInHands));
 				for ( int j =0; j < WeaponInHandsAttachments.Count(); j++ )
 				{
 					weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
@@ -529,8 +532,20 @@ class HeroesAndBanditsGuard
 			obj.SetOrientation(guardOrientation);
 	}
 	
+	void ReloadWeapon()
+	{
+		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
+		EntityAI weaponInHands = guard.GetHumanInventory().GetEntityInHands();
+		if (weaponInHands.IsWeapon())
+		{
+			guard.GetHumanInventory().GetEntityInHands();
+			guard.QuickReloadWeapon(Weapon_Base.Cast(weaponInHands));
+		}
+	}
+	
 	void FireWeapon()
 	{
+		habPrint("Firing Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
 		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		if (weaponInHands.IsWeapon())
 		{

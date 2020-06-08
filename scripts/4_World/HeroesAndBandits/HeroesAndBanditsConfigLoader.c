@@ -261,9 +261,10 @@ class habZone
     float MinHumanity;
     float MaxHumanity;
 	bool OverrideSafeZone = false;
+	bool GodModPlayers = false;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	
-    void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false) 
+    void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
 	{
         Name = name;
 		X = x;
@@ -272,6 +273,8 @@ class habZone
 		KillRadius = killRadius;
 	    MinHumanity = minHumanity;
 	    MaxHumanity = maxHumanity;
+		OverrideSafeZone = overrideSafeZone;
+		GodModPlayers = godModPlayers;
 		if (warningMessage == ""){
 			WarningMessage = "Warning!! you are about to enter " + name + " if you continue you will be shot!";
 		}else{
