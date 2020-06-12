@@ -19,7 +19,19 @@ modded class ZombieBase
 			}else if (killer.IsMeleeWeapon())
 			{
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
-			}else{
+			} else if (killer.IsTransport()){
+				CarScript vehicle;
+				if (Class.CastTo(vehicle, killer))
+				{
+					if ( vehicle.CrewSize() > 0 )
+					{
+						PlayerBase driver = PlayerBase.Cast(vehicle.CrewMember( 0 ));
+						if ( driver ){
+							sourcePlayer = PlayerBase.Cast(driver);
+						}
+					}
+				}
+			} else {
 				return;
 			}
 			

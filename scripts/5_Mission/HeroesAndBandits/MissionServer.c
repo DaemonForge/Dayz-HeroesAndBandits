@@ -116,7 +116,7 @@ modded class MissionServer
 		
 		switch(command) {
 			case "humanity": {
-				habMessage = "You're Current Humanity is " + GetHeroesAndBandits().GetPlayerHumanity(playerID);
+				habMessage = "#HAB_CHECK_PREHUMANITY " + GetHeroesAndBandits().GetPlayerHumanity(playerID);
 				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 				break;
 			}
@@ -141,10 +141,10 @@ modded class MissionServer
 					}
 				}
 				if (statExsit){
-					habMessage = "You're Total '" + statname + "' is " + statTotal;
+					habMessage = "#HAB_CHECK_PRESTAT '" + statname + "' #HAB_CHECK_IS " + statTotal;
 					GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 				} else {
-					habMessage = "Can't find stat '" + statname + "'";
+					habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";
 					GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 				}
 				break;

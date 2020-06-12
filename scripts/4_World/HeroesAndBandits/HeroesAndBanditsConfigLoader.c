@@ -207,6 +207,10 @@ class HeroesAndBanditsConfig
 			addAction( "bambiVsbandit", "hero", 300);
 			addAction( "CombinationLockRaid", "bandit", 150);
 			addAction( "FencePartRaid", "bandit", 100);
+			addAction( "BandagePlayer", "hero", 50);
+			addAction( "GiveBloodPlayer", "hero", 25);
+			addAction( "GiveSalinePlayer", "hero", 25);
+			addAction( "GivePlayerCPR", "hero", 75);
 			addZone("Default Zone", 11250, 4300, -1000, 1000, 75, 50);
 	}
 	
@@ -255,11 +259,16 @@ class habZone
     string Name;
 	float X;
 	float Z;
-	int WarningRadius;
-	string WarningMessage;
 	int KillRadius;
     float MinHumanity;
     float MaxHumanity;
+	int WarningRadius;
+	bool ShowWarningMsg = true;
+	string WarningMessage = "";
+	bool ShowWelcomeMsg = false;
+	string WelcomeMessage = "Welcome to the Default Zone";
+	string WelcomeIcon = "HeroesAndBandits/gui/images/BambiNotification.paa";
+	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
@@ -276,7 +285,7 @@ class habZone
 		OverrideSafeZone = overrideSafeZone;
 		GodModPlayers = godModPlayers;
 		if (warningMessage == ""){
-			WarningMessage = "Warning!! you are about to enter " + name + " if you continue you will be shot!";
+			WarningMessage = "!!Warning!! you are about to enter " + name + " if you continue you will be shot!";
 		}else{
 			WarningMessage = warningMessage;
 		}
@@ -298,7 +307,12 @@ class habZone
 			}
 		return false;
 	}
+
+	int getWelcomeMessageColor(){
+		return ARGB(WelcomeMessageColor[0], WelcomeMessageColor[1], WelcomeMessageColor[2], WelcomeMessageColor[3]);
+	}
 }
+
 
 class habGuard
 {

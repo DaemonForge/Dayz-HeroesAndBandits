@@ -43,11 +43,12 @@ class HeroesAndBandits
 						string skin = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).Skin; 
 						string weaponInHands = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHands; 
 						string weaponInHandsMag = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsMag;
-						m_HeroesAndBanditsReloadTest.Run(120, GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j), "ReloadWeapon", NULL, false); //Reload gun 2 minutes after server start
 						TStringArray weaponInHandsAttachments = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).WeaponInHandsAttachments; 
 						TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
 						Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 			    		Zones.Get(i).Guards.Get(j).Spawn();
+						//m_HeroesAndBanditsReloadTest.Run(120, Zones.Get(i).Guards.Get(j), "ReloadWeapon", NULL, false); //Reload gun 2 minutes after server start
+						
 					}
 				}
 			}
@@ -102,24 +103,24 @@ class HeroesAndBandits
 					if (actionHumanity > 0){
 						prefix = "+";
 					}
-					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + " Humanity" );	
+					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + " #HAB_HUMANITY" );	
 				}
 				if (didLevelUp && GetHeroesAndBanditsConfig().NotifyLevelChange)
 				{
-					NotifyPlayer(playerID, p.getLevel().LevelImage, "You are now " + p.getLevel().Name, "Level Changed" );
+					NotifyPlayer(playerID, p.getLevel().LevelImage, "#HAB_HUMANITY_LEVELUP_PRE" + p.getLevel().Name, "#HAB_HUMANITY_LEVELUP_HEADING" );
 				}
 				return;
 			}
 		}
 	}
 	
-	void NotifyPlayer(string playerID, string image ,string message, string heading = "Humanity Affected")
+	void NotifyPlayer(string playerID, string image ,string message, string heading = "#HAB_HUMANITY_CHANGEHEADING")
 	{
 		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsConfig().getNotificationColor(), GetHeroesAndBanditsConfig().NotificationMessageTime, GetPlayerBaseByID(playerID).GetIdentity());
 		habPrint("Notify Player: " + playerID +" Message: "+ message + " Image: " + image, "Verbose");	
 	}
 	
-	void NotifyKillFeed(string image ,string message, string heading = "Kill Feed")
+	void NotifyKillFeed(string image ,string message, string heading = "#HAB_KILLFEED_HEADING")
 	{
 		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsConfig().getKillFeedMessageColor(), GetHeroesAndBanditsConfig().NotificationMessageTime);
 		habPrint("Kill Feed Message: "+ message + " Image: " + image, "Verbose");	
@@ -140,7 +141,7 @@ class HeroesAndBandits
 			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
 			string levelName = GetPlayerLevel(sourcePlayerID).Name;
 			float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
-			string message = "A " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " killed " + targetPlayer.GetIdentity().GetName() + " with " + weaponName + " at " + distance + " meters" ;
+			string message = "#HAB_KILLFEED_PRE" + levelName + " " + sourcePlayer.GetIdentity().GetName() + "#HAB_KILLFEED_KILLED" + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
 			NotifyKillFeed(levelImage, message);
 		}
 	}
@@ -150,8 +151,8 @@ class HeroesAndBandits
 		if (GetHeroesAndBanditsConfig().SucideFeed){
 			PlayerBase sourcePlayer = GetPlayerBaseByID(sourcePlayerID);
 			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
-			string message = sourcePlayer.GetIdentity().GetName() + " killed them self" ;
-			NotifyKillFeed(levelImage, message, "Player Sucide");
+			string message = sourcePlayer.GetIdentity().GetName() + "#HAB_KILLFEED_SUCIDEPOST" ;
+			NotifyKillFeed(levelImage, message, "#HAB_KILLFEED_SUCIDEHEADING");
 		}
 	}
 	
@@ -380,7 +381,7 @@ class HeroesAndBandits
 							{
 								player.SetAllowDamage(true);
 							}
-							Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
+							//Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
 							player.SetHealth(0.0);
 						}
 						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent != k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius)
@@ -519,13 +520,13 @@ class HeroesAndBanditsGuard
 				{
 					Guard.GetInventory().CreateAttachment(GuardGear.Get(i));
 				}
-				weaponInHandsMag = Guard.GetInventory().CreateAttachment("Mag_STANAGCoupled_30Rnd");
+				weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
 				if (Guard.GetHumanInventory().GetEntityInHands()){
 					habPrint("Item spawned in Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " Item: " + Guard.GetHumanInventory().GetEntityInHands().GetDisplayName() +  " Removing it", "Exception");	
 					Guard.GetHumanInventory().GetEntityInHands().Delete(); //Remove any Items in Hand
 				}
 				weaponInHands = Guard.GetHumanInventory().CreateInHands(WeaponInHands);
-				weaponInHands.GetInventory().CreateAttachment("Mag_STANAGCoupled_30Rnd");
+				weaponInHands.GetInventory().CreateAttachment(WeaponInHandsMag);
 				for ( int j =0; j < WeaponInHandsAttachments.Count(); j++ )
 				{
 					weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
@@ -543,13 +544,12 @@ class HeroesAndBanditsGuard
 	void ReloadWeapon()
 	{
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		EntityAI weaponInHands = Guard.GetHumanInventory().GetEntityInHands();
+		EntityAI weaponInHands = Weapon_Base.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		EntityAI weaponInHandsMag;
 		if (weaponInHands.IsWeapon())
-		{
-			Guard.GetHumanInventory().GetEntityInHands();
-			weaponInHandsMag = Guard.GetInventory().CreateAttachment("Mag_STANAGCoupled_30Rnd");
-			Guard.ReloadWeapon(Weapon_Base.Cast(weaponInHands), weaponInHandsMag);
+		{	
+				weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
+				Guard.GetWeaponManager().StartAction(AT_WPN_ATTACH_MAGAZINE, weaponInHandsMag, NULL);
 		}
 	}
 	
@@ -577,7 +577,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 		m_HeroesAndBandits = new HeroesAndBandits;
 		m_HeroesAndBanditsSaveTimer.Run(300, m_HeroesAndBandits, "SaveAllPlayers", NULL, true);
 		m_HeroesAndBandits.Init();
-		if (GetHeroesAndBanditsConfig().ZoneCheckTimer >= 1 ){
+		if (GetHeroesAndBanditsConfig().ZoneCheckTimer >= 1 && m_HeroesAndBandits.Zones ){
 			habPrint("Creating Zone Check Timer", "Debug");			
 			m_HeroesAndBanditsCheckTimer.Run(GetHeroesAndBanditsConfig().ZoneCheckTimer, m_HeroesAndBandits, "CheckPlayersEnterZones", NULL, true);
 		}else{
