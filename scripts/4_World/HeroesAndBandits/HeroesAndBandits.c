@@ -366,6 +366,10 @@ class HeroesAndBandits
 						if (Zones.Get(k).validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent != k ){
 							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
 							player.m_HeroesAndBandits_WarningSent = k;
+							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity))
+							{
+								player.SetAllowDamage(false);
+							}
 						}
 						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent == k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).KillRadius)
 						{
@@ -376,7 +380,7 @@ class HeroesAndBandits
 							{
 								player.SetAllowDamage(true);
 							}
-							//Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
+							Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
 							player.SetHealth(0.0);
 						}
 						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent != k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius)
@@ -387,6 +391,10 @@ class HeroesAndBandits
 							GetHeroesAndBandits().WarnPlayer(Zones.Get(k).Name, Zones.Get(k).WarningMessage, player.GetIdentity().GetPlainId());
 						}else if (vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) > Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent == k)
 						{
+							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity) )
+							{
+								player.SetAllowDamage(true);
+							}
 							//Player Left Warning Radius
 							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Zones.Get(k).Name, "Verbose");
 							player.m_HeroesAndBandits_WarningSent = -1;
@@ -535,11 +543,13 @@ class HeroesAndBanditsGuard
 	void ReloadWeapon()
 	{
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		EntityAI weaponInHands = guard.GetHumanInventory().GetEntityInHands();
+		EntityAI weaponInHands = Guard.GetHumanInventory().GetEntityInHands();
+		EntityAI weaponInHandsMag;
 		if (weaponInHands.IsWeapon())
 		{
-			guard.GetHumanInventory().GetEntityInHands();
-			guard.QuickReloadWeapon(Weapon_Base.Cast(weaponInHands));
+			Guard.GetHumanInventory().GetEntityInHands();
+			weaponInHandsMag = Guard.GetInventory().CreateAttachment("Mag_STANAGCoupled_30Rnd");
+			Guard.ReloadWeapon(Weapon_Base.Cast(weaponInHands), weaponInHandsMag);
 		}
 	}
 	
