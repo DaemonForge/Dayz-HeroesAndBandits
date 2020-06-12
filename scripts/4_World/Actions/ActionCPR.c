@@ -1,4 +1,4 @@
-modded class ActionGiveSalineTarget
+modded class ActionCPR
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
