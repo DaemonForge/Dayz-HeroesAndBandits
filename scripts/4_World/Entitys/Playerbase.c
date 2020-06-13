@@ -63,7 +63,7 @@ modded class PlayerBase
 	{
 		
 		PlayerBase targetPlayer = this;
-		if ( targetPlayer && source )		
+		if ( targetPlayer && source && damageType)		
 		{
 			switch ( damageType )
 			{

@@ -35,19 +35,28 @@ class CfgMods
 			class gameScriptModule
             {
                 value="";
-                files[]={"HeroesAndBandits/scripts/3_Game"};
+                files[]={
+					"HeroesAndBandits/scripts/Common",
+					"HeroesAndBandits/scripts/3_Game"
+					};
             };
 			
 			class worldScriptModule
             {
                 value="";
-                files[]={ "HeroesAndBandits/scripts/4_World" };
+                files[]={ 
+					"HeroesAndBandits/scripts/Common",
+					"HeroesAndBandits/scripts/4_World" 
+					};
             };
 			
 	        class missionScriptModule
             {
                 value="";
-                files[]={ "HeroesAndBandits/scripts/5_Mission" };
+                files[]={ 
+					"HeroesAndBandits/scripts/Common",
+					"HeroesAndBandits/scripts/5_Mission" 
+					};
             };
 			
         };
