@@ -6,7 +6,7 @@ modded class ActionCPR
 		PlayerBase tagetPlayer = PlayerBase.Cast(action_data.m_Target.GetObject());
 		float shock = tagetPlayer.GetHealth("","Shock");
 		
-		if ( shock <= PlayerConstants.UNCONSCIOUS_THRESHOLD )
+		if ( shock >= PlayerConstants.UNCONSCIOUS_THRESHOLD )
 		{
 			PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 			string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
