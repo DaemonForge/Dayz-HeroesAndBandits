@@ -113,7 +113,7 @@ class HeroesAndBandits
 					if (actionHumanity > 0){
 						prefix = "+";
 					}
-					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + "#HAB_HUMANITY" );	
+					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + " #HAB_HUMANITY" );	
 				}
 				if (didLevelUp)
 				{
