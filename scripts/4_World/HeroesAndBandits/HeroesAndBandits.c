@@ -117,10 +117,7 @@ class HeroesAndBandits
 				}
 				if (didLevelUp)
 				{
-					Param2< string, string > data;
-					data.param1 = playerID;
-					data.param2 = p.getLevel().ImageSet;
-					GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", data);
+					GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().ImageSet), false, GetPlayerBaseByID(playerID).GetIdentity());
 				}
 				if (didLevelUp && GetHeroesAndBanditsConfig().NotifyLevelChange)
 				{

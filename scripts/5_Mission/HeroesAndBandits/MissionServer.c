@@ -20,11 +20,11 @@ modded class MissionServer
 		habPrint("InvokeOnConnect Player Connected", "Debug");
 		GetHeroesAndBandits().OnPlayerConnect(identity);
 		super.InvokeOnConnect(player, identity);
-		Param2< string, string > data;
-		string playerID = identity.GetPlainId();
-		data.param1 = playerID;
-		data.param2 = GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet;
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", data);
+		if ( identity )
+		{
+			string playerID = identity.GetPlainId();
+			GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet), false, identity);
+		}
 	}
 
 	override void InvokeOnDisconnect( PlayerBase player )
