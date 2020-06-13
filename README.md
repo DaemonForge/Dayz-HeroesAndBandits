@@ -144,7 +144,7 @@ This will return the players Humanity in a float value, it will return 0 if the 
 ```
 m_HeroesAndBandits.GetPlayerLevelName(PlayerID) 
 ```
-Returns the Level Name in a string, it will return the default level's name (usually Bambi) if the player can't be found
+Returns the Level Name in a string, if the player doesn't exsit it will return the default level's name (usually Bambi) if the player can't be found
 
 
 ### Get Player Stat
