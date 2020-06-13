@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{1EB8B96AC783EA36}HeroesAndBandits/ImageSet.edds"
+ Author "desktop-tdpoqud"
+ ChangeDate 160966861
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "ImageSet.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}

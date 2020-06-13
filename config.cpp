@@ -32,6 +32,13 @@ class CfgMods
 	    dependencies[]={ "Game", "World", "Mission" };
 	    class defs
 	    {
+			class imageSets
+			{
+				files[]=
+				{
+					"DHeroesAndBandits/gui/images/HeroesAndBandits.imageset"
+				};
+			};
 			class gameScriptModule
             {
                 value="";

@@ -29,10 +29,20 @@ class HeroesAndBandits
 				float maxHumanity = GetHeroesAndBanditsConfig().Zones.Get(i).MaxHumanity;
 				int warningRadius = GetHeroesAndBanditsConfig().Zones.Get(i).WarningRadius;
 				int killRadius = GetHeroesAndBanditsConfig().Zones.Get(i).KillRadius;
+				int welcomeMessageColor = GetHeroesAndBanditsConfig().Zones.Get(i).getWelcomeMessageColor();
+				bool showWelcomeMsg = GetHeroesAndBanditsConfig().Zones.Get(i).ShowWelcomeMsg;
+				string welcomeMessage = GetHeroesAndBanditsConfig().Zones.Get(i).WelcomeMessage;
+				string welcomeIcon = GetHeroesAndBanditsConfig().Zones.Get(i).WelcomeIcon;
+				bool showWarningMsg = GetHeroesAndBanditsConfig().Zones.Get(i).ShowWarningMsg;
 				string warningMessage = GetHeroesAndBanditsConfig().Zones.Get(i).WarningMessage;
 				bool overrideSafeZone = GetHeroesAndBanditsConfig().Zones.Get(i).OverrideSafeZone;
 				bool godModPlayers = GetHeroesAndBanditsConfig().Zones.Get(i).GodModPlayers;
 				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage, overrideSafeZone, godModPlayers));
+				Zones.Get(i).ShowWarningMsg  = showWarningMsg;
+				Zones.Get(i).WelcomeMessageColor = welcomeMessageColor;
+				Zones.Get(i).ShowWelcomeMsg = showWelcomeMsg;
+				Zones.Get(i).WelcomeMessage = welcomeMessage;
+				Zones.Get(i).WelcomeIcon = welcomeIcon;
 				if (GetHeroesAndBanditsConfig().Zones.Get(i).Guards){
 					for ( int j = 0; j < GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Count(); j++ )
 					{	
@@ -103,11 +113,21 @@ class HeroesAndBandits
 					if (actionHumanity > 0){
 						prefix = "+";
 					}
-					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + " #HAB_HUMANITY" );	
+					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + "#HAB_HUMANITY" );	
+				}
+				if (didLevelUp)
+				{
+					Param2< string, string > data;
+					data.param1 = playerID;
+					data.param2 = p.getLevel().ImageSet;
+					GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", data);
 				}
 				if (didLevelUp && GetHeroesAndBanditsConfig().NotifyLevelChange)
 				{
+					
 					NotifyPlayer(playerID, p.getLevel().LevelImage, "#HAB_HUMANITY_LEVELUP_PRE" + p.getLevel().Name, "#HAB_HUMANITY_LEVELUP_HEADING" );
+				
+					
 				}
 				return;
 			}
@@ -131,7 +151,12 @@ class HeroesAndBandits
 		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(header), new ref StringLocaliser(message), GetHeroesAndBanditsConfig().WarningMessageImagePath, GetHeroesAndBanditsConfig().getWarningMessageColor(), GetHeroesAndBanditsConfig().NotificationMessageTime, GetPlayerBaseByID(playerID).GetIdentity());
 		habPrint("Issued Warning '"+ message + "' To Player: " + playerID, "Verbose");
 	}
-	
+		
+	void WelcomePlayer( string zoneName, string message, string welcomeImage, string playerID, int welcomeColor)
+	{
+		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(zoneName), new ref StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsConfig().NotificationMessageTime, GetPlayerBaseByID(playerID).GetIdentity());
+		habPrint("Welcome Message: '"+ message + "' To Player: " + playerID, "Verbose");
+	}
 	
 	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName){
 		habPrint("Kill Feed Player: " + sourcePlayerID +" killed " + targetPlayerID + " with " + weaponName , "Debug");
@@ -367,6 +392,10 @@ class HeroesAndBandits
 						if (Zones.Get(k).validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent != k ){
 							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
 							player.m_HeroesAndBandits_WarningSent = k;
+							if ( Zones.Get(k).ShowWelcomeMsg )
+							{
+								WelcomePlayer(Zones.Get(k).Name, Zones.Get(k).WelcomeMessage, Zones.Get(k).WelcomeIcon, player.GetIdentity().GetPlainId(), Zones.Get(k).WelcomeMessageColor);
+							}
 							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity))
 							{
 								player.SetAllowDamage(false);
@@ -389,7 +418,11 @@ class HeroesAndBandits
 							//Player Entered Warning Zone Issue Warning
 							player.m_HeroesAndBandits_WarningSent = k ;
 							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
-							GetHeroesAndBandits().WarnPlayer(Zones.Get(k).Name, Zones.Get(k).WarningMessage, player.GetIdentity().GetPlainId());
+							if ( Zones.Get(k).ShowWarningMsg )
+							{
+								GetHeroesAndBandits().WarnPlayer(Zones.Get(k).Name, Zones.Get(k).WarningMessage, player.GetIdentity().GetPlainId());
+							}
+						
 						}else if (vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) > Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent == k)
 						{
 							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity) )
@@ -414,7 +447,12 @@ class HeroesAndBanditsZone
 	float X;
 	float Z;
 	int WarningRadius;
+	bool ShowWarningMsg;
 	string WarningMessage;
+	bool ShowWelcomeMsg;
+	string WelcomeMessage;
+	string WelcomeIcon;
+	int WelcomeMessageColor;
 	int KillRadius;
     float MinHumanity;
     float MaxHumanity;

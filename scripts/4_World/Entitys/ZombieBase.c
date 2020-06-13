@@ -11,7 +11,6 @@ modded class ZombieBase
 				if (killer.IsInherited(SurvivorBase))
 				{
 					sourcePlayer = PlayerBase.Cast(killer);
-					
 				}
 			}else if (killer.IsWeapon())
 			{
