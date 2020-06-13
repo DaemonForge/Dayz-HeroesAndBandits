@@ -32,7 +32,7 @@ Actions are things players can do to lose or gain humanity currently actions can
      "Name": "ZombieKill",  // Name of the Action should NOT ever be changed
      "Affinity": "hero",  // This should be either hero or bandit hero will add humanity, bandit subtracts humanity
      "Humanity": 5, // This is how much humanity should be adjusted (should always be a positive number) use the affinity to determine if it should subtract or add
-      "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from there action
+     "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from there action
 }
 ```
 
@@ -44,8 +44,8 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
             "X": 11250,  // This is the X coordinate for the zone
             "Z": 4300,  // This is the Z coordinate for the zone
             "KillRadius": 50, // This is the radius at which the zone will kill players who enter it
-            "MinHumanity": -1000, // This is the Minimum humanity the player is allowed to have to enter the zone
-            "MaxHumanity": 1000, // This is the Maximum humanity the player is allowed to have to enter the zone
+            "MinHumanity": -1000, // This is the Minimum humanity the player is allowed to have to enter the zone (-1 will set to no minimum)
+            "MaxHumanity": 1000, // This is the Maximum humanity the player is allowed to have to enter the zone (-1 will set to no maximum)
             "WarningRadius": 75, // This is the radius at which players will be warned they are approaching the zone
             "ShowWarningMsg": 1, // DOES NOTHING CURRENTLY
             "WarningMessage": "!!Warning!! you are about to enter Default Zone if you continue you will be shot!", // The warning message show to players
