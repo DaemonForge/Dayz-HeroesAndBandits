@@ -1,6 +1,6 @@
 # Heroes and Bandits Humanity Mod
 
-This mod add humanity to Dayz in a very expandable way, allow for server owners and mod creators to dictate almost everything including the ability to create customized Levels and Actions, the ability to create customized zones for exclusive
+This mod add humanity to Dayz in a very expandable way, allow for server owners and mod creators to dictate almost everything including the ability to create customized Levels and Actions, the ability to create customized zones for exclusive use based on the players stats
 
 ### Player Commands
 "/humanity" in local chat will tell you you're humanity
