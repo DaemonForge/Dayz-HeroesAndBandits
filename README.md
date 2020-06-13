@@ -8,7 +8,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 "/stat Kills" in local chat will give you how many Kills you have made
 
 
-## Config File Details
+## Default Config
 
 [https://pastebin.com/uE7cULFW](https://pastebin.com/uE7cULFW)
 ## Main Config Options and Explanations
