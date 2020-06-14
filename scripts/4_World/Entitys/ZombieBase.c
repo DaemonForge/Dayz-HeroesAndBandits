@@ -24,10 +24,7 @@ modded class ZombieBase
 				{
 					if ( vehicle.CrewSize() > 0 )
 					{
-						PlayerBase driver = PlayerBase.Cast(vehicle.CrewMember( 0 ));
-						if ( driver ){
-							sourcePlayer = PlayerBase.Cast(driver);
-						}
+						sourcePlayer = PlayerBase.Cast(vehicle.CrewMember( 0 ));
 					}
 				}
 			} else {
@@ -37,7 +34,7 @@ modded class ZombieBase
 			if (!sourcePlayer){
 			}else{
 				string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-				GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "ZombieKill");
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLaterByName(GetHeroesAndBandits(), "NewPlayerAction", 1, false, new Param2<string, string>(sourcePlayerID, "ZombieKill"));
 			}
 		}
     }

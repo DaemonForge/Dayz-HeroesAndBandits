@@ -21,6 +21,7 @@ modded class MissionGameplay
 		if ( !ctx.Read( data ) ) return;
 		string newIcon = data.param2;
 		string playerID = data.param1;
+		Print("[HeroesAndBandits] [DebugClient] " + playerID + " send icon " + newIcon);
 		if ( type == CallType.Server )
     	{	
 			if ( !newIcon || !playerID )
@@ -29,16 +30,20 @@ modded class MissionGameplay
 			}
 			if ( newIcon != m_HeroesAndBanditsCurrentIcon)
 			{
-				if ( m_HeroesAndBanditsIconUI ) 
-				{
-					m_HeroesAndBanditsIconUI.updateIcon(newIcon);
-				}
 				m_HeroesAndBanditsCurrentIcon = newIcon;
+				GetGame().GetCallQueue( CALL_CATEGORY_GUI ).CallLaterByName(this,"UpdateHABIcon", 1000, false);
 			} 
 			else 
 			{
 				return;
 			}
+		}
+	}
+	
+	void UpdateHABIcon(){
+		if ( m_HeroesAndBanditsIconUI ) 
+		{
+			m_HeroesAndBanditsIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
 		}
 	}
 }

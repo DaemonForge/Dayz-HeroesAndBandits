@@ -59,9 +59,11 @@ modded class PlayerBase
 			}
 		}
 	}
+	
+	/*
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
-		
+
 		PlayerBase targetPlayer = this;
 		if ( targetPlayer && source && damageType)		
 		{
@@ -90,4 +92,5 @@ modded class PlayerBase
 			}
 		}
 	}
+		*/
 }

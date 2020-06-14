@@ -1,8 +1,5 @@
 ref HeroesAndBandits m_HeroesAndBandits;
 ref HeroesAndBanditsConfig m_HeroesAndBanditsConfig
-ref Timer m_HeroesAndBanditsSaveTimer = new Timer();
-ref Timer m_HeroesAndBanditsCheckTimer = new Timer();
-ref Timer m_HeroesAndBanditsReloadTest = new Timer();
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
 class HeroesAndBandits
@@ -57,7 +54,7 @@ class HeroesAndBandits
 						TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
 						Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 			    		Zones.Get(i).Guards.Get(j).Spawn();
-						//m_HeroesAndBanditsReloadTest.Run(120, Zones.Get(i).Guards.Get(j), "ReloadWeapon", NULL, false); //Reload gun 2 minutes after server start
+						//GetGame().GetCallQueue().CallLaterByName(Zones.Get(i).Guards.Get(j), "ReloadWeapon", 120000, false); //Reload gun 2 minutes after server start
 						
 					}
 				}
@@ -610,11 +607,11 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 	{
 		habPrint("Init", "Always");
 		m_HeroesAndBandits = new HeroesAndBandits;
-		m_HeroesAndBanditsSaveTimer.Run(300, m_HeroesAndBandits, "SaveAllPlayers", NULL, true);
 		m_HeroesAndBandits.Init();
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "SaveAllPlayers", 300 * 1000, true);
 		if (GetHeroesAndBanditsConfig().ZoneCheckTimer >= 1 && m_HeroesAndBandits.Zones ){
-			habPrint("Creating Zone Check Timer", "Debug");			
-			m_HeroesAndBanditsCheckTimer.Run(GetHeroesAndBanditsConfig().ZoneCheckTimer, m_HeroesAndBandits, "CheckPlayersEnterZones", NULL, true);
+			habPrint("Creating Zone Check Timer", "Debug");
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsConfig().ZoneCheckTimer * 1000, true);
 		}else{
 			habPrint("Zone Check Time Less than 1 so not creating timer", "Debug");					
 		}
