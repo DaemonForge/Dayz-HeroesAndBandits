@@ -1,20 +1,20 @@
-Language,Original,English,French,Russian
-HAB_HUMANITY, Humanity, Humanity, Humanité, Репутация
-HAB_HUMANITY_CHANGEHEADING,Humanity Affected, Humanity Affected, Humanité Affectée, Потеряно Репутации
-HAB_HUMANITY_LEVELUP_HEADING,Level Changed, Level Changed, Niveau Modifié, Уровень Изменился
-HAB_HUMANITY_LEVELUP_PRE, "You are now ", "You are now ", "Vous êtes maintenant au ", "Твоя Репутация "
-HAB_HUMANITY_WARNING, Warning, Warning, Warning, Предупреждение
-HAB_KILLFEED_HEADING, Killfeed, Killfeed, Killfeed, Киллфид
-HAB_KILLFEED_PRE, A , A , Un , " "
-HAB_KILLFEED_KILLED, killed , killed , a tué, Убит
-HAB_KILLFEED_WITH, " with ", " with ", " avec" , " С помощью "
-HAB_KILLFEED_AT, " at" , " at" , " à" , " С"
-HAB_KILLFEED_METERS, " meters" , " meters" , " mètres" , " Метров"
-HAB_KILLFEED_FISTS, " their fists" , " their fists" , " leurs poings", " Кулаками"
-HAB_KILLFEED_SUCIDEPOST,  killed them self, killed them self,  se sont tués, " Убил Себя"
-HAB_KILLFEED_SUCIDEHEADING", Player Sucide, Player Sucide", Suicide du joueur, " Совершил Самоубийство"
-HAB_CHECK_PRESTAT, You're Total, You're Total, Vous êtes total, " Ваша статистика"
-HAB_CHECK_PREHUMANITY, Your Current Humanity is, Your Current Humanity is, Votre humanité actuelle est, " Ваша репутация"
-HAB_CHECK_NOTFOUND, Can't find stat, Can't find stat, Impossible de trouver la statistique, Отсутствует Статистика
-HAB_CHECK_IS, is, is, est, is
-HAB_BLANK, "", "", "", ""
+Language,Original,English,French,Russian,Other
+HAB_HUMANITY, Humanity, Humanity, Humanité, Репутация, Humanity
+HAB_HUMANITY_CHANGEHEADING,Humanity Affected, Humanity Affected, Humanité Affectée, Потеряно Репутации,Humanity Affected
+HAB_HUMANITY_LEVELUP_HEADING,Level Changed, Level Changed, Niveau Modifié, Уровень Изменился, Level Changed
+HAB_HUMANITY_LEVELUP_PRE, "You are now ", "You are now ", "Vous êtes maintenant au ", "Твоя Репутация ", "You are now "
+HAB_HUMANITY_WARNING, Warning, Warning, Warning, Предупреждение, Warning
+HAB_KILLFEED_HEADING, Killfeed, Killfeed, Killfeed, Киллфид, Killfeed
+HAB_KILLFEED_PRE, A , A , Un , " ", A 
+HAB_KILLFEED_KILLED, killed , killed , a tué, Убит, killed 
+HAB_KILLFEED_WITH, " with ", " with ", " avec" , " С помощью ", " with "
+HAB_KILLFEED_AT, " at" , " at" , " à" , " С", " at" 
+HAB_KILLFEED_METERS, " meters" , " meters" , " mètres" , " Метров", " meters" 
+HAB_KILLFEED_FISTS, " their fists" , " their fists" , " leurs poings", " Кулаками", " their fists" 
+HAB_KILLFEED_SUCIDEPOST,  killed them self, killed them self,  se sont tués, " Убил Себя",  killed them self
+HAB_KILLFEED_SUCIDEHEADING", Player Sucide, Player Sucide", Suicide du joueur, " Совершил Самоубийство", Player Sucide
+HAB_CHECK_PRESTAT, You're Total, You're Total, Vous êtes total, " Ваша статистика", You're Total
+HAB_CHECK_PREHUMANITY, Your Current Humanity is, Your Current Humanity is, Votre humanité actuelle est, " Ваша репутация", Your Current Humanity is
+HAB_CHECK_NOTFOUND, Can't find stat, Can't find stat, Impossible de trouver la statistique, Отсутствует Статистика, Can't find stat
+HAB_CHECK_IS, is, is, est, is, is
+HAB_BLANK, "", "", "", "", ""
