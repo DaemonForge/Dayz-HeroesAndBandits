@@ -4,115 +4,95 @@ ImageSetClass {
  Textures {
   ImageSetTextureClass {
    mpix 1
-   path "{1EB8B96AC783EA36}HeroesAndBandits/ImageSet.edds"
+   path "{1EB8B96AC783EA36}HeroesAndBandits/gui/images/ImageSet.edds"
   }
  }
  Images {
+  ImageSetDefClass Hero {
+   Name "Hero"
+   Pos 0 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass HeroLv1 {
+   Name "HeroLv1"
+   Pos 512 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass HeroLv2 {
+   Name "HeroLv2"
+   Pos 1024 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass HeroLv3 {
+   Name "HeroLv3"
+   Pos 1536 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass HeroLv4 {
+   Name "HeroLv4"
+   Pos 0 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass HeroLv5 {
+   Name "HeroLv5"
+   Pos 512 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass Bandit {
+   Name "Bandit"
+   Pos 512 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass BanditLv1 {
+   Name "BanditLv1"
+   Pos 0 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass BanditLv2 {
+   Name "BanditLv2"
+   Pos 512 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass BanditLv3 {
+   Name "BanditLv3"
+   Pos 1024 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass BanditLv4 {
+   Name "BanditLv4"
+   Pos 1536 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass BanditLv5 {
+   Name "BanditLv5"
+   Pos 0 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass Bambi {
+   Name "Bambi"
+   Pos 1024 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass Death {
+   Name "Death"
+   Pos 1536 0
+   Size 512 512
+   Flags 0
+  }
  }
  Groups {
-  ImageSetGroupClass hero {
-   Name "hero"
-   Images {
-    ImageSetDefClass Hero {
-     Name "Hero"
-     Pos 0 0
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass HeroLv1 {
-     Name "HeroLv1"
-     Pos 512 1024
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass HeroLv2 {
-     Name "HeroLv2"
-     Pos 1024 1024
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass HeroLv3 {
-     Name "HeroLv3"
-     Pos 1536 1024
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass HeroLv4 {
-     Name "HeroLv4"
-     Pos 0 1536
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass HeroLv5 {
-     Name "HeroLv5"
-     Pos 512 1536
-     Size 512 512
-     Flags 0
-    }
-   }
-  }
-  ImageSetGroupClass bandit {
-   Name "bandit"
-   Images {
-    ImageSetDefClass Bandit {
-     Name "Bandit"
-     Pos 512 0
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass BanditLv1 {
-     Name "BanditLv1"
-     Pos 0 512
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass BanditLv2 {
-     Name "BanditLv2"
-     Pos 512 512
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass BanditLv3 {
-     Name "BanditLv3"
-     Pos 1024 512
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass BanditLv4 {
-     Name "BanditLv4"
-     Pos 1536 512
-     Size 512 512
-     Flags 0
-    }
-    ImageSetDefClass BanditLv5 {
-     Name "BanditLv5"
-     Pos 0 1024
-     Size 512 512
-     Flags 0
-    }
-   }
-  }
-  ImageSetGroupClass bambi {
-   Name "bambi"
-   Images {
-    ImageSetDefClass Bambi {
-     Name "Bambi"
-     Pos 1024 0
-     Size 512 512
-     Flags 0
-    }
-   }
-  }
-  ImageSetGroupClass Death {
-   Name "Death"
-   Images {
-    ImageSetDefClass Death {
-     Name "Death"
-     Pos 1536 0
-     Size 512 512
-     Flags 0
-    }
-   }
-  }
  }
 }

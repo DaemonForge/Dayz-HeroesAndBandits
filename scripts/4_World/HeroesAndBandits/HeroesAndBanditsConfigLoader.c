@@ -5,7 +5,7 @@ static string HeroesAndBanditsPATH = HeroesAndBanditsDIR + "\\config.json";
 class HeroesAndBanditsConfig
 { 
 	//Default Values
-	
+	string ConfigVersion = "1";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", "set:HeroesAndBandits image:Bambi", -1000, 1000);
 	
@@ -29,6 +29,11 @@ class HeroesAndBanditsConfig
 	ref array<int> WarningMessageColor = {200, 255, 0, 0};
 	
 	ref array<int> KillFeedMessageColor = {200, 250, 0, 100};
+	
+	bool AllowStatCommand = true;
+	bool AllowHumanityCommand = true;
+	
+	bool ShowLevelIcon = false;
 	
     bool ExceptionLogs = true;
     bool VerboseLogs = false;
@@ -90,6 +95,11 @@ class HeroesAndBanditsConfig
 		if (FileExist(HeroesAndBanditsPATH)) //If config does not exist create File
 	    {
 	        	JsonFileLoader<HeroesAndBanditsConfig>.JsonLoadFile(HeroesAndBanditsPATH, this);
+				if ( !ConfigVersion )
+				{
+					UpdateDefaults();
+					JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
+				}
 	    }else{
 			createDefaults();
 	        MakeDirectory(HeroesAndBanditsDIR);
@@ -213,7 +223,14 @@ class HeroesAndBanditsConfig
 			addAction( "GivePlayerCPR", "hero", 75);
 			addZone("Default Zone", 11250, 4300, -1000, 1000, 75, 50);
 	}
-	
+
+	void UpdateDefaults()
+	{
+		ConfigVersion = "1";
+		AllowStatCommand = true;
+		AllowHumanityCommand = true;
+		ShowLevelIcon = true;
+	}
 
 }
 

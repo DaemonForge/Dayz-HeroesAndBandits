@@ -13,6 +13,8 @@ modded class MissionServer
 		super.OnInit();
 		GetHeroesAndBanditsConfig();
 		GetHeroesAndBandits();
+		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );
 	}
 	
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity)
@@ -29,13 +31,83 @@ modded class MissionServer
 	
 	override void InvokeOnDisconnect( PlayerBase player )
 	{
+		
+		
 		habPrint("InvokeOnDisconnect Player Disconneted", "Debug");
-		GetHeroesAndBandits().OnPlayerDisconnect(player);
+		if ( player.GetIdentity() ){
+			GetHeroesAndBandits().OnPlayerDisconnect(player);
+		}
+		
 		super.InvokeOnDisconnect(player);
 	}
 	
 	
+	void RPCSendHumanityNotification( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		if ( GetHeroesAndBanditsConfig().AllowHumanityCommand )
+		{
+			if (!sender)
+			{
+				return;
+			}
+			Param2< string, string > data  //Player ID, Icon
+			if ( !ctx.Read( data ) ) return;
+			
+			string playerID = sender.GetPlainId();
+			string habMessage = "#HAB_CHECK_PREHUMANITY " + GetHeroesAndBandits().GetPlayerHumanity(playerID);
+			GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
+		}
+	}
 	
+		
+	void RPCSendStatNotification( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		if ( GetHeroesAndBanditsConfig().AllowStatCommand )
+		{
+			if (!sender)
+			{
+				return;
+			}
+			Param3< string, string, string > data  //Player ID, Icon
+			if ( !ctx.Read( data ) ) 
+			{
+				return;
+			}
+			
+			string statname = data.param3;
+			string playerID = sender.GetPlainId();
+			string habMessage;
+			int statTotal = 0;
+			bool statExsit =false;
+			if (statname == "Kills"){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVshero");
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbandit");
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVshero"); 
+						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbambi"); 
+						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbandit"); 
+						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVshero"); 
+						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbambi"); 
+						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbandit");
+			} else {
+				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
+				{
+					statExsit = true;
+					statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, statname);
+				}
+			}
+			if (statExsit){
+				habMessage = "#HAB_CHECK_PRESTAT '" + statname + "' #HAB_CHECK_IS " + statTotal;
+				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
+			} else {
+				habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";
+				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
+			}
+		}
+	}
+	
+	/*
 	override void OnEvent(EventType eventTypeId, Param params)  {
 	
 		ref array<Man> players = new array<Man>;
@@ -159,7 +231,7 @@ modded class MissionServer
 				break;
 			}
 		}
-	}
+	}*/
 	
 }
 
