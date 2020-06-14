@@ -36,7 +36,7 @@ class CfgMods
 			{
 				files[]=
 				{
-					"DHeroesAndBandits/gui/images/HeroesAndBandits.imageset"
+					"HeroesAndBandits/gui/images/HeroesAndBandits.imageset"
 				};
 			};
 			class gameScriptModule
