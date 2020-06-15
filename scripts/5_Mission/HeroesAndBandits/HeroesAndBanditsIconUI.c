@@ -15,9 +15,6 @@ class HeroesAndBanditsIconUI extends UIScriptedMenu
 
 	void updateIcon(string imageSet)
 	{
-		layoutRoot 	= GetGame().GetWorkspace().CreateWidgets( "HeroesAndBandits/gui/images/HeroesAndBandits.layout" );
-		m_Icon		= ImageWidget.Cast( layoutRoot.FindAnyWidget( "HeroesAndBanditsIcon" ) );
-		
 		m_Icon.LoadImageFile( 0, imageSet );
 	}
 }
