@@ -20,6 +20,8 @@ modded class MissionGameplay
 		m_HeroesAndBanditsIconUI.Init();
 		if ( !m_HeroesAndBanditsCurrentIcon ) {
 			m_HeroesAndBanditsCurrentIcon = "set:HeroesAndBandits image:Bambi";
+		} else {
+			UpdateHABIcon();
 		}
 	}
 	
@@ -89,8 +91,6 @@ modded class MissionGameplay
 		
 		if(eventTypeId != ChatMessageEventTypeID) 
 		{ 
-			Print("[HeroesAndBandits] eventTypeId != ChatMessageEventTypeID");
-			
 			super.OnEvent(eventTypeId,params); 
 			 return; 
 		}
@@ -98,22 +98,15 @@ modded class MissionGameplay
 		ChatMessageEventParams chat_params = ChatMessageEventParams.Cast( params );
 		if(chat_params.param1 != 0 || chat_params.param2 == "") 
 		{ 
-			Print("[HeroesAndBandits] chat_params.param1 != 0 || chat_params.param2 == ''");
-			
 			super.OnEvent(eventTypeId,params);
 			 return; 
 		}
 		
-		Print("[HeroesAndBandits] chat_prams 1: " + chat_params.param1);
-		Print("[HeroesAndBandits] chat_prams 2: " + chat_params.param2);
-		Print("[HeroesAndBandits] chat_prams 3: " + chat_params.param3);
-		Print("[HeroesAndBandits] chat_prams 4: " + chat_params.param4);
 		PlayerBase player = GetGame().GetPlayer();		
 		
 		if (!player) { 
-			Print("[HeroesAndBandits] Player is Not found: " + chat_params.param2);
 			super.OnEvent(eventTypeId,params); 
-			return; 
+			 return; 
 		}
 		
 		string message = chat_params.param3;
@@ -121,12 +114,6 @@ modded class MissionGameplay
 		string param0;
 		string command;
 		
-		Print("[HeroesAndBandits] chat_prams 3: " + chat_params.param3);
-		Print("[HeroesAndBandits] name: " + chat_params.param2);
-		Print("[HeroesAndBandits] prefix: " + prefix);
-		Print("[HeroesAndBandits] param0: " + param0);
-		Print("[HeroesAndBandits] command: " + command);
-		Print("[HeroesAndBandits] Message: " + message);
 		TStringArray tokens = new TStringArray;
 		message.Replace("` ", "&SPCESC!");
 		message.Split(" ", tokens); 
@@ -137,12 +124,10 @@ modded class MissionGameplay
 		statname.Replace("/stat", " ");
 		statname.Replace(" ", "");
 		
-		habPrint("statname: " + statname, "Debug");
 		string cmd_prefix = "/";
 		param0 = tokens.Get(0);
 		param0.ParseStringEx(prefix); 
 		if(prefix != cmd_prefix) {
-			Print("[HeroesAndBandits] prefix != cmd_prefix");
 			super.OnEvent(eventTypeId,params); 
 			 return; 
 		};

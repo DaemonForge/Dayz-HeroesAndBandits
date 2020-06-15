@@ -25,15 +25,12 @@ modded class MissionServer
 		if ( identity )
 		{
 			string playerID = identity.GetPlainId();
-			GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet), false, identity);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 10000, true, new Param1<ref PlayerIdentity>(identity));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5000, true, new Param1<ref PlayerIdentity>(identity));
 		}
 	}
 	
 	override void InvokeOnDisconnect( PlayerBase player )
 	{
-		
-		
 		habPrint("InvokeOnDisconnect Player Disconneted", "Debug");
 		if ( player.GetIdentity() ){
 			GetHeroesAndBandits().OnPlayerDisconnect(player);
@@ -43,6 +40,8 @@ modded class MissionServer
 	}
 	
 	void SendHeroesAndBanditsSettings( ref PlayerIdentity identity){
+		string playerID = identity.GetPlainId();
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet), false, identity);
 		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< bool, bool, bool >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand), false, identity);
 	}
 	
