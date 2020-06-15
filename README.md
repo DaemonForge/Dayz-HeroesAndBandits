@@ -48,17 +48,12 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
             "MinHumanity": -1000, // This is the Minimum humanity the player is allowed to have to enter the zone (-1 will set to no minimum)
             "MaxHumanity": 1000, // This is the Maximum humanity the player is allowed to have to enter the zone (-1 will set to no maximum)
             "WarningRadius": 75, // This is the radius at which players will be warned they are approaching the zone
-            "ShowWarningMsg": 1, // DOES NOTHING CURRENTLY
+            "ShowWarningMsg": 1, // 1 / 0 This will show a warning to players who do not have valid humanity when they enter the warning radius
             "WarningMessage": "!!Warning!! you are about to enter Default Zone if you continue you will be shot!", // The warning message show to players
-            "ShowWelcomeMsg": 0, // DOES NOTHING CURRENTLY
-            "WelcomeMessage": "Welcome to the Default Zone", // DOES NOTHING CURRENTLY
-            "WelcomeIcon": "HeroesAndBandits/gui/images/BambiNotification.paa",  // DOES NOTHING CURRENTLY
-            "WelcomeMessageColor": [  // DOES NOTHING CURRENTLY
-                200,
-                0,
-                200,
-                200
-            ],
+            "ShowWelcomeMsg": 0, // 1 Enabled / 0 Disabled This will show the welcome message to players if they have valid humanity when they enter the warning radius
+            "WelcomeMessage": "Welcome to the Default Zone", // This is the message that is given to players when they enter the warning radius and they have valid humanity
+            "WelcomeIcon": "HeroesAndBandits/gui/images/BambiNotification.paa",  // This is the icon for the notification for the welcome message
+            "WelcomeMessageColor": [ 200, 0, 200, 200 ], // this is the color for the welcome message good for matching up to the map icon color
             "OverrideSafeZone": 0, // 1 Enabled / 2 Disabled This will allow the zone to kill players despite the area being a safe zone this also overrides god mode for admins so beware. Useful for server with Helicopters where the player may be able to get into the zone before they are killed by the check timer
             "GodModPlayers": 0, // This will god mod valid players when they enter the warning radius
             "Guards": [  // These are guards that you can have placed around the zone that eventually will shoot the players when they enter.
@@ -88,6 +83,7 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
 
 ### Other Settings
 ```
+    "ConfigVersion": "1", //Do not changed this will be used for future updates to help me ensure that your config files are updated automatically
     "NotifyLevelChange": 1, // 1 Enabled / 0 Disabled when enabled it will notify the player when their level changes
     "KillFeed": 1,  // 1 Enabled / 0 Disabled When enabled it will notify all players of Kills on the server
     "SucideFeed": 0, // 1 Enabled / 0 Disabled When enabled it will notify all players of Sucides on the server
@@ -97,6 +93,9 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
     "WarningMessageImagePath": "HeroesAndBandits/gui/images/DeathWarning.paa", // Icon for the warning messages
     "WarningMessageColor": [ 200, 255, 0, 0], // The colour for the Warning messages
     "KillFeedMessageColor": [ 200, 250, 0, 100 ], // The colour for the Kill feed messages
+    "AllowStatCommand": 1,  // 1 Enabled / 0 Disabled allows the use of the /stat command
+    "AllowHumanityCommand": 1, // 1 Enabled / 0 Disabled allows the use of the /humanity command
+    "ShowLevelIcon": 0, // 1 Enabled / 0 Disabled Currently not working as intended so leave disabled
     "ExceptionLogs": 1,  //  1 Enabled / 0 Disabled This show any exceptions the mod encounters in the script.log
     "VerboseLogs": 0, //  1 Enabled / 0 Disabled  This adds a bit of logging for standard use, script.log
     "DebugLogs": 0, // KEEP 0 OR YOUR LOGS WILL FILL LIKE CRAZY THIS IS FOR ME OR OTHER DEVS ONLY TO DEBUG
