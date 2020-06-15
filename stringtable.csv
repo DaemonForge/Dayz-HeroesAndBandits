@@ -7,7 +7,7 @@ HAB_HUMANITY_WARNING, Warning, Warning, Warning, Предупреждение, W
 HAB_KILLFEED_HEADING, Killfeed, Killfeed, Killfeed, Киллфид, Killfeed
 HAB_KILLFEED_PRE, A , A , Un , " ", A 
 HAB_KILLFEED_KILLED, killed , killed , a tué, Убит, killed 
-HAB_KILLFEED_WITH, " with ", " with ", " avec" , " С помощью ", " with "
+HAB_KILLFEED_WITH, " with ", " with ", " avec" , " с помощью ", " with "
 HAB_KILLFEED_AT, " at" , " at" , " à" , " С", " at" 
 HAB_KILLFEED_METERS, " meters" , " meters" , " mètres" , " Метров", " meters" 
 HAB_KILLFEED_FISTS, " their fists" , " their fists" , " leurs poings", " Кулаками", " their fists" 
