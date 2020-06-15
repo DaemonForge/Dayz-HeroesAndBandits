@@ -419,7 +419,7 @@ class HeroesAndBandits
 						
 						}else if (vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) > Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent == k)
 						{
-							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity) )
+							if ( Zones.Get(k).GodModPlayers )
 							{
 								player.SetAllowDamage(true);
 							}
