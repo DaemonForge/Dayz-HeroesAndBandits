@@ -2,16 +2,40 @@ modded class MissionGameplay
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
 	string									m_HeroesAndBanditsCurrentIcon;
+	bool 									m_HeroesAndBanditsShowLevelIcon;
+	bool 									m_HeroesAndBanditsAllowHumanityCommand;
+	bool 									m_HeroesAndBanditsAllowStatCommand;
 	
 	override void OnInit()
 	{
 		super.OnInit();
+
+		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABSettings", this, SingeplayerExecutionType.Both );
+	}
+	
+	
+	void InitHabIcon(){
 		m_HeroesAndBanditsIconUI = new HeroesAndBanditsIconUI;
 		m_HeroesAndBanditsIconUI.Init();
 		if ( !m_HeroesAndBanditsCurrentIcon ) {
 			m_HeroesAndBanditsCurrentIcon = "set:HeroesAndBandits image:Bambi";
 		}
-		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
+	}
+	
+	
+	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		Param3<bool, bool, bool> data;
+		if ( !ctx.Read( data ) ) return;
+		m_HeroesAndBanditsShowLevelIcon = data.param1;
+		m_HeroesAndBanditsAllowHumanityCommand = data.param2;
+		m_HeroesAndBanditsAllowStatCommand = data.param3;
+		if ( m_HeroesAndBanditsShowLevelIcon )
+		{
+			InitHabIcon();
+		}
+
 	}
 	
 	
@@ -24,7 +48,7 @@ modded class MissionGameplay
 		Print("[HeroesAndBandits] [DebugClient] " + playerID + " send icon " + newIcon);
 		if ( type == CallType.Server )
     	{	
-			if ( !newIcon || !playerID )
+			if ( !newIcon || !playerID || !m_HeroesAndBanditsShowLevelIcon)
 			{
 				return;
 			}
@@ -129,11 +153,19 @@ modded class MissionGameplay
 		
 		switch(command) {
 			case "humanity": {
-				GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param2< string, string >(playerID, command), false, identity);
+				if (m_HeroesAndBanditsAllowHumanityCommand){
+					GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param2< string, string >(playerID, command), false, identity);
+				} else {
+					super.OnEvent(eventTypeId,params); 
+				}
 				break;
 			}
 			case "stat": {
-				GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param3< string, string, string >(playerID, command, statname), false, identity);
+				if (m_HeroesAndBanditsAllowStatCommand){
+					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param3< string, string, string >(playerID, command, statname), false, identity);
+				} else {
+					super.OnEvent(eventTypeId,params); 
+				}
 				break;
 			}
 			default: {

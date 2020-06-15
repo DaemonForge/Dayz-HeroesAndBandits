@@ -229,7 +229,17 @@ class HeroesAndBanditsConfig
 		ConfigVersion = "1";
 		AllowStatCommand = true;
 		AllowHumanityCommand = true;
-		ShowLevelIcon = true;
+		ShowLevelIcon = false;
+		for (int i = 0; i < Levels.Count(); i++ )
+		{
+			if (Levels.Get(i).Affinity == "hero") {
+				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Hero";
+			} else if (Levels.Get(i).Affinity == "bandit") {
+				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Bandit";
+			} else {
+				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Bambi";
+			}
+		}
 	}
 
 }

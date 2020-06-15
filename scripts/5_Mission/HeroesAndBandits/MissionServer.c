@@ -26,6 +26,7 @@ modded class MissionServer
 		{
 			string playerID = identity.GetPlainId();
 			GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet), false, identity);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 10000, true, new Param1<ref PlayerIdentity>(identity));
 		}
 	}
 	
@@ -39,6 +40,10 @@ modded class MissionServer
 		}
 		
 		super.InvokeOnDisconnect(player);
+	}
+	
+	void SendHeroesAndBanditsSettings( ref PlayerIdentity identity){
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< bool, bool, bool >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand), false, identity);
 	}
 	
 	
@@ -85,11 +90,11 @@ modded class MissionServer
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbandit");
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVshero"); 
-						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbambi"); 
-						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbandit"); 
-						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVshero"); 
-						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbambi"); 
-						statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbandit");
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbambi"); 
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbandit"); 
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVshero"); 
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbambi"); 
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbandit");
 			} else {
 				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
 				{
