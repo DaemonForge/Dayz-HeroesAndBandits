@@ -10,7 +10,7 @@ ImageSetClass {
  Images {
   ImageSetDefClass Hero {
    Name "Hero"
-   Pos 0 0
+   Pos 1 1
    Size 510 510
    Flags 0
   }
@@ -23,7 +23,7 @@ ImageSetClass {
   ImageSetDefClass HeroLv2 {
    Name "HeroLv2"
    Pos 1025 1025
-   Size 510 511
+   Size 510 510
    Flags 0
   }
   ImageSetDefClass HeroLv3 {
@@ -34,61 +34,61 @@ ImageSetClass {
   }
   ImageSetDefClass HeroLv4 {
    Name "HeroLv4"
-   Pos 0 1537
+   Pos 1 1537
    Size 510 510
    Flags 0
   }
   ImageSetDefClass HeroLv5 {
    Name "HeroLv5"
    Pos 513 1537
-   Size 513 513
+   Size 510 510
    Flags 0
   }
   ImageSetDefClass Bandit {
    Name "Bandit"
-   Pos 513 0
+   Pos 513 1
    Size 510 510
    Flags 0
   }
   ImageSetDefClass BanditLv1 {
    Name "BanditLv1"
-   Pos 0 510
+   Pos 1 513
    Size 510 510
    Flags 0
   }
   ImageSetDefClass BanditLv2 {
    Name "BanditLv2"
-   Pos 510 510
+   Pos 513 513
    Size 510 510
    Flags 0
   }
   ImageSetDefClass BanditLv3 {
    Name "BanditLv3"
-   Pos 1025 510
+   Pos 1025 513
    Size 510 510
    Flags 0
   }
   ImageSetDefClass BanditLv4 {
    Name "BanditLv4"
-   Pos 1537 510
+   Pos 1537 513
    Size 510 510
    Flags 0
   }
   ImageSetDefClass BanditLv5 {
    Name "BanditLv5"
-   Pos 0 1025
+   Pos 1 1025
    Size 510 510
    Flags 0
   }
   ImageSetDefClass Bambi {
    Name "Bambi"
-   Pos 1025 0
+   Pos 1025 1
    Size 510 510
    Flags 0
   }
   ImageSetDefClass Death {
    Name "Death"
-   Pos 1537 0
+   Pos 1537 1
    Size 510 510
    Flags 0
   }
