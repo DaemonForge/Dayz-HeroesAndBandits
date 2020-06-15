@@ -19,6 +19,7 @@ The first setting is an array of the levels there are no limit to levels but the
      "Name": "Bambi",   //This is the Level name, this will be the name shown to players when they change levels or in the kill feed
      "Affinity": "bambi", // This should be either bambi, hero, or bandit
      "LevelImage": "HeroesAndBandits/gui/images/BambiNotification.paa", //This is the notification icon for that level i have included 14 Icons in my mod but you can always upload custom images to your own mod
+     "ImageSet": "set:HeroesAndBandits image:Bambi", This is the image for the top right hand corner when ShowLevelIcon is enabled
      "MinHumanity": -1000,  //This is the Minimum humanity the player has to have to be considered that level (-1 means no minimum)
      "MaxHumanity": 1000  //This is the Maximum humanity the player has to have to be considered that level (-1 means no maximum)
 }
