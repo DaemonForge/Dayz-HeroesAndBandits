@@ -18,21 +18,18 @@ modded class MissionGameplay
 	void InitHabIcon(){
 		m_HeroesAndBanditsIconUI = new HeroesAndBanditsIconUI;
 		m_HeroesAndBanditsIconUI.Init();
-		if ( !m_HeroesAndBanditsCurrentIcon ) {
-			m_HeroesAndBanditsCurrentIcon = "set:HeroesAndBandits image:Bambi";
-		} else {
-			UpdateHABIcon();
-		}
+		UpdateHABIcon();
 	}
 	
 	
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
-		Param3<bool, bool, bool> data;
+		Param4<bool, bool, bool, string> data;
 		if ( !ctx.Read( data ) ) return;
 		m_HeroesAndBanditsShowLevelIcon = data.param1;
 		m_HeroesAndBanditsAllowHumanityCommand = data.param2;
 		m_HeroesAndBanditsAllowStatCommand = data.param3;
+		m_HeroesAndBanditsCurrentIcon = data.param4;
 		if ( m_HeroesAndBanditsShowLevelIcon )
 		{
 			InitHabIcon();
@@ -48,8 +45,6 @@ modded class MissionGameplay
 		string newIcon = data.param2;
 		string playerID = data.param1;
 		Print("[HeroesAndBandits] [DebugClient] " + playerID + " send icon " + newIcon);
-		if ( type == CallType.Server )
-    	{	
 			if ( !newIcon || !playerID || !m_HeroesAndBanditsShowLevelIcon)
 			{
 				return;
@@ -63,7 +58,6 @@ modded class MissionGameplay
 			{
 				return;
 			}
-		}
 	}
 	
 	void UpdateHABIcon(){

@@ -10,12 +10,14 @@ class HeroesAndBanditsIconUI extends UIScriptedMenu
 		m_Icon		= ImageWidget.Cast( layoutRoot.FindAnyWidget( "HeroesAndBanditsIcon" ) );
 				
 		m_Icon.LoadImageFile( 0, "set:HeroesAndBandits image:Bambi" );
-
         return layoutRoot;
     }
 
 	void updateIcon(string imageSet)
 	{
+		layoutRoot 	= GetGame().GetWorkspace().CreateWidgets( "HeroesAndBandits/gui/images/HeroesAndBandits.layout" );
+		m_Icon		= ImageWidget.Cast( layoutRoot.FindAnyWidget( "HeroesAndBanditsIcon" ) );
+		
 		m_Icon.LoadImageFile( 0, imageSet );
 	}
 }
