@@ -42,7 +42,7 @@ modded class MissionServer
 	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
 		string playerID = identity.GetPlainId();
 		habPrint("Setting Settings to Player: " + playerID, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< bool, bool, bool, string >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).ImageSet), false, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< bool, bool, bool, string >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage), false, identity);
 	}
 	
 	

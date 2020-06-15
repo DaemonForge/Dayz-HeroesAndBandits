@@ -52,7 +52,7 @@ modded class MissionGameplay
 			if ( newIcon != m_HeroesAndBanditsCurrentIcon)
 			{
 				m_HeroesAndBanditsCurrentIcon = newIcon;
-				GetGame().GetCallQueue( CALL_CATEGORY_GUI ).CallLaterByName(this, "UpdateHABIcon", 1000, false);
+				GetGame().GetCallQueue( CALL_CATEGORY_GUI ).CallLaterByName(this, "UpdateHABIcon", 500, false);
 			} 
 			else 
 			{

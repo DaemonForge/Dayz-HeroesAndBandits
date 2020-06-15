@@ -1,41 +1,43 @@
 FrameWidgetClass rootFrame {
- clipchildren 0
+ clipchildren 1
+ inheritalpha 0
  ignorepointer 1
- size 0.97 0.97
+ position 0 0
+ size 0.98 0.98
  halign center_ref
  valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 0
+ scaled 1
  {
   FrameWidgetClass IconFrame {
-   visible 1
    clipchildren 0
    ignorepointer 1
-   position 8 8
-   size 64 64
+   position 0.01 0.01
+   size 80 80
    halign right_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 1
    vexactsize 1
    fixaspect fixwidth
    {
     ImageWidgetClass HeroesAndBanditsIcon {
-     clipchildren 0
+     clipchildren 1
      ignorepointer 1
-     position 0 0
-     size 64 64
+     position -2 -2
+     size 84 84
      halign right_ref
-     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 1
      fixaspect fixwidth
      mode blend
+     stretch 1
+     "no wrap" 1
      "src alpha" 1
     }
    }
