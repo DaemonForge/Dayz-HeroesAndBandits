@@ -67,7 +67,7 @@ modded class MissionGameplay
 	}
 	
 	void UpdateHABIcon(){
-		if ( m_HeroesAndBanditsIconUI ) 
+		if ( m_HeroesAndBanditsShowLevelIcon && m_HeroesAndBanditsIconUI ) 
 		{
 			m_HeroesAndBanditsIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
 		}
