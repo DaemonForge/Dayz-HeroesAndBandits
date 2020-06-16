@@ -136,25 +136,28 @@ modded class MissionGameplay
 		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
 		
 		TStringArray tokens = new TStringArray;
-		message.Split(" ", tokens); 
-		int count = tokens.Count();
+		message.Replace("  ", " ");
+		message.Split(" ", tokens);
 
 		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
 		
-		string statname = message;
-		statname.Replace("/stat", " ");
-		statname.Replace(" ", "");
-		
 		string cmd_prefix = "/";
+
 		param0 = tokens.Get(0);
 		param0.ParseStringEx(prefix); 
 		if(prefix != cmd_prefix) {
 			super.OnEvent(eventTypeId,params); 
 			 return; 
 		} else {
-			command = message;
+			command = param0;
 			command.Replace(cmd_prefix, "");
 			command.Replace(" ", "");
+		}
+		
+		if (tokens.Count() > 1 )
+		{
+			statname = tokens.Get(1);
+			statname.Replace(" ", "");
 		}
 		bool commandNotSentToServer = true;
 		//Print("[HeroesAndBandits] [DebugClient] Command: " + command);
