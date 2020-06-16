@@ -130,8 +130,12 @@ modded class MissionGameplay
 		PlayerIdentity identity = player.GetIdentity();
 		bool statExsit = false;
 		
-		switch(command) {
-			case "humanity": {
+		switch(command.tolower()) {
+			case "humanity":
+			case "humanité":
+			case "pепутация":
+			case "menschheit":
+			case "Humanitarność": {
 				if (m_HeroesAndBanditsAllowHumanityCommand){
 					GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param2< string, string >(playerID, command), false, identity);
 				} else {

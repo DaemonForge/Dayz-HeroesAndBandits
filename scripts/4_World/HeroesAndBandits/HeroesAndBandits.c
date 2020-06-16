@@ -119,7 +119,7 @@ class HeroesAndBandits
 				if (didLevelUp && GetHeroesAndBanditsConfig().NotifyLevelChange)
 				{
 					
-					NotifyPlayer(playerID, p.getLevel().LevelImage, "#HAB_HUMANITY_LEVELUP_PRE" + p.getLevel().Name, "#HAB_HUMANITY_LEVELUP_HEADING" );
+					NotifyPlayer(playerID, p.getLevel().LevelImage, "#HAB_HUMANITY_LEVELUP_PRE " + p.getLevel().Name, " #HAB_HUMANITY_LEVELUP_HEADING" );
 				
 					
 				}
@@ -160,7 +160,7 @@ class HeroesAndBandits
 			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
 			string levelName = GetPlayerLevel(sourcePlayerID).Name;
 			float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
-			string message = "#HAB_KILLFEED_PRE" + levelName + " " + sourcePlayer.GetIdentity().GetName() + "#HAB_KILLFEED_KILLED" + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
+			string message = "#HAB_KILLFEED_PRE " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
 			NotifyKillFeed(levelImage, message);
 		}
 	}
@@ -170,7 +170,7 @@ class HeroesAndBandits
 		if (GetHeroesAndBanditsConfig().SucideFeed){
 			PlayerBase sourcePlayer = GetPlayerBaseByID(sourcePlayerID);
 			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
-			string message = sourcePlayer.GetIdentity().GetName() + "#HAB_KILLFEED_SUCIDEPOST" ;
+			string message = sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_SUCIDEPOST" ;
 			NotifyKillFeed(levelImage, message, "#HAB_KILLFEED_SUCIDEHEADING");
 		}
 	}

@@ -83,7 +83,9 @@ modded class MissionServer
 			string habMessage;
 			int statTotal = 0;
 			bool statExsit =false;
-			if (statname == "Kills"){
+			string killsStat = "Kills";
+			string killStat = "Kill";
+			if (statname.tolower() == killsStat.tolower() || statname.tolower() == killStat.tolower()){
 				statExsit = true;
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVshero");
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 
@@ -98,7 +100,7 @@ modded class MissionServer
 				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
 				{
 					statExsit = true;
-					statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, statname);
+					statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, GetHeroesAndBanditsConfig().getAction(statname).Name);
 				}
 			}
 			if (statExsit){

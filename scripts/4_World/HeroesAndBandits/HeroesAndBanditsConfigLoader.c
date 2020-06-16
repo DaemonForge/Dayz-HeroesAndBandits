@@ -7,7 +7,7 @@ class HeroesAndBanditsConfig
 	//Default Values
 	string ConfigVersion = "1";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
-	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", "set:HeroesAndBandits image:Bambi", -1000, 1000);
+	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
 	
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
 	
@@ -34,6 +34,7 @@ class HeroesAndBanditsConfig
 	bool AllowHumanityCommand = true;
 	
 	bool ShowLevelIcon = false;
+	int  LevelIconLocation = 1;
 	
     bool ExceptionLogs = true;
     bool VerboseLogs = false;
@@ -98,8 +99,13 @@ class HeroesAndBanditsConfig
 				if ( !ConfigVersion )
 				{
 					UpdateDefaults();
-					JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
 				}
+				if ( ConfigVersion == "1" )
+				{
+					UpdateDefaultsV2();
+	       			JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
+				}
+			
 	    }else{
 			createDefaults();
 	        MakeDirectory(HeroesAndBanditsDIR);
@@ -151,7 +157,8 @@ class HeroesAndBanditsConfig
 	habAction getAction(string actionName){
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
-			if (Actions.Get(i).Name == actionName){
+			string pluralnameS = Actions.Get(i).Name.tolower()+"s";
+			if (Actions.Get(i).Name.tolower() == actionName.tolower() || pluralnameS == actionName.tolower() ){
 					return Actions.Get(i);
 			}
 		}
@@ -179,8 +186,8 @@ class HeroesAndBanditsConfig
 		Zones.Insert(tempZone);
 		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
 	}
-	void addLevel(string name, string affinity, string levelImage, string imageSet, float minHumanity, float maxHumanity){
-		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, imageSet, minHumanity, maxHumanity);
+	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
+		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
 		Levels.Insert(tempLevel);
 		habPrint("Level Added: " + name + " There are now " + Levels.Count() + " Levels", "Verbose");	
 	}
@@ -191,17 +198,17 @@ class HeroesAndBanditsConfig
 	}
 	
 	void createDefaults(){
-			addLevel( "Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", "set:HeroesAndBandits image:Bambi", -1000, 1000);
-			addLevel( "Hero Lv1", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv1.paa", "set:HeroesAndBandits image:HeroLv1", 1001, 4000);
-			addLevel( "Hero Lv2", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv2.paa", "set:HeroesAndBandits image:HeroLv2", 4001, 12000);
-			addLevel( "Hero Lv3", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv3.paa", "set:HeroesAndBandits image:HeroLv3", 12001, 20000);
-			addLevel( "Hero Lv4", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv4.paa",  "set:HeroesAndBandits image:HeroLv4", 20001, 50000);
-			addLevel( "Hero Lv5", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv5.paa",  "set:HeroesAndBandits image:HeroLv5", 50001, -1);
-			addLevel( "Bandit Lv1", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv1.paa", "set:HeroesAndBandits image:BanditLv1", -4000, -1001);
-			addLevel( "Bandit Lv2", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv2.paa", "set:HeroesAndBandits image:BanditLv2", -12000, -4001);
-			addLevel( "Bandit Lv3", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv3.paa", "set:HeroesAndBandits image:BanditLv3", -20000, -12001);
-			addLevel( "Bandit Lv4", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv4.paa", "set:HeroesAndBandits image:BanditLv4", -50000, -20001);
-			addLevel( "Bandit Lv5", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv5.paa", "set:HeroesAndBandits image:BanditLv5", -1, -50001);
+			addLevel( "Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
+			addLevel( "Hero Lv1", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv1.paa", 1001, 4000);
+			addLevel( "Hero Lv2", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv2.paa", 4001, 12000);
+			addLevel( "Hero Lv3", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv3.paa", 12001, 20000);
+			addLevel( "Hero Lv4", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv4.paa", 20001, 50000);
+			addLevel( "Hero Lv5", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv5.paa", 50001, -1);
+			addLevel( "Bandit Lv1", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv1.paa", -4000, -1001);
+			addLevel( "Bandit Lv2", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv2.paa", -12000, -4001);
+			addLevel( "Bandit Lv3", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv3.paa", -20000, -12001);
+			addLevel( "Bandit Lv4", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv4.paa", -50000, -20001);
+			addLevel( "Bandit Lv5", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv5.paa", -1, -50001);
 			addAction( "ZombieKill", "hero", 5);
 			addAction( "heroSucide", "bandit", 150);
 			addAction( "banditSucide", "hero", 150);
@@ -230,18 +237,13 @@ class HeroesAndBanditsConfig
 		AllowStatCommand = true;
 		AllowHumanityCommand = true;
 		ShowLevelIcon = false;
-		for (int i = 0; i < Levels.Count(); i++ )
-		{
-			if (Levels.Get(i).Affinity == "hero") {
-				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Hero";
-			} else if (Levels.Get(i).Affinity == "bandit") {
-				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Bandit";
-			} else {
-				Levels.Get(i).ImageSet = "set:HeroesAndBandits image:Bambi";
-			}
-		}
 	}
 
+	void UpdateDefaultsV2()
+	{
+		ConfigVersion = "2";
+		LevelIconLocation = 1;
+	}
 }
 
 
@@ -251,16 +253,14 @@ class habLevel
     string Name;
 	string Affinity; //bandit / hero / bambi
 	string LevelImage;
-	string ImageSet;
     float MinHumanity;
     float MaxHumanity;
 
-    void habLevel(string name, string affinity, string levelImage, string imageSet, float minHumanity, float maxHumanity) 
+    void habLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity) 
 	{
         Name = name;
 		Affinity = affinity;
 		LevelImage = levelImage;
-		ImageSet = imageSet;
         MinHumanity = minHumanity;
 		MaxHumanity = maxHumanity;
     }
