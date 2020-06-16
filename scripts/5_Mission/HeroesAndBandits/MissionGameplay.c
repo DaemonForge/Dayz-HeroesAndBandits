@@ -1,41 +1,60 @@
 modded class MissionGameplay
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
+	ref HeroesAndBanditsStatusBarIconUI		m_HeroesAndBanditsStatusBarIconUI;
+	bool									m_HeroesAndBanditsIconsInitialized;
 	string									m_HeroesAndBanditsCurrentIcon;
 	bool 									m_HeroesAndBanditsShowLevelIcon;
-	bool 									m_HeroesAndBanditsIconLocation;
+	int 									m_HeroesAndBanditsIconLocation;
 	bool 									m_HeroesAndBanditsAllowHumanityCommand;
 	bool 									m_HeroesAndBanditsAllowStatCommand;
 	
 	override void OnInit()
 	{
 		super.OnInit();
-
+		m_HeroesAndBanditsIconsInitialized = false;
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABSettings", this, SingeplayerExecutionType.Both );
 	}
 	
 	
 	void InitHabIcon(){
-		m_HeroesAndBanditsIconUI = new HeroesAndBanditsIconUI;
-		updateLocation(m_HeroesAndBanditsIconLocation);
-		m_HeroesAndBanditsIconUI.Init();
+		if ( m_HeroesAndBanditsIconLocation == 1 ||  m_HeroesAndBanditsIconLocation == 3  )
+		{
+			m_HeroesAndBanditsIconUI = new ref HeroesAndBanditsIconUI;
+			m_HeroesAndBanditsIconUI.Init();
+		} 
+		if ( m_HeroesAndBanditsIconLocation == 2 ||  m_HeroesAndBanditsIconLocation == 3  ) {
+			m_HeroesAndBanditsStatusBarIconUI = new ref HeroesAndBanditsStatusBarIconUI;
+			m_HeroesAndBanditsStatusBarIconUI.Init();
+		}
 		UpdateHABIcon();
 	}
 	
 	
+	
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
-		Param5<bool, bool, bool, string, int> data;
+		//Print("[HeroesAndBandits] [DebugClient] Received Settings");
+		Param5< bool, bool, bool, string, int > data;
 		if ( !ctx.Read( data ) ) return;
 		m_HeroesAndBanditsShowLevelIcon = data.param1;
 		m_HeroesAndBanditsAllowHumanityCommand = data.param2;
 		m_HeroesAndBanditsAllowStatCommand = data.param3;
 		m_HeroesAndBanditsCurrentIcon = data.param4;
 		m_HeroesAndBanditsIconLocation = data.param5;
+		//Print("[HeroesAndBandits] [DebugClient] Settings Proccessed - ShowLevelIcon:" + m_HeroesAndBanditsShowLevelIcon + " AllowHumanityCommand:" + m_HeroesAndBanditsAllowHumanityCommand + " AllowStatCommand:" + m_HeroesAndBanditsAllowStatCommand + " CurrentIcon:" + m_HeroesAndBanditsCurrentIcon + " IconLocation:" + m_HeroesAndBanditsIconLocation);
 		if ( m_HeroesAndBanditsShowLevelIcon )
 		{
-			InitHabIcon();
+			if ( !m_HeroesAndBanditsIconsInitialized )
+			{
+				m_HeroesAndBanditsIconsInitialized = true;
+				//Print("[HeroesAndBandits] [DebugClient] Settings Icons Initialized");
+				InitHabIcon();
+			} else {
+				//Print("[HeroesAndBandits] [DebugClient] Settings Icons Icon Updated");
+				UpdateHABIcon();
+			}
 		}
 
 	}
@@ -47,7 +66,7 @@ modded class MissionGameplay
 		if ( !ctx.Read( data ) ) return;
 		string newIcon = data.param2;
 		string playerID = data.param1;
-		Print("[HeroesAndBandits] [DebugClient] " + playerID + " send icon " + newIcon);
+		//Print("[HeroesAndBandits] [DebugClient] " + playerID + " received icon " + newIcon);
 			if ( !newIcon || !playerID || !m_HeroesAndBanditsShowLevelIcon)
 			{
 				return;
@@ -56,17 +75,21 @@ modded class MissionGameplay
 			{
 				m_HeroesAndBanditsCurrentIcon = newIcon;
 				GetGame().GetCallQueue( CALL_CATEGORY_GUI ).CallLaterByName(this, "UpdateHABIcon", 500, false);
-			} 
-			else 
-			{
-				return;
 			}
 	}
 	
 	void UpdateHABIcon(){
-		if ( m_HeroesAndBanditsShowLevelIcon && m_HeroesAndBanditsIconUI ) 
-		{
+		//Print("[HeroesAndBandits] [DebugClient] Updating Icon");
+		
+		if ( !m_HeroesAndBanditsShowLevelIcon || !m_HeroesAndBanditsIconUI ) 
+		{	
+		} else {
 			m_HeroesAndBanditsIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
+		}
+		if ( !m_HeroesAndBanditsShowLevelIcon || !m_HeroesAndBanditsStatusBarIconUI ) 
+		{
+		} else {
+			m_HeroesAndBanditsStatusBarIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
 		}
 	}
 	
@@ -76,10 +99,9 @@ modded class MissionGameplay
 	
 		
 	
-	override void OnEvent(EventType eventTypeId, Param params)  {
+	override void OnEvent(EventType eventTypeId, Param params) 
+	{
 		
-		ref array<Man> players = new array<Man>;
-		GetGame().GetPlayers(players);
 		if(eventTypeId != ChatMessageEventTypeID && eventTypeId != ChatChannelEventTypeID) 
 		{ 
 			super.OnEvent(eventTypeId,params); 
@@ -99,7 +121,7 @@ modded class MissionGameplay
 			 return; 
 		}
 		
-		PlayerBase player = GetGame().GetPlayer();		
+		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());		
 		
 		if (!player) { 
 			super.OnEvent(eventTypeId,params); 
@@ -111,13 +133,15 @@ modded class MissionGameplay
 		string param0;
 		string command;
 		
+		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
+		
 		TStringArray tokens = new TStringArray;
-		message.Replace("` ", "&SPCESC!");
 		message.Split(" ", tokens); 
 		int count = tokens.Count();
 
+		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
+		
 		string statname = message;
-		statname.Replace("&SPCESC!", " ");
 		statname.Replace("/stat", " ");
 		statname.Replace(" ", "");
 		
@@ -127,38 +151,47 @@ modded class MissionGameplay
 		if(prefix != cmd_prefix) {
 			super.OnEvent(eventTypeId,params); 
 			 return; 
-		};
-		param0.ParseStringEx(command);
-		string playerID = player.GetIdentity().GetPlainId();
-		PlayerIdentity identity = player.GetIdentity();
-		bool statExsit = false;
-		
-		switch(command.ToLower().ToString()) {
+		} else {
+			command = message;
+			command.Replace(cmd_prefix, "");
+			command.Replace(" ", "");
+		}
+		bool commandNotSentToServer = true;
+		//Print("[HeroesAndBandits] [DebugClient] Command: " + command);
+		switch(command) {
 			case "humanity":
 			case "humanité":
 			case "pепутация":
 			case "menschheit":
-			case "humanitarność": {
-				if (m_HeroesAndBanditsAllowHumanityCommand){
-					GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param2< string, string >(playerID, command), false, identity);
-				} else {
-					super.OnEvent(eventTypeId,params); 
+			case "humanitarność":
+			case "Humanity":
+			case "Humanité":
+			case "Pепутация":
+			case "Menschheit":
+			case "Humanitarność": {
+					if (m_HeroesAndBanditsAllowHumanityCommand){
+						commandNotSentToServer = false;
+						Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
+						GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param1< string >(command), false);
+					}
+					break;
 				}
-				break;
-			}
 			case "stat": {
 				if (m_HeroesAndBanditsAllowStatCommand){
-					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param3< string, string, string >(playerID, command, statname), false, identity);
-				} else {
-					super.OnEvent(eventTypeId,params); 
+					commandNotSentToServer = false;
+					Print("[HeroesAndBandits] [DebugClient] Requesting Stat from server");
+					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param2< string, string >( command, statname), false);
 				}
 				break;
 			}
 			default: {
-				super.OnEvent(eventTypeId,params); 
-				return; 
+				commandNotSentToServer = true;
 				break;
 			}
+		}
+		if ( commandNotSentToServer )
+		{
+			super.OnEvent(eventTypeId,params); 
 		}
 	}
 }

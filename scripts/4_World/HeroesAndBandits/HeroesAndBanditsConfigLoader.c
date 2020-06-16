@@ -157,9 +157,7 @@ class HeroesAndBanditsConfig
 	habAction getAction(string actionName){
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
-			string lowerActionName = Actions.Get(i).Name.ToLower().ToString();
-			string pluralActionName = lowerActionName + "s" ;
-			if ( lowerActionName == actionName.ToLower().ToString() || pluralActionName == actionName.ToLower().ToString() ){
+			if ( Actions.Get(i).Name == actionName ){
 					return Actions.Get(i);
 			}
 		}
@@ -243,7 +241,34 @@ class HeroesAndBanditsConfig
 	void UpdateDefaultsV2()
 	{
 		ConfigVersion = "2";
-		LevelIconLocation = 1;
+		LevelIconLocation = 2;
+		addAction( "HuntAnimal_BosTaurus_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurus_White", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_White", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero", 0, false);
+		addAction( "HuntAnimal_CanisLupus_Grey", "hero", 0, false);
+		addAction( "HuntAnimal_CanisLupus_White", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_Black", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_White", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircusF", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolus", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero", 0, false);
+		addAction( "HuntAnimal_CervusElaphus", "hero", 0, false);
+		addAction( "HuntAnimal_CervusElaphusF", "hero", 0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", 0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero", 0, false);
+		addAction( "HuntAnimal_OvisAries", "hero", 0, false);
+		addAction( "HuntAnimal_OvisAriesF", "hero", 0, false);
+		addAction( "HuntAnimal_SusDomesticus", "hero", 0, false);
+		addAction( "HuntAnimal_SusScrofa", "hero", 0, false);
+		addAction( "HuntAnimal_LepusEuropaeus", "hero", 0, false);
+		addAction( "HuntAnimal_UrsusArctos", "hero", 0, false);
+		
 	}
 }
 
