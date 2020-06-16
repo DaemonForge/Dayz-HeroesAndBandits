@@ -132,6 +132,7 @@ modded class MissionGameplay
 		string prefix;
 		string param0;
 		string command;
+		string statname;
 		
 		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
 		
