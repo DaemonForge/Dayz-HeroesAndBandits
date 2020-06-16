@@ -88,9 +88,10 @@ modded class MissionServer
 			string habMessage;
 			int statTotal = 0;
 			bool statExsit = false;
-			string killsStat = "Kills";
-			string killStat = "Kill";
-			if (statname.ToLower().ToString() == killsStat.ToLower().ToString() || statname.ToLower().ToString() == killStat.ToLower().ToString()){
+			string killsStat = "kills";
+			string killStat = "kill";
+			string statDisplayName;
+			if ( statname == killsStat || statname == killStat){
 				statExsit = true;
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVshero");
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 
@@ -101,15 +102,17 @@ modded class MissionServer
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVshero"); 
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbambi"); 
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbandit");
+				statDisplayName = "Kills";
 			} else {
 				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
 				{
 					statExsit = true;
 					statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, GetHeroesAndBanditsConfig().getAction(statname).Name);
+					statDisplayName = GetHeroesAndBanditsConfig().getAction(statname).Name;
 				}
 			}
 			if (statExsit){
-				habMessage = "#HAB_CHECK_PRESTAT '" + GetHeroesAndBanditsConfig().getAction(statname).Name + "' #HAB_CHECK_IS " + statTotal;
+				habMessage = "#HAB_CHECK_PRESTAT '" + statDisplayName + "' #HAB_CHECK_IS " + statTotal;
 				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 			} else {
 				habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";

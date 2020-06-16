@@ -159,11 +159,13 @@ class HeroesAndBanditsConfig
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
 			tempActionName = Actions.Get(i).Name
-			if ( tempActionName.ToLower().ToString() == actionName.ToLower().ToString() ){
+			tempActionName.ToLower();
+			actionName.ToLower();
+			if ( tempActionName == actionName ){
 					return Actions.Get(i);
 			}
 		}
-		habPrint("Action: " +actionName+ " not found", "Exception");	
+		habPrint("Action: " + actionName + " not found", "Exception");	
 		return new habAction("Null", "Null", 0, false);
 	}
 	

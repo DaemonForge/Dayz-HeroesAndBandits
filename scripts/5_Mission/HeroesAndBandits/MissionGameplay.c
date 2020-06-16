@@ -153,12 +153,14 @@ modded class MissionGameplay
 			command = param0;
 			command.Replace(cmd_prefix, "");
 			command.Replace(" ", "");
+			command.ToLower();
 		}
 		
 		if (tokens.Count() > 1 )
 		{
 			statname = tokens.Get(1);
 			statname.Replace(" ", "");
+			statname.ToLower();
 		}
 		bool commandNotSentToServer = true;
 		//Print("[HeroesAndBandits] [DebugClient] Command: " + command);
@@ -167,12 +169,7 @@ modded class MissionGameplay
 			case "humanité":
 			case "pепутация":
 			case "menschheit":
-			case "humanitarność":
-			case "Humanity":
-			case "Humanité":
-			case "Pепутация":
-			case "Menschheit":
-			case "Humanitarność": {
+			case "humanitarność": {
 					if (m_HeroesAndBanditsAllowHumanityCommand){
 						commandNotSentToServer = false;
 						Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
