@@ -42,7 +42,7 @@ modded class MissionServer
 	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
 		string playerID = identity.GetPlainId();
 		habPrint("Setting Settings to Player: " + playerID, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< bool, bool, bool, string >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage), false, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< bool, bool, bool, string, int >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsConfig().LevelIconLocation), false, identity);
 	}
 	
 	
@@ -82,10 +82,10 @@ modded class MissionServer
 			string playerID = sender.GetPlainId();
 			string habMessage;
 			int statTotal = 0;
-			bool statExsit =false;
+			bool statExsit = false;
 			string killsStat = "Kills";
 			string killStat = "Kill";
-			if (statname.tolower() == killsStat.tolower() || statname.tolower() == killStat.tolower()){
+			if (statname.ToLower().ToString() == killsStat.ToLower().ToString() || statname.ToLower().ToString() == killStat.ToLower().ToString()){
 				statExsit = true;
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVshero");
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 

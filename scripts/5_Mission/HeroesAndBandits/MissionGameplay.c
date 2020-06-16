@@ -3,6 +3,7 @@ modded class MissionGameplay
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
 	string									m_HeroesAndBanditsCurrentIcon;
 	bool 									m_HeroesAndBanditsShowLevelIcon;
+	bool 									m_HeroesAndBanditsIconLocation;
 	bool 									m_HeroesAndBanditsAllowHumanityCommand;
 	bool 									m_HeroesAndBanditsAllowStatCommand;
 	
@@ -17,6 +18,7 @@ modded class MissionGameplay
 	
 	void InitHabIcon(){
 		m_HeroesAndBanditsIconUI = new HeroesAndBanditsIconUI;
+		updateLocation(m_HeroesAndBanditsIconLocation);
 		m_HeroesAndBanditsIconUI.Init();
 		UpdateHABIcon();
 	}
@@ -24,12 +26,13 @@ modded class MissionGameplay
 	
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
-		Param4<bool, bool, bool, string> data;
+		Param5<bool, bool, bool, string, int> data;
 		if ( !ctx.Read( data ) ) return;
 		m_HeroesAndBanditsShowLevelIcon = data.param1;
 		m_HeroesAndBanditsAllowHumanityCommand = data.param2;
 		m_HeroesAndBanditsAllowStatCommand = data.param3;
 		m_HeroesAndBanditsCurrentIcon = data.param4;
+		m_HeroesAndBanditsIconLocation = data.param5;
 		if ( m_HeroesAndBanditsShowLevelIcon )
 		{
 			InitHabIcon();
@@ -130,12 +133,12 @@ modded class MissionGameplay
 		PlayerIdentity identity = player.GetIdentity();
 		bool statExsit = false;
 		
-		switch(command.tolower()) {
+		switch(command.ToLower().ToString()) {
 			case "humanity":
 			case "humanité":
 			case "pепутация":
 			case "menschheit":
-			case "Humanitarność": {
+			case "humanitarność": {
 				if (m_HeroesAndBanditsAllowHumanityCommand){
 					GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param2< string, string >(playerID, command), false, identity);
 				} else {

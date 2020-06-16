@@ -157,8 +157,9 @@ class HeroesAndBanditsConfig
 	habAction getAction(string actionName){
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
-			string pluralnameS = Actions.Get(i).Name.tolower()+"s";
-			if (Actions.Get(i).Name.tolower() == actionName.tolower() || pluralnameS == actionName.tolower() ){
+			string lowerActionName = Actions.Get(i).Name.ToLower().ToString();
+			string pluralActionName = lowerActionName + "s" ;
+			if ( lowerActionName == actionName.ToLower().ToString() || pluralActionName == actionName.ToLower().ToString() ){
 					return Actions.Get(i);
 			}
 		}
