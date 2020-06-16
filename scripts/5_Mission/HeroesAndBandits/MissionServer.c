@@ -109,7 +109,7 @@ modded class MissionServer
 				}
 			}
 			if (statExsit){
-				habMessage = "#HAB_CHECK_PRESTAT '" + statname + "' #HAB_CHECK_IS " + statTotal;
+				habMessage = "#HAB_CHECK_PRESTAT '" + GetHeroesAndBanditsConfig().getAction(statname).Name + "' #HAB_CHECK_IS " + statTotal;
 				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 			} else {
 				habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";

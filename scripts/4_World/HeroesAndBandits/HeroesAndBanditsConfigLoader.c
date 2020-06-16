@@ -155,9 +155,11 @@ class HeroesAndBanditsConfig
 	}
 	
 	habAction getAction(string actionName){
+		string tempActionName
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
-			if ( Actions.Get(i).Name == actionName ){
+			tempActionName = Actions.Get(i).Name
+			if ( tempActionName.ToLower().ToString() == actionName.ToLower().ToString() ){
 					return Actions.Get(i);
 			}
 		}
