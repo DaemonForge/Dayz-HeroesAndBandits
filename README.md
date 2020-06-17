@@ -10,7 +10,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 
 ## Default Config
 
-[https://pastebin.com/ShAnr6Pr](https://pastebin.com/ShAnr6Pr)
+[https://pastebin.com/0FSstxTE](https://pastebin.com/0FSstxTE)
 ## Main Config Options and Explanations
 ### Levels
 The first setting is an array of the levels there are no limit to levels but there is a limit to the JSON file of 64KB
