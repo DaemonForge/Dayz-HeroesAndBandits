@@ -2,7 +2,7 @@
 
 This is how you can create your own mod to allow you to use your own Custom Icons with the Heroes and Bandit Mod
 
-1. **[Part One Creating the Images](#part-1-creating-the-images) ** 
+1. [**Part One Creating the Images** ](#part-1-creating-the-images) 
 2. **[Part Two Creating the Mod Folder Structures](#part-2-create-mod-folder-structures) ** 
 3. **[Part Three Packing and Signing the Mod](#part-3-packing-and-signing-the-mod) ** 
 4. **[Part Four Publishing The Mod to Steam Workshop](#part-4-publishing-the-mod-to-steam-workshop) ** 
