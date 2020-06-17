@@ -10,7 +10,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 
 ## Default Config
 
-[https://pastebin.com/ShAnr6Pr](https://pastebin.com/ShAnr6Pr)
+[https://pastebin.com/0FSstxTE](https://pastebin.com/0FSstxTE)
 ## Main Config Options and Explanations
 ### Levels
 The first setting is an array of the levels there are no limit to levels but there is a limit to the JSON file of 64KB
@@ -19,7 +19,6 @@ The first setting is an array of the levels there are no limit to levels but the
      "Name": "Bambi",   //This is the Level name, this will be the name shown to players when they change levels or in the kill feed
      "Affinity": "bambi", // This should be either bambi, hero, or bandit
      "LevelImage": "HeroesAndBandits/gui/images/BambiNotification.paa", //This is the notification icon for that level i have included 14 Icons in my mod but you can always upload custom images to your own mod
-     "ImageSet": "set:HeroesAndBandits image:Bambi", This is the image for the top right hand corner when ShowLevelIcon is enabled
      "MinHumanity": -1000,  //This is the Minimum humanity the player has to have to be considered that level (-1 means no minimum)
      "MaxHumanity": 1000  //This is the Maximum humanity the player has to have to be considered that level (-1 means no maximum)
 }
@@ -95,7 +94,8 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
     "KillFeedMessageColor": [ 200, 250, 0, 100 ], // The colour for the Kill feed messages
     "AllowStatCommand": 1,  // 1 Enabled / 0 Disabled allows the use of the /stat command
     "AllowHumanityCommand": 1, // 1 Enabled / 0 Disabled allows the use of the /humanity command
-    "ShowLevelIcon": 0, // 1 Enabled / 0 Disabled Currently not working as intended so leave disabled
+    "ShowLevelIcon": 1, // 1 Enabled / 0 Disabled This will enable or disable level icon
+    "LevelIconLocation": 2 // 1 Top Right, 2 Bottom right by icons, 3 Both
     "ExceptionLogs": 1,  //  1 Enabled / 0 Disabled This show any exceptions the mod encounters in the script.log
     "VerboseLogs": 0, //  1 Enabled / 0 Disabled  This adds a bit of logging for standard use, script.log
     "DebugLogs": 0, // KEEP 0 OR YOUR LOGS WILL FILL LIKE CRAZY THIS IS FOR ME OR OTHER DEVS ONLY TO DEBUG
