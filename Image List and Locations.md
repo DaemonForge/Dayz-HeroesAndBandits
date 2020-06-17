@@ -11,11 +11,6 @@
 ![Hero](https://yourenotready.ca/wp-content/uploads/2020/06/HeroNotification.png)
 
 
-`HeroesAndBandits/gui/images/BambiNotification.paa`
-
-![Hero](https://yourenotready.ca/wp-content/uploads/2020/06/HeroNotification.png)
-
-
 `HeroesAndBandits/gui/images/HeroNotificationlv1.paa`
 
 ![Hero1](https://yourenotready.ca/wp-content/uploads/2020/05/HeroNotificationlv1.png)
