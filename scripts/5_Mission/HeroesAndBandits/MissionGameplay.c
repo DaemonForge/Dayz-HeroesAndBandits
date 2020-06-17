@@ -6,6 +6,7 @@ modded class MissionGameplay
 	string									m_HeroesAndBanditsCurrentIcon;
 	bool 									m_HeroesAndBanditsShowLevelIcon;
 	int 									m_HeroesAndBanditsIconLocation;
+	string									m_HeroesAndBanditsCommandPrefix;
 	bool 									m_HeroesAndBanditsAllowHumanityCommand;
 	bool 									m_HeroesAndBanditsAllowStatCommand;
 	
@@ -36,13 +37,14 @@ modded class MissionGameplay
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		//Print("[HeroesAndBandits] [DebugClient] Received Settings");
-		Param5< bool, bool, bool, string, int > data;
+		Param6< bool, string, bool, bool, string, int > data;
 		if ( !ctx.Read( data ) ) return;
 		m_HeroesAndBanditsShowLevelIcon = data.param1;
-		m_HeroesAndBanditsAllowHumanityCommand = data.param2;
-		m_HeroesAndBanditsAllowStatCommand = data.param3;
-		m_HeroesAndBanditsCurrentIcon = data.param4;
-		m_HeroesAndBanditsIconLocation = data.param5;
+		m_HeroesAndBanditsCommandPrefix = data.param2;
+		m_HeroesAndBanditsAllowHumanityCommand = data.param3;
+		m_HeroesAndBanditsAllowStatCommand = data.param4;
+		m_HeroesAndBanditsCurrentIcon = data.param5;
+		m_HeroesAndBanditsIconLocation = data.param6;
 		//Print("[HeroesAndBandits] [DebugClient] Settings Proccessed - ShowLevelIcon:" + m_HeroesAndBanditsShowLevelIcon + " AllowHumanityCommand:" + m_HeroesAndBanditsAllowHumanityCommand + " AllowStatCommand:" + m_HeroesAndBanditsAllowStatCommand + " CurrentIcon:" + m_HeroesAndBanditsCurrentIcon + " IconLocation:" + m_HeroesAndBanditsIconLocation);
 		if ( m_HeroesAndBanditsShowLevelIcon )
 		{
@@ -141,8 +143,11 @@ modded class MissionGameplay
 		message.Split(" ", tokens);
 
 		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
-		
-		string cmd_prefix = "/";
+		string cmd_prefix = "/"
+		if ( !m_HeroesAndBanditsCommandPrefix ){
+		} else {
+			cmd_prefix = m_HeroesAndBanditsCommandPrefix;
+		}
 
 		param0 = tokens.Get(0);
 		param0.ParseStringEx(prefix); 

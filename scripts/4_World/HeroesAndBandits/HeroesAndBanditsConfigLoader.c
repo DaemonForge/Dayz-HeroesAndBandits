@@ -30,8 +30,11 @@ class HeroesAndBanditsConfig
 	
 	ref array<int> KillFeedMessageColor = {200, 250, 0, 100};
 	
+	string CommandPrefix = "/";
+	
 	bool AllowStatCommand = true;
 	bool AllowHumanityCommand = true;
+	
 	
 	bool ShowLevelIcon = true;
 	int  LevelIconLocation = 2;
@@ -103,6 +106,11 @@ class HeroesAndBanditsConfig
 				if ( ConfigVersion == "1" )
 				{
 					UpdateDefaultsV2();
+	       			JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
+				}
+				if ( ConfigVersion == "2" )
+				{
+					UpdateDefaultsV3();
 	       			JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
 				}
 			
@@ -273,6 +281,12 @@ class HeroesAndBanditsConfig
 		addAction( "HuntAnimal_LepusEuropaeus", "hero", 0, false);
 		addAction( "HuntAnimal_UrsusArctos", "hero", 0, false);
 		
+	}
+	
+	void UpdateDefaultsV3()
+	{
+		ConfigVersion = "3";
+		CommandPrefix = "/";
 	}
 }
 
