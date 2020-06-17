@@ -33,8 +33,8 @@ class HeroesAndBanditsConfig
 	bool AllowStatCommand = true;
 	bool AllowHumanityCommand = true;
 	
-	bool ShowLevelIcon = false;
-	int  LevelIconLocation = 1;
+	bool ShowLevelIcon = true;
+	int  LevelIconLocation = 2;
 	
     bool ExceptionLogs = true;
     bool VerboseLogs = false;
