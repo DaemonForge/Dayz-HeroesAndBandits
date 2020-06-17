@@ -82,7 +82,7 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
 
 ### Other Settings
 ```
-    "ConfigVersion": "1", //Do not changed this will be used for future updates to help me ensure that your config files are updated automatically
+    "ConfigVersion": "2", //Do not changed this will be used for future updates to help me ensure that your config files are updated automatically
     "NotifyLevelChange": 1, // 1 Enabled / 0 Disabled when enabled it will notify the player when their level changes
     "KillFeed": 1,  // 1 Enabled / 0 Disabled When enabled it will notify all players of Kills on the server
     "SucideFeed": 0, // 1 Enabled / 0 Disabled When enabled it will notify all players of Sucides on the server
