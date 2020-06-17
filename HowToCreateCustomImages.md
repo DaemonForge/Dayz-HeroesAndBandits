@@ -24,7 +24,7 @@ Using that same tool export the image it is important that it has a transparnt b
 ![Step 2 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep2.png)
 
 ### Step 3 Convert the Image to PAA
-Open Dayz Tools and go to the Image To PAA Tool add the directory where you saved the image and click Proccess Files
+Open "Dayz Tools" and go to the "Image To PAA Tool" add the directory where you saved the image, then click Proccess Files
 
 ![Step 3 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep6.png)
 
