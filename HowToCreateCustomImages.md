@@ -134,7 +134,7 @@ If you want to allow others to use your mod go back to your Second Directory and
 ### Step 2 B
 If you are just planning on having the mod for your server only you can just edit your meta.cpp as per Step 2 A then copy the mod to your server manually
 
-## Part 5 Updateing the Levels in the config
+## Part 5 Updating the Levels in the config
 ### Step 1
 Get the file diretory which should be HaBCustomImages\images\BanditCustom.paa for this example replacing HaBCustomImages to what ever the name of your PBO is, and then replaceing BanditCustom to what ever you called your image file
 then put that Directory in to the "LevelImage": setting for the level you wish to have the custom images for. 
