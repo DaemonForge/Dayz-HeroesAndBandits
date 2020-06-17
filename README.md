@@ -32,7 +32,7 @@ Actions are things players can do to lose or gain humanity currently actions can
      "Name": "ZombieKill",  // Name of the Action should NOT ever be changed
      "Affinity": "hero",  // This should be either hero or bandit hero will add humanity, bandit subtracts humanity
      "Humanity": 5, // This is how much humanity should be adjusted (should always be a positive number) use the affinity to determine if it should subtract or add
-     "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from there action
+     "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from the action
 }
 ```
 
