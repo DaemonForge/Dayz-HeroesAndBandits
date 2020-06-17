@@ -94,7 +94,7 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
     "KillFeedMessageColor": [ 200, 250, 0, 100 ], // The colour for the Kill feed messages
     "AllowStatCommand": 1,  // 1 Enabled / 0 Disabled allows the use of the /stat command
     "AllowHumanityCommand": 1, // 1 Enabled / 0 Disabled allows the use of the /humanity command
-    "ShowLevelIcon": 0, // 1 Enabled / 0 Disabled Currently not working as intended so leave disabled
+    "ShowLevelIcon": 1, // 1 Enabled / 0 Disabled This will enable or disable level icon
     "LevelIconLocation": 2 // 1 Top Right, 2 Bottom right by icons, 3 Both
     "ExceptionLogs": 1,  //  1 Enabled / 0 Disabled This show any exceptions the mod encounters in the script.log
     "VerboseLogs": 0, //  1 Enabled / 0 Disabled  This adds a bit of logging for standard use, script.log
