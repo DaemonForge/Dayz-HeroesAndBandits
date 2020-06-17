@@ -30,7 +30,7 @@ Create two Folders with the name of your mod in my example I am calling them HaB
 In the first Directory (HaBCustomImages) Create a folder Called images and copy all the PAA image files into it
 
 ### Step 3
-And in the root of the Folder create a file called config.cpp with the following code replace HaBCustomImages with what ever you called the folder in Step 1
+And in the root of the Folder create a file called config.cpp with the following code replace all the HaBCustomImages with what ever you called the folder in Step 1
 ```javascript
 class CfgPatches
 {
