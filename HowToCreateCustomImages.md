@@ -2,6 +2,15 @@
 
 This is how you can create your own mod to allow you to use your own Custom Icons with the Heroes and Bandit Mod
 
+1. **[Part One Creating the Images](#part-1-creating-the-images) ** 
+2. **[Part Two Creating the Mod Folder Structures](#part-2-create-mod-folder-structures) ** 
+3. **[Part Three Packing and Signing the Mod](#part-3-packing-and-signing-the-mod) ** 
+4. **[Part Four Publishing The Mod to Steam Workshop](#part-4-publishing-the-mod-to-steam-workshop) ** 
+5. **[Part Five Updateing the Config](#part-5-updating-the-config) ** 
+
+
+
+
 ## Part 1 Creating the Images
 
 ### Step 1 Scale Image
@@ -21,7 +30,7 @@ Open Dayz Tools and go to the Image To PAA Tool add the directory where you save
 
 If successfull you will see green Text saying Converted Successfully
 
-## Part 2 Create Mod Folder Stuctures
+## Part 2 Create Mod Folder Structures
 
 ### Step 1
 Create two Folders with the name of your mod in my example I am calling them HaBCustomImages and second HaBCustomImagesPublished
@@ -117,7 +126,7 @@ If you plan on making the mod public (Allow other servers to use your Icons) you
 ### Step 4 B
 If you don't do Step 4 A you will need to copy your .bikey from Step 3 into the Keys folder on your server in your Dayz Server installation
 
-## Part 4 Publishing your mod to the Steam Workshop
+## Part 4 Publishing the mod to Steam Workshop
 
 ### Step 1
 Open up the Dayz Tools and open Publisher Make (New Workshop Item) is selected and then Give your mod a name and choose the Second Directory (HaBCustomImagesPublished) as the Mod Content, You should see Mod Content Structure seems to be valid and Signatures: all signed Check Box I agree and click publish
@@ -137,5 +146,5 @@ If you are just planning on having the mod for your server only you can just edi
 ## Part 5 Updating the Levels in the config
 ### Step 1
 Get the file diretory which should be HaBCustomImages\images\BanditCustom.paa for this example replacing HaBCustomImages to what ever the name of your PBO is, and then replaceing BanditCustom to what ever you called your image file
-then put that Directory in to the "LevelImage": setting for the level you wish to have the custom images for. 
+then put that Directory in to the "LevelImage": setting for the level you wish to have the custom images for. or for any of the image settings like the zone notifications or death warning icons
 
