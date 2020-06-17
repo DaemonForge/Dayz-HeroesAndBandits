@@ -31,7 +31,7 @@ In the first Directory (HaBCustomImages) Create a folder Called images and copy 
 
 ### Step 3
 And in the root of the Folder create a file called config.cpp with the following code replace HaBCustomImages with what ever you called the folder in Step 1
-```
+```javascript
 class CfgPatches
 {
 	class HaBCustomImages
@@ -77,7 +77,7 @@ In your Second Directory (HaBCustomImagesPublished) Create 2 folders one called 
 
 ### Step 5
 Create a file called meta.cpp put the following code in there replacing the name with what ever you called your first directory
-```
+```javascript
 protocol = 1;
 publishedid = ;
 name = "HaBCustomImages";
