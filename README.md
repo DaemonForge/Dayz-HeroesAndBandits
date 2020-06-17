@@ -24,6 +24,7 @@ The first setting is an array of the levels there are no limit to levels but the
 }
 ```
 There is also a default level this is used when the level can't be determined in different functions, and may be used in when using load out functions and the player is new this generally should be the same as what you are using for your bambi level
+#### Custom Images
 If you wish to learn how to create your own mod to upload custom images [Click Here](https://github.com/daemonforge/Dayz-HeroesAndBandits/blob/master/HowToCreateCustomImages.md)
 
 
