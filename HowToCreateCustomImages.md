@@ -128,7 +128,7 @@ Get your Mod's Workshop ID open up the mod and copy the id=
 ![Part 4 Step 2 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep15.png)
 
 ### Step 2 A
-If you want to allow others to use your mod go back to your Second Directory and edit the meta.cpp to inlcude the ID that you got from step 2 and republish the mod with the Dayz Publisher (Step 1 But Select the mod on the right hand side)
+If you want to allow others to use your mod go back to your Second Directory and edit the meta.cpp to inlcude the ID that you got from step 2 and republish the mod with the Dayz Publisher (Step 1 But Select the mod on the left hand side)
 
 ### Step 2 B
 If you are just planning on having the mod for your server only you can just edit your meta.cpp then copy the mod to your server manually
