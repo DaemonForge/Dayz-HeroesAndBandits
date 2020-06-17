@@ -28,7 +28,7 @@ Open "Dayz Tools" and go to the "Image To PAA Tool" add the directory where you 
 
 ![Step 3 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep6.png)
 
-If successfull you will see green Text saying Converted Successfully
+If successfull you will see image in green text and at the bottom it will say converted successfully
 
 ## Part 2 Create Mod Folder Structures
 
