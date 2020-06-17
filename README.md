@@ -24,6 +24,9 @@ The first setting is an array of the levels there are no limit to levels but the
 }
 ```
 There is also a default level this is used when the level can't be determined in different functions, and may be used in when using load out functions and the player is new this generally should be the same as what you are using for your bambi level
+#### Custom Images
+If you wish to learn how to create your own mod to upload custom images [Click Here](https://github.com/daemonforge/Dayz-HeroesAndBandits/blob/master/HowToCreateCustomImages.md)
+
 
 ### Actions
 Actions are things players can do to lose or gain humanity currently actions can be classified as either hero or bandit actions, and more actions can be added through add on mods
@@ -32,7 +35,7 @@ Actions are things players can do to lose or gain humanity currently actions can
      "Name": "ZombieKill",  // Name of the Action should NOT ever be changed
      "Affinity": "hero",  // This should be either hero or bandit hero will add humanity, bandit subtracts humanity
      "Humanity": 5, // This is how much humanity should be adjusted (should always be a positive number) use the affinity to determine if it should subtract or add
-     "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from there action
+     "NotifiyPlayer": 1  // 1 Enabled / 0 Disabled  This will determine if the player should be notified of their humanity adjustment from the action
 }
 ```
 
@@ -82,7 +85,7 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
 
 ### Other Settings
 ```
-    "ConfigVersion": "1", //Do not changed this will be used for future updates to help me ensure that your config files are updated automatically
+    "ConfigVersion": "2", //Do not changed this will be used for future updates to help me ensure that your config files are updated automatically
     "NotifyLevelChange": 1, // 1 Enabled / 0 Disabled when enabled it will notify the player when their level changes
     "KillFeed": 1,  // 1 Enabled / 0 Disabled When enabled it will notify all players of Kills on the server
     "SucideFeed": 0, // 1 Enabled / 0 Disabled When enabled it will notify all players of Sucides on the server
