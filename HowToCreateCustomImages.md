@@ -129,7 +129,7 @@ If you don't do Step 4 A you will need to copy your .bikey from Step 3 into the 
 ## Part 4 Publishing the mod to Steam Workshop
 
 ### Step 1
-Open up the Dayz Tools and open Publisher Make (New Workshop Item) is selected and then Give your mod a name and choose the Second Directory (HaBCustomImagesPublished) as the Mod Content, You should see Mod Content Structure seems to be valid and Signatures: all signed Check Box I agree and click publish
+Open up the Dayz Tools and open Publisher Make sure (New Workshop Item) is selected and then Give your mod a name and choose the Second Directory (HaBCustomImagesPublished) as the Mod Content, You should see Mod Content Structure seems to be valid and Signatures: all signed Check Box I agree and click publish
 ![Part 4 Step 1 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep14.png)
 
 ### Step 2
