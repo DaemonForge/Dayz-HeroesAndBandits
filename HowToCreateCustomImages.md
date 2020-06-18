@@ -112,7 +112,7 @@ Click "add source directory" and choose the Addon folder in side the Second Dire
 ### Step 3
 Create your Key Click the "N" Beside Private Key to create your Private Key (Unless you already have one)
 Give your Private key a name and then click Create Key
-![Part 3 Step 3 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep11.png]
+![Part 3 Step 3 Image](https://yourenotready.ca/wp-content/uploads/2020/06/IconStep11.png)
 Make sure to make a note of the Private Keys Path you will need that later
 
 ### Step 4
