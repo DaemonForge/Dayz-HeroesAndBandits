@@ -107,7 +107,6 @@ class HeroesAndBanditsConfig
 				if ( ConfigVersion == "1" )
 				{
 					UpdateDefaultsV2();
-	       			JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
 				}
 				if ( ConfigVersion == "2" )
 				{
@@ -239,8 +238,8 @@ class HeroesAndBanditsConfig
 		addLevel( "Bandit Lv4", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv4.paa", -50000, -20001);
 		addLevel( "Bandit Lv5", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv5.paa", -1, -50001);
 		addAction( "ZombieKill", "hero", 5);
-		addAction( "heroSucide", "bandit", 150);
-		addAction( "banditSucide", "hero", 150);
+		addAction( "heroSucide", "bandit", 100);
+		addAction( "banditSucide", "hero", 100);
 		addAction( "bambiSucide", "bambi", 0, false);
 		addAction( "heroVshero", "bandit", 150);
 		addAction( "heroVsbambi", "bandit", 300);

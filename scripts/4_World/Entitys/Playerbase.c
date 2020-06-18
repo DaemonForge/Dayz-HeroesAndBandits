@@ -49,9 +49,12 @@ modded class PlayerBase
 				string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
 				if (sourcePlayerID == targetPlayerID){ //Sucide
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
-					GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
-					
+					Transport InVehicleCrash;
+					if ( !Class.CastTo( InVehicleCrash, PlayerBase.GetCommand_Vehicle().GetTransport()))
+					{//If not in Vehicle Crash
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
+						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
+					}
 				}else {
 					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerAffinity(targetPlayerID));
 					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);

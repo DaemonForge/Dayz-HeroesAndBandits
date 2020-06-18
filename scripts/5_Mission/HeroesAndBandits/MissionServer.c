@@ -88,21 +88,27 @@ modded class MissionServer
 			string habMessage;
 			int statTotal = 0;
 			bool statExsit = false;
-			string killsStat = "kills";
-			string killStat = "kill";
 			string statDisplayName;
-			if ( statname == killsStat || statname == killStat){
+			if ( statname ==  "kills" || statname == "kill"){
 				statExsit = true;
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVshero");
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbambi"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "heroVsbandit");
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVshero"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbambi"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "banditVsbandit"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVshero"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbambi"); 
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "bambiVsbandit");
-				statDisplayName = "Kills";
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Kills");
+				statDisplayName = "Kill";
+			} else if ( statname ==  "hunt" || statname == "hunts"){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Hunt");
+				statDisplayName = "Hunt";
+			}  else if ( statname ==  "medic" ){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Medic");
+				statDisplayName = "Medic";
+			} else if ( statname ==  "raid" ||  statname ==  "raids" ){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Raid");
+				statDisplayName = "Raid";
+			} else if ( statname ==  "mission" || statname ==  "missions" ){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Mission");
+				statDisplayName = "Mission";
 			} else {
 				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
 				{
