@@ -5,7 +5,7 @@ static string HeroesAndBanditsPATH = HeroesAndBanditsDIR + "\\config.json";
 class HeroesAndBanditsConfig
 { 
 	//Default Values
-	string ConfigVersion = "2";
+	string ConfigVersion = "3";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
 	
@@ -95,6 +95,7 @@ class HeroesAndBanditsConfig
 
 	}
 	
+	// Load config file or create default file if config doesn't exsit
 	void Load(){
 		if (FileExist(HeroesAndBanditsPATH)) //If config exist load File
 		{
@@ -123,6 +124,7 @@ class HeroesAndBanditsConfig
 		}
 	}
 
+	//Returns the level based on humanity value
 	habLevel getLevel(float humanity){
 		for ( int i =0; i < Levels.Count(); i++ )
 		{
@@ -139,10 +141,12 @@ class HeroesAndBanditsConfig
 		return DefaultLevel;
 	}
 	
+        //Returns the players Affinity based on their level
 	string getAffinity(float humanity){
 		return getLevel(humanity).Affinity;
 	}
-	
+
+	//Returns the Humanity value for the action requested
 	float getActionHumanity(string actionName){
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
@@ -162,7 +166,8 @@ class HeroesAndBanditsConfig
 		habPrint("Action: " +actionName+ " not found", "Exception");	
 		return 0;
 	}
-	
+
+	//Returns the action based on the name it is NOT case sensitive
 	habAction getAction(string actionName){
 		string tempActionName
 		for ( int i =0; i < Actions.Count(); i++ )
@@ -178,18 +183,23 @@ class HeroesAndBanditsConfig
 		return new habAction("Null", "Null", 0, false);
 	}
 	
+	//Returns the warning message color in an int value
 	int getWarningMessageColor(){
 		return ARGB(WarningMessageColor[0], WarningMessageColor[1], WarningMessageColor[2], WarningMessageColor[3]);
 	}
 	
+	//Returns the kill feed message color in an int value
 	int getKillFeedMessageColor(){
 		return ARGB(KillFeedMessageColor[0], KillFeedMessageColor[1], KillFeedMessageColor[2], KillFeedMessageColor[3]);
 	}
-	
+
+	//Returns the Notification color in an int value
 	int getNotificationColor(){
 		return ARGB(NotificationColor[0], NotificationColor[1], NotificationColor[2], NotificationColor[3]);
 	}
 
+
+	//Helper function for defaults to add Zones
 	void addZone(string name, int x, int z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = ""){
 		habZone tempZone = new ref habZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage);
 		if (tempZone.Name == "Default Zone"){
@@ -199,18 +209,23 @@ class HeroesAndBanditsConfig
 		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
 	}
 
+
+	//Helper function for adding levels
 	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
 		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
 		Levels.Insert(tempLevel);
 		habPrint("Level Added: " + name + " There are now " + Levels.Count() + " Levels", "Verbose");	
 	}
 
+
+	//Helper function for adding Actions
 	void addAction(string actionName, string affinity, float humanity, bool notifyPlayer = true){
 		habAction tempAction = new ref habAction(actionName, affinity, humanity, notifyPlayer);
 		Actions.Insert(tempAction);
 		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Verbose");	
 	}
 	
+        //Helper function for creating defaults
 	void createDefaults(){
 		addLevel( "Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
 		addLevel( "Hero Lv1", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv1.paa", 1001, 4000);
@@ -322,6 +337,7 @@ class HeroesAndBanditsConfig
 
 
 
+//Class for holding levels
 class habLevel
 {
 	string Name;
@@ -341,6 +357,7 @@ class habLevel
 }
 
 
+//Class for holding Actions
 class habAction
 {
 	string Name;
@@ -358,6 +375,7 @@ class habAction
 }
 
 
+//Class for holding Zones
 class habZone
 {
 	string Name;
@@ -395,10 +413,12 @@ class habZone
 		}
 	}
 	
+	//Converts the x and y to vector
 	vector getVector(){
 		return Vector( X, GetGame().SurfaceY(X, Z), Z );
 	}
 	
+	//Helper function to check if player has valid humanity for the zone
 	bool validHumanity(float humanity){
 		if ( MinHumanity != -1 && MaxHumanity != -1 && humanity >= MinHumanity && humanity <= MaxHumanity){
 				return true;
@@ -412,12 +432,14 @@ class habZone
 		return false;
 	}
 
+	//Returns the welcome color in an int value
 	int getWelcomeMessageColor(){
 		return ARGB(WelcomeMessageColor[0], WelcomeMessageColor[1], WelcomeMessageColor[2], WelcomeMessageColor[3]);
 	}
 }
 
 
+//Class for holding guard values
 class habGuard
 {
 	float X;
@@ -443,11 +465,13 @@ class habGuard
 		}
 	}
 
+	//Converts the x and y to vector
 	vector getVector(){
 		return Vector( X, Y, Z );
 	}
 }
 
+//Helper function to return Config
 static ref HeroesAndBanditsConfig GetHeroesAndBanditsConfig()
 {
 	if (!m_HeroesAndBanditsConfig)
