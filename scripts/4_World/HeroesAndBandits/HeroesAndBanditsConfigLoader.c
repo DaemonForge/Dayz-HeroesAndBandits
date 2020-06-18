@@ -5,7 +5,7 @@ static string HeroesAndBanditsPATH = HeroesAndBanditsDIR + "\\config.json";
 class HeroesAndBanditsConfig
 { 
 	//Default Values
-	string ConfigVersion = "1";
+	string ConfigVersion = "2";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
 	
