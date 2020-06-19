@@ -58,19 +58,19 @@ class CfgMods
 	class HaBCustomImages
 	{
 		dir="HaBCustomImages";
-        picture="";
-        action="";
-        hideName=1;
-        hidePicture=1;
-        name="HaBCustomImages";
-        credits="DaemonForge";
-        author="DaemonForge";
-        authorID="0";
-        version="0.1";
-        extra=0;
-        type="mod";
-	    dependencies[]={ };
-	    class defs
+        	picture="";
+		action="";
+       		hideName=1;
+        	hidePicture=1;
+        	name="HaBCustomImages";
+      		Credits="DaemonForge";
+		author="DaemonForge";
+        	authorID="0";
+        	version="0.1";
+        	extra=0;
+		type="mod";
+		dependencies[]={ };
+	  	class defs
 	    {
 			
         };
@@ -145,6 +145,16 @@ If you are just planning on having the mod for your server only you can just edi
 
 ## Part 5 Updating the Levels in the config
 ### Step 1
+
 Get the file diretory which should be HaBCustomImages\images\BanditCustom.paa for this example replacing HaBCustomImages to what ever the name of your PBO is, and then replaceing BanditCustom to what ever you called your image file
 then put that Directory in to the "LevelImage": setting for the level you wish to have the custom images for. or for any of the image settings like the zone notifications or death warning icons
 
+```json
+{
+     "Name": "Bandit King",  
+     "Affinity": "bandit",
+     "LevelImage": "HaBCustomImages\images\BanditCustom.paa",
+     "MinHumanity": -1, 
+     "MaxHumanity": -50001  
+}
+```
