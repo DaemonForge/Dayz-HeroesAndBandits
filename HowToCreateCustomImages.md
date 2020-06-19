@@ -153,7 +153,7 @@ then put that Directory in to the "LevelImage": setting for the level you wish t
 {
      "Name": "Bandit King",  
      "Affinity": "bandit",
-     "LevelImage": "HaBCustomImages\images\BanditCustom.paa",
+     "LevelImage": "HaBCustomImages\\images\\BanditCustom.paa",
      "MinHumanity": -1, 
      "MaxHumanity": -50001  
 }
