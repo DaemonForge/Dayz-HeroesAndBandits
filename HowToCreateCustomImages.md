@@ -149,11 +149,11 @@ If you are just planning on having the mod for your server only you can just edi
 Get the file diretory which should be HaBCustomImages\images\BanditCustom.paa for this example replacing HaBCustomImages to what ever the name of your PBO is, and then replaceing BanditCustom to what ever you called your image file
 then put that Directory in to the "LevelImage": setting for the level you wish to have the custom images for. or for any of the image settings like the zone notifications or death warning icons
 
-```json
+```
 {
      "Name": "Bandit King",  
      "Affinity": "bandit",
-     "LevelImage": "HaBCustomImages\\images\\BanditCustom.paa",
+     "LevelImage": "HaBCustomImages\images\BanditCustom.paa",
      "MinHumanity": -1, 
      "MaxHumanity": -50001  
 }
