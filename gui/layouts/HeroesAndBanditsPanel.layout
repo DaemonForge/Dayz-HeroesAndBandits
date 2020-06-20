@@ -1,0 +1,118 @@
+FrameWidgetClass rootFrame {
+ position 0 0
+ size 0.9 0.9
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ {
+  PanelWidgetClass PanelWidget {
+   ignorepointer 1
+   color 0.9529 0.9373 0.8941 0.7843
+   position 0 -0.05
+   size 480 580
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 1
+   vexactsize 1
+   draggable 1
+   style DayZDefaultPanel
+   {
+    ImageWidgetClass LevelImage {
+     ignorepointer 1
+     position 16 16
+     size 128 128
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "src alpha" 1
+     stretch 1
+    }
+    RichTextWidgetClass Heading {
+     ignorepointer 1
+     color 0 0 0 1
+     position 160 28
+     size 304 46
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     style DayZBold
+     text "Heroes and Bandits"
+     "text color" 0 0 0 1
+     "exact text" 1
+     "text halign" center
+     "text valign" center
+    }
+	RichTextWidgetClass PlayerName {
+     ignorepointer 1
+     position 160 118
+     size 158 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    RichTextWidgetClass LevelName {
+     ignorepointer 1
+     position 328 118
+     size 136 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    RichTextWidgetClass Humanity {
+     ignorepointer 1
+     color 0.0353 0.0353 0.0353 1
+     position 160 82
+     size 304 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    ContentWidgetClass Stats {
+     position 16 160
+     size 448 404
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     {
+      ScrollWidgetClass scroll {
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        TextListboxWidgetClass statslist {
+         position 0 0
+         size 448 404
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         colums "2"
+         lines 24
+         "highlight row" 0
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
