@@ -171,7 +171,7 @@ class HeroesAndBanditsConfig
 		string tempActionName
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
-			tempActionName = Actions.Get(i).Name
+			tempActionName = Actions.Get(i).Name;
 			tempActionName.ToLower();
 			actionName.ToLower();
 			if ( tempActionName == actionName ){

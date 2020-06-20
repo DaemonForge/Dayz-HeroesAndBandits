@@ -50,7 +50,7 @@ modded class PlayerBase
 				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
 				if (sourcePlayerID == targetPlayerID){ //Sucide
 					Transport InVehicleCrash;
-					if ( !Class.CastTo( InVehicleCrash, PlayerBase.GetCommand_Vehicle().GetTransport()))
+					if ( !Class.CastTo( InVehicleCrash, sourcePlayer.GetCommand_Vehicle().GetTransport()))
 					{//If not in Vehicle Crash
 						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);

@@ -46,7 +46,7 @@ modded class MissionServer
 	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
 		string playerID = identity.GetPlainId();
 		habPrint("Sending Settings to Player: " + playerID + ", ShowLevelIcon: " +  GetHeroesAndBanditsConfig().ShowLevelIcon + ", CommandPrefix: " +  GetHeroesAndBanditsConfig().CommandPrefix + ", AllowHumanityCommand " + GetHeroesAndBanditsConfig().AllowHumanityCommand + ", AllowStatCommand: " + GetHeroesAndBanditsConfig().AllowStatCommand + ", LevelImage: " + GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage + ", LevelIconLocation: " + GetHeroesAndBanditsConfig().LevelIconLocation, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param5< bool, string, bool, bool, string, int >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().CommandPrefix, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsConfig().LevelIconLocation), true, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param6< bool, string, bool, bool, string, int >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().CommandPrefix, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsConfig().LevelIconLocation), true, identity);
 	}
 	
 	

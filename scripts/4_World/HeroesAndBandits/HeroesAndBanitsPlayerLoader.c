@@ -50,48 +50,48 @@ class HeroesAndBanditsPlayer
 		if ( statName == "Kill" ){
 			for ( int h =0; h < Stats.Count(); h++ )
 			{
-				if (Stats.Get(i).Name == "heroVshero" || Stats.Get(i).Name == "heroVsbambi" || Stats.Get(i).Name == "heroVsbandit" || Stats.Get(i).Name == "banditVshero" || Stats.Get(i).Name == "banditVsbambi" || Stats.Get(i).Name == "bambiVsbandit" || Stats.Get(i).Name == "bambiVshero" || Stats.Get(i).Name == "bambiVsbambi" || Stats.Get(i).Name == "bambiVshero"){
-					statTotal = statTotal = Stats.Get(i).Stat;
+				if (Stats.Get(h).Name == "heroVshero" || Stats.Get(h).Name == "heroVsbambi" || Stats.Get(h).Name == "heroVsbandit" || Stats.Get(h).Name == "banditVshero" || Stats.Get(h).Name == "banditVsbambi" || Stats.Get(h).Name == "bambiVsbandit" || Stats.Get(h).Name == "bambiVshero" || Stats.Get(h).Name == "bambiVsbambi" || Stats.Get(h).Name == "bambiVshero"){
+					statTotal = statTotal + Stats.Get(h).Stat;
 				}
 			}
 			return statTotal;
 		} else if ( statName == "Hunt" ) {
 			for ( int j =0; j < Stats.Count(); j++ )
 			{
-				prefix = Stats.Get(i).Name;
+				prefix = Stats.Get(j).Name;
 				prefix.Substring(0,4);
 				if (prefix == "Hunt"){
-					statTotal = statTotal = Stats.Get(i).Stat;
+					statTotal = statTotal + Stats.Get(j).Stat;
 				}
 			}
 			
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
-				if ( Stats.Get(i).Name == "BandagePlayer" || Stats.Get(i).Name == "GiveBloodPlayer" || Stats.Get(i).Name == "GiveSalinePlayer" || Stats.Get(i).Name == "GivePlayerCPR" ){
-					statTotal = statTotal = Stats.Get(i).Stat;
+				if ( Stats.Get(k).Name == "BandagePlayer" || Stats.Get(k).Name == "GiveBloodPlayer" || Stats.Get(k).Name == "GiveSalinePlayer" || Stats.Get(k).Name == "GivePlayerCPR" ){
+					statTotal = statTotal + Stats.Get(k).Stat;
 				}
 			}
 			return statTotal;
 		} else if ( statName == "Raid" ) {
 			for ( int l =0; l < Stats.Count(); l++ )
 			{
-				nameLength = Stats.Get(i).Name.Length();
+				nameLength = Stats.Get(l).Name.Length();
 				nameLength = nameLength - 5;
-				prefix = Stats.Get(i).Name;
+				prefix = Stats.Get(l).Name;
 				prefix.Substring(nameLength, 4);
 				if ( prefix == "Raid" ){
-					statTotal = statTotal = Stats.Get(i).Stat;
+					statTotal = statTotal + Stats.Get(l).Stat;
 				}
 			}
 			return statTotal;
 		} else if ( statName == "Mission" ) {
 			for ( int m =0; m < Stats.Count(); m++ )
 			{
-				prefix = Stats.Get(i).Name;
+				prefix = Stats.Get(m).Name;
 				prefix.Substring(0, 3);
 				if ( prefix == "SMM" ){
-					statTotal = statTotal = Stats.Get(i).Stat;
+					statTotal = statTotal + Stats.Get(m).Stat;
 				}
 			}
 			return statTotal;
@@ -135,6 +135,18 @@ class HeroesAndBanditsPlayer
 			return true;
 		}
 		
+	}
+	
+	void recalculateTotals()
+	{
+		float newTotal = 0;
+		float subTotal = 0;
+		for ( int i =0; i < Stats.Count(); i++ )
+		{
+			subTotal = Stats.Get(i).Stat * GetHeroesAndBanditsConfig().getActionHumanity(Stats.Get(i).Name);
+			newTotal = newTotal + subTotal;
+		}
+		Humanity = newTotal;
 	}
 }
 

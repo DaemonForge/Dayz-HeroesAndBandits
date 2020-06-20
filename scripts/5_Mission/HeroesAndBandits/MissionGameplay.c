@@ -143,7 +143,7 @@ modded class MissionGameplay
 		message.Split(" ", tokens);
 
 		//Print("[HeroesAndBandits] [DebugClient] Message: " + message);
-		string cmd_prefix = "/"
+		string cmd_prefix = "/";
 		if ( !m_HeroesAndBanditsCommandPrefix ){
 		} else {
 			cmd_prefix = m_HeroesAndBanditsCommandPrefix;
