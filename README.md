@@ -219,3 +219,13 @@ Returns INT of the player stat, if player or the player's stat doesn't exist it 
 
 
 For questions or help feel free to contact me on discord: DaemonForge#5454
+
+
+### Repacking/Building from Source Code Rules
+For anyone interested in repacking please read all this
+- 1st I heavily discourage Repacking/Building from my source code, as it would greatly impact your ability to receive feature updates and bug fixes
+- 2nd I will not support any repacks if its is causing conflict that I can't reproduce with the my published mod 
+- 3rd YOU MUST PROVIDE CREDIT on the steam page and you must link to the Orginal Mod or the Source Code
+- 4th Any repacks or builds can only be for personal use no redistributing my mod for public use, should only be for your own servers and players and you must be able to enfore this
+- 5th Please ask for permission prior to repacking, almost all request will be approved as long as you have a valid reason to repack
+- 6th Also not that the Source Code is the activly developing version so it may not work as it sits here right now so just be warnned.
