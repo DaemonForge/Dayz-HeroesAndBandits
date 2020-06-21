@@ -229,3 +229,4 @@ For anyone interested in repacking please read all this
 - 4th Any repacks or builds can only be for personal use no redistributing my mod for public use, should only be for your own servers and players and you must be able to enfore this
 - 5th Please ask for permission prior to repacking, almost all request will be approved as long as you have a valid reason to repack
 - 6th Also note that the Source Code is the activly developing version so it may not work as it sits here right now so just be warnned.
+- 7th Must include the Notice File https://github.com/daemonforge/Dayz-HeroesAndBandits/blob/master/NOTICE in your code
