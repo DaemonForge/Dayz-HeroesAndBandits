@@ -1,5 +1,5 @@
 FrameWidgetClass rootFrame {
- position 0.0018 0.0015
+ position 0 0
  size 0.9 0.9
  halign center_ref
  valign center_ref
@@ -11,7 +11,7 @@ FrameWidgetClass rootFrame {
   PanelWidgetClass PanelWidget {
    ignorepointer 1
    color 0.8941 0.8 0.6627 0.7725
-   position 0.001 -0.05
+   position 0 -0.05
    size 480 360
    halign center_ref
    valign center_ref
