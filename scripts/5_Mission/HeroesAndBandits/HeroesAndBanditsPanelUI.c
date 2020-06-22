@@ -5,6 +5,7 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	
 	ImageWidget			m_LevelImage;
 	RichTextWidget		m_Heading;
+	RichTextWidget		m_Affinity;
 	RichTextWidget		m_LevelName;
 	RichTextWidget		m_Humanity;
 	RichTextWidget		m_PlayerKills;
@@ -30,9 +31,30 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		Print("[HeroesAndBandits] [DebugClient] Init Panel ");
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
 		Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
+		
 		m_Heading.SetText("#HAB_TITLE");
-		m_LevelName.SetText(g_HeroesAndBanditsLevel.Name);
+		
+		string playerAffinity = g_HeroesAndBanditsLevel.affinity;
+		if ( playerAffinity == "hero")
+		{
+			playerAffinity = "#HAB_HERO";
+			
+		} else if ( playerAffinity == "bandit"){
+			playerAffinity = "#HAB_BANDIT";
+		
+		} else if ( playerAffinity == "bambi"){
+			playerAffinity = "#HAB_BAMBI";
+		
+		} else {
+			
+		}
+ 		
+		m_Affinity.SetText("#HAB_AFFINITY: " + playerAffinity);
+		Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + playerAffinity);
+		
+		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
 		Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
+		
 		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.Humanity);
 		Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.Humanity);
 		
