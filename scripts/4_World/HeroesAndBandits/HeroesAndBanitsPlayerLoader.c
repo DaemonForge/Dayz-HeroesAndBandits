@@ -44,6 +44,7 @@ class HeroesAndBanditsPlayer
 	}
 
 	float getStat(string statName){
+		//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName );
 		float statTotal = 0;
 		string prefix;
 		int nameLength;
@@ -60,11 +61,12 @@ class HeroesAndBanditsPlayer
 			{
 				prefix = Stats.Get(j).Name;
 				prefix.Substring(0,4);
+				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
 				if (prefix == "Hunt"){
 					statTotal = statTotal + Stats.Get(j).Stat;
 				}
 			}
-			
+			return statTotal;
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
@@ -77,7 +79,7 @@ class HeroesAndBanditsPlayer
 			for ( int l =0; l < Stats.Count(); l++ )
 			{
 				nameLength = Stats.Get(l).Name.Length();
-				nameLength = nameLength - 5;
+				nameLength = nameLength - 4;
 				prefix = Stats.Get(l).Name;
 				prefix.Substring(nameLength, 4);
 				if ( prefix == "Raid" ){

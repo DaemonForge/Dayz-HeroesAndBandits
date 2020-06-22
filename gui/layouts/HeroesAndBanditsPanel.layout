@@ -40,8 +40,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABHeading {
      ignorepointer 1
      color 0 0 0 1
-     position 16 16
-     size 428 46
+     position 16 8
+     size 428 58
      hexactpos 1
      vexactpos 1
      hexactsize 1

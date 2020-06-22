@@ -1,6 +1,6 @@
 ref HeroesAndBanditsPlayer 	g_HeroesAndBanditsPlayer;
 ref habLevel 				g_HeroesAndBanditsLevel;
-
+bool 						g_HeroesAndBanditsHideKillsInGUI;
 
 modded class MissionGameplay
 {
@@ -14,6 +14,7 @@ modded class MissionGameplay
 	string									m_HeroesAndBanditsCommandPrefix;
 	bool 									m_HeroesAndBanditsAllowHumanityCommand;
 	bool 									m_HeroesAndBanditsAllowStatCommand;
+	bool 									m_HeroesAndBanditsAllowGUI;
 	
 	override void OnInit()
 	{
@@ -71,10 +72,12 @@ modded class MissionGameplay
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
-		Param2< HeroesAndBanditsPlayer, habLevel > data;
+		Param4< bool, bool, HeroesAndBanditsPlayer, habLevel > data;
 		if ( !ctx.Read( data ) ) return;
-            g_HeroesAndBanditsPlayer = data.param1;
-			g_HeroesAndBanditsLevel = data.param2;
+			m_HeroesAndBanditsAllowGUI  = data.param1;
+			g_HeroesAndBanditsHideKillsInGUI = data.param2;
+            g_HeroesAndBanditsPlayer = data.param3;
+			g_HeroesAndBanditsLevel = data.param4;
 			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
 	}
 	
@@ -234,30 +237,36 @@ modded class MissionGameplay
                 } else if (GetGame().GetUIManager().GetMenu() == NULL) {
 					GetRPCManager().SendRPC("HaB", "RPCRequestHABPlayerData", NULL, true);
 					//Wait a bit before opening so that way player data is received
-					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsOpenPanel", 300, false);
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsOpenPanel", 400, false);
                 }
             } else if (GetGame().GetUIManager().GetMenu() == NULL && m_HeroesAndBanditsPanelUI == null) {
 				GetRPCManager().SendRPC("HaB", "RPCRequestHABPlayerData", NULL, true);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsCreatePanel", 300, false);
+				//Wait a bit before opening so that way player data is received
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsCreatePanel", 400, false);
             }
         }
     }
 		
 	void HeroesAndBanditsCreatePanel()
 	{
-    	HeroesAndBanditsLockControls();
-        m_HeroesAndBanditsPanelUI = HeroesAndBanditsPanelUI.Cast(GetUIManager().EnterScriptedMenu(HEROESANDBANDITS_PANEL_MENU, null));
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
-        m_HeroesAndBanditsPanelUI.SetOpen(true);
-
+		if(m_HeroesAndBanditsAllowGUI)
+		{
+	    	HeroesAndBanditsLockControls();
+	        m_HeroesAndBanditsPanelUI = HeroesAndBanditsPanelUI.Cast(GetUIManager().EnterScriptedMenu(HEROESANDBANDITS_PANEL_MENU, null));
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
+	        m_HeroesAndBanditsPanelUI.SetOpen(true);
+		}
 	}
 	
 	void HeroesAndBanditsOpenPanel()
-	{
-		GetGame().GetUIManager().ShowScriptedMenu(m_HeroesAndBanditsPanelUI, NULL);
-        m_HeroesAndBanditsPanelUI.SetOpen(true);
-    	HeroesAndBanditsLockControls();
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
+	{	
+		if(m_HeroesAndBanditsAllowGUI)
+		{
+			GetGame().GetUIManager().ShowScriptedMenu(m_HeroesAndBanditsPanelUI, NULL);
+	        m_HeroesAndBanditsPanelUI.SetOpen(true);
+	    	HeroesAndBanditsLockControls();
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
+		}
 	}
 	
 	void HeroesAndBanditsClosePanel()

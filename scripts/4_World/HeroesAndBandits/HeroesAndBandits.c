@@ -434,9 +434,11 @@ class HeroesAndBandits
 	
 	void updatePlayerTotals()
 	{
+		habPrint("Updating Player Totals", "Verbose");
 		ref array<string> playerDataBaseFiles = new array<string>;
 		ref array<string> playerList = new array<string>;
-		playerDataBaseFiles = FindFilesInLocation(HeroesAndBanditsPlayerDB);
+		playerDataBaseFiles = FindFilesInLocation(HeroesAndBanditsPlayerDB+"\\");
+		habPrint("Found " + playerDataBaseFiles.Count() + " Players in database Localed:" + HeroesAndBanditsPlayerDB, "Verbose");
 		string tempFileName = "";
 		string jsonName = "";
 		int nameLength = 0;
@@ -445,14 +447,15 @@ class HeroesAndBandits
 		{
 			tempFileName = playerDataBaseFiles.Get(i);
 			nameLength = tempFileName.Length();
-			nameLength = nameLength - 6;
-			jsonName = tempFileName;
-			jsonName.Substring(nameLength, 5);
+			nameLength = nameLength - 5;
+			jsonName = tempFileName.Substring(nameLength, 5);
 			if ( jsonName == ".json" && tempFileName.Length() ==  22){
 				playerList.Insert(tempFileName);
 				habPrint("Valid File Found: " + tempFileName + " Loading it now", "Debug");
 				tempFileName.Substring(0, 17);
 				loadPlayer(tempFileName);
+			} else {
+				habPrint("Invalid File Found: " + tempFileName + " Name Length: " + tempFileName.Length() + "Json Name: " + jsonName , "Debug");
 			}
 		}
 		for ( int j =0; j < HeroesAndBanditsPlayers.Count(); j++ )
@@ -610,9 +613,9 @@ class HeroesAndBanditsGuard
 		EntityAI weaponInHands = Weapon_Base.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		EntityAI weaponInHandsMag;
 		if (weaponInHands.IsWeapon())
-		{	
+		{
 				weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
-				Guard.GetWeaponManager().StartAction(AT_WPN_ATTACH_MAGAZINE, weaponInHandsMag, NULL);
+				Guard.GetWeaponManager().StartAction(AT_WPN_ATTACH_MAGAZINE, Magazine.Cast(weaponInHandsMag), NULL);
 		}
 	}
 	
