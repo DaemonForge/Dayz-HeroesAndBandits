@@ -652,6 +652,10 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 
 //Always Exception Verbose Debug
 static void habPrint(string message, string msgType){
+	if(!GetGame().IsServer())
+	{
+		return;
+	}
 	if (msgType == "Always"){
 		Print("[HeroesAndBandits]  " + message);
 	}else if (msgType == "Exception" && GetHeroesAndBanditsConfig().ExceptionLogs){

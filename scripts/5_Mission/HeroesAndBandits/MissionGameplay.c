@@ -73,14 +73,9 @@ modded class MissionGameplay
 		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
 		Param2< HeroesAndBanditsPlayer, habLevel > data;
 		if ( !ctx.Read( data ) ) return;
-		if (data.param1.PlayerID == GetGame().GetPlayer().GetIdentity().GetPlainId())
-		{
-			g_HeroesAndBanditsPlayer = data.param1;
+            g_HeroesAndBanditsPlayer = data.param1;
 			g_HeroesAndBanditsLevel = data.param2;
 			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
-		} else {
-			Print("[HeroesAndBandits] [DebugClient] Incorrect Player ID Sent to client");
-		}
 	}
 	
 	
@@ -237,11 +232,12 @@ modded class MissionGameplay
                 if (m_HeroesAndBanditsPanelUI.IsOpen()) {
 					HeroesAndBanditsClosePanel();
                 } else if (GetGame().GetUIManager().GetMenu() == NULL) {
-					GetRPCManager().SendRPC("HaB", "RPCRequestPlayerData", NULL, true);
+					GetRPCManager().SendRPC("HaB", "RPCRequestHABPlayerData", NULL, true);
 					//Wait a bit before opening so that way player data is received
 					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsOpenPanel", 300, false);
                 }
             } else if (GetGame().GetUIManager().GetMenu() == NULL && m_HeroesAndBanditsPanelUI == null) {
+				GetRPCManager().SendRPC("HaB", "RPCRequestHABPlayerData", NULL, true);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsCreatePanel", 300, false);
             }
         }

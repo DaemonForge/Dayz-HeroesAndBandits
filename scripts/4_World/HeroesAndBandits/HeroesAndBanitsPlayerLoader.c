@@ -95,6 +95,14 @@ class HeroesAndBanditsPlayer
 				}
 			}
 			return statTotal;
+		}  else if ( statName == "Sucide" ) {
+			for ( int n =0; n < Stats.Count(); n++ )
+			{
+				if ( Stats.Get(n).Name == "heroSucide" || Stats.Get(n).Name == "banditSucide" || Stats.Get(n).Name == "bambiSucide" ){
+					statTotal = statTotal + Stats.Get(n).Stat;
+				}
+			}
+			return statTotal;
 		} 
 		
 		for ( int i =0; i < Stats.Count(); i++ )

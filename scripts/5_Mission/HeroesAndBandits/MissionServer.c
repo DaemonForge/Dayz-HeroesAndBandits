@@ -30,7 +30,6 @@ modded class MissionServer
 		{
 			string playerID = identity.GetPlainId();
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 4000, false, new Param1<ref PlayerIdentity>(identity));
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 4000, false, new Param1<ref PlayerIdentity>(identity));
 		}
 	}
 	
@@ -52,7 +51,8 @@ modded class MissionServer
 		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param6< bool, string, bool, bool, string, int >(GetHeroesAndBanditsConfig().ShowLevelIcon, GetHeroesAndBanditsConfig().CommandPrefix, GetHeroesAndBanditsConfig().AllowHumanityCommand, GetHeroesAndBanditsConfig().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsConfig().LevelIconLocation), true, identity);
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
-		GetRPCManager().SendRPC("HaB", "RPCUpdatePlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
+		
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
 	}
 	
 	
@@ -85,23 +85,10 @@ modded class MissionServer
 		habPrint(" Request from:" + playerID + " for player data:", "Debug");
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
+		habPrint("Player: " + playerID + " Requested Player Data", "Debug");
 		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, sender);
 	}
 	
-		
-	
-	void sendPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
-	{
-		if (!sender)
-		{
-			return;
-		}
-		string playerID = sender.GetPlainId();
-		habPrint(" Request from:" + playerID + " for player data:", "Debug");
-		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
-		habLevel playerLevel = playerData.getLevel();
-		GetRPCManager().SendRPC("HaB", "RPCUpdatePlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, sender);
-	}
 	
 	void RPCSendStatNotification( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
@@ -143,6 +130,10 @@ modded class MissionServer
 				statExsit = true;
 				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Mission");
 				statDisplayName = "Mission";
+			} else if ( statname ==  "sucide" || statname ==  "sucides" ){
+				statExsit = true;
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Sucide");
+				statDisplayName = "Sucides";
 			} else {
 				if (GetHeroesAndBanditsConfig().getAction(statname).Name != "Null")
 				{
