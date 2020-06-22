@@ -35,6 +35,7 @@ class HeroesAndBanditsConfig
 	bool AllowStatCommand = true;
 	bool AllowHumanityCommand = true;
 	
+	bool AllowGUI = true;
 	
 	bool ShowLevelIcon = true;
 	int  LevelIconLocation = 2;
@@ -331,6 +332,7 @@ class HeroesAndBanditsConfig
 	{
 		ConfigVersion = "3";
 		CommandPrefix = "/";
+		AllowGUI = true;
 	}
 }
 

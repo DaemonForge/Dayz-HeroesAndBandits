@@ -22,7 +22,7 @@ FrameWidgetClass rootFrame {
    draggable 1
    style DayZDefaultPanel
    {
-    ImageWidgetClass LevelImage {
+    ImageWidgetClass HABLevelImage {
      ignorepointer 1
      position 16 16
      size 128 128
@@ -33,7 +33,7 @@ FrameWidgetClass rootFrame {
      "src alpha" 1
      stretch 1
     }
-    RichTextWidgetClass Heading {
+    RichTextWidgetClass HABHeading {
      ignorepointer 1
      color 0 0 0 1
      position 160 28
@@ -44,41 +44,13 @@ FrameWidgetClass rootFrame {
      vexactsize 1
      scaled 1
      style DayZBold
-     text "Heroes and Bandits"
+     text "#HAB_TITLE"
      "text color" 0 0 0 1
      "exact text" 1
      "text halign" center
      "text valign" center
     }
-	RichTextWidgetClass PlayerName {
-     ignorepointer 1
-     position 160 118
-     size 158 28
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-    }
-    RichTextWidgetClass LevelName {
-     ignorepointer 1
-     position 328 118
-     size 136 28
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-    }
-    RichTextWidgetClass Humanity {
-     ignorepointer 1
-     color 0.0353 0.0353 0.0353 1
-     position 160 82
-     size 304 28
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-    }
-    ContentWidgetClass Stats {
+    ContentWidgetClass HABStats {
      position 16 160
      size 448 404
      hexactpos 1
@@ -97,7 +69,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        TextListboxWidgetClass statslist {
+        TextListboxWidgetClass HABstatslist {
          position 0 0
          size 448 404
          hexactpos 0
@@ -107,10 +79,47 @@ FrameWidgetClass rootFrame {
          colums "2"
          lines 24
          "highlight row" 0
+		 style DayZBold
         }
        }
       }
      }
+    }
+    RichTextWidgetClass HABPlayerName {
+     ignorepointer 1
+     position 160 118
+     size 158 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "text color" 0 0 0 1
+     style DayZBold
+     scaled 1
+    }
+    RichTextWidgetClass HABLevelName {
+     ignorepointer 1
+     position 328 118
+     size 136 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "text color" 0 0 0 1
+     style DayZBold
+     scaled 1
+    }
+    RichTextWidgetClass HABHumanity {
+     ignorepointer 1
+     position 160 82
+     size 304 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "text color" 0 0 0 1
+     style DayZBold
+     scaled 1
     }
    }
   }

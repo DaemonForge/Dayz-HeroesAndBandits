@@ -1,5 +1,4 @@
 
-
 class HeroesAndBanditsStatusBarIconUI extends UIScriptedMenu
 {	
 	ImageWidget			m_Icon;

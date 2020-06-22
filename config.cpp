@@ -26,9 +26,10 @@ class CfgMods
         credits="DaemonForge";
         author="DaemonForge";
         authorID="0";
-        version="0.1";
+        version="1.0";
         extra=0;
         type="mod";
+		inputs = "HeroesAndBandits/data/Inputs.xml";
 	    dependencies[]={ "Game", "World", "Mission" };
 	    class defs
 	    {

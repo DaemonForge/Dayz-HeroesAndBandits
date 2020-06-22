@@ -1,7 +1,12 @@
+ref HeroesAndBanditsPlayer 	g_HeroesAndBanditsPlayer;
+ref habLevel 				g_HeroesAndBanditsLevel;
+
+
 modded class MissionGameplay
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
 	ref HeroesAndBanditsStatusBarIconUI		m_HeroesAndBanditsStatusBarIconUI;
+	ref HeroesAndBanditsPanelUI				m_HeroesAndBanditsPanelUI;
 	bool									m_HeroesAndBanditsIconsInitialized;
 	string									m_HeroesAndBanditsCurrentIcon;
 	bool 									m_HeroesAndBanditsShowLevelIcon;
@@ -16,6 +21,7 @@ modded class MissionGameplay
 		m_HeroesAndBanditsIconsInitialized = false;
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABSettings", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABPlayerData", this, SingeplayerExecutionType.Both );
 	}
 	
 	
@@ -59,6 +65,22 @@ modded class MissionGameplay
 			}
 		}
 
+	}
+	
+	
+	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
+		Param2< HeroesAndBanditsPlayer, habLevel > data;
+		if ( !ctx.Read( data ) ) return;
+		if (data.param1.PlayerID == GetGame().GetPlayer().GetIdentity().GetPlainId())
+		{
+			g_HeroesAndBanditsPlayer = data.param1;
+			g_HeroesAndBanditsLevel = data.param2;
+			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
+		} else {
+			Print("[HeroesAndBandits] [DebugClient] Incorrect Player ID Sent to client");
+		}
 	}
 	
 	
@@ -200,4 +222,63 @@ modded class MissionGameplay
 			super.OnEvent(eventTypeId,params); 
 		}
 	}
+	override void OnUpdate (float timeslice) {
+        super.OnUpdate (timeslice);
+
+        Input input = GetGame().GetInput();
+        if (input.LocalPress("UAUIBack", false)) {
+            if (m_HeroesAndBanditsPanelUI != NULL && GetGame().GetUIManager().GetMenu() == m_HeroesAndBanditsPanelUI) {
+                HeroesAndBanditsClosePanel();
+            }
+        }
+
+        if (input.LocalPress("UAHeroesAndBanditsPanel", false)) {
+            if (m_HeroesAndBanditsPanelUI) {
+                if (m_HeroesAndBanditsPanelUI.IsOpen()) {
+					HeroesAndBanditsClosePanel();
+                } else if (GetGame().GetUIManager().GetMenu() == NULL) {
+					GetRPCManager().SendRPC("HaB", "RPCRequestPlayerData", NULL, true);
+					//Wait a bit before opening so that way player data is received
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsOpenPanel", 300, false);
+                }
+            } else if (GetGame().GetUIManager().GetMenu() == NULL && m_HeroesAndBanditsPanelUI == null) {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(this, "HeroesAndBanditsCreatePanel", 300, false);
+            }
+        }
+    }
+		
+	void HeroesAndBanditsCreatePanel()
+	{
+    	HeroesAndBanditsLockControls();
+        m_HeroesAndBanditsPanelUI = HeroesAndBanditsPanelUI.Cast(GetUIManager().EnterScriptedMenu(HEROESANDBANDITS_PANEL_MENU, null));
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
+        m_HeroesAndBanditsPanelUI.SetOpen(true);
+
+	}
+	
+	void HeroesAndBanditsOpenPanel()
+	{
+		GetGame().GetUIManager().ShowScriptedMenu(m_HeroesAndBanditsPanelUI, NULL);
+        m_HeroesAndBanditsPanelUI.SetOpen(true);
+    	HeroesAndBanditsLockControls();
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLaterByName(m_HeroesAndBanditsPanelUI, "updateData", 500, false);
+	}
+	
+	void HeroesAndBanditsClosePanel()
+	{
+		m_HeroesAndBanditsPanelUI.SetOpen(false);
+        GetGame().GetUIManager().HideScriptedMenu(m_HeroesAndBanditsPanelUI);
+		HeroesAndBanditsUnLockControls();
+	}
+	
+	private void HeroesAndBanditsLockControls() {
+        GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
+        GetGame().GetUIManager().ShowUICursor(true);
+    }
+
+    private void HeroesAndBanditsUnLockControls() {
+        GetGame().GetMission().PlayerControlEnable(false);
+        GetGame().GetInput().ResetGameFocus();
+        GetGame().GetUIManager().ShowUICursor(false);
+    }
 }

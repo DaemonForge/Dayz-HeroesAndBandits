@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<modded_inputs>
+    <inputs>
+        <actions>
+            <input name="UAHeroesAndBanditsPanel" loc="Heroes And Bandits Panel" />
+        </actions>
+    </inputs>
+    <preset>
+        <input name="UAHeroesAndBanditsPanel">
+            <btn name="kK" />
+        </input>
+    </preset>
+</modded_inputs>
