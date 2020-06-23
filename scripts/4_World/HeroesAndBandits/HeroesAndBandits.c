@@ -452,7 +452,7 @@ class HeroesAndBandits
 			if ( jsonName == ".json" && tempFileName.Length() ==  22){
 				playerList.Insert(tempFileName);
 				habPrint("Valid File Found: " + tempFileName + " Loading it now", "Debug");
-				tempFileName.Substring(0, 17);
+				tempFileName = tempFileName.Substring(0, 17);
 				loadPlayer(tempFileName);
 			} else {
 				habPrint("Invalid File Found: " + tempFileName + " Name Length: " + tempFileName.Length() + "Json Name: " + jsonName , "Debug");

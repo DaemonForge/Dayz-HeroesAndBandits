@@ -12,7 +12,7 @@ FrameWidgetClass rootFrame {
    ignorepointer 1
    color 0.8941 0.8 0.6627 0.7725
    position 0 -0.05
-   size 460 336
+   size 520 332
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -25,7 +25,6 @@ FrameWidgetClass rootFrame {
    {
     ImageWidgetClass HABLevelImage {
      ignorepointer 1
-     color 1 1 1 0
      position 16 72
      size 128 128
      hexactpos 1
@@ -41,7 +40,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 16 8
-     size 428 58
+     size 488 58
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -58,7 +57,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 160 114
-     size 284 46
+     size 344 46
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -73,7 +72,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 160 158
-     size 284 46
+     size 344 46
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -87,7 +86,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 16 208
-     size 206 36
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -100,8 +99,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABPlayerKills {
      ignorepointer 1
      color 0 0 0 1
-     position 238 208
-     size 206 36
+     position 262 208
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -114,8 +113,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABMedic {
      ignorepointer 1
      color 0 0 0 1
-     position 16 248
-     size 206 36
+     position 16 246
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -128,8 +127,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABRaid {
      ignorepointer 1
      color 0 0 0 1
-     position 238 248
-     size 206 36
+     position 262 246
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -144,8 +143,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABHunt {
      ignorepointer 1
      color 0 0 0 1
-     position 16 288
-     size 206 36
+     position 16 284
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -158,8 +157,8 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABSucides {
      ignorepointer 1
      color 0 0 0 1
-     position 238 288
-     size 206 36
+     position 262 284
+     size 240 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -173,7 +172,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 160 70
-     size 284 46
+     size 344 46
      hexactpos 1
      vexactpos 1
      hexactsize 1

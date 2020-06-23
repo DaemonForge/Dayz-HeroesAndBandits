@@ -112,7 +112,7 @@ modded class MissionServer
 			string statDisplayName;
 			if ( statname ==  "kills" || statname == "kill"){
 				statExsit = true;
-				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Kills");
+				statTotal = statTotal + GetHeroesAndBandits().GetPlayerStat(playerID, "Kill");
 				statDisplayName = "Kill";
 			} else if ( statname ==  "hunt" || statname == "hunts"){
 				statExsit = true;

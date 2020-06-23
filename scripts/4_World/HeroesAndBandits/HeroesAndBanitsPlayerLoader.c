@@ -59,8 +59,7 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Hunt" ) {
 			for ( int j =0; j < Stats.Count(); j++ )
 			{
-				prefix = Stats.Get(j).Name;
-				prefix.Substring(0,4);
+				prefix = Stats.Get(j).Name.Substring(0,4);
 				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
 				if (prefix == "Hunt"){
 					statTotal = statTotal + Stats.Get(j).Stat;
@@ -78,10 +77,11 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Raid" ) {
 			for ( int l =0; l < Stats.Count(); l++ )
 			{
-				nameLength = Stats.Get(l).Name.Length();
+				string tempStatName = Stats.Get(l).Name;
+				nameLength = tempStatName.Length();
 				nameLength = nameLength - 4;
-				prefix = Stats.Get(l).Name;
-				prefix.Substring(nameLength, 4);
+				prefix = Stats.Get(l).Name.Substring(nameLength, 4);
+				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
 				if ( prefix == "Raid" ){
 					statTotal = statTotal + Stats.Get(l).Stat;
 				}
@@ -90,8 +90,9 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Mission" ) {
 			for ( int m =0; m < Stats.Count(); m++ )
 			{
-				prefix = Stats.Get(m).Name;
-				prefix.Substring(0, 3);
+				prefix = Stats.Get(m).Name.Substring(0, 3);;
+				
+				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
 				if ( prefix == "SMM" ){
 					statTotal = statTotal + Stats.Get(m).Stat;
 				}

@@ -71,14 +71,14 @@ modded class MissionGameplay
 	
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
-		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
+		//Print("[HeroesAndBandits] [DebugClient] Received Player Data");
 		Param4< bool, bool, HeroesAndBanditsPlayer, habLevel > data;
 		if ( !ctx.Read( data ) ) return;
 			m_HeroesAndBanditsAllowGUI  = data.param1;
 			g_HeroesAndBanditsHideKillsInGUI = data.param2;
             g_HeroesAndBanditsPlayer = data.param3;
 			g_HeroesAndBanditsLevel = data.param4;
-			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
+			//Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
 	}
 	
 	
@@ -197,7 +197,7 @@ modded class MissionGameplay
 			case "humanitarność": {
 					if (m_HeroesAndBanditsAllowHumanityCommand){
 						commandNotSentToServer = false;
-						Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
+						//Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
 						GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param1< string >(command), false);
 					}
 					break;
@@ -205,7 +205,7 @@ modded class MissionGameplay
 			case "stat": {
 				if (m_HeroesAndBanditsAllowStatCommand){
 					commandNotSentToServer = false;
-					Print("[HeroesAndBandits] [DebugClient] Requesting Stat from server");
+					//Print("[HeroesAndBandits] [DebugClient] Requesting Stat from server");
 					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param2< string, string >( command, statname), false);
 				}
 				break;
