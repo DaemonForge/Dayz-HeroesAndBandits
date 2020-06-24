@@ -3,10 +3,10 @@
 This mod add humanity to Dayz in a very expandable way, allow for server owners and mod creators to dictate almost everything including the ability to create customized Levels and Actions, the ability to create customized zones for exclusive use based on the players stats
 
 ### Player Commands
-"/humanity" in local chat will tell you you're humanity
-"/stat ActionName" in local chat will give you how many times you have done a certain action
-"/stat Kills" in local chat will give you how many Kills you have made
-"J" Opens a very simple GUI to see your Humanity, Level and some Stats
+- "/humanity" in local chat will tell you you're humanity
+- "/stat ActionName" in local chat will give you how many times you have done a certain action
+- "/stat Kills" in local chat will give you how many Kills you have made
+- "J" Opens a very simple GUI to see your Humanity, Level and some Stats
 
 ## Default Config
 
