@@ -95,10 +95,14 @@ Zones allows you to determine zones for players to be allowed to enter, useful f
     "WarningMessageImagePath": "HeroesAndBandits/gui/images/DeathWarning.paa", // Icon for the warning messages
     "WarningMessageColor": [ 200, 255, 0, 0], // The colour for the Warning messages
     "KillFeedMessageColor": [ 200, 250, 0, 100 ], // The colour for the Kill feed messages
+    "CommandPrefix": "/",  //Changes the Command Prefix for checking humanity or stats
     "AllowStatCommand": 1,  // 1 Enabled / 0 Disabled allows the use of the /stat command
     "AllowHumanityCommand": 1, // 1 Enabled / 0 Disabled allows the use of the /humanity command
     "ShowLevelIcon": 1, // 1 Enabled / 0 Disabled This will enable or disable level icon
     "LevelIconLocation": 2 // 1 Top Right, 2 Bottom right by icons, 3 Both
+    "AllowGUI" = 1, //1 Enable /Disabled  If Enabled it Allows players to open the GUI
+    "HideKillsInGUI" = 0, // 1 Enable / Disable If Enabled it hides the kills from the GUI
+    "GUIHeading" = "#HAB_TITLE",  // Allows server owners to set the title of the gui Default #HAB_TITLE is the localized Heroes And Bandits
     "ExceptionLogs": 1,  //  1 Enabled / 0 Disabled This show any exceptions the mod encounters in the script.log
     "VerboseLogs": 0, //  1 Enabled / 0 Disabled  This adds a bit of logging for standard use, script.log
     "DebugLogs": 0, // KEEP 0 OR YOUR LOGS WILL FILL LIKE CRAZY THIS IS FOR ME OR OTHER DEVS ONLY TO DEBUG
@@ -157,6 +161,13 @@ m_HeroesAndBandits.GetPlayerStat(PlayerID, ActionName)
 Returns INT of the player stats for the Action specified, if player or the player's stat doesn't exist it returns 0
 
 
+### Recalcuate Player Stats
+```
+m_HeroesAndBandits.updatePlayerTotals()
+```
+This will load and then recaluate all of the players humanity based on the current action values.
+
+
 ## Add On Mods
 There are add on mods that allow players to gain and lose humanity based on their actions from other mods
 [View on Steam](https://steamcommunity.com/workshop/filedetails/discussion/2111160696/2447091420211936958/)
@@ -167,15 +178,17 @@ There are add on mods that allow players to gain and lose humanity based on thei
 - Russian - Thanks @NeonMurder
 - German  - Thanks @ServerAtze
 - Polish  - Thanks @Kirlen
-
+- Portuguese - Thanks @Wwillers
 (If you want your language supported please contact me)
 
 
 ## To Do List
 - Get guards to shoot guns at players when the zone kills them
-- Add a GUI for players to track there stats and humanity
 - Add custom skins for Hero's and Bandits so they are more easily identifiable
 - Add the ability for certain clothing to only be wear able by certain affinities
+- Create a export function for server leaderboards and a basic web app to view
+- Change Icon location settings to be client side so that way players can choose where to show it
+- Add secondary affinities, eg Hunter, and Medic and make it expandable
 
 ## Developer Helper Functions
 These functions are to help developers (they will not work as they are shown below in the unit.c)
