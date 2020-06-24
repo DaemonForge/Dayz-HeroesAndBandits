@@ -12,7 +12,7 @@ Each command and the GUI can be disabled in the server configuration
 
 ## Default Config
 
-[https://pastebin.com/0FSstxTE](https://pastebin.com/0FSstxTE)
+[https://pastebin.com/MPp7LxpL](https://pastebin.com/MPp7LxpL)
 ## Main Config Options and Explanations
 ### Levels
 The first setting is an array of the levels there are no limit to levels but there is a limit to the JSON file of 64KB
