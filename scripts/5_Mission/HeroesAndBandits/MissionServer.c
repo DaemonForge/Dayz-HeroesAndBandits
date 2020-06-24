@@ -52,7 +52,7 @@ modded class MissionServer
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param4< bool, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsConfig().AllowGUI, GetHeroesAndBanditsConfig().HideKillsInGUI, playerData, playerLevel ), true, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsConfig().AllowGUI,GetHeroesAndBanditsConfig().GUIHeading, GetHeroesAndBanditsConfig().HideKillsInGUI, playerData, playerLevel ), true, identity);
 	}
 	
 	
@@ -86,7 +86,7 @@ modded class MissionServer
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		habPrint("Player: " + playerID + " Requested Player Data", "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param4< bool, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsConfig().AllowGUI,  GetHeroesAndBanditsConfig().HideKillsInGUI, playerData, playerLevel ), true, sender);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsConfig().AllowGUI, GetHeroesAndBanditsConfig().GUIHeading, GetHeroesAndBanditsConfig().HideKillsInGUI, playerData, playerLevel ), true, sender);
 	}
 	
 	

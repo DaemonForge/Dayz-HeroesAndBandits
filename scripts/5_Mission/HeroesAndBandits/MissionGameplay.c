@@ -1,7 +1,7 @@
 ref HeroesAndBanditsPlayer 	g_HeroesAndBanditsPlayer;
 ref habLevel 				g_HeroesAndBanditsLevel;
+string 						g_HeroesAndBanditsGUIHeading;
 bool 						g_HeroesAndBanditsHideKillsInGUI;
-
 modded class MissionGameplay
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
@@ -72,12 +72,13 @@ modded class MissionGameplay
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		//Print("[HeroesAndBandits] [DebugClient] Received Player Data");
-		Param4< bool, bool, HeroesAndBanditsPlayer, habLevel > data;
+		Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel > data;
 		if ( !ctx.Read( data ) ) return;
 			m_HeroesAndBanditsAllowGUI  = data.param1;
-			g_HeroesAndBanditsHideKillsInGUI = data.param2;
-            g_HeroesAndBanditsPlayer = data.param3;
-			g_HeroesAndBanditsLevel = data.param4;
+			g_HeroesAndBanditsGUIHeading  = data.param2;
+			g_HeroesAndBanditsHideKillsInGUI = data.param3;
+            g_HeroesAndBanditsPlayer = data.param4;
+			g_HeroesAndBanditsLevel = data.param5;
 			//Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed");
 	}
 	

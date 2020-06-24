@@ -1,5 +1,5 @@
 FrameWidgetClass rootFrame {
- position 0 0
+ position 0.00089 0
  size 0.9 0.9
  halign center_ref
  valign center_ref
@@ -12,7 +12,7 @@ FrameWidgetClass rootFrame {
    ignorepointer 1
    color 0.8941 0.8 0.6627 0.7725
    position 0 -0.05
-   size 520 332
+   size 524 348
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -25,8 +25,8 @@ FrameWidgetClass rootFrame {
    {
     ImageWidgetClass HABLevelImage {
      ignorepointer 1
-     position 16 72
-     size 128 128
+     position 36 72
+     size 156 156
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -40,7 +40,7 @@ FrameWidgetClass rootFrame {
      ignorepointer 1
      color 0 0 0 1
      position 16 8
-     size 488 58
+     size 498 58
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -53,17 +53,42 @@ FrameWidgetClass rootFrame {
      "text halign" center
      "text valign" center
     }
+    FrameWidgetClass HABAffinityFrame {
+     ignorepointer 1
+     position 216 80
+     size 298 46
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     {
+      RichTextWidgetClass HABAffinity {
+       ignorepointer 1
+       color 0 0 0 1
+       position 0 0
+       size 1 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       font "gui/fonts/Metron-Bold28"
+       text "Affinity"
+       "text color" 0 0 0 1
+       "exact text" 1
+      }
+     }
+    }
     RichTextWidgetClass HABLevelName {
      ignorepointer 1
      color 0 0 0 1
-     position 160 114
-     size 344 46
+     position 216 124
+     size 298 48
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
-     style DayZBold
+     font "gui/fonts/Metron-Bold28"
      text "LevelName "
      "text color" 0 0 0 1
      "exact text" 1
@@ -71,116 +96,209 @@ FrameWidgetClass rootFrame {
     RichTextWidgetClass HABHumanity {
      ignorepointer 1
      color 0 0 0 1
-     position 160 158
-     size 344 46
+     position 216 168
+     size 298 46
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     style DayZBold
+     font "gui/fonts/Metron-Bold28"
      text "Humanity"
      "text color" 0 0 0 1
      "exact text" 1
     }
-    RichTextWidgetClass HABZombieKills {
+    FrameWidgetClass HABStats {
+     inheritalpha 0
      ignorepointer 1
-     color 0 0 0 1
-     position 16 208
-     size 240 32
+     color 0.2863 0.2549 0.2118 0.3412
+     position 16 236
+     size 500 98
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     style DayZBold
-     text "ZombieKills"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABPlayerKills {
-     ignorepointer 1
-     color 0 0 0 1
-     position 262 208
-     size 240 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style DayZBold
-     text "PlayerKills"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABMedic {
-     ignorepointer 1
-     color 0 0 0 1
-     position 16 246
-     size 240 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style DayZBold
-     text "Raid Actions"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABRaid {
-     ignorepointer 1
-     color 0 0 0 1
-     position 262 246
-     size 240 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     scriptclass "Raid Actions"
-     style DayZBold
-     text "RaidActions"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABHunt {
-     ignorepointer 1
-     color 0 0 0 1
-     position 16 284
-     size 240 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style DayZBold
-     text "AnimalKIlls"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABSucides {
-     ignorepointer 1
-     color 0 0 0 1
-     position 262 284
-     size 240 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style DayZBold
-     text "Sucides"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass HABAffinity {
-     ignorepointer 1
-     color 0 0 0 1
-     position 160 70
-     size 344 46
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style DayZBold
-     text "Affinity"
-     "text color" 0 0 0 1
-     "exact text" 1
+     {
+      FrameWidgetClass HABPlayerKillsFrame {
+       ignorepointer 1
+       color 0 0 0 0.0392
+       position 0.525 0
+       size 0.47 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABPlayerKills {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "PlayerKills"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HABSucidesFrame {
+       ignorepointer 1
+       color 0 0 0 0.0353
+       position 0.525 0.66
+       size 0.47 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABSucides {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "Sucides"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HABHuntFrame {
+       ignorepointer 1
+       color 0 0 0 0.0353
+       position 0 0.66
+       size 0.52 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABHunt {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "AnimalKIlls"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HABRaidFrame {
+       ignorepointer 1
+       color 0 0 0 0.0353
+       position 0.525 0.33
+       size 0.47 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABRaid {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "RaidActions"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HABMedicFrame {
+       ignorepointer 1
+       color 0 0 0 0.0353
+       position 0 0.33
+       size 0.52 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABMedic {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "MedicActions"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HABZombieKillsFrame {
+       ignorepointer 1
+       color 0 0 0 0.0588
+       position 0 0
+       size 0.52 0.31
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        RichTextWidgetClass HABZombieKills {
+         ignorepointer 1
+         color 0 0 0 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "ZombieKills"
+         font "gui/fonts/Metron-Bold22"
+         "text color" 0 0 0 1
+         "exact text" 1
+         "exact text size" 18
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+       }
+      }
+     }
     }
    }
   }

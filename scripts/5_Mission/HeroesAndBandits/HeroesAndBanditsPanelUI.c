@@ -33,7 +33,12 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
 		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
 		
-		m_Heading.SetText("#HAB_TITLE");
+		if (!g_HeroesAndBanditsGUIHeading)
+		{
+			m_Heading.SetText("#HAB_TITLE");
+		} else {
+			m_Heading.SetText(g_HeroesAndBanditsGUIHeading);
+		}
 		
 		string playerAffinity = g_HeroesAndBanditsLevel.Affinity;
 		if ( playerAffinity == "hero")

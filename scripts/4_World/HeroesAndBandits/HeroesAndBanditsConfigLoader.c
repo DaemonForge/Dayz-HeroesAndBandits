@@ -36,6 +36,7 @@ class HeroesAndBanditsConfig
 	bool AllowHumanityCommand = true;
 	
 	bool AllowGUI = true;
+	string GUIHeading = "#HAB_TITLE";
 	bool HideKillsInGUI = false;
 	
 	bool ShowLevelIcon = true;
@@ -335,6 +336,7 @@ class HeroesAndBanditsConfig
 		CommandPrefix = "/";
 		AllowGUI = true;
 		HideKillsInGUI = false;
+		GUIHeading = "#HAB_TITLE";
 	}
 }
 
