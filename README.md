@@ -179,6 +179,7 @@ There are add on mods that allow players to gain and lose humanity based on thei
 - German  - Thanks @ServerAtze
 - Polish  - Thanks @Kirlen
 - Portuguese - Thanks @Wwillers
+
 (If you want your language supported please contact me)
 
 
