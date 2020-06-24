@@ -165,7 +165,7 @@ Returns INT of the player stats for the Action specified, if player or the playe
 ```
 m_HeroesAndBandits.updatePlayerTotals()
 ```
-This will load and then recaluate all of the players humanity based on the current action values. This will also load all players into the local system, it is recommended to remove the code and restart the server once it finishes booting.
+This will load and then recalcuate all of the players humanity based on the current action values. Since this will load all players into the local system, it is recommended to remove the code and restart the server once it finishes booting. To prevent any potential performance decreases especially on large population servers.
 
 
 ## Add On Mods
