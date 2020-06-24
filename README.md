@@ -7,6 +7,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 - "/stat ActionName" in local chat will give you how many times you have done a certain action
 - "/stat Kills" in local chat will give you how many Kills you have made
 - "J" Opens a very simple GUI to see your Humanity, Level and some Stats
+Each command and the GUI can be disabled in the server configuration
 
 ## Default Config
 
