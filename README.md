@@ -6,7 +6,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 "/humanity" in local chat will tell you you're humanity
 "/stat ActionName" in local chat will give you how many times you have done a certain action
 "/stat Kills" in local chat will give you how many Kills you have made
-
+"J" Opens a very simple GUI to see your Humanity, Level and some Stats
 
 ## Default Config
 
@@ -29,7 +29,7 @@ If you wish to learn how to create your own mod to upload custom images [Click H
 
 
 ### Actions
-Actions are things players can do to lose or gain humanity currently actions can be classified as either hero or bandit actions, and more actions can be added through add on mods
+Actions are things players can do to lose or gain humanity curre gontly actions can be classified as either hero or bandit actions, and more actions can be added through add on mods
 ```
 {
      "Name": "ZombieKill",  // Name of the Action should NOT ever be changed
@@ -165,7 +165,7 @@ Returns INT of the player stats for the Action specified, if player or the playe
 ```
 m_HeroesAndBandits.updatePlayerTotals()
 ```
-This will load and then recaluate all of the players humanity based on the current action values.
+This will load and then recaluate all of the players humanity based on the current action values. This will also load all players into the local system, it is recommended to remove the code and restart the server once it finishes booting.
 
 
 ## Add On Mods
