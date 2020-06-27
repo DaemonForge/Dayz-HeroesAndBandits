@@ -1,22 +1,19 @@
 modded class Grenade_Base
 {
-    protected string hab_ThrowerId;
+    protected string hab_ActivatedByID;
 
-    void habSetThrower(string playerId)
-    {
-		if ( hab_ThrowerId )
+	void habSetActivatedBy(string playerID)
+	{
+		if (playerID)
 		{
-        	hab_ThrowerId = playerId;
-		} else {
-			hab_ThrowerId = "";
+			hab_ActivatedByID = playerID;
 		}
-    }
-
-    string habGetThrowerID() 
-	{ 
-		if ( hab_ThrowerId )
-		{
-			return hab_ThrowerId; 
+	}
+	
+	string habGetActivatedBy()
+	{
+		if (hab_ActivatedByID){
+			return hab_ActivatedByID;
 		} else {
 			return "null";
 		}

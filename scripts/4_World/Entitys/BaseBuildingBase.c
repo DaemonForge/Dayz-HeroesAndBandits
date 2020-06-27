@@ -41,17 +41,26 @@ modded class BaseBuildingBase
 				TrapBase trap = TrapBase.Cast(source);
 				habPrint( GetType() + " hit by " + trap.GetType() + " set by " + trap.habGetActivatedBy(), "Debug");
 				habLastHitBy = trap.habGetActivatedBy();
+			} else if (source.IsInherited(Grenade_Base)){
+				// If source is Grenade
+				
+				Grenade_Base grenade = Grenade_Base.Cast(source);
+				habPrint( GetType() + " hit by " + grenade.GetType() + " set by " + grenade.habGetActivatedBy(), "Debug");
 			} else {
 				habPrint( GetType() + " hit by " + source.GetType(), "Debug");
 			}
 			if ( sourcePlayer )
 			{
-				habPrint( GetType() + " hit by " + sourcePlayer.GetIdentity().GetPlainId(), "Debug");
+				habPrint( GetType() + " hit by " + sourcePlayer.GetIdentity().GetPlainId() + " with " + source.GetType(), "Debug");
 				habLastHitBy = sourcePlayer.GetIdentity().GetPlainId();
 			}
 		} else if ( damageType == DT_EXPLOSION ) {
+			//If Damage Type Explosion
+			
 			habPrint( GetType() + " Hit by Explosion with no source", "Debug");
 		} else {
+			//Everything else
+			
 			habPrint( GetType() + " Hit by Type " + damageType + " with no source", "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);

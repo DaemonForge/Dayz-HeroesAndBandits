@@ -95,10 +95,10 @@ modded class PlayerBase
 			string weaponName;
 			if (source.IsInherited(Grenade_Base)){
 				Grenade_Base grenade = Grenade_Base.Cast(source);
-				string objectThrowerID = grenade.habGetThrowerID();
-				weaponName =  "#HAB_KILLFEED_PRE " + grenade.GetDisplayName();
-				habPrint("Player " + GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectThrowerID,"Debug");
-				sourcePlayerID = objectThrowerID;
+				string objectActivatedByID = grenade.habGetActivatedBy();
+				weaponName =  "#HAB_KILLFEED_PRE " + grenade.habGetActivatedBy();
+				habPrint("Player " + GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectActivatedByID,"Debug");
+				sourcePlayerID = objectActivatedByID;
 				targetPlayerID = GetIdentity().GetPlainId();
 				if ( sourcePlayerID != "null" )
 				{
