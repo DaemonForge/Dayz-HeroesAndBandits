@@ -100,12 +100,15 @@ modded class PlayerBase
 				habPrint("Player " + GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectThrowerID,"Debug");
 				sourcePlayerID = objectThrowerID;
 				targetPlayerID = GetIdentity().GetPlainId();
-				if (sourcePlayerID == targetPlayerID){ //Sucide
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
-					GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
-				}else {
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerAffinity(targetPlayerID));
-					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
+				if ( sourcePlayerID != "null" )
+				{
+					if (sourcePlayerID == targetPlayerID){ //Sucide
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
+						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
+					}else {
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerAffinity(targetPlayerID));
+						GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
+					}
 				}
 			} else {
 				habPrint( "" + GetIdentity().GetPlainId() + " killed by Explosion with " + source.GetType(), "Debug");

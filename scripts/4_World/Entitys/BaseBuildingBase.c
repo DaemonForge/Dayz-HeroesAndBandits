@@ -37,6 +37,9 @@ modded class BaseBuildingBase
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
 			} else if (source.IsMeleeWeapon()) {
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
+			} else if (source.IsInherited(TrapBase)){
+				habPrint( GetType() + " hit by " + source.GetType() + " set by " + source.habGetActivatedBy(), "Debug");
+				habLastHitBy = source.habGetActivatedBy();
 			} else {
 				habPrint( GetType() + " hit by " + source.GetType(), "Debug");
 			}
@@ -47,6 +50,8 @@ modded class BaseBuildingBase
 			}
 		} else if ( damageType == DT_EXPLOSION ) {
 			habPrint( GetType() + " Hit by Explosion with no source", "Debug");
+		} else {
+			habPrint( GetType() + " Hit by Type " + damageType + " with no source", "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
