@@ -54,7 +54,7 @@ class HeroesAndBandits
 						TStringArray guardGear = GetHeroesAndBanditsConfig().Zones.Get(i).Guards.Get(j).GuardGear;
 						Zones.Get(i).Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 			    		Zones.Get(i).Guards.Get(j).Spawn();
-						//GetGame().GetCallQueue().CallLaterByName(Zones.Get(i).Guards.Get(j), "ReloadWeapon", 120000, false); //Reload gun 2 minutes after server start
+						GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Zones.Get(i).Guards.Get(j), "ReloadWeapon", 120000, false); //Reload gun 2 minutes after server start
 						
 					}
 				}
@@ -252,7 +252,7 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  pID)
 			{
-				habPrint("Getting Humanity for Player " + p.PlayerID + " Humanity is " + p.Humanity, "Debug");	
+				//habPrint("Getting Humanity for Player " + p.PlayerID + " Humanity is " + p.Humanity, "Debug");	
 				return p.Humanity;
 			}
 		}
@@ -368,7 +368,7 @@ class HeroesAndBandits
 			{
 				return;
 			}
-			habPrint("Checking if Players are in Zones", "Debug");			
+			//habPrint("Checking if Players are in Zones", "Debug");			
 			ref array<Man> players = new array<Man>;
 			GetGame().GetPlayers(players);
 			for (int j = 0; j < players.Count(); j++)
@@ -382,7 +382,7 @@ class HeroesAndBandits
 				{				
 					for (int k = 0; k < Zones.Count(); k++)
 					{	
-						habPrint("Checking if Players is in Zone " + Zones.Get(k).Name, "Debug");	
+						//habPrint("Checking if Players is in Zone " + Zones.Get(k).Name, "Debug");	
 						if (Zones.Get(k).validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent != k ){
 							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
 							player.m_HeroesAndBandits_WarningSent = k;
@@ -404,7 +404,7 @@ class HeroesAndBandits
 							{
 								player.SetAllowDamage(true);
 							}
-							//Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
+							Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
 							player.SetHealth(0.0);
 						}
 						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent != k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius)
