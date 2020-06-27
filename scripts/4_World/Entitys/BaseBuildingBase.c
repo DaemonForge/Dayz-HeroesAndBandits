@@ -38,8 +38,9 @@ modded class BaseBuildingBase
 			} else if (source.IsMeleeWeapon()) {
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
 			} else if (source.IsInherited(TrapBase)){
-				habPrint( GetType() + " hit by " + source.GetType() + " set by " + source.habGetActivatedBy(), "Debug");
-				habLastHitBy = source.habGetActivatedBy();
+				TrapBase trap = TrapBase.Cast(source);
+				habPrint( GetType() + " hit by " + trap.GetType() + " set by " + trap.habGetActivatedBy(), "Debug");
+				habLastHitBy = trap.habGetActivatedBy();
 			} else {
 				habPrint( GetType() + " hit by " + source.GetType(), "Debug");
 			}
