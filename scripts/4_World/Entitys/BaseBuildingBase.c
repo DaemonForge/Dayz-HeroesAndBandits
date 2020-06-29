@@ -42,11 +42,20 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + trap.GetType() + " set by " + trap.habGetActivatedBy(), "Debug");
 				habLastHitBy = trap.habGetActivatedBy();
 			} else if (source.IsInherited(Grenade_Base)){
-				// If source is Grenade
+				//Doesn't work currently had to add to individual classes
 				
 				Grenade_Base grenade = Grenade_Base.Cast(source);
 				habPrint( GetType() + " hit by " + grenade.GetType() + " set by " + grenade.habGetActivatedBy(), "Debug");
-			} else {
+			} 
+			#ifdef EXPANSIONMOD
+			else if ( source.IsInherited(ExpansionExplosiveBase)){
+				ExpansionExplosiveBase expansionExplosive = ExpansionExplosiveBase.Cast(source);
+				
+				habPrint( GetType() + " hit by " + expansionExplosive.GetType() + " set by " + expansionExplosive.habGetActivatedBy(), "Debug");
+				habLastHitBy = expansionExplosive.habGetActivatedBy();
+			}
+			#endif
+			else {
 				habPrint( GetType() + " hit by " + source.GetType(), "Debug");
 			}
 			if ( sourcePlayer )
@@ -54,18 +63,9 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + sourcePlayer.GetIdentity().GetPlainId() + " with " + source.GetType(), "Debug");
 				habLastHitBy = sourcePlayer.GetIdentity().GetPlainId();
 			}
-		} else if ( damageType == DT_EXPLOSION ) {
-			//If Damage Type Explosion
-			
-			habPrint( GetType() + " Hit by Explosion with no source", "Debug");
-		} else {
-			//Everything else
-			
-			habPrint( GetType() + " Hit by Type " + damageType + " with no source", "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 	
 
 }
-

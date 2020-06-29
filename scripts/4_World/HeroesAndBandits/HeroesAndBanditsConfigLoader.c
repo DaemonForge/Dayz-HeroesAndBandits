@@ -1,15 +1,14 @@
 static string HeroesAndBanditsDIR = "$profile:HeroesAndBandits";
-static string HeroesAndBanditsPlayerDB =  HeroesAndBanditsDIR + "\\PlayerDB";
 static string HeroesAndBanditsPATH = HeroesAndBanditsDIR + "\\config.json";
 
 class HeroesAndBanditsConfig
 { 
 	//Default Values
 	string ConfigVersion = "3";
-	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
-	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
+	ref array< ref habOldLevel > Levels = new ref array< ref habOldLevel >;
+	ref habOldLevel DefaultLevel = new ref habOldLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
 	
-	ref array< ref habAction > Actions = new ref array< ref habAction >;
+	ref array< ref habOldAction > Actions = new ref array< ref habOldAction >;
 	
 	ref array< ref habZone > Zones = new ref array< ref habZone >;
 	
@@ -118,16 +117,12 @@ class HeroesAndBanditsConfig
 				}
 			
 		}else{ //File does not exist create file
-			createDefaults();
-			MakeDirectory(HeroesAndBanditsDIR);
-			MakeDirectory(HeroesAndBanditsPlayerDB);
-			habPrint("Creating Default Config with "+ Actions.Count() +" Actions and " +  Levels.Count() +" Levels", "Always");	
-			JsonFileLoader<HeroesAndBanditsConfig>.JsonSaveFile(HeroesAndBanditsPATH, this);
+			habPrint("Something went wrong trying to create orginal config", "Exception");	
 		}
 	}
 
 	//Returns the level based on humanity value
-	habLevel getLevel(float humanity){
+	habOldLevel getLevel(float humanity){
 		for ( int i =0; i < Levels.Count(); i++ )
 		{
 			float minHumanity = Levels.Get(i).MinHumanity;
@@ -170,7 +165,7 @@ class HeroesAndBanditsConfig
 	}
 
 	//Returns the action based on the name it is NOT case sensitive
-	habAction getAction(string actionName){
+	habOldAction getAction(string actionName){
 		string tempActionName
 		for ( int i =0; i < Actions.Count(); i++ )
 		{
@@ -182,7 +177,7 @@ class HeroesAndBanditsConfig
 			}
 		}
 		habPrint("Action: " + actionName + " not found", "Exception");	
-		return new habAction("Null", "Null", 0, false);
+		return new habOldAction("Null", "Null", "Null", 0, false);
 	}
 	
 	//Returns the warning message color in an int value
@@ -214,80 +209,19 @@ class HeroesAndBanditsConfig
 
 	//Helper function for adding levels
 	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
-		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
+		habOldLevel tempLevel = new ref habOldLevel(name, affinity, levelImage, minHumanity, maxHumanity);
 		Levels.Insert(tempLevel);
 		habPrint("Level Added: " + name + " There are now " + Levels.Count() + " Levels", "Verbose");	
 	}
 
 
 	//Helper function for adding Actions
-	void addAction(string actionName, string affinity, float humanity, bool notifyPlayer = true){
-		habAction tempAction = new ref habAction(actionName, affinity, humanity, notifyPlayer);
+	void addAction(string actionName, string affinity, string secondaryAffinity, float humanity,  bool notifyPlayer = true){
+		habOldAction tempAction = new ref habOldAction(actionName, affinity, secondaryAffinity ,humanity, notifyPlayer);
 		Actions.Insert(tempAction);
 		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Verbose");	
 	}
 	
-        //Helper function for creating defaults
-	void createDefaults(){
-		addLevel( "Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1000, 1000);
-		addLevel( "Hero Lv1", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv1.paa", 1001, 4000);
-		addLevel( "Hero Lv2", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv2.paa", 4001, 12000);
-		addLevel( "Hero Lv3", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv3.paa", 12001, 20000);
-		addLevel( "Hero Lv4", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv4.paa", 20001, 50000);
-		addLevel( "Hero Lv5", "hero", "HeroesAndBandits/gui/images/HeroNotificationlv5.paa", 50001, -1);
-		addLevel( "Bandit Lv1", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv1.paa", -4000, -1001);
-		addLevel( "Bandit Lv2", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv2.paa", -12000, -4001);
-		addLevel( "Bandit Lv3", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv3.paa", -20000, -12001);
-		addLevel( "Bandit Lv4", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv4.paa", -50000, -20001);
-		addLevel( "Bandit Lv5", "bandit", "HeroesAndBandits/gui/images/BanditNotificationlv5.paa", -1, -50001);
-		addAction( "ZombieKill", "hero", 5);
-		addAction( "heroSucide", "bandit", 100);
-		addAction( "banditSucide", "hero", 100);
-		addAction( "bambiSucide", "bambi", 0, false);
-		addAction( "heroVshero", "bandit", 150);
-		addAction( "heroVsbambi", "bandit", 300);
-		addAction( "heroVsbandit", "hero", 250);
-		addAction( "banditVshero", "bandit", 250);
-		addAction( "banditVsbambi", "bandit", 125);
-		addAction( "banditVsbandit", "bandit", 150);
-		addAction( "bambiVshero", "bandit", 250);
-		addAction( "bambiVsbambi", "bandit", 100);
-		addAction( "bambiVsbandit", "hero", 300);
-		addAction( "CombinationLockRaid", "bandit", 150);
-		addAction( "FencePartRaid", "bandit", 100);
-		addAction( "BandagePlayer", "hero", 50);
-		addAction( "GiveBloodPlayer", "hero", 25);
-		addAction( "GiveSalinePlayer", "hero", 25);
-		addAction( "GivePlayerCPR", "hero", 75);
-		addAction( "HuntAnimal_BosTaurus_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurus_White", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_White", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_CanisLupus_Grey", "hero", 0, false);
-		addAction( "HuntAnimal_CanisLupus_White", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_Black", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_White", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircusF", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolus", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero", 0, false);
-		addAction( "HuntAnimal_CervusElaphus", "hero", 0, false);
-		addAction( "HuntAnimal_CervusElaphusF", "hero", 0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", 0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero", 0, false);
-		addAction( "HuntAnimal_OvisAries", "hero", 0, false);
-		addAction( "HuntAnimal_OvisAriesF", "hero", 0, false);
-		addAction( "HuntAnimal_SusDomesticus", "hero", 0, false);
-		addAction( "HuntAnimal_SusScrofa", "hero", 0, false);
-		addAction( "HuntAnimal_LepusEuropaeus", "hero", 0, false);
-		addAction( "HuntAnimal_UrsusArctos", "hero", 0, false);
-		addZone("Default Zone", 11250, 4300, -1000, 1000, 75, 50);
-	
-	}
 
 	void UpdateDefaults()
 	{
@@ -301,32 +235,32 @@ class HeroesAndBanditsConfig
 	{
 		ConfigVersion = "2";
 		LevelIconLocation = 2;
-		addAction( "HuntAnimal_BosTaurus_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurus_White", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_White", "hero", 0, false);
-		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_CanisLupus_Grey", "hero", 0, false);
-		addAction( "HuntAnimal_CanisLupus_White", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_Black", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircus_White", "hero", 0, false);
-		addAction( "HuntAnimal_CapraHircusF", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolus", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero", 0, false);
-		addAction( "HuntAnimal_CervusElaphus", "hero", 0, false);
-		addAction( "HuntAnimal_CervusElaphusF", "hero", 0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", 0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero", 0, false);
-		addAction( "HuntAnimal_OvisAries", "hero", 0, false);
-		addAction( "HuntAnimal_OvisAriesF", "hero", 0, false);
-		addAction( "HuntAnimal_SusDomesticus", "hero", 0, false);
-		addAction( "HuntAnimal_SusScrofa", "hero", 0, false);
-		addAction( "HuntAnimal_LepusEuropaeus", "hero", 0, false);
-		addAction( "HuntAnimal_UrsusArctos", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurus_Brown", "hero", "hunter", 0, false);
+		addAction( "HuntAnimal_BosTaurus_White", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_BosTaurusF_White", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CanisLupus_Grey", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CanisLupus_White", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapraHircus_Brown", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapraHircus_Black", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapraHircus_White", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapraHircusF", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapreolusCapreolus", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_CervusElaphus", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_CervusElaphusF", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_OvisAries", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_OvisAriesF", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_SusDomesticus", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_SusScrofa", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_LepusEuropaeus", "hero", "hunter",  0, false);
+		addAction( "HuntAnimal_UrsusArctos", "hero",  "hunter", 0, false);
 		
 	}
 	
@@ -341,9 +275,8 @@ class HeroesAndBanditsConfig
 }
 
 
-
 //Class for holding levels
-class habLevel
+class habOldLevel
 {
 	string Name;
 	string Affinity; //bandit / hero / bambi
@@ -351,130 +284,35 @@ class habLevel
 	float MinHumanity;
 	float MaxHumanity;
 
-	void habLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity) 
+	void habOldLevel(string name, string affinity, string levelImage, float minPoints, float maxPoints) 
 	{
 		Name = name;
 		Affinity = affinity;
 		LevelImage = levelImage;
-		MinHumanity = minHumanity;
-		MaxHumanity = maxHumanity;
+		MinPoints = minHumanity;
+		MaxPoints = maxHumanity;
 	}
 }
 
 
 //Class for holding Actions
-class habAction
+class habOldAction
 {
 	string Name;
 	string Affinity; //bandit / hero / bambi
 	float Humanity;
 	bool NotifiyPlayer;
 
-	void habAction(string actionName, string affinity, float humanity, bool notifiyPlayer = true) 
+	void habAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifiyPlayer = true) 
 	{
 		Name = actionName;
 		Affinity = affinity;
-		Humanity = humanity;
+		SecondaryAffinity =  secondaryAffinity;
+		Points = points;
 		NotifiyPlayer = notifiyPlayer;
 	}
 }
 
-
-//Class for holding Zones
-class habZone
-{
-	string Name;
-	float X;
-	float Z;
-	int KillRadius;
-	float MinHumanity;
-	float MaxHumanity;
-	int WarningRadius;
-	bool ShowWarningMsg = true;
-	string WarningMessage = "";
-	bool ShowWelcomeMsg = false;
-	string WelcomeMessage = "Welcome to the Default Zone";
-	string WelcomeIcon = "HeroesAndBandits/gui/images/BambiNotification.paa";
-	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
-	bool OverrideSafeZone = false;
-	bool GodModPlayers = false;
-	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
-	
-	void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
-	{
-		Name = name;
-		X = x;
-		Z = z;
-		WarningRadius = warningRadius;
-		KillRadius = killRadius;
-		MinHumanity = minHumanity;
-		MaxHumanity = maxHumanity;
-		OverrideSafeZone = overrideSafeZone;
-		GodModPlayers = godModPlayers;
-		if (warningMessage == ""){
-			WarningMessage = "!!Warning!! you are about to enter " + name + " if you continue you will be shot!";
-		}else{
-			WarningMessage = warningMessage;
-		}
-	}
-	
-	//Converts the x and y to vector
-	vector getVector(){
-		return Vector( X, GetGame().SurfaceY(X, Z), Z );
-	}
-	
-	//Helper function to check if player has valid humanity for the zone
-	bool validHumanity(float humanity){
-		if ( MinHumanity != -1 && MaxHumanity != -1 && humanity >= MinHumanity && humanity <= MaxHumanity){
-				return true;
-			}else if (MinHumanity == -1 && MaxHumanity == -1){
-				return true;
-			}else if (MinHumanity == -1 && MaxHumanity != -1 && humanity <= MaxHumanity){
-				return true;
-			}else if (MinHumanity != -1 && MaxHumanity == -1 && humanity >= MinHumanity){
-				return true;
-			}
-		return false;
-	}
-
-	//Returns the welcome color in an int value
-	int getWelcomeMessageColor(){
-		return ARGB(WelcomeMessageColor[0], WelcomeMessageColor[1], WelcomeMessageColor[2], WelcomeMessageColor[3]);
-	}
-}
-
-
-//Class for holding guard values
-class habGuard
-{
-	float X;
-	float Y;
-	float Z;
-	float Orientation;
-	string Skin = "";
-	string WeaponInHands = "M4A1";
-	string WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
-	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
-	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
-
-	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "") 
-	{
-		X = x;
-		Y = y;
-		Z = z;
-		Orientation = orientation;
-		if ( skin == ""){
-		 	Skin = GetHeroesAndBanditsConfig().BanditSkins.GetRandomElement();
-		}else {
-			Skin = skin;
-		}
-	}
-
-	//Converts the x and y to vector
-	vector getVector(){
-		return Vector( X, Y, Z );
-	}
-}
 
 //Helper function to return Config
 static ref HeroesAndBanditsConfig GetHeroesAndBanditsConfig()

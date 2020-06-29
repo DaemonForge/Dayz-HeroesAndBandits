@@ -1,6 +1,7 @@
 modded class PlayerBase
 {
 	float m_HeroesAndBandits_WarningSent = -1; //For Zones
+	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For Zones
 	bool  m_HeroesAndBandits_Killed = false;
 	
 	override void Init()
