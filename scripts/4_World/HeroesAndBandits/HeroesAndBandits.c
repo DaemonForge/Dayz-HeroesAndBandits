@@ -74,13 +74,22 @@ class HeroesAndBandits
 			if ( p.PlayerID ==  playerID)
 			{
 				bool didLevelUp = p.NewAction(action);
-				if (GetHeroesAndBanditsActions().getAction(action).NotifiyPlayer){
+				habAction tempAction = GetHeroesAndBanditsActions().getAction(action);
+				if (tempAction.NotifiyPlayer){
 					string prefix = "";
-					float actionHumanity = GetHeroesAndBanditsActions().getActionHumanity(action);
-					if (actionHumanity > 0){
+					string postix = "";
+					float actionHumanity = tempAction.Points;
+					if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "hero"){
 						prefix = "+";
+						postix = " #HAB_HUMANITY";
+					} else if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "bandit") {
+						prefix = "-";
+						postix = " #HAB_HUMANITY";
+					} else if (GetHeroesAndBanditsSettings().Mode == 1){
+						prefix = "+";
+						postix = " " + getAffinity(tempAction.Affinity).DisplayName;
 					}
-					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + " #HAB_HUMANITY" );	
+					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + postix );	
 				}
 				if (didLevelUp)
 				{
