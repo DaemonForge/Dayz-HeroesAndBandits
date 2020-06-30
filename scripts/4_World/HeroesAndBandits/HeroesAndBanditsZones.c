@@ -76,11 +76,7 @@ class HeroesAndBanditsZone
 	}
 	
 	bool CheckPlayer(PlayerBase player){
-
-	}
-	
-	bool isInZone(){
-	
+		
 	}
 	
     void HeroesAndBanditsZone(string name, float x, float z) 

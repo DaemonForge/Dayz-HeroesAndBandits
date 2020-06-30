@@ -501,7 +501,6 @@ static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 		}
 		return m_HeroesAndBanditsConfigActions;
 	} else {
-		
 		return g_HeroesAndBanditsConfigActions;
 	}
 }

@@ -75,11 +75,11 @@ modded class PlayerBase
 				if (sourcePlayerID == targetPlayerID){ //Sucide
 					if ( !sourcePlayer.IsInVehicle() )
 					{//If not in Vehicle Crash
-						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
 					}
 				}else {
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerAffinity(targetPlayerID));
+					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
 					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
 				}
 			}
@@ -97,17 +97,17 @@ modded class PlayerBase
 			if (source.IsInherited(Grenade_Base)){
 				Grenade_Base grenade = Grenade_Base.Cast(source);
 				string objectActivatedByID = grenade.habGetActivatedBy();
-				weaponName =  "#HAB_KILLFEED_PRE " + grenade.habGetActivatedBy();
+				weaponName =  "#HAB_KILLFEED_PRE " + grenade.GetType();
 				habPrint("Player " + GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectActivatedByID,"Debug");
 				sourcePlayerID = objectActivatedByID;
 				targetPlayerID = GetIdentity().GetPlainId();
 				if ( sourcePlayerID != "null" )
 				{
 					if (sourcePlayerID == targetPlayerID){ //Sucide
-						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Sucide");
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
 					}else {
-						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerAffinity(targetPlayerID));
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
 						GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
 					}
 				}

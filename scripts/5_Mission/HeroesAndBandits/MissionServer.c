@@ -55,11 +55,11 @@ modded class MissionServer
 	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
 		string playerID = identity.GetPlainId();
 		habPrint("Sending Settings to Player: " + playerID, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels()), false, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, identity);
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsSettings().AllowGUI,GetHeroesAndBanditsSettings().GUIHeading, GetHeroesAndBanditsSettings().HideKillsInGUI, playerData, playerLevel ), true, identity);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
 	}
 	
 	
@@ -93,7 +93,7 @@ modded class MissionServer
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		habPrint("Player: " + playerID + " Requested Player Data", "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel >( GetHeroesAndBanditsSettings().AllowGUI, GetHeroesAndBanditsSettings().GUIHeading, GetHeroesAndBanditsSettings().HideKillsInGUI, playerData, playerLevel ), true, sender);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, sender);
 	}
 	
 	
@@ -170,7 +170,7 @@ modded class MissionServer
 			if (!p.IsPlayerDisconnected())
 			{
 				playerID = p.GetIdentity().GetPlainId();
-				GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels()), false, p.GetIdentity());
+				GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, p.GetIdentity());
 			}
 		}
 	}

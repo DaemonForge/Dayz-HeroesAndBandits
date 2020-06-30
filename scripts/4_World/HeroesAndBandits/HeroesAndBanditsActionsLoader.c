@@ -100,7 +100,7 @@ class HeroesAndBanditsConfigActions
 		addAction( "bambiVsbandit", "hero", "none",300);
 		addAction( "CombinationLockRaid", "bandit", "none", 150);
 		addAction( "FencePartRaid", "bandit","none", 50);
-		addAction( "WatchtowerPartRaid", "bandit", "none",30);
+		addAction( "WatchtowerPartRaid", "bandit", "none", 30);
 		addAction( "BandagePlayer", "hero", "medic", 50);
 		addAction( "GiveBloodPlayer", "hero", "medic",25);
 		addAction( "GiveSalinePlayer", "hero","medic", 25);

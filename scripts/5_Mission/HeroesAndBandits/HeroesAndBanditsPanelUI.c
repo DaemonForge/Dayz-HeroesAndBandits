@@ -33,38 +33,18 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
 		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
 		
-		if (!g_HeroesAndBanditsGUIHeading)
-		{
-			m_Heading.SetText("#HAB_TITLE");
-		} else {
-			m_Heading.SetText(g_HeroesAndBanditsGUIHeading);
-		}
+		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
+
+		m_Affinity.SetText("#HAB_AFFINITY: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
+		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		
-		string playerAffinity = g_HeroesAndBanditsLevel.Affinity;
-		if ( playerAffinity == "hero")
-		{
-			playerAffinity = "#HAB_HERO";
-			
-		} else if ( playerAffinity == "bandit"){
-			playerAffinity = "#HAB_BANDIT";
-		
-		} else if ( playerAffinity == "bambi"){
-			playerAffinity = "#HAB_BAMBI";
-		
-		} else {
-			
-		}
- 		
-		m_Affinity.SetText("#HAB_AFFINITY: " + playerAffinity);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + playerAffinity);
-		
-		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
+		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsPlayer.getLevel().Name);
 		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
 		
 		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
 		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
 		
-		if ( !g_HeroesAndBanditsHideKillsInGUI )
+		if ( !GetHeroesAndBanditsSettings().HideKillsInGUI )
 		{
 			m_PlayerKills.SetText("#HAB_PLAYERKILLS: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
@@ -96,26 +76,12 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	{
 		//Print("[HeroesAndBandits] [DebugClient] Update Panel ");
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
+		
 		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
-		m_Heading.SetText("#HAB_TITLE");
+		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
 		
-		string playerAffinity = g_HeroesAndBanditsLevel.Affinity;
-		if ( playerAffinity == "hero")
-		{
-			playerAffinity = "#HAB_HERO";
-			
-		} else if ( playerAffinity == "bandit"){
-			playerAffinity = "#HAB_BANDIT";
-		
-		} else if ( playerAffinity == "bambi"){
-			playerAffinity = "#HAB_BAMBI";
-		
-		} else {
-			
-		}
- 		
-		m_Affinity.SetText("#HAB_AFFINITY: " + playerAffinity);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + playerAffinity);
+		m_Affinity.SetText("#HAB_AFFINITY: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
+		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		
 		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
 		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
@@ -123,7 +89,7 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
 		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
 		
-		if ( !g_HeroesAndBanditsHideKillsInGUI )
+		if ( !GetHeroesAndBanditsSettings().HideKillsInGUI )
 		{
 			m_PlayerKills.SetText("#HAB_PLAYERKILLS: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
@@ -131,6 +97,7 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 			m_PlayerKills.SetText(" ");
 			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 		}
+		
 		m_ZombieKills.SetText("#HAB_ZOMBIEKILLS: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
 		//Print("[HeroesAndBandits] [DebugClient] Setting ZombieKill: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
 		

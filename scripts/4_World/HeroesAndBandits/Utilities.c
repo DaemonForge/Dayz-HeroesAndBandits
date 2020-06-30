@@ -159,6 +159,7 @@ bool habCheckUpgradeToConfigV4(){
 				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;
 				temp_Actions.Actions.Insert( new ref habAction(tempActionName, tempActionAffinity, tempActionSecondaryAffinity, tempActionPoints, tempActionNotifiyPlayer));
 			}
+			temp_Actions.addAction( "WatchtowerPartRaid", "bandit", "none", 30);
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);
 			

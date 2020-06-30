@@ -1,8 +1,6 @@
 ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
+ref habLevel 						g_HeroesAndBanditsLevel;
 
-ref habLevel 				g_HeroesAndBanditsLevel;
-string 						g_HeroesAndBanditsGUIHeading;
-bool 						g_HeroesAndBanditsHideKillsInGUI;
 modded class MissionGameplay
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
@@ -10,12 +8,6 @@ modded class MissionGameplay
 	ref HeroesAndBanditsPanelUI				m_HeroesAndBanditsPanelUI;
 	bool									m_HeroesAndBanditsIconsInitialized;
 	string									m_HeroesAndBanditsCurrentIcon;
-	bool 									m_HeroesAndBanditsShowLevelIcon;
-	int 									m_HeroesAndBanditsIconLocation;
-	string									m_HeroesAndBanditsCommandPrefix;
-	bool 									m_HeroesAndBanditsAllowHumanityCommand;
-	bool 									m_HeroesAndBanditsAllowStatCommand;
-	bool 									m_HeroesAndBanditsAllowGUI;
 	
 	override void OnInit()
 	{
@@ -28,12 +20,14 @@ modded class MissionGameplay
 	
 	
 	void InitHabIcon(){
-		if ( m_HeroesAndBanditsIconLocation == 1 ||  m_HeroesAndBanditsIconLocation == 3  )
+		if ( GetHeroesAndBanditsLevels().LevelIconLocation == 1 ||  GetHeroesAndBanditsLevels().LevelIconLocation == 3  )
 		{
+			m_HeroesAndBanditsIconsInitialized = true;
 			m_HeroesAndBanditsIconUI = new ref HeroesAndBanditsIconUI;
 			m_HeroesAndBanditsIconUI.Init();
 		} 
-		if ( m_HeroesAndBanditsIconLocation == 2 ||  m_HeroesAndBanditsIconLocation == 3  ) {
+		if ( GetHeroesAndBanditsLevels().LevelIconLocation == 2 ||  GetHeroesAndBanditsLevels().LevelIconLocation == 3  ) {
+			m_HeroesAndBanditsIconsInitialized = true;
 			m_HeroesAndBanditsStatusBarIconUI = new ref HeroesAndBanditsStatusBarIconUI;
 			m_HeroesAndBanditsStatusBarIconUI.Init();
 		}
@@ -45,20 +39,15 @@ modded class MissionGameplay
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Settings");
-		Param3< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels> data;
+		Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> data;
 		if ( !ctx.Read( data ) ) return;
 		g_HeroesAndBanditsSettings = data.param1;
 		g_HeroesAndBanditsConfigActions = data.param2;
 		g_HeroesAndBanditsConfigLevels = data.param3;
+		g_HeroesAndBanditsPlayer = data.param4;
+		g_HeroesAndBanditsLevel = g_HeroesAndBanditsPlayer.getLevel();
+		m_HeroesAndBanditsCurrentIcon = g_HeroesAndBanditsPlayer.getLevel().LevelImage;
 		Print("[HeroesAndBandits] [DebugClient] Settings Proccessed");
-		g_HeroesAndBanditsGUIHeading = GetHeroesAndBanditsSettings().GUIHeading; // Will remove and replace just being lazy
-		g_HeroesAndBanditsHideKillsInGUI = GetHeroesAndBanditsSettings().HideKillsInGUI;
-		m_HeroesAndBanditsShowLevelIcon = GetHeroesAndBanditsLevels().ShowLevelIcon;
-		m_HeroesAndBanditsIconLocation = GetHeroesAndBanditsLevels().LevelIconLocation;
-		m_HeroesAndBanditsCommandPrefix = GetHeroesAndBanditsSettings().CommandPrefix;
-		m_HeroesAndBanditsAllowHumanityCommand = GetHeroesAndBanditsSettings().AllowHumanityCommand;
-		m_HeroesAndBanditsAllowStatCommand = GetHeroesAndBanditsSettings().AllowStatCommand;
-		m_HeroesAndBanditsAllowGUI = GetHeroesAndBanditsSettings().AllowGUI;
 		if ( GetHeroesAndBanditsLevels().ShowLevelIcon )
 		{
 			if ( !m_HeroesAndBanditsIconsInitialized )
@@ -78,17 +67,14 @@ modded class MissionGameplay
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
-		Param5< bool, string, bool, HeroesAndBanditsPlayer, habLevel > data;
+		Param2< HeroesAndBanditsPlayer, habLevel > data;
 		if ( !ctx.Read( data ) ) return;
-			m_HeroesAndBanditsAllowGUI  = data.param1;
-			g_HeroesAndBanditsGUIHeading  = data.param2;
-			g_HeroesAndBanditsHideKillsInGUI = data.param3;
-            g_HeroesAndBanditsPlayer = data.param4;
-			g_HeroesAndBanditsLevel = data.param5;		
+            g_HeroesAndBanditsPlayer = data.param1;
+			g_HeroesAndBanditsLevel = data.param2;		
 			string newIcon = g_HeroesAndBanditsLevel.LevelImage;
 			string playerID = g_HeroesAndBanditsPlayer.PlayerID;
 			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed Icon: " + m_HeroesAndBanditsCurrentIcon);
-			if ( !newIcon || !playerID || !m_HeroesAndBanditsShowLevelIcon)
+			if ( !newIcon || !playerID )
 			{
 				return;
 			}
@@ -107,7 +93,7 @@ modded class MissionGameplay
 		string newIcon = data.param2;
 		string playerID = data.param1;
 		Print("[HeroesAndBandits] [DebugClient] " + playerID + " received icon " + newIcon);
-			if ( !newIcon || !playerID || !m_HeroesAndBanditsShowLevelIcon)
+			if ( !newIcon || !playerID || !GetHeroesAndBanditsLevels().ShowLevelIcon)
 			{
 				return;
 			}
@@ -121,12 +107,12 @@ modded class MissionGameplay
 	void UpdateHABIcon(){
 		Print("[HeroesAndBandits] [DebugClient] Updating Icon");
 		
-		if ( !m_HeroesAndBanditsShowLevelIcon || !m_HeroesAndBanditsIconUI ) 
+		if ( !GetHeroesAndBanditsLevels().ShowLevelIcon || !m_HeroesAndBanditsIconUI ) 
 		{	
 		} else {
 			m_HeroesAndBanditsIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
 		}
-		if ( !m_HeroesAndBanditsShowLevelIcon || !m_HeroesAndBanditsStatusBarIconUI ) 
+		if ( !GetHeroesAndBanditsLevels().ShowLevelIcon || !m_HeroesAndBanditsStatusBarIconUI ) 
 		{
 		} else {
 			m_HeroesAndBanditsStatusBarIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
@@ -182,9 +168,9 @@ modded class MissionGameplay
 
 		Print("[HeroesAndBandits] [DebugClient] Message: " + message);
 		string cmd_prefix = "/";
-		if ( !m_HeroesAndBanditsCommandPrefix ){
+		if ( !GetHeroesAndBanditsSettings().CommandPrefix ){
 		} else {
-			cmd_prefix = m_HeroesAndBanditsCommandPrefix;
+			cmd_prefix = GetHeroesAndBanditsSettings().CommandPrefix;
 		}
 
 		param0 = tokens.Get(0);
@@ -213,7 +199,7 @@ modded class MissionGameplay
 			case "pепутация":
 			case "menschheit":
 			case "humanitarność": {
-					if (m_HeroesAndBanditsAllowHumanityCommand){
+					if (GetHeroesAndBanditsSettings().AllowHumanityCommand){
 						commandNotSentToServer = false;
 						Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
 						GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param1< string >(command), false);
@@ -221,7 +207,7 @@ modded class MissionGameplay
 					break;
 				}
 			case "stat": {
-				if (m_HeroesAndBanditsAllowStatCommand){
+				if (GetHeroesAndBanditsSettings().AllowStatCommand){
 					commandNotSentToServer = false;
 					Print("[HeroesAndBandits] [DebugClient] Requesting Stat from server");
 					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param2< string, string >( command, statname), false);
@@ -267,7 +253,7 @@ modded class MissionGameplay
 		
 	void HeroesAndBanditsCreatePanel()
 	{
-		if(m_HeroesAndBanditsAllowGUI)
+		if(GetHeroesAndBanditsSettings().AllowGUI)
 		{
 	    	HeroesAndBanditsLockControls();
 	        m_HeroesAndBanditsPanelUI = HeroesAndBanditsPanelUI.Cast(GetUIManager().EnterScriptedMenu(HEROESANDBANDITS_PANEL_MENU, null));
@@ -278,7 +264,7 @@ modded class MissionGameplay
 	
 	void HeroesAndBanditsOpenPanel()
 	{	
-		if(m_HeroesAndBanditsAllowGUI)
+		if(GetHeroesAndBanditsSettings().AllowGUI)
 		{
 			GetGame().GetUIManager().ShowScriptedMenu(m_HeroesAndBanditsPanelUI, NULL);
 	        m_HeroesAndBanditsPanelUI.SetOpen(true);

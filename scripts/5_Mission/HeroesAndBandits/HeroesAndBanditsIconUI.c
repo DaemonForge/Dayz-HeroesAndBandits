@@ -8,7 +8,7 @@ class HeroesAndBanditsIconUI extends UIScriptedMenu
     {
 		layoutRoot 	= GetGame().GetWorkspace().CreateWidgets( "HeroesAndBandits/gui/layouts/HeroesAndBandits.layout" );
 		m_Icon		= ImageWidget.Cast( layoutRoot.FindAnyWidget( "HeroesAndBanditsIcon" ) );
-		m_Icon.LoadImageFile( 0, "HeroesAndBandits/gui/images/BambiNotification.paa" , true );
+		m_Icon.LoadImageFile( 0, g_HeroesAndBanditsPlayer.getLevel().LevelImage , true );
 		
         return layoutRoot;
     }
