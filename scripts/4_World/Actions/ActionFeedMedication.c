@@ -32,7 +32,7 @@ modded class ActionFeedCharcoalTablets
 	}
 }
 
-modded class ActionEatVitaminBottle
+modded class ActionFeedVitaminBottle
 {	
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

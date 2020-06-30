@@ -160,6 +160,11 @@ bool habCheckUpgradeToConfigV4(){
 				temp_Actions.Actions.Insert( new ref habAction(tempActionName, tempActionAffinity, tempActionSecondaryAffinity, tempActionPoints, tempActionNotifiyPlayer));
 			}
 			temp_Actions.addAction( "WatchtowerPartRaid", "bandit", "none", 30);
+			temp_Actions.addAction( "MedicFeedTetracycline", "hero", "medic", 25);
+			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 25);
+			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 25);
+			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 25);
+			temp_Actions.addAction( "MedicSplintPlayer", "hero", "medic", 75);
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);
 			
