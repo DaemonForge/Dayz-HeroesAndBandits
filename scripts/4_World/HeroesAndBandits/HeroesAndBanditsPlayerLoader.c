@@ -150,8 +150,10 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
-				if ( Stats.Get(k).Name == "BandagePlayer" || Stats.Get(k).Name == "GiveBloodPlayer" || Stats.Get(k).Name == "GiveSalinePlayer" || Stats.Get(k).Name == "GivePlayerCPR" ){
-					statTotal = statTotal + Stats.Get(k).Stat;
+				prefix = Stats.Get(j).Name.Substring(0,5);
+				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
+				if ( prefix == "Medic" ){
+					statTotal = statTotal + Stats.Get(l).Stat;
 				}
 			}
 			return statTotal;
@@ -252,7 +254,13 @@ class HeroesAndBanditsPlayer
 		float subTotal = 0;
 		for ( int j =0; j < Stats.Count(); j++ )
 		{
+			string statName = habUpdateStat(Stats.Get(j).Name);
+			if (statName != Stats.Get(j).Name) {
+				habPrint( "Player: " + PlayerID + " updating stat from Stats.Get(j).Name to " + statName, "Always");
+				Stats.Get(j).Name = statName;
+			}
 			habAction tempAction = GetHeroesAndBanditsActions().getAction(Stats.Get(j).Name);
+			
 			if (tempAction.Name != "Null"){
 				subTotal = Stats.Get(j).Stat * tempAction.Points;
 				if ( tempAction.Affinity != "none" ){

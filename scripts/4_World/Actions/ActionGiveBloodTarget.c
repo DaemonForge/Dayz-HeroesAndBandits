@@ -15,7 +15,7 @@ modded class ActionGiveBloodTarget
 		{
 			PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 			string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-			GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "GiveBloodPlayer");
+			GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicGiveBlood");
 		} else
 		{ //TODO
 			

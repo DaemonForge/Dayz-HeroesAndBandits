@@ -152,8 +152,25 @@ bool habCheckUpgradeToConfigV4(){
 				if (tempActionprefix == "Hunt"){
 					tempActionSecondaryAffinity = "hunter";
 				}
-				if ( tempActionName == "BandagePlayer" || tempActionName == "GiveBloodPlayer" || tempActionName == "GiveSalinePlayer" || tempActionName == "GivePlayerCPR" ){
+				if ( tempActionName == "BandagePlayer")
+				{
 					tempActionSecondaryAffinity = "medic";
+					tempActionName = "MedicBandagePlayer";
+				}
+				if (tempActionName == "GiveBloodPlayer" ) {
+					tempActionSecondaryAffinity = "medic";
+					tempActionName = "MedicGiveBlood";
+					
+				}
+				if (tempActionName == "GiveSalinePlayer" ) {
+					tempActionSecondaryAffinity = "medic";
+					tempActionName = "MedicGiveSaline";
+				
+				}
+				if (tempActionName == "GivePlayerCPR" )	{
+					tempActionSecondaryAffinity = "medic";
+					tempActionName = "MedicGiveCPR";
+				
 				}
 				float tempActionPoints = GetHeroesAndBanditsConfig().Actions.Get(j).Humanity;
 				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;
@@ -213,4 +230,21 @@ bool habCheckUpgradeToConfigV4(){
 		}
 	}
 	return didUpgrade;
+}
+
+string habUpdateStat(string statName){
+	if ( statName == "BandagePlayer") {
+		statName = "MedicBandagePlayer";
+	}
+	if (statName == "GiveBloodPlayer" ) {
+		statName = "MedicGiveBlood";	
+	}
+	if (statName == "GiveSalinePlayer" ) {
+		statName = "MedicGiveSaline";
+				
+	}
+	if (statName == "GivePlayerCPR" ) {
+		statName = "MedicGiveCPR";
+	}
+	return statName;
 }
