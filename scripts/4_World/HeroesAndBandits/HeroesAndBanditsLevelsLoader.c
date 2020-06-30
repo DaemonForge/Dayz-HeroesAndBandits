@@ -33,8 +33,8 @@ class HeroesAndBanditsConfigLevels
 		{
 			if( Levels.Get(i).Affinity ==  affinity)
 			{
-				float minPoints = Levels.Get(i).minPoints;
-				float maxPoints = Levels.Get(i).maxPoints;
+				float minPoints = Levels.Get(i).MinPoints;
+				float maxPoints = Levels.Get(i).MaxPoints;
 				if ( minPoints != -1 && maxPoints != -1 && points >= minPoints && points <= maxPoints){
 					return Levels.Get(i);
 				}else if (minPoints == -1 && maxPoints != -1 && points <= maxPoints){
@@ -50,7 +50,7 @@ class HeroesAndBanditsConfigLevels
 	bool doesAffinityExsit(string name){
 		for ( int i =0; i < Affinities.Count(); i++ )
 		{
-			if ( Affinities.Get(i).Name ==  affinity)
+			if ( Affinities.Get(i).Name ==  name)
 			{
 				return true;
 			}
@@ -61,7 +61,7 @@ class HeroesAndBanditsConfigLevels
 	habAffinity getAffinity(string name){
 		for ( int i =0; i < Affinities.Count(); i++ )
 		{
-			if ( Affinities.Get(i).Name ==  affinity)
+			if ( Affinities.Get(i).Name ==  name)
 			{
 				return Affinities.Get(i);
 			}
@@ -129,8 +129,8 @@ class habLevel
 		Name = name;
 		Affinity = affinity;
 		LevelImage = levelImage;
-		MinPoints = minHumanity;
-		MaxPoints = maxHumanity;
+		MinPoints = minPoints;
+		MaxPoints = maxPoints;
 	}
 }
 
@@ -145,15 +145,4 @@ class habAffinity
 		Name = name;
 		DisplayName = displayName;
 	}
-}
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
-{
-	if (!m_HeroesAndBanditsConfigLevels)
-	{
-		m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
-		m_HeroesAndBanditsConfigLevels.Load();
-	}
-	return m_HeroesAndBanditsConfigLevels;
 }

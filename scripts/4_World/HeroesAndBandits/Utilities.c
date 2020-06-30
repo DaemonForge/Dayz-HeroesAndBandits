@@ -145,7 +145,19 @@ bool habCheckUpgradeToConfigV4(){
 			temp_Actions.NotificationColor = GetHeroesAndBanditsConfig().NotificationColor;
 			for ( int j = 0; j < GetHeroesAndBanditsConfig().Actions.Count(); j++)
 			{//TODO
-				temp_Actions.Actions.Insert(GetHeroesAndBanditsConfig().Actions.Get(i));
+				string tempActionName = GetHeroesAndBanditsConfig().Actions.Get(j).Name;
+				string tempActionAffinity = GetHeroesAndBanditsConfig().Actions.Get(j).Affinity; //bandit / hero / bambi
+				string tempActionSecondaryAffinity = "none";
+				string tempActionprefix = tempActionName.Substring(0,4);
+				if (tempActionprefix == "Hunt"){
+					tempActionSecondaryAffinity = "hunter";
+				}
+				if ( tempActionName == "BandagePlayer" || tempActionName == "GiveBloodPlayer" || tempActionName == "GiveSalinePlayer" || tempActionName == "GivePlayerCPR" ){
+					tempActionSecondaryAffinity = "medic";
+				}
+				float tempActionPoints = GetHeroesAndBanditsConfig().Actions.Get(j).Humanity;
+				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;
+				temp_Actions.Actions.Insert( new ref habAction(tempActionName, tempActionAffinity, tempActionSecondaryAffinity, tempActionPoints, tempActionNotifiyPlayer));
 			}
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);
@@ -153,23 +165,23 @@ bool habCheckUpgradeToConfigV4(){
 			//Levels
 			temp_Levels.ConfigVersion = "4";
 			temp_Levels.Affinities = new ref array< ref habAffinity >;
-			temp_Levels.DefaultLevel = GetHeroesAndBanditsConfig().DefaultLevel;
+			temp_Levels.DefaultLevel = new ref habLevel(GetHeroesAndBanditsConfig().DefaultLevel.Name, "bambi", GetHeroesAndBanditsConfig().DefaultLevel.LevelImage, -1, 1000);
 			temp_Levels.ShowLevelIcon = GetHeroesAndBanditsConfig().ShowLevelIcon;
 			temp_Levels.LevelIconLocation = GetHeroesAndBanditsConfig().LevelIconLocation;
 			temp_Levels.NotifyLevelChange = GetHeroesAndBanditsConfig().NotifyLevelChange;
-			for ( int j = 0; j < GetHeroesAndBanditsConfig().Levels.Count(); j++)
+			for ( int k = 0; k < GetHeroesAndBanditsConfig().Levels.Count(); k++)
 			{
-				float minPoints = GetHeroesAndBanditsConfig().Levels.Get(j).MinHumanity;
-				float maxPoints = GetHeroesAndBanditsConfig().Levels.Get(j).MaxHumanity;
-				if (GetHeroesAndBanditsConfig().Levels.Get(j).Affinity == "bandit")
+				float minPoints = GetHeroesAndBanditsConfig().Levels.Get(k).MinHumanity;
+				float maxPoints = GetHeroesAndBanditsConfig().Levels.Get(k).MaxHumanity;
+				if (GetHeroesAndBanditsConfig().Levels.Get(k).Affinity == "bandit")
 				{
-					minPoints = 0 - GetHeroesAndBanditsConfig().Levels.Get(j).MaxHumanity;
-					maxPoints = 0 - GetHeroesAndBanditsConfig().Levels.Get(j).MinHumanity;
-					if ( GetHeroesAndBanditsConfig().Levels.Get(j).MinHumanity == -1){
+					minPoints = 0 - GetHeroesAndBanditsConfig().Levels.Get(k).MaxHumanity;
+					maxPoints = 0 - GetHeroesAndBanditsConfig().Levels.Get(k).MinHumanity;
+					if ( GetHeroesAndBanditsConfig().Levels.Get(k).MinHumanity == -1){
 						maxPoints = -1;
 					}
 				}
-				temp_Levels.Levels.Insert(GetHeroesAndBanditsConfig().Levels.Get(j).Name, GetHeroesAndBanditsConfig().Levels.Get(j).Affinity, GetHeroesAndBanditsConfig().Levels.Get(j).LevelImage, minPoints, maxPoints);
+				temp_Levels.Levels.Insert(new ref habLevel(GetHeroesAndBanditsConfig().Levels.Get(k).Name, GetHeroesAndBanditsConfig().Levels.Get(k).Affinity, GetHeroesAndBanditsConfig().Levels.Get(k).LevelImage, minPoints, maxPoints));
 			}
 			
 			temp_Levels.addLevel( "Medic Lv1", "medic", "HeroesAndBandits/gui/images/Mediclv1.paa", 1001, 4000);
@@ -182,7 +194,6 @@ bool habCheckUpgradeToConfigV4(){
 			temp_Levels.addLevel( "Hunter Lv3", "hunter", "HeroesAndBandits/gui/images/Hunterlv3.paa", 12001, 20000);
 			temp_Levels.addLevel( "Hunter Lv4", "hunter", "HeroesAndBandits/gui/images/Hunterlv4.paa", 20001, 50000);
 			temp_Levels.addLevel( "Hunter Lv5", "hunter", "HeroesAndBandits/gui/images/Hunterlv5.paa", 50001, -1);
-			temp_Levels.addAffinity("bambi", "#HAB_BAMBI");
 			temp_Levels.addAffinity("hero", "#HAB_HERO");
 			temp_Levels.addAffinity("bandit", "#HAB_BANDIT");
 			temp_Levels.addAffinity("medic", "#HAB_MEDIC");

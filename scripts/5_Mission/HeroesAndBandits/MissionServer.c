@@ -36,7 +36,7 @@ modded class MissionServer
 		if ( identity )
 		{
 			string playerID = identity.GetPlainId();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 4000, false, new Param1<ref PlayerIdentity>(identity));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 3000, false, new Param1<ref PlayerIdentity>(identity));
 		}
 	}
 	
@@ -54,8 +54,8 @@ modded class MissionServer
 	
 	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
 		string playerID = identity.GetPlainId();
-		habPrint("Sending Settings to Player: " + playerID + ", ShowLevelIcon: " +  GetHeroesAndBanditsLevels().ShowLevelIcon + ", CommandPrefix: " +  GetHeroesAndBanditsSettings().CommandPrefix + ", AllowHumanityCommand " + GetHeroesAndBanditsSettings().AllowHumanityCommand + ", AllowStatCommand: " + GetHeroesAndBanditsSettings().AllowStatCommand + ", LevelImage: " + GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage + ", LevelIconLocation: " + GetHeroesAndBanditsLevels().LevelIconLocation, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param6< bool, string, bool, bool, string, int >(GetHeroesAndBanditsLevels().ShowLevelIcon, GetHeroesAndBanditsSettings().CommandPrefix, GetHeroesAndBanditsSettings().AllowHumanityCommand, GetHeroesAndBanditsSettings().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsLevels().LevelIconLocation), true, identity);
+		habPrint("Sending Settings to Player: " + playerID, "Debug");
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels()), false, identity);
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		
@@ -170,7 +170,7 @@ modded class MissionServer
 			if (!p.IsPlayerDisconnected())
 			{
 				playerID = p.GetIdentity().GetPlainId();
-				GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param6< bool, string, bool, bool, string, int >(GetHeroesAndBanditsLevels().ShowLevelIcon, GetHeroesAndBanditsSettings().CommandPrefix, GetHeroesAndBanditsSettings().AllowHumanityCommand, GetHeroesAndBanditsSettings().AllowStatCommand, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, GetHeroesAndBanditsLevels().LevelIconLocation), false, p.GetIdentity());
+				GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param3< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels()), false, p.GetIdentity());
 			}
 		}
 	}

@@ -29,15 +29,27 @@ class HeroesAndBanditsConfigActions
 		{
 			if (Actions.Get(i).Name == actionName){
 				if (Actions.Get(i).Affinity == "bandit"){
-					return -Actions.Get(i).Humanity;
+					return -Actions.Get(i).Points;
 				}else if (Actions.Get(i).Affinity == "hero"){
-					return Actions.Get(i).Humanity;
+					return Actions.Get(i).Points;
 				}else if (Actions.Get(i).Affinity == "bambi"){
 					return 0;
 				}else{
 					return 0;
 					habPrint("Action: " +actionName+ " Affinity not specified", "Exception");	
 				}
+			}
+		}
+		habPrint("Action: " +actionName+ " not found", "Exception");	
+		return 0;
+	}
+	
+		//Returns the Humanity value for the action requested
+	float getActionPoints(string actionName){
+		for ( int i =0; i < Actions.Count(); i++ )
+		{
+			if (Actions.Get(i).Name == actionName){
+				return Actions.Get(i).Points;
 			}
 		}
 		habPrint("Action: " +actionName+ " not found", "Exception");	
@@ -61,8 +73,8 @@ class HeroesAndBanditsConfigActions
 	}
 	
 	//Helper function for adding Actions
-	void addAction(string actionName, string affinity, string secondaryAffinity, float humanity, bool notifyPlayer = true){
-		habAction tempAction = new ref habAction(actionName, affinity, secondaryAffinity, humanity, notifyPlayer);
+	void addAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifyPlayer = true){
+		habAction tempAction = new ref habAction(actionName, affinity, secondaryAffinity, points, notifyPlayer);
 		Actions.Insert(tempAction);
 		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Verbose");	
 	}
@@ -143,18 +155,4 @@ class habAction
 		Points = points;
 		NotifiyPlayer = notifiyPlayer;
 	}
-}
-
-
-
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
-{
-	if (!m_HeroesAndBanditsConfigActions)
-	{
-		m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;
-		m_HeroesAndBanditsConfigActions.Load();
-	}
-	return m_HeroesAndBanditsConfigActions;
 }

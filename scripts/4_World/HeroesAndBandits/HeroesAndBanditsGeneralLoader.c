@@ -101,15 +101,3 @@ class HeroesAndBanditsSettings
 	
 }
 
-
-
-//Helper function to return Config
-static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
-{
-	if (!m_HeroesAndBanditsSettings)
-	{
-		m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
-		m_HeroesAndBanditsSettings.Load();
-	}
-	return m_HeroesAndBanditsSettings;
-}

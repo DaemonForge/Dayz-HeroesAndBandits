@@ -1,6 +1,7 @@
 
 class HeroesAndBanditsZone
 {
+	int Index; //0 top level zones, 1 sub zone, 2 sub zone of a sub zone 
     string Name;
 	float X;
 	float Z;
@@ -19,9 +20,9 @@ class HeroesAndBanditsZone
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
 	ref array< ref PlayerBase > PlayersInZone = new ref array< ref PlayerBase >;
-	ref HeroesAndBanditsZone ParrentZone;
 
-	void Init(habZone zoneToLoad, HeroesAndBanditsZone parrentZone = null){
+	void Init(habZone zoneToLoad, int index = 0){
+		Index = index;
 		Name = zoneToLoad.Name;
 		X = zoneToLoad.X;
 		Z = zoneToLoad.Z;
@@ -37,9 +38,6 @@ class HeroesAndBanditsZone
 		WarningMessage = zoneToLoad.WarningMessage;
 		OverrideSafeZone = zoneToLoad.OverrideSafeZone;
 		GodModPlayers = zoneToLoad.GodModPlayers;
-		if ( parrentZone ){
-			ParrentZone = parrentZone;
-		}
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
 			{	
@@ -67,7 +65,7 @@ class HeroesAndBanditsZone
 				int x = zoneToLoad.SubZones.Get(i).X;
 				int z = zoneToLoad.SubZones.Get(i).Z;
 				SubZones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), this);
+				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), Index + 1);
 			}
 		}
 		
@@ -200,7 +198,7 @@ class HeroesAndBanditsGuard
 		EntityAI weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
 		if (weaponInHands.IsWeapon())
 		{
-			Guard.GetWeaponManager().AttachMagazine(weaponInHandsMag);
+			Guard.GetWeaponManager().AttachMagazine(Magazine.Cast(weaponInHandsMag));
 		}
 	}
 	

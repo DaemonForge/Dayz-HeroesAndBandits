@@ -177,7 +177,7 @@ class HeroesAndBanditsConfig
 			}
 		}
 		habPrint("Action: " + actionName + " not found", "Exception");	
-		return new habOldAction("Null", "Null", "Null", 0, false);
+		return new habOldAction("Null", "Null", 0, false);
 	}
 	
 	//Returns the warning message color in an int value
@@ -216,8 +216,8 @@ class HeroesAndBanditsConfig
 
 
 	//Helper function for adding Actions
-	void addAction(string actionName, string affinity, string secondaryAffinity, float humanity,  bool notifyPlayer = true){
-		habOldAction tempAction = new ref habOldAction(actionName, affinity, secondaryAffinity ,humanity, notifyPlayer);
+	void addAction(string actionName, string affinity, float humanity,  bool notifyPlayer = true){
+		habOldAction tempAction = new ref habOldAction(actionName, affinity, humanity, notifyPlayer);
 		Actions.Insert(tempAction);
 		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Verbose");	
 	}
@@ -235,32 +235,32 @@ class HeroesAndBanditsConfig
 	{
 		ConfigVersion = "2";
 		LevelIconLocation = 2;
-		addAction( "HuntAnimal_BosTaurus_Brown", "hero", "hunter", 0, false);
-		addAction( "HuntAnimal_BosTaurus_White", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_BosTaurusF_White", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CanisLupus_Grey", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CanisLupus_White", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapraHircus_Brown", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapraHircus_Black", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapraHircus_White", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapraHircusF", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapreolusCapreolus", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_CervusElaphus", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_CervusElaphusF", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_OvisAries", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_OvisAriesF", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_SusDomesticus", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_SusScrofa", "hero",  "hunter", 0, false);
-		addAction( "HuntAnimal_LepusEuropaeus", "hero", "hunter",  0, false);
-		addAction( "HuntAnimal_UrsusArctos", "hero",  "hunter", 0, false);
+		addAction( "HuntAnimal_BosTaurus_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurus_White", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurus_Spotted", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_White", "hero", 0, false);
+		addAction( "HuntAnimal_BosTaurusF_Spotted", "hero",  0, false);
+		addAction( "HuntAnimal_CanisLupus_Grey", "hero", 0, false);
+		addAction( "HuntAnimal_CanisLupus_White", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_Black", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircus_White", "hero", 0, false);
+		addAction( "HuntAnimal_CapraHircusF", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolus", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Brown", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_Spotted", "hero", 0, false);
+		addAction( "HuntAnimal_CapreolusCapreolusF_White", "hero", 0, false);
+		addAction( "HuntAnimal_CervusElaphus", "hero", 0, false);
+		addAction( "HuntAnimal_CervusElaphusF", "hero", 0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticus", "hero", 0, false);
+		addAction( "HuntAnimal_GallusGallusDomesticusF", "hero", 0, false);
+		addAction( "HuntAnimal_OvisAries", "hero", 0, false);
+		addAction( "HuntAnimal_OvisAriesF", "hero", 0, false);
+		addAction( "HuntAnimal_SusDomesticus", "hero", 0, false);
+		addAction( "HuntAnimal_SusScrofa", "hero", 0, false);
+		addAction( "HuntAnimal_LepusEuropaeus", "hero", 0, false);
+		addAction( "HuntAnimal_UrsusArctos", "hero", 0, false);
 		
 	}
 	
@@ -272,6 +272,9 @@ class HeroesAndBanditsConfig
 		HideKillsInGUI = false;
 		GUIHeading = "#HAB_TITLE";
 	}
+	
+	
+	
 }
 
 
@@ -284,13 +287,13 @@ class habOldLevel
 	float MinHumanity;
 	float MaxHumanity;
 
-	void habOldLevel(string name, string affinity, string levelImage, float minPoints, float maxPoints) 
+	void habOldLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity) 
 	{
 		Name = name;
 		Affinity = affinity;
 		LevelImage = levelImage;
-		MinPoints = minHumanity;
-		MaxPoints = maxHumanity;
+		MinHumanity = minHumanity;
+		MaxHumanity = maxHumanity;
 	}
 }
 
@@ -303,12 +306,11 @@ class habOldAction
 	float Humanity;
 	bool NotifiyPlayer;
 
-	void habAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifiyPlayer = true) 
+	void habOldAction(string actionName, string affinity, float humanity, bool notifiyPlayer = true) 
 	{
 		Name = actionName;
 		Affinity = affinity;
-		SecondaryAffinity =  secondaryAffinity;
-		Points = points;
+		Humanity = humanity;
 		NotifiyPlayer = notifiyPlayer;
 	}
 }

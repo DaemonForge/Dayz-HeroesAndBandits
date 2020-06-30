@@ -28,17 +28,17 @@ class HeroesAndBanditsPlayer
 		if (GetHeroesAndBanditsSettings().Mode == 0){
 			float humanity = getHumanity();
 			if ( humanity > 0 ){
-				tempLevel = getLevel("hero", humanity);	
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("hero", humanity);	
 			} else if ( humanity < 0 ) {
-				tempLevel = getLevel("bandit", -humanity);	
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("bandit", -humanity);	
 			} 
 		} else if (GetHeroesAndBanditsSettings().Mode == 1){
 			for (int i = 0; i < Affinities.Count(); i++)
 			{
-				if (getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points) != GetHeroesAndBanditsLevels().DefaultLevel){
+				if (GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points) != GetHeroesAndBanditsLevels().DefaultLevel){
 					if (Affinities.Get(i).Points > points){
 						points = Affinities.Get(i).Points;
-						tempLevel = getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points);
+						tempLevel = GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points);
 					}
 				}
 			}
@@ -49,10 +49,11 @@ class HeroesAndBanditsPlayer
 	
 	habAffinity getAffinity(){
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		habLevel tempLevel;
+		habLevel tempLevel = getLevel();
 		float points = 0;
-		if (getLevel() != GetHeroesAndBanditsLevels().DefaultLevel){
-			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(getLevel().Affinity);
+		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
+			habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(tempLevel.Affinity);
 		}
 		return tempAffinity;
 	}
@@ -77,8 +78,11 @@ class HeroesAndBanditsPlayer
 			}
 		}
 			
-		if (!found && doesAffinityExsit(name)){
-			 Affinities.Insert(new ref habPlayerAffinity(name, points));
+		if (!found && GetHeroesAndBanditsLevels().doesAffinityExsit(name)){
+			habPrint("Creating affinity " + name + " for player " + PlayerID + " with " + points, "Verbose");
+			Affinities.Insert(new ref habPlayerAffinity(name, points));
+		} else if (!found) {
+			habPrint("Tried to add "+ points + " for player " + PlayerID + " to " + name + " but affinity does not exist", "Exception");
 		}
 	}
 	
@@ -86,6 +90,29 @@ class HeroesAndBanditsPlayer
 		return getAffinity().Name;
 	}
 		
+	
+	string getHeroOrBandit(){
+		
+		habLevel tempLevel = GetHeroesAndBanditsLevels().DefaultLevel;
+		float points = 0;
+		if (GetHeroesAndBanditsSettings().Mode == 0){
+			float humanity = getHumanity();
+			if ( humanity > 0 ){
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("hero", humanity);	
+			} else if ( humanity < 0 ) {
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("bandit", -humanity);	
+			} 
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){
+			if (getAffinityPoints( "hero" ) > getAffinityPoints( "bandit" )){
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("hero", getAffinityPoints( "hero" ));
+			} else {
+				tempLevel = GetHeroesAndBanditsLevels().getLevel("bandit", getAffinityPoints( "bandit" ));
+			}
+		}
+		return tempLevel.Affinity;
+	}
+		
+	
 	void saveData(){
 		if (GetGame().IsServer())
 		{
@@ -191,12 +218,18 @@ class HeroesAndBanditsPlayer
 			habPrint("Stat: " + actionName + " for player " + PlayerID + " Updated to " + Stats.Get(statID).Stat, "Debug");
 		}
 		string oldLevel = getLevel().Name;
-		habAction tempAction GetHeroesAndBanditsActions().getAction(actionName);
+		habAction tempAction = GetHeroesAndBanditsActions().getAction(actionName);
+		habPrint( "Found action: " + tempAction.Name, "Debug");
 		if ( tempAction.Affinity != "none" ){
+			habPrint( "Player: " + PlayerID + " adding " + tempAction.Points + " points to  " + tempAction.Affinity + " currenlty: " + getAffinityPoints(tempAction.Affinity), "Debug");
 			addAffinityPoints(tempAction.Affinity, tempAction.Points);
+			habPrint( "Player: " + PlayerID + " adding " + tempAction.Points + " points to  " + tempAction.Affinity + " now: " + getAffinityPoints(tempAction.Affinity), "Debug");
 		}
 		if (( tempAction.SecondaryAffinity != "none" )){
+			habPrint( "Player: " + PlayerID + " adding " + tempAction.Points + " points to  " + tempAction.SecondaryAffinity + " currenlty: " + getAffinityPoints(tempAction.SecondaryAffinity), "Debug");
 			addAffinityPoints(tempAction.SecondaryAffinity, tempAction.Points);
+			habPrint( "Player: " + PlayerID + " adding " + tempAction.Points + " points to  " + tempAction.SecondaryAffinity + " now: " + getAffinityPoints(tempAction.SecondaryAffinity), "Debug");
+			
 		}
 		if (oldLevel == getLevel().Name){ //Check if Level Changed
 			return false;
@@ -217,15 +250,19 @@ class HeroesAndBanditsPlayer
 			}
 		}
 		float subTotal = 0;
-		for ( int i =0; i < Stats.Count(); i++ )
+		for ( int j =0; j < Stats.Count(); j++ )
 		{
-			habAction tempAction GetHeroesAndBanditsActions().getAction(Stats.Get(i).Name);
-			subTotal = Stats.Get(i).Stat * tempAction.Points;
-			if ( tempAction.Affinity != "none" ){
-				addAffinityPoints(tempAction.Affinity, subTotal);
-			}
-			if (( tempAction.SecondaryAffinity != "none" )){
-				addAffinityPoints(tempAction.SecondaryAffinity, subTotal);
+			habAction tempAction = GetHeroesAndBanditsActions().getAction(Stats.Get(j).Name);
+			if (tempAction.Name != "Null"){
+				subTotal = Stats.Get(j).Stat * tempAction.Points;
+				if ( tempAction.Affinity != "none" ){
+					addAffinityPoints(tempAction.Affinity, subTotal);
+				}
+				if (( tempAction.SecondaryAffinity != "none" )){
+					addAffinityPoints(tempAction.SecondaryAffinity, subTotal);
+				}
+			} else {
+				habPrint( "Player: " + PlayerID + " has stat that does not exsit " + tempAction.Name, "Verbose");
 			}
 		}
 	}

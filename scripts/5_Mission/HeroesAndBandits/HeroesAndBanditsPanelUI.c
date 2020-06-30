@@ -61,8 +61,8 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
 		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
 		
-		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.Humanity);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.Humanity);
+		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
+		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
 		
 		if ( !g_HeroesAndBanditsHideKillsInGUI )
 		{
@@ -120,8 +120,8 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
 		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
 		
-		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.Humanity);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.Humanity);
+		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
+		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
 		
 		if ( !g_HeroesAndBanditsHideKillsInGUI )
 		{

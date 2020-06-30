@@ -16,7 +16,7 @@ FrameWidgetClass rootFrame {
    clipchildren 1
    ignorepointer 1
    position -58 18
-   size 44 44
+   size 46 46
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -28,7 +28,7 @@ FrameWidgetClass rootFrame {
     ImageWidgetClass HeroesAndBanditsStatusBarIcon {
      clipchildren 1
      ignorepointer 1
-     position -1 -1
+     position 0 0
      size 46 46
      halign right_ref
      hexactpos 1

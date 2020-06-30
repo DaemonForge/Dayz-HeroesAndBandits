@@ -4,6 +4,12 @@ ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
 ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
 ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
 ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
+
+
+ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
+ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
+ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
+
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
 class HeroesAndBandits
@@ -87,7 +93,7 @@ class HeroesAndBandits
 						postix = " #HAB_HUMANITY";
 					} else if (GetHeroesAndBanditsSettings().Mode == 1){
 						prefix = "+";
-						postix = " " + getAffinity(tempAction.Affinity).DisplayName;
+						postix = " " + GetHeroesAndBanditsLevels().getAffinity(tempAction.Affinity).DisplayName;
 					}
 					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + postix );	
 				}
@@ -217,7 +223,7 @@ class HeroesAndBandits
 				return p.getStat(stat);
 			}
 		}
-	    habPrint("Failed to get Stat " + stat + " for Player " + pID , "Verbose");	
+	    habPrint("Failed to get Stat " + stat + " for Player " + pID , "Exception");	
 		return 0;
 	}
 	
@@ -232,8 +238,28 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  pID)
 			{
-				habPrint("Geting Affinity Player " + p.PlayerID + " Affinity " + p.getAffinity(), "Debug");	
-				return p.getAffinity();
+				habPrint("Geting Affinity Player " + p.PlayerID + " Affinity " + p.getAffinity().Name, "Debug");	
+				return p.getAffinity().Name;
+				
+			}
+		}
+	    habPrint("Failed to get Affinity for Player " + pID , "Exception");	
+		return GetHeroesAndBanditsLevels().DefaultAffinity.Name;
+	}
+	
+	string GetPlayerHeroOrBandit( string pID )
+	{
+		if (!IsPlayerLoaded(pID))
+		{
+			loadPlayer(pID);
+		}
+		for ( int i = 0; i < HeroesAndBanditsPlayers.Count(); i++ )
+		{
+			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
+			if ( p.PlayerID ==  pID)
+			{
+				habPrint("Geting Hero or Bandit for Player " + p.PlayerID + " Affinity " + p.getHeroOrBandit(), "Debug");	
+				return p.getHeroOrBandit();
 				
 			}
 		}
@@ -252,7 +278,7 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  pID)
 			{
-				habPrint("Geting Affinity Player " + p.PlayerID + " Affinity " + p.getAffinity(), "Debug");	
+				habPrint("Geting Level Player " + p.PlayerID + " Affinity " + p.getLevel().Name, "Debug");	
 				return p.getLevel();
 				
 			}
@@ -272,7 +298,7 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  pID)
 			{
-				habPrint("Geting Affinity Player " + p.PlayerID + " Affinity " + p.getAffinity(), "Debug");	
+				habPrint("Geting Level Player " + p.PlayerID + " Level " + p.getLevel().Name, "Debug");	
 				return p.getLevel().Name;
 				
 			}
@@ -427,4 +453,55 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 		}
 	}
 	return m_HeroesAndBandits;
+}
+
+
+//Helper function to return Config
+static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
+{
+	if ( GetGame().IsServer() ){
+		if (!m_HeroesAndBanditsSettings)
+		{
+			m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
+			m_HeroesAndBanditsSettings.Load();
+		}
+		return m_HeroesAndBanditsSettings;
+	} else {
+		
+		return g_HeroesAndBanditsSettings;
+	}
+}
+
+
+//Helper function to return Config
+static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
+{
+	if ( GetGame().IsServer() ){
+		if (!m_HeroesAndBanditsConfigLevels)
+		{
+			m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
+			m_HeroesAndBanditsConfigLevels.Load();
+		}
+		return m_HeroesAndBanditsConfigLevels;
+	} else {
+		return g_HeroesAndBanditsConfigLevels;
+	}
+}
+
+
+
+//Helper function to return Config
+static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
+{
+	if ( GetGame().IsServer() ){
+		if (!m_HeroesAndBanditsConfigActions)
+		{
+			m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;
+			m_HeroesAndBanditsConfigActions.Load();
+		}
+		return m_HeroesAndBanditsConfigActions;
+	} else {
+		
+		return g_HeroesAndBanditsConfigActions;
+	}
 }
