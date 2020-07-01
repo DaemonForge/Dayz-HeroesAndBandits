@@ -53,6 +53,7 @@ modded class MissionServer
 	
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
+		if (player.IsPlayerDisconnected()) { return; }
 		PlayerIdentity identity = player.GetIdentity();
 		string playerID = identity.GetPlainId();
 		habPrint("Sending Settings to Player: " + playerID, "Debug");
