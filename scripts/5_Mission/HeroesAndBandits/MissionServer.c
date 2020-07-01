@@ -36,7 +36,7 @@ modded class MissionServer
 		if ( identity )
 		{
 			string playerID = identity.GetPlainId();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 3000, false, new Param1<ref PlayerIdentity>(identity));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 3000, false, new Param1<ref PlayerBase >( player ));
 		}
 	}
 	
@@ -52,7 +52,8 @@ modded class MissionServer
 	
 	
 	
-	void SendHeroesAndBanditsSettings( PlayerIdentity identity ){
+	void SendHeroesAndBanditsSettings( PlayerBase player ){
+		PlayerIdentity identity = player.GetIdentity();
 		string playerID = identity.GetPlainId();
 		habPrint("Sending Settings to Player: " + playerID, "Debug");
 		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, identity);
