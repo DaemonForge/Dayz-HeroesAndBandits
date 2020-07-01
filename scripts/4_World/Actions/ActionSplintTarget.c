@@ -1,4 +1,4 @@
-class ActionSplintTarget: ActionContinuousBase
+modded class ActionSplintTarget
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

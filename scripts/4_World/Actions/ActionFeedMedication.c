@@ -1,4 +1,4 @@
-moddel class ActionFeedTetracyclineAntibiotics
+modded class ActionFeedTetracyclineAntibiotics
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

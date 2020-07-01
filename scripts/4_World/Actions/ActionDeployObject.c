@@ -3,10 +3,11 @@ modded class ActionDeployObject
 	
 	override void OnFinishProgressServer( ActionData action_data )
 	{
+		PlayerBase sourcePlayer;
 		if (action_data.m_MainItem.IsInherited(TrapBase))
 		{
 			TrapBase trap = TrapBase.Cast(action_data.m_MainItem);
-			PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
+			sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 			if ( sourcePlayer && trap)
 			{
 				trap.habSetActivatedBy(sourcePlayer.GetIdentity().GetPlainId());
@@ -14,12 +15,13 @@ modded class ActionDeployObject
 		}
 		
 		#ifdef EXPANSIONMOD
-			if (action_data.m_MainItem.IsInherited(ExpansionExplosiveBase))
+			if (action_data.m_MainItem.IsInherited(ExpansionExplosive))
 			{
-				ExpansionExplosiveBase explosive = ExpansionExplosiveBase.Cast(action_data.m_MainItem);
-				PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
+				ExpansionExplosive explosive = ExpansionExplosive.Cast(action_data.m_MainItem);
+				sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 				if ( sourcePlayer && explosive)
 				{
+					habPrint( sourcePlayer.GetIdentity().GetPlainId() + " Placeing C4" , "Debug");
 					explosive.habSetActivatedBy(sourcePlayer.GetIdentity().GetPlainId());
 				}
 			}

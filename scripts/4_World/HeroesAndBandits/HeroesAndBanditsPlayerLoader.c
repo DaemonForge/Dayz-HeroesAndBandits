@@ -150,10 +150,10 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
-				prefix = Stats.Get(j).Name.Substring(0,5);
+				prefix = Stats.Get(k).Name.Substring(0,5);
 				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
 				if ( prefix == "Medic" ){
-					statTotal = statTotal + Stats.Get(l).Stat;
+					statTotal = statTotal + Stats.Get(k).Stat;
 				}
 			}
 			return statTotal;

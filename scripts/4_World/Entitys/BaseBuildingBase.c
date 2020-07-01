@@ -48,11 +48,12 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + grenade.GetType() + " set by " + grenade.habGetActivatedBy(), "Debug");
 			} 
 			#ifdef EXPANSIONMOD
-			else if ( source.IsInherited(ExpansionExplosiveBase)){
-				ExpansionExplosiveBase expansionExplosive = ExpansionExplosiveBase.Cast(source);
-				
-				habPrint( GetType() + " hit by " + expansionExplosive.GetType() + " set by " + expansionExplosive.habGetActivatedBy(), "Debug");
-				habLastHitBy = expansionExplosive.habGetActivatedBy();
+			else if ( source.IsInherited(Expansion_C4_Explosion)){
+				Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(source);
+				if ( expansionExplosive ){
+					habPrint( GetType() + " hit by " + expansionExplosive.GetType() + " set by " + expansionExplosive.habGetActivatedBy() +  " in BaseBuildingBase Class", "Debug");
+					habLastHitBy = expansionExplosive.habGetActivatedBy();
+				}
 			}
 			#endif
 			else {

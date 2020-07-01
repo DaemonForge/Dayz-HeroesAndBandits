@@ -51,7 +51,20 @@ modded class PlayerBase
 				objectPlacerID = trap.habGetActivatedBy();
 				weaponName =  "#HAB_KILLFEED_PRE " + trap.GetDisplayName();
 				habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectPlacerID,"Debug");
-			} else {
+			} 
+			#ifdef EXPANSIONMOD
+				else if ( killer.IsInherited(Expansion_C4_Explosion)){
+					Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(killer);
+					if ( expansionExplosive ){
+						killedByObject = true;
+						objectPlacerID = expansionExplosive.habGetActivatedBy();
+						weaponName = "#HAB_KILLFEED_PRE " + "Home Made Explosive"; //TODO
+
+						habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectPlacerID, "Debug");
+					}
+				}
+			#endif
+			else {
 				if ( killer )
 				{
 					habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + killer.GetType() ,"Debug");
@@ -73,8 +86,10 @@ modded class PlayerBase
 
 				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
 				if (sourcePlayerID == targetPlayerID){ //Sucide
-					if ( !sourcePlayer.IsInVehicle() )
-					{//If not in Vehicle Crash
+					if ( killedByObject ){
+						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
+						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
+					} else if ( sourcePlayer && !sourcePlayer.IsInVehicle() ){//If not in Vehicle Crash
 						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
 					}
