@@ -33,7 +33,7 @@ class HeroesAndBandits
 				int x = GetHeroesAndBanditsZones().Zones.Get(i).X;
 				int z = GetHeroesAndBanditsZones().Zones.Get(i).Z;
 				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i));
+				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i);
 			}
 		}
 	}

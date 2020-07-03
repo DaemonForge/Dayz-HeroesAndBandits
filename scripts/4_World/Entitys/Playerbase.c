@@ -13,6 +13,31 @@ modded class PlayerBase
 		
 	}
 	
+	bool isInZone(int zoneID, int index = 0)
+	{
+		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
+	}
+	
+	void enteredZone(int zoneID, int index = 0)
+	{
+		m_HeroesAndBandits_InZones.Set(index, zoneID);
+	}
+	
+	void leftZone(int index){
+		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
+		if ( index == maxIndex ){
+			m_HeroesAndBandits_InZones.Remove(index);
+			habPrint("Removing Player from zone", "Debug");
+		} else if ( index < maxIndex ){
+			habPrint("Removing Player from all subzones", "Debug");
+			for ( int i = maxIndex; i >= index; i-- ){
+				m_HeroesAndBandits_InZones.Remove(i);
+			}
+		} else {
+			habPrint("Trying to leave zone not in", "Exception");
+		}
+	}
+	
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
