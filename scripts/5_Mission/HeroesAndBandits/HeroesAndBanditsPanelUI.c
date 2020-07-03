@@ -30,8 +30,8 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_Hunts			= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABHunt" ) );
 		m_Sucides		= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABSucides" ) );
 		//Print("[HeroesAndBandits] [DebugClient] Init Panel ");
-		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
-		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
+		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsPlayer.getLevel().LevelImage , true );
+		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsPlayer.getLevel().LevelImage);
 		
 		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
 
@@ -75,16 +75,16 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	void updateData()
 	{
 		//Print("[HeroesAndBandits] [DebugClient] Update Panel ");
-		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsLevel.LevelImage , true );
+		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsPlayer.getLevel().LevelImage , true );
 		
-		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsLevel.LevelImage);
+		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsPlayer.getLevel().LevelImage);
 		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
 		
 		m_Affinity.SetText("#HAB_AFFINITY: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		
-		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsLevel.Name);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
+		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsPlayer.getLevel().Name);
+		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsPlayer.getLevel().Name);
 		
 		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
 		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
