@@ -332,72 +332,26 @@ class HeroesAndBandits
 	
 	
 	void CheckPlayersEnterZones(){
-			if (!Zones) //if no zones Defined exit
-			{
-				return;
-			}
-			//habPrint("Checking if Players are in Zones", "Debug");			
-			ref array<Man> players = new array<Man>;
-			GetGame().GetPlayers(players);
-			for (int j = 0; j < players.Count(); j++)
-			{
-				PlayerBase player = PlayerBase.Cast(players.Get(j));
-				float playerHumanity = GetPlayerHumanity(player.GetIdentity().GetPlainId());
-				if ( !player )
-					continue;
-				
+		if (!Zones) //if no zones Defined exit
+		{
+			return;
+		}
+		//habPrint("Checking if Players are in Zones", "Debug");			
+		ref array<Man> players = new array<Man>;
+		GetGame().GetPlayers(players);
+		for (int j = 0; j < players.Count(); j++)
+		{
+			PlayerBase player = PlayerBase.Cast(players.Get(j));
+			if ( player ){	
 				if (player.IsAlive())
 				{				
 					for (int k = 0; k < Zones.Count(); k++)
 					{	
-						//habPrint("Checking if Players is in Zone " + Zones.Get(k).Name, "Debug");	
-						if (Zones.Get(k).validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent != k ){
-							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
-							player.m_HeroesAndBandits_WarningSent = k;
-							if ( Zones.Get(k).ShowWelcomeMsg )
-							{
-								WelcomePlayer(Zones.Get(k).Name, Zones.Get(k).WelcomeMessage, Zones.Get(k).WelcomeIcon, player.GetIdentity().GetPlainId(), Zones.Get(k).WelcomeMessageColor);
-							}
-							if ( Zones.Get(k).GodModPlayers && Zones.Get(k).validHumanity(playerHumanity))
-							{
-								player.SetAllowDamage(false);
-							}
-						}
-						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent == k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).KillRadius)
-						{
-							//Player Entered Kill Zone Kill Player if warning has been given
-							player.m_HeroesAndBandits_WarningSent = -1;
-							habPrint("Killed Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") for Entering Zone: " + Zones.Get(k).Name, "Always");
-							if ( Zones.Get(k).OverrideSafeZone )
-							{
-								player.SetAllowDamage(true);
-							}
-							Zones.Get(k).FireWeaponClosestGuard(player.GetPosition());
-							player.SetHealth(0.0);
-						}
-						else if (!Zones.Get(k).validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent != k && vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) <= Zones.Get(k).WarningRadius)
-						{
-							//Player Entered Warning Zone Issue Warning
-							player.m_HeroesAndBandits_WarningSent = k ;
-							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Zones.Get(k).Name, "Verbose");
-							if ( Zones.Get(k).ShowWarningMsg )
-							{
-								GetHeroesAndBandits().WarnPlayer(Zones.Get(k).Name, Zones.Get(k).WarningMessage, player.GetIdentity().GetPlainId());
-							}
-						
-						}else if (vector.Distance(player.GetPosition(), Zones.Get(k).getVector()) > Zones.Get(k).WarningRadius && player.m_HeroesAndBandits_WarningSent == k)
-						{
-							if ( Zones.Get(k).GodModPlayers )
-							{
-								player.SetAllowDamage(true);
-							}
-							//Player Left Warning Radius
-							habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Zones.Get(k).Name, "Verbose");
-							player.m_HeroesAndBandits_WarningSent = -1;
-						}
+						Zones.Get(k).CheckPlayer(player);
 					}
 				}
 			}
+		}
 	}
 	
 	void updatePlayerTotals()

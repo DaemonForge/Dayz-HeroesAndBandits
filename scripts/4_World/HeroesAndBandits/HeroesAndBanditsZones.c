@@ -72,7 +72,7 @@ class HeroesAndBanditsZone
 		
 	}
 		
-	bool CheckPlayer(PlayerBase player){
+	void CheckPlayer(PlayerBase player){
 		float playerHumanity = GetPlayerHumanity(player.GetIdentity().GetPlainId());
 		if ( !player )
 		{
@@ -124,6 +124,13 @@ class HeroesAndBanditsZone
 				//Player Left Warning Radius
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Name, "Verbose");
 				player.leftZone(Index);			
+			}
+			if ( SubZones && player.isInZone(ZoneID, Index) )
+			{ 
+				for (int subI = 0; subI < SubZones.Count(); subI++)
+				{
+					SubZones.Get(subI).CheckPlayer(player);
+				}
 			}
 		}
 		
