@@ -68,8 +68,10 @@ class HeroesAndBandits
 	
 	void OnPlayerDisconnect(PlayerBase player)
 	{
-		habPrint("Player " + player.GetIdentity().GetPlainId()+ " Disconnecting saving player data", "Verbose");	
-		GetPlayer(player.GetIdentity().GetPlainId()).saveData();
+		if ( player.GetIdentity() ) {
+			habPrint("Player " + player.GetIdentity().GetPlainId()+ " Disconnecting saving player data", "Verbose");	
+			GetPlayer(player.GetIdentity().GetPlainId()).saveData();
+		}
 	}
 	
 	void NewPlayerAction(string playerID, string action)
@@ -99,14 +101,14 @@ class HeroesAndBandits
 				}
 				if (didLevelUp)
 				{
-					GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, habGetPlayerBaseByID(playerID).GetIdentity());
+					PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+					if (player){
+						GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());
+					}
 				}
 				if (didLevelUp && GetHeroesAndBanditsLevels().NotifyLevelChange)
 				{
-					
 					NotifyPlayer(playerID, p.getLevel().LevelImage, "#HAB_HUMANITY_LEVELUP_PRE " + p.getLevel().Name, " #HAB_HUMANITY_LEVELUP_HEADING" );
-				
-					
 				}
 				return;
 			}
@@ -115,8 +117,11 @@ class HeroesAndBandits
 	
 	void NotifyPlayer(string playerID, string image ,string message, string heading = "#HAB_HUMANITY_CHANGEHEADING")
 	{
-		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, habGetPlayerBaseByID(playerID).GetIdentity());
-		habPrint("Notify Player: " + playerID +" Message: "+ message + " Image: " + image, "Verbose");	
+		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+		if (player){
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, player.GetIdentity());
+			habPrint("Notify Player: " + playerID +" Message: "+ message + " Image: " + image, "Verbose");	
+		}
 	}
 	
 	void NotifyKillFeed(string image ,string message, string heading = "#HAB_KILLFEED_HEADING")
@@ -127,36 +132,48 @@ class HeroesAndBandits
 	
 	void WarnPlayer( string header, string message, string playerID)
 	{
-		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(header), new ref StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, habGetPlayerBaseByID(playerID).GetIdentity());
-		habPrint("Issued Warning '"+ message + "' To Player: " + playerID, "Verbose");
+		
+		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+		if (player){
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(header), new ref StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+			habPrint("Issued Warning '"+ message + "' To Player: " + playerID, "Verbose");
+		}
 	}
 		
 	void WelcomePlayer( string zoneName, string message, string welcomeImage, string playerID, int welcomeColor)
 	{
-		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(zoneName), new ref StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, habGetPlayerBaseByID(playerID).GetIdentity());
-		habPrint("Welcome Message: '"+ message + "' To Player: " + playerID, "Verbose");
+			
+		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+		if (player){
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(zoneName), new ref StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+			habPrint("Welcome Message: '"+ message + "' To Player: " + playerID, "Verbose");
+		}
 	}
 	
 	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName){
 		habPrint("Kill Feed Player: " + sourcePlayerID +" killed " + targetPlayerID + " with " + weaponName , "Debug");
 		if (GetHeroesAndBanditsSettings().KillFeed){
-			PlayerBase sourcePlayer = habGetPlayerBaseByID(sourcePlayerID);
-			PlayerBase targetPlayer = habGetPlayerBaseByID(targetPlayerID);
-			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
-			string levelName = GetPlayerLevel(sourcePlayerID).Name;
-			float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
-			string message = "#HAB_KILLFEED_PRE " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
-			NotifyKillFeed(levelImage, message);
+			PlayerBase sourcePlayer = PlayerBase.Cast(habGetPlayerBaseByID(sourcePlayerID));
+			PlayerBase targetPlayer = PlayerBase.Cast(habGetPlayerBaseByID(targetPlayerID));
+			if ( sourcePlayer && targetPlayer ){
+				string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
+				string levelName = GetPlayerLevel(sourcePlayerID).Name;
+				float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
+				string message = "#HAB_KILLFEED_PRE " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
+				NotifyKillFeed(levelImage, message);
+			}
 		}
 	}
 	
 	void TriggerSucideFeed(string sourcePlayerID){
 		habPrint("Sucide Kill Feed Player: " + sourcePlayerID, "Debug");
 		if (GetHeroesAndBanditsSettings().SucideFeed){
-			PlayerBase sourcePlayer = habGetPlayerBaseByID(sourcePlayerID);
-			string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
-			string message = sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_SUCIDEPOST" ;
-			NotifyKillFeed(levelImage, message, "#HAB_KILLFEED_SUCIDEHEADING");
+			PlayerBase sourcePlayer = PlayerBase.Cast(habGetPlayerBaseByID(sourcePlayerID));
+			if (sourcePlayer) {
+				string levelImage = GetPlayerLevel(sourcePlayerID).LevelImage;
+				string message = sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_SUCIDEPOST" ;
+				NotifyKillFeed(levelImage, message, "#HAB_KILLFEED_SUCIDEHEADING");
+			}
 		}
 	}
 	

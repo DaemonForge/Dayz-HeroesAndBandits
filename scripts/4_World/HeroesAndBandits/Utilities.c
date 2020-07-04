@@ -61,7 +61,7 @@ PlayerBase habGetPlayerBaseByID( string pID )
 			return p;
 		}
 	}
-	habPrint("Failed to GetPlayerBaseByID for Player " + pID , "Verbose");
+	habPrint("Failed to GetPlayerBaseByID for Player " + pID , "Exception");
 	return null;
 }
 
@@ -88,8 +88,13 @@ PlayerBase habGetPlayerBaseByName( string pName )
 
 
 /*
-
-This is tempoary code for upgrading the config to v4
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*                                                                                   *
+*                                                                                   *
+*              This is tempoary code for upgrading the config to v4                 *
+*                                                                                   *
+*                                                                                   *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 */
 
 bool habCheckUpgradeToConfigV4(){

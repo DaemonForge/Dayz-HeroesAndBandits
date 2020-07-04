@@ -23,18 +23,23 @@
 		override void Trigger()
 		{
 			super.Trigger();
-			ref array<Object> objects = new array<Object>;
-			ref array<CargoBase> proxy = new array<CargoBase>;
-			GetGame().GetObjectsAtPosition(this.GetPosition(), 1, objects, proxy);
-			for ( int i = 0; i < objects.Count(); i++ ) 
+			if (hab_ActivatedByID)
 			{
-				Object obj = objects.Get(i);
-				if (obj.IsInherited(Expansion_C4_Explosion))
+				ref array<Object> objects = new array<Object>;
+				ref array<CargoBase> proxy = new array<CargoBase>;
+				GetGame().GetObjectsAtPosition(this.GetPosition(), 1, objects, proxy);
+				for ( int i = 0; i < objects.Count(); i++ ) 
 				{
-					habPrint( "Found C4 Explosion setting ID to " + hab_ActivatedByID , "Debug");
-					Expansion_C4_Explosion explosive = Expansion_C4_Explosion.Cast(obj);
-					explosive.habSetActivatedBy(hab_ActivatedByID);
-					return;
+					Object obj = objects.Get(i);
+					if (obj.IsInherited(Expansion_C4_Explosion))
+					{
+						habPrint( "Found C4 Explosion setting ID to " + hab_ActivatedByID , "Debug");
+						Expansion_C4_Explosion explosive = Expansion_C4_Explosion.Cast(obj);
+						if ( explosive ){
+							explosive.habSetActivatedBy(hab_ActivatedByID);
+						}
+						return;
+					}
 				}
 			}
 		}

@@ -58,10 +58,10 @@ class habZone
 	string Name;
 	float X;
 	float Z;
-	int KillRadius;
+	float WarningRadius;
+	float KillRadius;
 	float MinHumanity;
 	float MaxHumanity;
-	int WarningRadius;
 	bool ShowWarningMsg = true;
 	string WarningMessage = "";
 	bool ShowWelcomeMsg = false;

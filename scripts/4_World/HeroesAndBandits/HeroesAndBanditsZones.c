@@ -6,14 +6,14 @@ class HeroesAndBanditsZone
     string Name;
 	float X;
 	float Z;
-	int WarningRadius;
+	float Radius;
 	bool ShowWarningMsg;
 	string WarningMessage;
 	bool ShowWelcomeMsg;
 	string WelcomeMessage;
 	string WelcomeIcon;
 	int WelcomeMessageColor;
-	int KillRadius;
+	float KillRadius;
     float MinHumanity;
     float MaxHumanity;
 	bool OverrideSafeZone;
@@ -29,7 +29,7 @@ class HeroesAndBanditsZone
 		Z = zoneToLoad.Z;
 		MinHumanity = zoneToLoad.MinHumanity;
 		MaxHumanity = zoneToLoad.MaxHumanity;
-		WarningRadius = zoneToLoad.WarningRadius;
+		Radius = zoneToLoad.WarningRadius;
 		KillRadius = zoneToLoad.KillRadius;
 		WelcomeMessageColor = zoneToLoad.getWelcomeMessageColor();
 		ShowWelcomeMsg = zoneToLoad.ShowWelcomeMsg;
@@ -81,7 +81,7 @@ class HeroesAndBanditsZone
 			
 		if (player.IsAlive())				
 		{//habPrint("Checking if Players is in Zone " + Name, "Debug");	
-			if (validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), getVector()) <= WarningRadius && player.m_HeroesAndBandits_WarningSent != k ){
+			if (validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.isInZone(ZoneID, Index)){
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
 				player.enteredZone(ZoneID, Index);
 				if ( ShowWelcomeMsg )
@@ -93,10 +93,10 @@ class HeroesAndBanditsZone
 					player.SetAllowDamage(false);
 				}
 			}
-			else if (!validHumanity(playerHumanity) && isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius)
+			else if (!validHumanity(playerHumanity) && isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
 			{
 				//Player Entered Kill Zone Kill Player if warning has been given
-				player.leftZone(Index);
+				player.leftZone(0); //Removed from all zones
 				habPrint("Killed Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") for Entering Zone: " + Name, "Always");
 				if ( OverrideSafeZone )
 				{
@@ -105,7 +105,7 @@ class HeroesAndBanditsZone
 				FireWeaponClosestGuard(player.GetPosition());
 				player.SetHealth(0.0);
 			}
-			else if (!validHumanity(playerHumanity) && player.m_HeroesAndBandits_WarningSent != k && vector.Distance(player.GetPosition(), getVector()) <= WarningRadius)
+			else if (!validHumanity(playerHumanity) && !player.isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
 			{
 				//Player Entered Warning Zone Issue Warning
 				player.enteredZone(ZoneID, Index);
@@ -115,7 +115,7 @@ class HeroesAndBanditsZone
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
 				}		
 			}
-			else if (vector.Distance(player.GetPosition(), getVector()) > WarningRadius && player.m_HeroesAndBandits_WarningSent == k)
+			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.isInZone(ZoneID, Index))
 			{
 				if ( GodModPlayers )
 				{
@@ -139,6 +139,9 @@ class HeroesAndBanditsZone
     void HeroesAndBanditsZone(string name, float x, float z) 
 	{
 
+		Name = name;
+		X = x;
+		Z = y;
     }
 	
 	vector getVector(){

@@ -1,3 +1,12 @@
+/*
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*                                                                                   *
+*                                                                                   *
+*   LEGACY FILE WILL BE REMOVED ONLY BEING KEPT TO HELP WITH UPGRADE TO NEW CONFIG  *
+*                                                                                   *
+*                                                                                   *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*/
 static string HeroesAndBanditsDIR = "$profile:HeroesAndBandits";
 static string HeroesAndBanditsPATH = HeroesAndBanditsDIR + "\\config.json";
 

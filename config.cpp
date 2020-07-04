@@ -26,7 +26,7 @@ class CfgMods
         credits="DaemonForge";
         author="DaemonForge";
         authorID="0";
-        version="1.0";
+        version="1.1";
         extra=0;
         type="mod";
 		inputs = "HeroesAndBandits/data/Inputs.xml";

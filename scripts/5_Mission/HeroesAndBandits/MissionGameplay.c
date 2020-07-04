@@ -118,11 +118,6 @@ modded class MissionGameplay
 			m_HeroesAndBanditsStatusBarIconUI.updateIcon(m_HeroesAndBanditsCurrentIcon);
 		}
 	}
-	
-	
-	
-	
-	
 		
 	
 	override void OnEvent(EventType eventTypeId, Param params) 
@@ -224,6 +219,8 @@ modded class MissionGameplay
 			super.OnEvent(eventTypeId,params); 
 		}
 	}
+	
+	
 	override void OnUpdate (float timeslice) {
         super.OnUpdate (timeslice);
 

@@ -1,14 +1,12 @@
 modded class PlayerBase
 {
-	float m_HeroesAndBandits_WarningSent = -1; //For Zones
-	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For Zones
+	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	bool  m_HeroesAndBandits_Killed = false;
 	
 	override void Init()
 	{
 		super.Init();
 		
-		RegisterNetSyncVariableFloat("m_HeroesAndBandits_WarningSent");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
 		
 	}
@@ -37,13 +35,16 @@ modded class PlayerBase
 		} else {
 			habPrint("Trying to leave zone not in", "Exception");
 		}
+		if (index == 0){ //just to be safe if leaving top level zone clear the array 
+			m_HeroesAndBandits_InZones.Clear();
+		}
 	}
 	
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
-		if (GetGame().IsServer()){
+		if (GetGame().IsServer() && GetIdentity()){
 			bool killedByObject = false;
 			string objectPlacerID = "";
 			PlayerBase sourcePlayer;
@@ -112,12 +113,9 @@ modded class PlayerBase
 
 				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
 				if (sourcePlayerID == targetPlayerID){ //Sucide
-					if ( killedByObject ){
-						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
-						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
-					} else if ( sourcePlayer && !sourcePlayer.IsInVehicle() ){//If not in Vehicle Crash
-						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
-						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
+					if ( targetPlayer && !targetPlayer.IsInVehicle() ){//If not in Vehicle Crash
+						GetHeroesAndBandits().NewPlayerAction(targetPlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID)+"Sucide");
+						GetHeroesAndBandits().TriggerSucideFeed(targetPlayerID);
 					}
 				}else {
 					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
@@ -130,7 +128,7 @@ modded class PlayerBase
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
 
-		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed) {
+		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed && GetGame().IsServer() && GetIdentity()) {
 			m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
 			string sourcePlayerID;
 			string targetPlayerID;
@@ -155,7 +153,7 @@ modded class PlayerBase
 			} else {
 				habPrint( "" + GetIdentity().GetPlainId() + " killed by Explosion with " + source.GetType(), "Debug");
 			}
-		} else  if ( damageType == DT_EXPLOSION && !source && !this.IsAlive() ) {
+		} else  if ( damageType == DT_EXPLOSION && !source && !this.IsAlive() && GetGame().IsServer() && GetIdentity() ) {
 			habPrint( "" + GetIdentity().GetPlainId() + " killed by Explosion with no source", "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
