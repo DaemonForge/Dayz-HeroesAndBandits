@@ -20,6 +20,7 @@ modded class PlayerBase
 	
 	void enteredZone(int zoneID, int index = 0)
 	{
+		habPrint("Player Entered Zone", "Debug");
 		m_HeroesAndBandits_InZones.Set(index, zoneID);
 	}
 	
