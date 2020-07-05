@@ -101,6 +101,17 @@ class HeroesAndBanditsConfigActions
 		addAction( "CombinationLockRaid", "bandit", "none", 150);
 		addAction( "FencePartRaid", "bandit","none", 50);
 		addAction( "WatchtowerPartRaid", "bandit", "none", 30);
+		
+		#ifdef EXPANSIONMOD
+			addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionRamp6x1_5x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionRamp3x1_5x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionStairS1_5x3x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_6x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_3x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_3x6Raid", "bandit", "none", 150);
+		#endif
+		
 		addAction( "MedicBandagePlayer", "hero", "medic", 50);
 		addAction( "MedicGiveBlood", "hero", "medic",25);
 		addAction( "MedicGiveSaline", "hero","medic", 25);

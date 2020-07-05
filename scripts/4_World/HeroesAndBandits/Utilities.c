@@ -191,6 +191,16 @@ bool habCheckUpgradeToConfigV4(){
 			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 25);
 			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 25);
 			temp_Actions.addAction( "MedicSplintPlayer", "hero", "medic", 75);
+			
+			#ifdef EXPANSIONMOD
+				temp_Actions.addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionRamp6x1_5x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionRamp3x1_5x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionStairS1_5x3x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_6x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_3x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_3x6Raid", "bandit", "none", 150);
+			#endif
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);
 			
