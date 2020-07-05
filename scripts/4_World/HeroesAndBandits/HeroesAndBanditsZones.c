@@ -66,7 +66,7 @@ class HeroesAndBanditsZone
 				int x = zoneToLoad.SubZones.Get(i).X;
 				int z = zoneToLoad.SubZones.Get(i).Z;
 				SubZones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), i, Index + 1);
+				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), i + 1, Index + 1);
 			}
 		}
 		

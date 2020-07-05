@@ -1,0 +1,59 @@
+{
+    "ConfigVersion": "4",
+    "ZoneCheckTimer": 3,
+    "WarningMessageColor": [
+        200,
+        255,
+        0,
+        0
+    ],
+    "NotificationMessageTime": 15,
+    "WarningMessageImagePath": "HeroesAndBandits/gui/images/DeathWarning.paa",
+    "Zones": [
+        {
+            "Name": "Default Zone",
+            "X": 11250,
+            "Z": 4300,
+            "WarningRadius": 75,
+            "KillRadius": 50,
+            "MinHumanity": -1000,
+            "MaxHumanity": 1000,
+            "ShowWarningMsg": 1,
+            "WarningMessage": "!!Warning!! you are about to enter Default Zone if you continue you will be shot!",
+            "ShowWelcomeMsg": 0,
+            "WelcomeMessage": "Welcome to the Default Zone",
+            "WelcomeIcon": "HeroesAndBandits/gui/images/BambiNotification.paa",
+            "WelcomeMessageColor": [
+                200,
+                0,
+                200,
+                200
+            ],
+            "OverrideSafeZone": 0,
+            "GodModPlayers": 0,
+            "Guards": [
+                {
+                    "X": 11250,
+                    "Y": 290.2,
+                    "Z": 4300,
+                    "Orientation": 0,
+                    "Skin": "SurvivorF_Helga",
+                    "WeaponInHands": "M4A1",
+                    "WeaponInHandsMag": "Mag_STANAGCoupled_30Rnd",
+                    "WeaponInHandsAttachments": [
+                        "M4_RISHndgrd",
+                        "M4_OEBttstck",
+                        "M68Optic"
+                    ],
+                    "GuardGear": [
+                        "PlateCarrierVest",
+                        "JungleBoots_Black",
+                        "CargoPants_Black",
+                        "M65Jacket_Black"
+                    ]
+                }
+            ],
+            "SubZones": []
+        }
+    ]
+}

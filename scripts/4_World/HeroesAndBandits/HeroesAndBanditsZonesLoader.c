@@ -68,10 +68,11 @@ class habZone
 	string WelcomeMessage = "Welcome to the Default Zone";
 	string WelcomeIcon = "HeroesAndBandits/gui/images/BambiNotification.paa";
 	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
-	ref array< ref habZone > SubZones = new ref array< ref habZone >;
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
+	
+	ref array< ref habZone > SubZones = new ref array< ref habZone >;
 	
 	void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
 	{

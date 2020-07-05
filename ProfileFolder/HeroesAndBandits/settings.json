@@ -1,0 +1,58 @@
+{
+    "ConfigVersion": "4",
+    "Mode": 0,
+    "NotificationMessageTime": 15,
+    "KillFeed": 1,
+    "SucideFeed": 0,
+    "KillFeedMessageColor": [
+        200,
+        250,
+        0,
+        100
+    ],
+    "CommandPrefix": "/",
+    "AllowStatCommand": 1,
+    "AllowHumanityCommand": 1,
+    "AllowGUI": 1,
+    "GUIHeading": "#HAB_TITLE",
+    "HideKillsInGUI": 0,
+    "ExceptionLogs": 1,
+    "VerboseLogs": 0,
+    "DebugLogs": 0,
+    "BambiSkins": [
+        "SurvivorM_Boris",
+        "SurvivorM_Hassan",
+        "SurvivorF_Frida",
+        "SurvivorM_Jose",
+        "SurvivorM_Cyril",
+        "SurvivorF_Gabi"
+    ],
+    "HeroSkins": [
+        "SurvivorM_Indar",
+        "SurvivorM_Lewis",
+        "SurvivorF_Linda",
+        "SurvivorM_Taiki",
+        "SurvivorM_Mirek",
+        "SurvivorM_Oliver",
+        "SurvivorF_Irena",
+        "SurvivorF_Judy",
+        "SurvivorF_Keiko",
+        "SurvivorM_Niki",
+        "SurvivorM_Rolf"
+    ],
+    "BanditSkins": [
+        "SurvivorM_Peter",
+        "SurvivorM_Kaito",
+        "SurvivorF_Naomi",
+        "SurvivorM_Francis",
+        "SurvivorM_Elias",
+        "SurvivorM_Manua",
+        "SurvivorM_Denis",
+        "SurvivorM_Quinn",
+        "SurvivorM_Guo",
+        "SurvivorM_Seth",
+        "SurvivorF_Maria",
+        "SurvivorF_Eva",
+        "SurvivorF_Helga"
+    ]
+}

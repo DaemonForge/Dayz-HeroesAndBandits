@@ -2,7 +2,6 @@ class HeroesAndBanditsPlayer
 {
 	//Default Values
     string PlayerID = "";
-	float Humanity = 0; //Legacy Will remove
 	ref array< ref habStat > Stats = new ref array< ref habStat >;
 	ref array< ref habPlayerAffinity > Affinities = new ref array< ref habPlayerAffinity >;
 	

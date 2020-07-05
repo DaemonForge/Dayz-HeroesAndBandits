@@ -24,28 +24,38 @@ modded class PlayerBase
 	void enteredZone(int zoneID, int index = 0)
 	{
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
-		if ( maxIndex <= index ){
+		if ( index <= maxIndex ){
 			leftZone(index);
 		}
-		habPrint("Player Entered Zone", "Debug");
+		habPrint("Player Entered Zone" + zoneID + " at index " + index, "Debug");
 		m_HeroesAndBandits_InZones.Insert(zoneID);
+		if ( GetHeroesAndBanditsSettings().DebugLogs ){
+			m_HeroesAndBandits_InZones.Debug();
+		}
 	}
 	
 	void leftZone(int index){
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
 		if ( index == maxIndex ){
+			habPrint("Removing Player from zone" + index, "Debug");
 			m_HeroesAndBandits_InZones.Remove(index);
-			habPrint("Removing Player from zone", "Debug");
+			if ( GetHeroesAndBanditsSettings().DebugLogs ){
+				m_HeroesAndBandits_InZones.Debug();
+			}
 		} else if ( index < maxIndex ){
 			habPrint("Removing Player from all subzones", "Debug");
+			m_HeroesAndBandits_InZones.Remove(index);
 			for ( int i = maxIndex; i >= index; i-- ){
 				m_HeroesAndBandits_InZones.Remove(i);
 			}
+			if ( GetHeroesAndBanditsSettings().DebugLogs ){
+				m_HeroesAndBandits_InZones.Debug();
+			}
 		} else {
-			habPrint("Trying to leave zone not in", "Exception");
-		}
-		if (index == 0){ //just to be safe if leaving top level zone clear the array 
-			m_HeroesAndBandits_InZones.Clear();
+			habPrint("Trying to leave zone not in" + index, "Exception");
+			if ( GetHeroesAndBanditsSettings().DebugLogs ){
+				m_HeroesAndBandits_InZones.Debug();
+			}
 		}
 	}
 	

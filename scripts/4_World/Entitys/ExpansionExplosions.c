@@ -15,7 +15,7 @@ modded class BuildingBase
 
 			if ( nearest_object.IsInherited( ExpansionBaseBuilding ) )
 			{
-				BaseBuildingBase baseBuildingObject = BaseBuildingBase.Cast(nearest_object)
+				BaseBuildingBase baseBuildingObject = BaseBuildingBase.Cast(nearest_object);
 				baseBuildingObject.habSetLastHitByObj(this);
 			}
 		}
@@ -41,7 +41,7 @@ modded class ItemBase
 
 			if ( nearest_object.IsInherited( ExpansionBaseBuilding ) )
 			{
-				BaseBuildingBase baseBuildingObject = BaseBuildingBase.Cast(nearest_object)
+				BaseBuildingBase baseBuildingObject = BaseBuildingBase.Cast(nearest_object);
 				baseBuildingObject.habSetLastHitByObj(this);
 			}
 		}

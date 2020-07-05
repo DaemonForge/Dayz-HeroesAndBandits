@@ -190,7 +190,6 @@ bool habCheckUpgradeToConfigV4(){
 			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 25);
 			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 25);
 			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicSplintPlayer", "hero", "medic", 75);
 			
 			#ifdef EXPANSIONMOD
 				temp_Actions.addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);
