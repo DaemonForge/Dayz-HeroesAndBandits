@@ -200,6 +200,10 @@ bool habCheckUpgradeToConfigV4(){
 				temp_Actions.addAction( "ExpansionFloor_6x6Raid", "bandit", "none", 150);
 				temp_Actions.addAction( "ExpansionFloor_3x3Raid", "bandit", "none", 150);
 				temp_Actions.addAction( "ExpansionFloor_3x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionSafeMiniRaid", "bandit", "none", 100);
+				temp_Actions.addAction( "ExpansionSafeMediumRaid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionSafeLargeRaid", "bandit", "none", 200);
+			
 			#endif
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);

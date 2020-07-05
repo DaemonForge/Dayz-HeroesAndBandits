@@ -52,7 +52,7 @@ modded class PlayerBase
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
-		if (!GetIdentity()){ return; } //If isn't Player return
+		if (!GetIdentity()){ return; } //If this isn't Player return
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
 		if (GetGame().IsServer() && GetIdentity()){
 			bool killedByObject = false;
