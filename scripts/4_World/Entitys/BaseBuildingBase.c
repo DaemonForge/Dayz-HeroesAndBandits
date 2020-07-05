@@ -64,6 +64,8 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + sourcePlayer.GetIdentity().GetPlainId() + " with " + source.GetType(), "Debug");
 				habLastHitBy = sourcePlayer.GetIdentity().GetPlainId();
 			}
+		} else if (damageType == DT_EXPLOSION) {
+			habPrint( GetType() + " hit by Explosion with unknown source in BaseBuildingBase class" , "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}

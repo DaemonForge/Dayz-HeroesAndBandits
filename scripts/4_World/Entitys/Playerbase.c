@@ -13,13 +13,22 @@ modded class PlayerBase
 	
 	bool isInZone(int zoneID, int index = 0)
 	{
+		if ( !m_HeroesAndBandits_InZones ){
+			return false;
+		} else if (m_HeroesAndBandits_InZones.Count() == 0) {
+			return false;
+		}
 		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
 	}
 	
 	void enteredZone(int zoneID, int index = 0)
 	{
+		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
+		if ( maxIndex <= index ){
+			leftZone(index);
+		}
 		habPrint("Player Entered Zone", "Debug");
-		m_HeroesAndBandits_InZones.Set(index, zoneID);
+		m_HeroesAndBandits_InZones.Insert(zoneID);
 	}
 	
 	void leftZone(int index){
@@ -43,6 +52,7 @@ modded class PlayerBase
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
+		if (!GetIdentity()){ return; } //If isn't Player return
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
 		if (GetGame().IsServer() && GetIdentity()){
 			bool killedByObject = false;

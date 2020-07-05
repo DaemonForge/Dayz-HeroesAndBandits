@@ -72,32 +72,44 @@ class HeroesAndBanditsZone
 		
 	}
 		
-	void CheckPlayer(PlayerBase player){
-		float playerHumanity = GetPlayerHumanity(player.GetIdentity().GetPlainId());
+	void CheckPlayer(PlayerBase inPlayer){
+		PlayerBase player = PlayerBase.Cast(inPlayer);
+		float playerHumanity = GetHeroesAndBandits().GetPlayerHumanity(player.GetIdentity().GetPlainId());
 		if ( !player )
 		{
 			return;
 		}
 			
 		if (player.IsAlive())				
-		{//habPrint("Checking if Players is in Zone " + Name, "Debug");	
+		{
+			
+			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
+			if ( GetHeroesAndBanditsSettings().DebugLogs ){
+				player.m_HeroesAndBandits_InZones.Debug();
+			}*/
 			if (validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.isInZone(ZoneID, Index)){
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
 				player.enteredZone(ZoneID, Index);
+				if ( GetHeroesAndBanditsSettings().DebugLogs ){
+					player.m_HeroesAndBandits_InZones.Debug();
+				}
 				if ( ShowWelcomeMsg )
 				{
-					WelcomePlayer(Name, WelcomeMessage, WelcomeIcon, player.GetIdentity().GetPlainId(), WelcomeMessageColor);
+					GetHeroesAndBandits().WelcomePlayer(Name, WelcomeMessage, WelcomeIcon, player.GetIdentity().GetPlainId(), WelcomeMessageColor);
 				}
 				if ( GodModPlayers && validHumanity(playerHumanity))
 				{
 					player.SetAllowDamage(false);
 				}
 			}
-			else if (!validHumanity(playerHumanity) && isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
+			else if (!validHumanity(playerHumanity) && player.isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
 			{
 				//Player Entered Kill Zone Kill Player if warning has been given
 				player.leftZone(0); //Removed from all zones
 				habPrint("Killed Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") for Entering Zone: " + Name, "Always");
+				if ( GetHeroesAndBanditsSettings().DebugLogs ){
+					player.m_HeroesAndBandits_InZones.Debug();
+				}
 				if ( OverrideSafeZone )
 				{
 					player.SetAllowDamage(true);
@@ -109,6 +121,9 @@ class HeroesAndBanditsZone
 			{
 				//Player Entered Warning Zone Issue Warning
 				player.enteredZone(ZoneID, Index);
+				if ( GetHeroesAndBanditsSettings().DebugLogs ){
+					player.m_HeroesAndBandits_InZones.Debug();
+				}
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
 				if ( ShowWarningMsg )
 				{
@@ -123,7 +138,10 @@ class HeroesAndBanditsZone
 				}
 				//Player Left Warning Radius
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Name, "Verbose");
-				player.leftZone(Index);			
+				player.leftZone(Index);		
+				if ( GetHeroesAndBanditsSettings().DebugLogs ){
+					player.m_HeroesAndBandits_InZones.Debug();
+				}	
 			}
 			if ( SubZones && player.isInZone(ZoneID, Index) )
 			{ 
@@ -141,7 +159,7 @@ class HeroesAndBanditsZone
 
 		Name = name;
 		X = x;
-		Z = y;
+		Z = z;
     }
 	
 	vector getVector(){

@@ -151,7 +151,7 @@ bool habCheckUpgradeToConfigV4(){
 			for ( int j = 0; j < GetHeroesAndBanditsConfig().Actions.Count(); j++)
 			{//TODO
 				string tempActionName = GetHeroesAndBanditsConfig().Actions.Get(j).Name;
-				string tempActionAffinity = GetHeroesAndBanditsConfig().Actions.Get(j).Affinity; //bandit / hero / bambi
+				string tempActionAffinity = GetHeroesAndBanditsConfig().Actions.Get(j).Affinity; //bandit / hero
 				string tempActionSecondaryAffinity = "none";
 				string tempActionprefix = tempActionName.Substring(0,4);
 				if (tempActionprefix == "Hunt"){
@@ -176,6 +176,10 @@ bool habCheckUpgradeToConfigV4(){
 					tempActionSecondaryAffinity = "medic";
 					tempActionName = "MedicGiveCPR";
 				
+				}
+				if (tempActionAffinity == "bambi" )	{
+					tempActionAffinity = "none";
+					tempActionSecondaryAffinity = "none";
 				}
 				float tempActionPoints = GetHeroesAndBanditsConfig().Actions.Get(j).Humanity;
 				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;

@@ -88,7 +88,7 @@ class HeroesAndBanditsConfigActions
 		addAction( "ZombieKill", "hero", "none", 5);
 		addAction( "heroSucide", "bandit", "none",100);
 		addAction( "banditSucide", "hero", "none",100);
-		addAction( "bambiSucide", "bambi", "none",0, false);
+		addAction( "bambiSucide", "none", "none",0, false);
 		addAction( "heroVshero", "bandit", "none",150);
 		addAction( "heroVsbambi", "bandit","none", 300);
 		addAction( "heroVsbandit", "hero", "none",250);
@@ -147,7 +147,7 @@ class HeroesAndBanditsConfigActions
 class habAction
 {
 	string Name;
-	string Affinity; //bandit / hero / bambi
+	string Affinity; //bandit / hero / none
 	string SecondaryAffinity = "none";
 	float Points;
 	bool NotifiyPlayer;
