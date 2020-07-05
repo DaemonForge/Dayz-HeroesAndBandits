@@ -222,28 +222,28 @@
             "Name": "MedicFeedTetracycline",
             "Affinity": "hero",
             "SecondaryAffinity": "medic",
-            "Points": 25,
+            "Points": 15,
             "NotifiyPlayer": 1
         },
         {
             "Name": "MedicFeedPainkiller",
             "Affinity": "hero",
             "SecondaryAffinity": "medic",
-            "Points": 25,
+            "Points": 15,
             "NotifiyPlayer": 1
         },
         {
             "Name": "MedicFeedCharcoal",
             "Affinity": "hero",
             "SecondaryAffinity": "medic",
-            "Points": 25,
+            "Points": 15,
             "NotifiyPlayer": 1
         },
         {
             "Name": "MedicFeedVitamin",
             "Affinity": "hero",
             "SecondaryAffinity": "medic",
-            "Points": 25,
+            "Points": 10,
             "NotifiyPlayer": 1
         },
         {

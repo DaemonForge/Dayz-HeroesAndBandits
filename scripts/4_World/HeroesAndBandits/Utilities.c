@@ -179,17 +179,16 @@ bool habCheckUpgradeToConfigV4(){
 				}
 				if (tempActionAffinity == "bambi" )	{
 					tempActionAffinity = "none";
-					tempActionSecondaryAffinity = "none";
 				}
 				float tempActionPoints = GetHeroesAndBanditsConfig().Actions.Get(j).Humanity;
 				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;
 				temp_Actions.Actions.Insert( new ref habAction(tempActionName, tempActionAffinity, tempActionSecondaryAffinity, tempActionPoints, tempActionNotifiyPlayer));
 			}
 			temp_Actions.addAction( "WatchtowerPartRaid", "bandit", "none", 30);
-			temp_Actions.addAction( "MedicFeedTetracycline", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 25);
+			temp_Actions.addAction( "MedicFeedTetracycline", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 15);
 			
 			#ifdef EXPANSIONMOD
 				temp_Actions.addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);

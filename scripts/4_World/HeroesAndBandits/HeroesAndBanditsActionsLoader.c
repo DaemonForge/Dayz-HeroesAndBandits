@@ -119,10 +119,10 @@ class HeroesAndBanditsConfigActions
 		addAction( "MedicGiveBlood", "hero", "medic",25);
 		addAction( "MedicGiveSaline", "hero","medic", 25);
 		addAction( "MedicGiveCPR", "hero", "medic" ,75);
-		addAction( "MedicFeedTetracycline", "hero", "medic", 25);
-		addAction( "MedicFeedPainkiller", "hero", "medic", 25);
-		addAction( "MedicFeedCharcoal", "hero", "medic", 25);
-		addAction( "MedicFeedVitamin", "hero", "medic", 25);
+		addAction( "MedicFeedTetracycline", "hero", "medic", 15);
+		addAction( "MedicFeedPainkiller", "hero", "medic", 15);
+		addAction( "MedicFeedCharcoal", "hero", "medic", 15);
+		addAction( "MedicFeedVitamin", "hero", "medic", 10);
 		addAction( "HuntAnimal_BosTaurus_Brown", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_White", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_Spotted", "hunter", "none", 25, false);
