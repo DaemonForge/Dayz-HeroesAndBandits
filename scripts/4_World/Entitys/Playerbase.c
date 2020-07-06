@@ -178,4 +178,21 @@ modded class PlayerBase
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
+
+
+	//Adding now so I don't forget
+	override bool CanReleaseAttachment (EntityAI attachment)
+	{
+		ClothingBase item = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
+
+		return super.CanReleaseAttachment(attachment);
+	}
+	
+	override bool CanReceiveAttachment (EntityAI attachment, int slotId)
+	{
+		ClothingBase item = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
+		
+		return super.CanReceiveAttachment(attachment, slotId);
+	}
+
 }
