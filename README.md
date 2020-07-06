@@ -11,7 +11,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 Each command and the GUI can be disabled in the server configuration
 
 ## For Information on how to configure the mod check out our wiki
-[Wiki](https://github.com/daemonforge/Dayz-HeroesAndBandits/wiki)
+[Wiki Link](https://github.com/daemonforge/Dayz-HeroesAndBandits/wiki)
 
 ## Supported Languages
 - English
