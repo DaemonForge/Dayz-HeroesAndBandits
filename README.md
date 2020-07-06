@@ -10,7 +10,7 @@ This mod add humanity to Dayz in a very expandable way, allow for server owners 
 
 Each command and the GUI can be disabled in the server configuration
 
-For Information on how to configure the mod check out our wiki
+## For Information on how to configure the mod check out our wiki
 [Wiki](https://github.com/daemonforge/Dayz-HeroesAndBandits/wiki)
 
 ## Supported Languages
@@ -31,47 +31,6 @@ For Information on how to configure the mod check out our wiki
 - Create a export function for server leaderboards and a basic web app to view
 - Change Icon location settings to be client side so that way players can choose where to show it
 - Add secondary affinities, eg Hunter, and Medic and make it expandable
-
-## Developer Helper Functions
-These functions are to help developers (they will not work as they are shown below in the unit.c)
-
-#### New Player Action
-```
-GetHeroesAndBandits().NewPlayerAction(PlayerID, ActionName) 
-```
-Adds an action to the player, adding an action to the player will update the stat, update the players humanity, action must exsit in the config or it will consider the action to give 0 humanity
-
-#### Get Player Affinity
-```
-GetHeroesAndBandits().GetPlayerAffinity(PlayerID) 
-```
-This will return the players Affinity in a string Ussaly bambi, hero, bandit but this can be configured by the server admins will return bambi(Default Level Affinity) if the player can't be found
-
-#### Get Player Humanity
-
-```
-GetHeroesAndBandits().GetPlayerHumanity(PlayerID) 
-```
-This will return the players Humanity in a float value, it will return 0 if the player can't be found
-
-#### Get Player Level
-```
-GetHeroesAndBandits().GetPlayerLevel(PlayerID) 
-```
-Returns the habLevel object will return the default level if player can't be found
-
-#### Get Player Level Name
-```
-GetHeroesAndBandits().GetPlayerLevelName(PlayerID) 
-```
-Returns the HabLevel Name in a string it will the default level's name usally Bambi if the player can't be found
-
-#### Get Player Stat
-```
-GetHeroesAndBandits().GetPlayerStat(PlayerID, StatName) 
-```
-Returns INT of the player stat, if player or the player's stat doesn't exist it returns 0
-
 
 For questions or help feel free to contact me on discord: DaemonForge#5454
 
