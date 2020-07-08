@@ -179,20 +179,82 @@ modded class PlayerBase
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 
-
-	//Adding now so I don't forget
-	override bool CanReleaseAttachment (EntityAI attachment)
+	
+	// making a safe way to grab the player withing the player class
+	HeroesAndBanditsPlayer GetHaBPlayer()
 	{
-		ClothingBase item = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
+		if (GetGame().IsServer()){
+			if (GetIdentity()){
+				return GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
+			} 
+		} else {
+			if (g_HeroesAndBanditsPlayer){
+				return g_HeroesAndBanditsPlayer;
+			} else {
+				habPrint("Player not defined on client","debug");
+			}
+		}
+		return null;
+	}
 
+	override bool CanReceiveItemIntoCargo(EntityAI cargo)
+	{
+		if (!GetHaBPlayer()){return super.CanReceiveItemIntoCargo(cargo);}
+		if (GetHaBPlayer().checkItem(cargo.GetType(), "inventory"))
+		{
+			return super.CanReceiveItemIntoCargo(cargo);
+		}
+		return false;
+	}
+	
+	override bool CanSwapItemInCargo(EntityAI child_entity, EntityAI new_entity)
+	{
+		if (!GetHaBPlayer()){return super.CanSwapItemInCargo(child_entity, new_entity);}
+		if (GetHaBPlayer().checkItem(new_entity.GetType(), "inventory"))
+		{
+			return super.CanSwapItemInCargo(child_entity, new_entity);
+		}
+		return false;
+	}
+	
+	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
+	{
+		if (!GetHaBPlayer()){return super.CanReceiveItemIntoHands(item_to_hands);}
+		if (GetHaBPlayer().checkItem(item_to_hands.GetType(), "inhands"))
+		{
+			return super.CanReceiveItemIntoHands(item_to_hands);
+		}
+		return false;
+	}
+	
+	//Adding now so I don't forget
+	override bool CanReleaseAttachment(EntityAI attachment)
+	{
+		if (!GetHaBPlayer()){
+			return super.CanReleaseAttachment(attachment);}
+		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
+		if (mask){
+			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && GetHaBPlayer().getAffinityName() == "bandit"){
+				return false;
+			}
+		}
 		return super.CanReleaseAttachment(attachment);
 	}
 	
-	override bool CanReceiveAttachment (EntityAI attachment, int slotId)
+	
+	
+	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		ClothingBase item = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
-		
-		return super.CanReceiveAttachment(attachment, slotId);
+		if (!GetHaBPlayer()){
+			habPrint("Player not defined","debug");
+			return super.CanReceiveAttachment(attachment, slotId);
+		}
+		if (GetHaBPlayer().checkItem(attachment.GetType(), "attach"))
+		{
+			return super.CanReceiveAttachment(attachment, slotId);
+		}
+		return false;
+			
 	}
 
 }

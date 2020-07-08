@@ -5,7 +5,7 @@ ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
 ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
 ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
 
-
+ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
 ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
 ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
 ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
@@ -416,10 +416,14 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 		m_HeroesAndBandits = new HeroesAndBandits;
 		m_HeroesAndBandits.Init();
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "SaveAllPlayers", 300 * 1000, true);
-		if (GetHeroesAndBanditsZones().ZoneCheckTimer >= 1 && m_HeroesAndBandits.Zones ){
-			habPrint("Creating Zone Check Timer", "Debug");
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsZones().ZoneCheckTimer * 1000, true);
-		}else{
+		if (GetHeroesAndBanditsZones().ZoneCheckTimer >= 0.5 && m_HeroesAndBandits.Zones ){
+			if (m_HeroesAndBandits.Zones.Count() >= 1){
+				habPrint("Creating Zone Check Timer", "Debug");
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsZones().ZoneCheckTimer * 1000, true);
+			} else {
+				habPrint("No zones defined", "Debug");
+			}
+		} else {
 			habPrint("Zone Check Time Less than 1 so not creating timer", "Debug");					
 		}
 	}
@@ -430,7 +434,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 //Helper function to return Config
 static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
 		if (!m_HeroesAndBanditsSettings)
 		{
 			m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
@@ -447,7 +451,7 @@ static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
 		if (!m_HeroesAndBanditsConfigLevels)
 		{
 			m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
@@ -464,7 +468,7 @@ static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
 		if (!m_HeroesAndBanditsConfigActions)
 		{
 			m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;

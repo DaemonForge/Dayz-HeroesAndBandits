@@ -14,10 +14,11 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	RichTextWidget		m_Raid;
 	RichTextWidget		m_Hunts;
 	RichTextWidget		m_Sucides;
+	String				m_layout = "HeroesAndBandits/gui/layouts/HeroesAndBanditsPanel.layout";
 	
 	override Widget Init()
     {
-		layoutRoot 		= GetGame().GetWorkspace().CreateWidgets( "HeroesAndBandits/gui/layouts/HeroesAndBanditsPanel.layout" );
+		layoutRoot 		= GetGame().GetWorkspace().CreateWidgets( m_layout );
 		m_LevelImage	= ImageWidget.Cast( layoutRoot.FindAnyWidget( "HABLevelImage" ) );
 		m_Heading		= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABHeading" ) );
 		m_Affinity		= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABAffinity" ) );

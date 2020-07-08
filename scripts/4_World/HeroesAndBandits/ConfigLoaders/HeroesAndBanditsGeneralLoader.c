@@ -26,6 +26,7 @@ class HeroesAndBanditsSettings
 	string GUIHeading = "#HAB_TITLE";
 	bool HideKillsInGUI = false;
 	
+	bool BanditsCanRemoveMask = false;
 	
 	bool ExceptionLogs = true;
 	bool VerboseLogs = false;
@@ -100,4 +101,3 @@ class HeroesAndBanditsSettings
 
 	
 }
-

@@ -110,6 +110,9 @@ class HeroesAndBanditsConfigLevels
 		addAffinity("bandit", "#HAB_BANDIT");
 		addAffinity("medic", "#HAB_MEDIC");
 		addAffinity("hunter", "#HAB_HUNTER");
+		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
+		getAffinity("hero").addItemList(-1, -1, "all", banditOnlyItems );
+		DefaultAffinity.addItemList(-1, -1, "all", banditOnlyItems);
 	}
 }
 
@@ -139,10 +142,74 @@ class habAffinity
 {
 	string Name;
 	string DisplayName;
+	ref array< ref habItemList > ItemLists = new ref array< ref habItemList >;
 
 	void habAffinity(string name, string displayName) 
 	{
 		Name = name;
 		DisplayName = displayName;
 	}
+	
+	bool checkItem(float points, string itemType, string location){
+		if (!ItemLists){ return true; }
+		if (ItemLists.Count() == 0){ return true; }
+		for (int i = 0; i < ItemLists.Count(); i++){
+			float minPoints = ItemLists.Get(i).MinPoints;
+			float maxPoints = ItemLists.Get(i).MaxPoints;
+			if ( minPoints != -1 && maxPoints != -1 && points >= minPoints && points <= maxPoints){
+				return ItemLists.Get(i).checkItem(itemType, location);
+			}else if (minPoints == -1 && maxPoints != -1 && points <= maxPoints){
+				return ItemLists.Get(i).checkItem(itemType, location);
+			}else if (minPoints != -1 && maxPoints == -1 && points >= minPoints){
+				return ItemLists.Get(i).checkItem(itemType, location);
+			}else if ( minPoints == -1 && maxPoints == -1 ){
+				return ItemLists.Get(i).checkItem(itemType, location);
+			}
+		}
+		return true;
+	}
+	
+	void addItemList( float minPoints, float maxPoints, string type, ref TStringArray items)
+	{
+		ItemLists.Insert(new ref habItemList( minPoints, maxPoints, type));
+		int index = ItemLists.Count() - 1;
+		ItemLists.Get(index).Items = items;
+	}
+}
+
+
+class habItemList
+{
+	float MinPoints;
+	float MaxPoints;
+	string Location; // attach / inventory / inhands / all 
+	ref TStringArray Items = new ref TStringArray;
+	
+	void habItemList( float minPoints, float maxPoints, string location )
+	{
+		MinPoints = minPoints;
+		MaxPoints = maxPoints;
+		Location = location;
+	}
+	
+	bool checkItem( string itemType , string location){
+		bool check = true;
+		bool doCheck = false;
+		if ( Location == "all" ){
+			doCheck = true;
+		} else if ( Location == location){
+			doCheck = true;
+		} else if (location == "inventory" && Location == "attach"){
+			doCheck = true;
+		}
+		
+		if (doCheck){
+			int index = Items.Find(itemType);
+				habPrint("Checking for " + itemType + " Found " + index, "debug");
+				if (Items.Get(index) == itemType){
+						check = !check;
+				}
+		}
+		return check;
+	}	
 }

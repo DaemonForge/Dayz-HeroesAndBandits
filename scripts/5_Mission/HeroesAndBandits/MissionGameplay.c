@@ -1,4 +1,4 @@
-ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
+
 ref habLevel 						g_HeroesAndBanditsLevel;
 
 modded class MissionGameplay

@@ -67,6 +67,11 @@ class HeroesAndBanditsPlayer
 		return 0;
 	}
 	
+	bool checkItem(string itemType, string location){
+		habPrint("Player " + PlayerID + " trying to put " + itemType + " into " + location,"debug");
+		 return getAffinity().checkItem(getAffinityPoints( getAffinity().Name ), itemType, location);
+	}
+	
 	void addAffinityPoints( string name, float points ){
 		bool found = false;
 		for (int i = 0; i < Affinities.Count(); i++)
