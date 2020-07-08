@@ -3,13 +3,35 @@ modded class PlayerBase
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	bool  m_HeroesAndBandits_Killed = false;
 	
+	int m_HeroesAndBandits_AffinityIndex = -1;
+	float m_HeroesAndBandits_AffinityPoints = 0;
+	
+	int m_HeroesAndBandits_LevelIndex = -1;
+	
 	override void Init()
 	{
 		super.Init();
 		
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
 		
+		RegisterNetSyncVariableInt("m_HeroesAndBandits_AffinityIndex");
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
+		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
 	}
+	
+	void habLevelChange( int affinityIndex, float affinityPoints, int levelIndex){
+		m_HeroesAndBandits_AffinityIndex = affinityIndex;
+		m_HeroesAndBandits_AffinityPoints = affinityPoints;
+	
+		m_HeroesAndBandits_LevelIndex = levelIndex;
+		SetSynchDirty();
+	}
+	
+	void habCurrentAffinityPointUpdate(float affinityPoints){
+		m_HeroesAndBandits_AffinityPoints = affinityPoints;
+		SetSynchDirty();
+	}
+	
 	
 	bool isInZone(int zoneID, int index = 0)
 	{

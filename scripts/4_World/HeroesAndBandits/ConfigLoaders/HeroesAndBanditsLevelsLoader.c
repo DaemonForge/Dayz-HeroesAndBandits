@@ -51,6 +51,27 @@ class HeroesAndBanditsConfigLevels
 		return DefaultLevel;
 	}
 	
+	
+	int getLevelIndex(string affinity, float points){
+		for ( int i =0; i < Levels.Count(); i++ )
+		{
+			if( Levels.Get(i).Affinity ==  affinity)
+			{
+				float minPoints = Levels.Get(i).MinPoints;
+				float maxPoints = Levels.Get(i).MaxPoints;
+				if ( minPoints != -1 && maxPoints != -1 && points >= minPoints && points <= maxPoints){
+					return i;
+				}else if (minPoints == -1 && maxPoints != -1 && points <= maxPoints){
+					return i;
+				}else if (minPoints != -1 && maxPoints == -1 && points >= minPoints){
+					return i;
+				}
+			}
+		}
+		return -1; // Default Level 
+	}
+	
+	
 	bool doesAffinityExsit(string name){
 		for ( int i =0; i < Affinities.Count(); i++ )
 		{
@@ -71,6 +92,17 @@ class HeroesAndBanditsConfigLevels
 			}
 		}
 		return DefaultAffinity;
+	}
+	
+	int getAffinityIndex(string name){
+		for ( int i =0; i < Affinities.Count(); i++ )
+		{
+			if ( Affinities.Get(i).Name ==  name)
+			{
+				return i;
+			}
+		}
+		return -1; // Default Affinity 
 	}
 		
 	//Helper function for adding levels
