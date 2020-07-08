@@ -51,7 +51,7 @@ class HeroesAndBanditsPlayer
 		habLevel tempLevel = getLevel();
 		float points = 0;
 		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
-			habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			//habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
 			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(tempLevel.Affinity);
 		}
 		return tempAffinity;
@@ -68,7 +68,7 @@ class HeroesAndBanditsPlayer
 	}
 	
 	bool checkItem(string itemType, string location){
-		habPrint("Player " + PlayerID + " trying to put " + itemType + " into " + location,"debug");
+		 habPrint("Player " + PlayerID + " trying to put " + itemType + " into " + location, "Debug");
 		 return getAffinity().checkItem(getAffinityPoints( getAffinity().Name ), itemType, location);
 	}
 	

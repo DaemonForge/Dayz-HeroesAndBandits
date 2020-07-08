@@ -284,6 +284,24 @@ class HeroesAndBandits
 		return GetHeroesAndBanditsLevels().DefaultLevel.Affinity;
 	}
 	
+	float GetPlayerAffinityPoints( string pID, string affinityName )
+	{
+		if (!IsPlayerLoaded(pID))
+		{
+			loadPlayer(pID);
+		}
+		for ( int i = 0; i < HeroesAndBanditsPlayers.Count(); i++ )
+		{
+			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
+			if ( p.PlayerID ==  pID)
+			{
+				return p.getAffinityPoints(affinityName);
+			}
+		}
+	    habPrint("Failed to get points for Affinity " + affinityName + " for Player " + pID , "Exception");	
+		return 0;
+	}
+	
 	habLevel GetPlayerLevel( string pID )
 	{
 		if (!IsPlayerLoaded(pID))

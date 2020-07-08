@@ -1,7 +1,7 @@
 
 class HeroesAndBanditsZone
 {
-	int Index; //0 top level zones, 1 sub zone, 2 sub zone of a sub zone 
+	int Index; //0 top level zones, 1 sub zone, 2 sub zone of a sub zone etc.
 	int ZoneID;
     string Name;
 	float X;
@@ -156,7 +156,6 @@ class HeroesAndBanditsZone
 	
     void HeroesAndBanditsZone(string name, float x, float z) 
 	{
-
 		Name = name;
 		X = x;
 		Z = z;

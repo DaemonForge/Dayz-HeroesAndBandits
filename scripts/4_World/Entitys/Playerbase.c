@@ -199,8 +199,10 @@ modded class PlayerBase
 
 	override bool CanReceiveItemIntoCargo(EntityAI cargo)
 	{
-		if (!GetHaBPlayer()){return super.CanReceiveItemIntoCargo(cargo);}
-		if (GetHaBPlayer().checkItem(cargo.GetType(), "inventory"))
+		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
+		if (!habPlayer){
+			return super.CanReceiveItemIntoCargo(cargo);}
+		if (habPlayer.checkItem(cargo.GetType(), "inventory"))
 		{
 			return super.CanReceiveItemIntoCargo(cargo);
 		}
@@ -209,8 +211,10 @@ modded class PlayerBase
 	
 	override bool CanSwapItemInCargo(EntityAI child_entity, EntityAI new_entity)
 	{
-		if (!GetHaBPlayer()){return super.CanSwapItemInCargo(child_entity, new_entity);}
-		if (GetHaBPlayer().checkItem(new_entity.GetType(), "inventory"))
+		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
+		if (!habPlayer){
+			return super.CanSwapItemInCargo(child_entity, new_entity);}
+		if (habPlayer.checkItem(new_entity.GetType(), "inventory"))
 		{
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
@@ -219,22 +223,24 @@ modded class PlayerBase
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{
-		if (!GetHaBPlayer()){return super.CanReceiveItemIntoHands(item_to_hands);}
-		if (GetHaBPlayer().checkItem(item_to_hands.GetType(), "inhands"))
+		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
+		if (!habPlayer){
+			return super.CanReceiveItemIntoHands(item_to_hands);}
+		if (habPlayer.checkItem(item_to_hands.GetType(), "inhands"))
 		{
 			return super.CanReceiveItemIntoHands(item_to_hands);
 		}
 		return false;
 	}
 	
-	//Adding now so I don't forget
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
-		if (!GetHaBPlayer()){
+		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
+		if (!habPlayer){
 			return super.CanReleaseAttachment(attachment);}
 		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 		if (mask){
-			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && GetHaBPlayer().getAffinityName() == "bandit"){
+			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && habPlayer.getAffinityName() == "bandit"){
 				return false;
 			}
 		}
@@ -245,11 +251,11 @@ modded class PlayerBase
 	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		if (!GetHaBPlayer()){
-			habPrint("Player not defined","debug");
+		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
+		if (!habPlayer){
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
-		if (GetHaBPlayer().checkItem(attachment.GetType(), "attach"))
+		if (habPlayer.checkItem(attachment.GetType(), "attach"))
 		{
 			return super.CanReceiveAttachment(attachment, slotId);
 		}

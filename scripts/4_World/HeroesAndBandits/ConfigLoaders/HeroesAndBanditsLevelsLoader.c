@@ -20,6 +20,10 @@ class HeroesAndBanditsConfigLevels
 		if (FileExist(HeroesAndBanditsLevelsPATH)) //If config exist load File
 		{
 	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(HeroesAndBanditsLevelsPATH, this);
+				if (ConfigVersion == "4"){
+					doV5Upgrade();
+					JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
+				}
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Actions Config", "Always");	
@@ -111,8 +115,15 @@ class HeroesAndBanditsConfigLevels
 		addAffinity("medic", "#HAB_MEDIC");
 		addAffinity("hunter", "#HAB_HUNTER");
 		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
-		getAffinity("hero").addItemList(-1, -1, "all", banditOnlyItems );
-		DefaultAffinity.addItemList(-1, -1, "all", banditOnlyItems);
+		getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
+		DefaultAffinity.addItemBlackList(-1, -1, "all", banditOnlyItems);
+	}
+	
+	void doV5Upgrade(){
+		ConfigVersion = "5";
+		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
+		getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
+		DefaultAffinity.addItemBlackList(-1, -1, "all", banditOnlyItems);
 	}
 }
 
@@ -142,7 +153,7 @@ class habAffinity
 {
 	string Name;
 	string DisplayName;
-	ref array< ref habItemList > ItemLists = new ref array< ref habItemList >;
+	ref array< ref habItemList > ItemBlackList = new ref array< ref habItemList >;
 
 	void habAffinity(string name, string displayName) 
 	{
@@ -151,29 +162,29 @@ class habAffinity
 	}
 	
 	bool checkItem(float points, string itemType, string location){
-		if (!ItemLists){ return true; }
-		if (ItemLists.Count() == 0){ return true; }
-		for (int i = 0; i < ItemLists.Count(); i++){
-			float minPoints = ItemLists.Get(i).MinPoints;
-			float maxPoints = ItemLists.Get(i).MaxPoints;
+		if (!ItemBlackList){ return true; }
+		if (ItemBlackList.Count() == 0){ return true; }
+		for (int i = 0; i < ItemBlackList.Count(); i++){
+			float minPoints = ItemBlackList.Get(i).MinPoints;
+			float maxPoints = ItemBlackList.Get(i).MaxPoints;
 			if ( minPoints != -1 && maxPoints != -1 && points >= minPoints && points <= maxPoints){
-				return ItemLists.Get(i).checkItem(itemType, location);
+				return ItemBlackList.Get(i).checkItem(itemType, location);
 			}else if (minPoints == -1 && maxPoints != -1 && points <= maxPoints){
-				return ItemLists.Get(i).checkItem(itemType, location);
+				return ItemBlackList.Get(i).checkItem(itemType, location);
 			}else if (minPoints != -1 && maxPoints == -1 && points >= minPoints){
-				return ItemLists.Get(i).checkItem(itemType, location);
+				return ItemBlackList.Get(i).checkItem(itemType, location);
 			}else if ( minPoints == -1 && maxPoints == -1 ){
-				return ItemLists.Get(i).checkItem(itemType, location);
+				return ItemBlackList.Get(i).checkItem(itemType, location);
 			}
 		}
 		return true;
 	}
 	
-	void addItemList( float minPoints, float maxPoints, string type, ref TStringArray items)
+	void addItemBlackList( float minPoints, float maxPoints, string type, ref TStringArray items)
 	{
-		ItemLists.Insert(new ref habItemList( minPoints, maxPoints, type));
-		int index = ItemLists.Count() - 1;
-		ItemLists.Get(index).Items = items;
+		ItemBlackList.Insert(new ref habItemList( minPoints, maxPoints, type));
+		int index = ItemBlackList.Count() - 1;
+		ItemBlackList.Get(index).Items = items;
 	}
 }
 
@@ -205,8 +216,8 @@ class habItemList
 		
 		if (doCheck){
 			int index = Items.Find(itemType);
-				habPrint("Checking for " + itemType + " Found " + index, "debug");
-				if (Items.Get(index) == itemType){
+				habPrint("Checking for " + itemType + " Found " + index, "Debug");
+				if (index != -1){
 						check = !check;
 				}
 		}

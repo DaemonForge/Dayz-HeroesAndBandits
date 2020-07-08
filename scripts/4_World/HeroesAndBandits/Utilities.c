@@ -31,10 +31,7 @@ TStringArray habFindFilesInDirectory(string directory)
 
 //Always Exception Verbose Debug
 static void habPrint(string message, string msgType){
-	if(!GetGame().IsServer())
-	{
-		return;
-	}
+	if (!GetHeroesAndBanditsSettings()){return;} //Preventing Null pointers on the client before the server has restarted
 	if (msgType == "Always"){
 		Print("[HeroesAndBandits]  " + message);
 	}else if (msgType == "Exception" && GetHeroesAndBanditsSettings().ExceptionLogs){

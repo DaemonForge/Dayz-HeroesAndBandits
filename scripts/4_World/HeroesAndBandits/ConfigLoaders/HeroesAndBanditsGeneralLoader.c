@@ -6,7 +6,7 @@ static string HeroesAndBanditsSettingsPATH = HeroesAndBanditsDirectory + "\\sett
 class HeroesAndBanditsSettings
 { 
 	//Default Values
-	string ConfigVersion = "4";
+	string ConfigVersion = "5";
 	
 	int Mode = 0; // 0 is differantial / 1 is highest level
 	
@@ -82,8 +82,11 @@ class HeroesAndBanditsSettings
 		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsSettingsPATH)) //If config exist load File
 		{
-	        	JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
-
+	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
+			if (ConfigVersion == "4"){
+				doV5Upgrade();
+				JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
+			}
 			
 		}else{ //File does not exist create file
 			MakeDirectory(HeroesAndBanditsDirectory);
@@ -99,5 +102,9 @@ class HeroesAndBanditsSettings
 		return ARGB(KillFeedMessageColor[0], KillFeedMessageColor[1], KillFeedMessageColor[2], KillFeedMessageColor[3]);
 	}
 
+	void doV5Upgrade(){
+		ConfigVersion = "5";
+		BanditsCanRemoveMask = false;
+	}
 	
 }

@@ -14,7 +14,7 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	RichTextWidget		m_Raid;
 	RichTextWidget		m_Hunts;
 	RichTextWidget		m_Sucides;
-	String				m_layout = "HeroesAndBandits/gui/layouts/HeroesAndBanditsPanel.layout";
+	string				m_layout = "HeroesAndBandits/gui/layouts/HeroesAndBanditsPanel.layout";
 	
 	override Widget Init()
     {
