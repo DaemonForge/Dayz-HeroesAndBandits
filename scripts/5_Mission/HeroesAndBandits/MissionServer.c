@@ -23,6 +23,7 @@ modded class MissionServer
 		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABPlayerData", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCRequestHABIcon", this, SingeplayerExecutionType.Both );
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "UpdateAllPlayersSettings", 300 * 1000, true);
 		
@@ -40,6 +41,8 @@ modded class MissionServer
 		}
 	}
 	
+	
+	
 	override void InvokeOnDisconnect( PlayerBase player )
 	{
 		habPrint("InvokeOnDisconnect Player Disconneted", "Debug");
@@ -51,6 +54,14 @@ modded class MissionServer
 	}
 	
 	
+		
+	void RPCRequestHABIcon( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		Param1< string > data;
+		if ( !ctx.Read( data ) ) return;
+        string playerID = data.param1;	
+		GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, sender.GetPlainId() ), true, sender);
+	}
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
 		if (player.IsPlayerDisconnected()) { return; }

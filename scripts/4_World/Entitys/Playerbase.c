@@ -288,12 +288,16 @@ modded class PlayerBase
 	
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
-		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer || !m_HeroesAndBandits_DataLoaded){
-			return super.CanReleaseAttachment(attachment);}
+		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+			return super.CanReleaseAttachment(attachment);
+		}
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		if (m_HeroesAndBandits_AffinityIndex != -1){
+			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		}
 		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 		if (mask){
-			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && habPlayer.getAffinityName() == "bandit"){
+			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && tempAffinity.Name == "bandit"){
 				return false;
 			}
 		}

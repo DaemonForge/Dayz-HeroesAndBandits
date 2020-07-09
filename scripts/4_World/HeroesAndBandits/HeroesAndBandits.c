@@ -88,13 +88,13 @@ class HeroesAndBandits
 					string prefix = "";
 					string postix = "";
 					float actionHumanity = tempAction.Points;
-					if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "hero"){
+					if (GetHeroesAndBanditsSettings().Mode != 1 && tempAction.Affinity == "hero"){
 						prefix = "+";
 						postix = " #HAB_HUMANITY";
-					} else if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "bandit") {
+					} else if (GetHeroesAndBanditsSettings().Mode != 1 && tempAction.Affinity == "bandit") {
 						prefix = "-";
 						postix = " #HAB_HUMANITY";
-					} else if (GetHeroesAndBanditsSettings().Mode == 1){
+					} else {
 						prefix = "+";
 						postix = " " + GetHeroesAndBanditsLevels().getAffinity(tempAction.Affinity).DisplayName;
 					}
@@ -102,7 +102,7 @@ class HeroesAndBandits
 				}
 				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 				float affinityPoints = 0;
-				if (GetHeroesAndBanditsSettings().Mode == 0){
+				if (GetHeroesAndBanditsSettings().Mode != 1){
 					affinityPoints = p.getHumanity();
 					if (affinityPoints < 0 ){
 						affinityPoints = 0 - affinityPoints;
@@ -110,14 +110,16 @@ class HeroesAndBandits
 				} else if ( GetHeroesAndBanditsSettings().Mode == 1 ){
 					affinityPoints = p.getAffinityPoints(p.getAffinityName());
 				}
-				if (didLevelUp)
-				{
-					player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
-					if (player){
-						GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());
+				if (player){
+					if (didLevelUp)
+					{
+						player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
+						if (player){
+							GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());
+						}
+					} else {
+						player.habCurrentAffinityPointUpdate(affinityPoints);
 					}
-				} else {
-					player.habCurrentAffinityPointUpdate(affinityPoints);
 				}
 				if (didLevelUp && GetHeroesAndBanditsLevels().NotifyLevelChange)
 				{

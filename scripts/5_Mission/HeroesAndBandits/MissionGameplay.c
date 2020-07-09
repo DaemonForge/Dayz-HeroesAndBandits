@@ -33,7 +33,8 @@ modded class MissionGameplay
 		}
 		UpdateHABIcon();
 	}
-	
+		
+
 	
 	
 	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
