@@ -194,19 +194,28 @@ class habAffinity
 	}
 	
 	bool checkItem(float points, string itemType, string location){
+		bool allowed = true;
 		if (!ItemBlackList){ return true; }
 		if (ItemBlackList.Count() == 0){ return true; }
 		for (int i = 0; i < ItemBlackList.Count(); i++){
 			float minPoints = ItemBlackList.Get(i).MinPoints;
 			float maxPoints = ItemBlackList.Get(i).MaxPoints;
 			if ( minPoints != -1 && maxPoints != -1 && points >= minPoints && points <= maxPoints){
-				return ItemBlackList.Get(i).checkItem(itemType, location);
+				if ( !ItemBlackList.Get(i).checkItem(itemType, location) ){
+					return false;
+				}
 			}else if (minPoints == -1 && maxPoints != -1 && points <= maxPoints){
-				return ItemBlackList.Get(i).checkItem(itemType, location);
+				if ( !ItemBlackList.Get(i).checkItem(itemType, location) ){
+					return false;
+				}
 			}else if (minPoints != -1 && maxPoints == -1 && points >= minPoints){
-				return ItemBlackList.Get(i).checkItem(itemType, location);
+				if ( !ItemBlackList.Get(i).checkItem(itemType, location) ){
+					return false;
+				}
 			}else if ( minPoints == -1 && maxPoints == -1 ){
-				return ItemBlackList.Get(i).checkItem(itemType, location);
+				if ( !ItemBlackList.Get(i).checkItem(itemType, location) ){
+					return false;
+				}
 			}
 		}
 		return true;

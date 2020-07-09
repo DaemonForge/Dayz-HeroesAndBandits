@@ -59,6 +59,7 @@ class HeroesAndBandits
 			return;
 		}else{
 			loadPlayer(playerIdent.GetPlainId());
+			
 		}
 	}
 	
@@ -111,16 +112,6 @@ class HeroesAndBandits
 				}
 				if (didLevelUp)
 				{
-					PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
-					float affinityPoints = 0;
-					if (GetHeroesAndBanditsSettings().Mode == 0){
-						affinityPoints = p.getHumanity();
-						if (affinityPoints < 0 ){
-							affinityPoints = 0 - affinityPoints;
-						}
-					} else if ( GetHeroesAndBanditsSettings().Mode == 1 ){
-						affinityPoints = p.getAffinityPoints(p.getAffinityName());
-					}
 					player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
 					if (player){
 						GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());

@@ -5,7 +5,7 @@ modded class PlayerBase
 	
 	int m_HeroesAndBandits_AffinityIndex = -1;
 	float m_HeroesAndBandits_AffinityPoints = 0;
-	
+	bool m_HeroesAndBandits_DataLoaded = false;
 	int m_HeroesAndBandits_LevelIndex = -1;
 	
 	override void Init()
@@ -17,6 +17,21 @@ modded class PlayerBase
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AffinityIndex");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_DataLoaded");
+		
+	}
+	
+	override void OnPlayerLoaded(){
+		super.OnPlayerLoaded();
+		if (GetGame().IsServer() && GetIdentity() ){ 
+			HeroesAndBanditsPlayer tempHABPlayer = GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
+			m_HeroesAndBandits_AffinityIndex = tempHABPlayer.getAffinityIndex();
+			m_HeroesAndBandits_AffinityPoints = tempHABPlayer.getAffinityPoints(tempHABPlayer.getAffinityName());
+			m_HeroesAndBandits_LevelIndex= tempHABPlayer.getLevelIndex();
+			m_HeroesAndBandits_DataLoaded = true;
+			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
+			SetSynchDirty();
+		}
 	}
 	
 	void habLevelChange( int affinityIndex, float affinityPoints, int levelIndex){
@@ -32,6 +47,9 @@ modded class PlayerBase
 		SetSynchDirty();
 	}
 	
+	int GetHeroesAndBanditsLevelIndex(){
+		return m_HeroesAndBandits_LevelIndex;
+	}
 	
 	bool isInZone(int zoneID, int index = 0)
 	{
@@ -219,12 +237,17 @@ modded class PlayerBase
 		return null;
 	}
 
+	
 	override bool CanReceiveItemIntoCargo(EntityAI cargo)
 	{
-		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer){
-			return super.CanReceiveItemIntoCargo(cargo);}
-		if (habPlayer.checkItem(cargo.GetType(), "inventory"))
+		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+			return super.CanReceiveItemIntoCargo(cargo);
+		}
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		if (m_HeroesAndBandits_AffinityIndex != -1){
+			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		}
+		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, cargo.GetType(), "inventory"))
 		{
 			return super.CanReceiveItemIntoCargo(cargo);
 		}
@@ -233,10 +256,14 @@ modded class PlayerBase
 	
 	override bool CanSwapItemInCargo(EntityAI child_entity, EntityAI new_entity)
 	{
-		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer){
-			return super.CanSwapItemInCargo(child_entity, new_entity);}
-		if (habPlayer.checkItem(new_entity.GetType(), "inventory"))
+		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+			return super.CanSwapItemInCargo(child_entity, new_entity);
+		}
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		if (m_HeroesAndBandits_AffinityIndex != -1){
+			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		}
+		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, new_entity.GetType(), "inventory"))
 		{
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
@@ -245,10 +272,14 @@ modded class PlayerBase
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{
-		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer){
-			return super.CanReceiveItemIntoHands(item_to_hands);}
-		if (habPlayer.checkItem(item_to_hands.GetType(), "inhands"))
+		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+			return super.CanReceiveItemIntoHands(item_to_hands);
+		}
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		if (m_HeroesAndBandits_AffinityIndex != -1){
+			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		}
+		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, item_to_hands.GetType(), "inhands"))
 		{
 			return super.CanReceiveItemIntoHands(item_to_hands);
 		}
@@ -258,7 +289,7 @@ modded class PlayerBase
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
 		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer){
+		if (!habPlayer || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReleaseAttachment(attachment);}
 		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 		if (mask){
@@ -273,11 +304,14 @@ modded class PlayerBase
 	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		HeroesAndBanditsPlayer habPlayer = HeroesAndBanditsPlayer.Cast(GetHaBPlayer());
-		if (!habPlayer){
+		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
-		if (habPlayer.checkItem(attachment.GetType(), "attach"))
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		if (m_HeroesAndBandits_AffinityIndex != -1){
+			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		}
+		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, attachment.GetType(), "attach"))
 		{
 			return super.CanReceiveAttachment(attachment, slotId);
 		}

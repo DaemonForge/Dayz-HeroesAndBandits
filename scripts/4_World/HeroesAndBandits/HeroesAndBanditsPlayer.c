@@ -47,6 +47,7 @@ class HeroesAndBanditsPlayer
 	
 	int getLevelIndex(){
 		int index = -1;
+		float points = 0;
 		if (GetHeroesAndBanditsSettings().Mode == 0){
 			float humanity = getHumanity();
 			if ( humanity > 0 ){
@@ -90,11 +91,32 @@ class HeroesAndBanditsPlayer
 		return index;
 	}
 	
-	float getAffinityPoints( string name ){
-		for (int i = 0; i < Affinities.Count(); i++)
+	float getAffinityPoints( string name){
+		if (GetHeroesAndBanditsSettings().Mode != 1){
+			if ( name == "hero" ||  name == "bandit") {
+				float heroPoints = 0;
+				float banditPoints = 0;
+				for (int i = 0; i < Affinities.Count(); i++)
+				{
+					if (Affinities.Get(i).Name == "hero") {
+						heroPoints = Affinities.Get(i).getPoints();
+					} else if (Affinities.Get(i).Name == "bandit") {
+						banditPoints = Affinities.Get(i).getPoints();
+					}
+				}
+				if (name == "hero"){
+					return heroPoints - banditPoints;
+				} else {
+					return banditPoints - heroPoints;
+				}
+			} else if (GetHeroesAndBanditsSettings().Mode == 0) {
+				return 0;
+			}
+		}
+		for (int j = 0; j < Affinities.Count(); j++)
 		{
-			if (Affinities.Get(i).Name == name) {
-				return Affinities.Get(i).getPoints();
+			if (Affinities.Get(j).Name == name) {
+				return Affinities.Get(j).getPoints();
 			}
 		}
 		return 0;
@@ -158,7 +180,7 @@ class HeroesAndBanditsPlayer
 	}
 	
 	float getHumanity(){
-		return getAffinityPoints("hero") - getAffinityPoints("bandit");
+		return getAffinityPoints("hero");
 	}
 
 	float getStat(string statName){
