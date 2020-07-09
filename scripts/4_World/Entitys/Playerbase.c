@@ -39,6 +39,7 @@ modded class PlayerBase
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
 	
 		m_HeroesAndBandits_LevelIndex = levelIndex;
+		
 		SetSynchDirty();
 	}
 	

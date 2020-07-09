@@ -52,7 +52,7 @@ PlayerBase habGetPlayerBaseByID( string pID )
 	for ( int i = 0; i < players.Count(); i++ )
 	{
 		p = PlayerBase.Cast(players.Get(i));
-		if ( p.GetIdentity().GetPlainId() ==  pID && p.IsAlive())
+		if ( p.GetIdentity().GetPlainId() ==  pID )
 		{
 			habPrint("Found Player " + p.GetIdentity().GetName() + " with id " + pID, "Debug");	
 			return p;
