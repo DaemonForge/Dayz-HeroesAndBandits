@@ -238,15 +238,21 @@ modded class PlayerBase
 		return null;
 	}
 
-	
+	/* Doesn't seem to work removing for now will circle back at a later time
 	override bool CanReceiveItemIntoCargo(EntityAI cargo)
 	{
-		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReceiveItemIntoCargo(cargo);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode != 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){ //This is a bit more performance heavy so only useing if need to
+			if (GetHaBPlayer().checkItem(cargo.GetType(), "inventory")){
+				return super.CanReceiveItemIntoCargo(cargo);
+			} else {
+				return false;
+			}
 		}
 		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, cargo.GetType(), "inventory"))
 		{
@@ -257,28 +263,40 @@ modded class PlayerBase
 	
 	override bool CanSwapItemInCargo(EntityAI child_entity, EntityAI new_entity)
 	{
-		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode != 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){ //This is a bit more performance heavy so only useing if need to
+			if (GetHaBPlayer().checkItem(new_entity.GetType(), "inventory")){
+				return super.CanSwapItemInCargo(new_entity);
+			} else {
+				return false;
+			}
 		}
 		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, new_entity.GetType(), "inventory"))
 		{
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
 		return false;
-	}
+	} */
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{
-		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReceiveItemIntoHands(item_to_hands);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode == 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		} else if (GetHeroesAndBanditsSettings().Mode != 1){ //This is a bit more performance heavy so only useing if need to
+			if (GetHaBPlayer().checkItem(item_to_hands.GetType(), "inhands")){
+				return super.CanReceiveItemIntoHands(item_to_hands);
+			} else {
+				return false;
+			}
 		}
 		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, item_to_hands.GetType(), "inhands"))
 		{
@@ -289,7 +307,7 @@ modded class PlayerBase
 	
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
-		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReleaseAttachment(attachment);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
@@ -298,7 +316,7 @@ modded class PlayerBase
 		}
 		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 		if (mask){
-			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && tempAffinity.Name == "bandit"){
+			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && tempAffinity.Name == "bandit" && GetHeroesAndBanditsSettings().Mode != 1){
 				return false;
 			}
 		}
@@ -306,15 +324,20 @@ modded class PlayerBase
 	}
 	
 	
-	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		if (!GetHeroesAndBanditsLevels() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode == 0 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
+		} else if (GetHeroesAndBanditsSettings().Mode != 0){ //This is a bit more performance heavy so only useing if need to
+			if (GetHaBPlayer().checkItem(attachment.GetType(), "attach")){
+				return super.CanReceiveAttachment(attachment, slotId);
+			} else {
+				return false;
+			}
 		}
 		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, attachment.GetType(), "attach"))
 		{

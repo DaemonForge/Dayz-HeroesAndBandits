@@ -1,3 +1,4 @@
+//Server Variables
 ref HeroesAndBandits m_HeroesAndBandits;
 ref HeroesAndBanditsConfig m_HeroesAndBanditsConfig;
 ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
@@ -5,10 +6,12 @@ ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
 ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
 ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
 
+//Client Variables
 ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
 ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
 ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
 ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
+
 
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
@@ -115,7 +118,7 @@ class HeroesAndBandits
 					{
 						player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
 						if (player){
-							GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());
+							GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( p, p.getLevel() ), true, player.GetIdentity());
 						}
 					} else {
 						player.habCurrentAffinityPointUpdate(affinityPoints);
@@ -457,7 +460,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 				habPrint("No zones defined", "Debug");
 			}
 		} else {
-			habPrint("Zone Check Time Less than 1 so not creating timer", "Debug");					
+			habPrint("Zone Check Time Less than 0.5 so not creating timer", "Debug");					
 		}
 	}
 	return m_HeroesAndBandits;

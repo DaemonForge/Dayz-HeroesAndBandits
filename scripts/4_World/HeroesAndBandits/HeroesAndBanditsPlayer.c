@@ -26,11 +26,11 @@ class HeroesAndBanditsPlayer
 		float points = 0;
 		if (GetHeroesAndBanditsSettings().Mode == 0){
 			float humanity = getHumanity();
-			if ( humanity > 0 ){
+			if ( humanity >= 0 ){
 				tempLevel = GetHeroesAndBanditsLevels().getLevel("hero", humanity);	
 			} else if ( humanity < 0 ) {
 				tempLevel = GetHeroesAndBanditsLevels().getLevel("bandit", -humanity);	
-			} 
+			}
 		} else if (GetHeroesAndBanditsSettings().Mode == 1){
 			for (int i = 0; i < Affinities.Count(); i++)
 			{
@@ -123,8 +123,18 @@ class HeroesAndBanditsPlayer
 	}
 	
 	bool checkItem(string itemType, string location){
-		 habPrint("Player " + PlayerID + " trying to put " + itemType + " into " + location, "Debug");
-		 return getAffinity().checkItem(getAffinityPoints( getAffinity().Name ), itemType, location);
+		if (GetHeroesAndBanditsSettings().Mode == 0){// shouldn't get called in my mod alone but just encase someone else wants to use the check item in their own mods :)
+			return getAffinity().checkItem(getAffinityPoints(getAffinity().Name ), itemType, location );
+		}
+		bool canAttach = true;
+		for (int j = 0; j < Affinities.Count(); j++)
+		{
+			if ( !GetHeroesAndBanditsLevels().getAffinity(Affinities.Get(j).Name).checkItem(Affinities.Get(j).Points, itemType, location)){
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	void addAffinityPoints( string name, float points ){
@@ -371,6 +381,9 @@ class habPlayerAffinity
 	
 	void updatePoints(float amount){
 		Points = Points + amount;
+		if (Points < 0 && GetHeroesAndBanditsSettings().AffintyCantGoBelowZero){
+			Points = 0;
+		}
 	}
 	
 	void setPoints(float amount){

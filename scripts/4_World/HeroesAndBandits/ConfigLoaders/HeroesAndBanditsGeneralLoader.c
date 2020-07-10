@@ -8,7 +8,8 @@ class HeroesAndBanditsSettings
 	//Default Values
 	string ConfigVersion = "5";
 	
-	int Mode = 0; // 0 is differantial / 1 is highest level
+	int Mode = 0; // 0 is differantial / 1 is highest level / 2 is Mixed
+	
 	
 	int NotificationMessageTime = 15;
 	
@@ -27,6 +28,13 @@ class HeroesAndBanditsSettings
 	bool HideKillsInGUI = false;
 	
 	bool BanditsCanRemoveMask = false;
+	//This doesn't affect Humanity as its the calcuation of two Affinities
+	bool AffintyCantGoBelowZero = true;
+	
+	//Expansion Settings 
+	bool EnableLevelImageOnExpansionPlayerTag = true;
+	
+	
 	
 	bool ExceptionLogs = true;
 	bool VerboseLogs = false;

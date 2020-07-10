@@ -59,8 +59,11 @@ modded class MissionServer
 	{
 		Param1< string > data;
 		if ( !ctx.Read( data ) ) return;
-        string playerID = data.param1;	
-		GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage, playerID ), true, sender);
+        string playerName = data.param1;
+		if ( playerName != "" ){
+			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByName(playerName));
+			GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( GetHeroesAndBanditsLevels().Levels.Get(player.GetHeroesAndBanditsLevelIndex()).LevelImage, playerName ), true, sender);
+		}
 	}
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
