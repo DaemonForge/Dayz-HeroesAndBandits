@@ -3,7 +3,7 @@ static string HeroesAndBanditsLevelsPATH = HeroesAndBanditsDirectory + "\\levels
 class HeroesAndBanditsConfigLevels
 { 
 	//Default Values
-	string ConfigVersion = "4";
+	string ConfigVersion = "5";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1, 1000);
 	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
@@ -22,13 +22,16 @@ class HeroesAndBanditsConfigLevels
 	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(HeroesAndBanditsLevelsPATH, this);
 				if (ConfigVersion == "4"){
 					doV5Upgrade();
-					JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
 				}
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Actions Config", "Always");	
-			JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
+			ReSave();
 		}
+	}
+	
+	void ReSave(){
+		JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
 	}
 	
 	//Returns the level based on points value
@@ -162,6 +165,7 @@ class HeroesAndBanditsConfigLevels
 		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
 		getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
 		DefaultAffinity.addItemBlackList(-1, -1, "all", banditOnlyItems);
+		ReSave();
 	}
 }
 

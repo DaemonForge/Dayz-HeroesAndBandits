@@ -22,6 +22,7 @@ modded class MissionServer
 		}
 		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCSendAffinityUpdate", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABPlayerData", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABIcon", this, SingeplayerExecutionType.Both );
 		
@@ -172,6 +173,29 @@ modded class MissionServer
 				habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";
 				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 			}
+		}
+	}
+	
+	//Adding so debuggin is easier :)
+	void RPCSendAffinityUpdate( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		if ( GetHeroesAndBanditsSettings().AllowStatCommand && GetHeroesAndBanditsSettings().DebugLogs )
+		{
+			if (!sender)
+			{
+				return;
+			}
+			Param3< string, string, int > data  //Player ID, Icon
+			if ( !ctx.Read( data ) ) 
+			{
+				return;
+			}
+			string statname = data.param2;
+			string playerID = sender.GetPlainId();
+			habPrint("AffinityUpdate from:" + playerID + " Command:" + data.param1 + " " + statname + " " + data.param3, "Debug");
+			GetHeroesAndBandits().GetPlayer(playerID).addAffinityPoints(statname, data.param3);
+			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+			player.habLevelChange( GetHeroesAndBandits().GetPlayer(playerID).getAffinityIndex() , GetHeroesAndBandits().GetPlayer(playerID).getAffinityPoints(GetHeroesAndBandits().GetPlayer(playerID).getAffinityName()), GetHeroesAndBandits().GetPlayer(playerID).getLevelIndex());
 		}
 	}
 	

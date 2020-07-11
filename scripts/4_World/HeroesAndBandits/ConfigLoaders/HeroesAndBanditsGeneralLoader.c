@@ -27,7 +27,9 @@ class HeroesAndBanditsSettings
 	string GUIHeading = "#HAB_TITLE";
 	bool HideKillsInGUI = false;
 	
-	bool BanditsCanRemoveMask = false;
+	bool BanditCanRemoveMask = false;
+	bool HeroCanRemoveMask = true;
+	
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;
 	
@@ -112,7 +114,11 @@ class HeroesAndBanditsSettings
 
 	void doV5Upgrade(){
 		ConfigVersion = "5";
-		BanditsCanRemoveMask = false;
+		BanditCanRemoveMask = false;
+		HeroCanRemoveMask = true;
+		AffintyCantGoBelowZero = true;
+		EnableLevelImageOnExpansionPlayerTag = true;
+		
 	}
 	
 }

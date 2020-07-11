@@ -224,6 +224,7 @@ class HeroesAndBandits
 		return false;
 	}
 	
+	
 	float GetPlayerHumanity( string pID )
 	{
 		if (!IsPlayerLoaded(pID))

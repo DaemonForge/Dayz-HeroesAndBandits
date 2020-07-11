@@ -155,6 +155,8 @@ modded class MissionGameplay
 		string param0;
 		string command;
 		string statname;
+		string ammount;
+		int ammountInt;
 		
 		Print("[HeroesAndBandits] [DebugClient] Message: " + message);
 		
@@ -187,6 +189,14 @@ modded class MissionGameplay
 			statname.Replace(" ", "");
 			statname.ToLower();
 		}
+		
+		if (tokens.Count() > 2)
+		{
+			ammount = tokens.Get(2);
+			ammount.Replace(" ", "");
+			ammount.ToLower();
+			ammountInt = ammount.ToInt();
+		}
 		bool commandNotSentToServer = true;
 		Print("[HeroesAndBandits] [DebugClient] Command: " + command);
 		switch(command) {
@@ -197,7 +207,7 @@ modded class MissionGameplay
 			case "humanitarność": {
 					if (GetHeroesAndBanditsSettings().AllowHumanityCommand){
 						commandNotSentToServer = false;
-						Print("[HeroesAndBandits] [DebugClient] Requesting Humanity from server");
+						habPrint("Requesting Humanity from server", "Debug");
 						GetRPCManager().SendRPC("HaB", "RPCSendHumanityNotification", new Param1< string >(command), false);
 					}
 					break;
@@ -205,8 +215,16 @@ modded class MissionGameplay
 			case "stat": {
 				if (GetHeroesAndBanditsSettings().AllowStatCommand){
 					commandNotSentToServer = false;
-					Print("[HeroesAndBandits] [DebugClient] Requesting Stat from server");
+					habPrint("Requesting Stat from server", "Debug");
 					GetRPCManager().SendRPC("HaB", "RPCSendStatNotification", new Param2< string, string >( command, statname), false);
+				}
+				break;
+			}
+			case "add": {//Adding so debuggin is easier :)
+				if (GetHeroesAndBanditsSettings().AllowStatCommand && GetHeroesAndBanditsSettings().DebugLogs && ammountInt){
+					commandNotSentToServer = false;
+					habPrint("Requesting to add " + statname + " from server", "Debug");
+					GetRPCManager().SendRPC("HaB", "RPCSendAffinityUpdate", new Param3< string, string, int >( command, statname, ammountInt), false);
 				}
 				break;
 			}

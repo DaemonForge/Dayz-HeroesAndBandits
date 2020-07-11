@@ -1,28 +1,28 @@
 modded class PlayerBase
 {
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
-	bool  m_HeroesAndBandits_Killed = false;
+	protected bool  m_HeroesAndBandits_Killed = false;
 	
-	int m_HeroesAndBandits_AffinityIndex = -1;
-	float m_HeroesAndBandits_AffinityPoints = 0;
-	bool m_HeroesAndBandits_DataLoaded = false;
-	int m_HeroesAndBandits_LevelIndex = -1;
+	protected int m_HeroesAndBandits_AffinityIndex = -1;
+	protected float m_HeroesAndBandits_AffinityPoints = 0;
+	protected bool m_HeroesAndBandits_DataLoaded = false;
+	protected int m_HeroesAndBandits_LevelIndex = -1;
 	
 	override void Init()
 	{
 		super.Init();
-		
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
-		
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AffinityIndex");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_DataLoaded");
-		
+		Print("[Client Pre Settings Debug]Player Init");
 	}
 	
-	override void OnPlayerLoaded(){
-		super.OnPlayerLoaded();
+	override void OnSelectPlayer()
+	{
+		super.OnSelectPlayer();
+		SetSynchDirty();
 		if (GetGame().IsServer() && GetIdentity() ){ 
 			HeroesAndBanditsPlayer tempHABPlayer = GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
 			m_HeroesAndBandits_AffinityIndex = tempHABPlayer.getAffinityIndex();
@@ -30,8 +30,19 @@ modded class PlayerBase
 			m_HeroesAndBandits_LevelIndex= tempHABPlayer.getLevelIndex();
 			m_HeroesAndBandits_DataLoaded = true;
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
-			SetSynchDirty();
 		}
+		SetSynchDirty();	
+		
+		if ( GetIdentity() && !GetGame().IsServer()){ 
+			Print("[Client Pre Settings Debug]Player: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 501);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 1000);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 3000, true);
+		}
+	}
+	
+	void habPrintInfoClient(){
+		Print("[Client Pre Settings Debug]habPrintInfoClient: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
 	}
 	
 	void habLevelChange( int affinityIndex, float affinityPoints, int levelIndex){
@@ -39,10 +50,11 @@ modded class PlayerBase
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
 	
 		m_HeroesAndBandits_LevelIndex = levelIndex;
-		
+
 		SetSynchDirty();
+		Print("[Client Pre Settings Debug]habLevelChange: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
 	}
-	
+		
 	void habCurrentAffinityPointUpdate(float affinityPoints){
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
 		SetSynchDirty();
@@ -50,6 +62,14 @@ modded class PlayerBase
 	
 	int GetHeroesAndBanditsLevelIndex(){
 		return m_HeroesAndBandits_LevelIndex;
+	}
+	
+	int GetHeroesAndBanditsAffinityIndex(){
+		return m_HeroesAndBandits_AffinityIndex;
+	}
+	
+	int GetHeroesAndBanditsAffinityPoints(){
+		return m_HeroesAndBandits_AffinityPoints;
 	}
 	
 	bool isInZone(int zoneID, int index = 0)
@@ -238,10 +258,11 @@ modded class PlayerBase
 		return null;
 	}
 
-	/* Doesn't seem to work removing for now will circle back at a later time
+	// Doesn't seem to work removing for now will circle back at a later time
 	override bool CanReceiveItemIntoCargo(EntityAI cargo)
 	{
-		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+			habPrint("CanReceiveItemIntoCargo Settings Not Definied - "  + cargo.GetType(), "Debug");
 			return super.CanReceiveItemIntoCargo(cargo);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
@@ -251,6 +272,7 @@ modded class PlayerBase
 			if (GetHaBPlayer().checkItem(cargo.GetType(), "inventory")){
 				return super.CanReceiveItemIntoCargo(cargo);
 			} else {
+				habPrint("CanReceiveItemIntoCargo Item Blocked - "  + cargo.GetType(), "Debug");
 				return false;
 			}
 		}
@@ -263,7 +285,8 @@ modded class PlayerBase
 	
 	override bool CanSwapItemInCargo(EntityAI child_entity, EntityAI new_entity)
 	{
-		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+			habPrint("CanSwapItemInCargo Settings Not Definied - "  + new_entity.GetType(), "Debug");
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
@@ -271,8 +294,9 @@ modded class PlayerBase
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
 		} else if (GetHeroesAndBanditsSettings().Mode == 1){ //This is a bit more performance heavy so only useing if need to
 			if (GetHaBPlayer().checkItem(new_entity.GetType(), "inventory")){
-				return super.CanSwapItemInCargo(new_entity);
+				return super.CanSwapItemInCargo(child_entity, new_entity);
 			} else {
+				habPrint("CanSwapItemInCargo Item Blocked - "  + new_entity.GetType(), "Debug");
 				return false;
 			}
 		}
@@ -281,18 +305,20 @@ modded class PlayerBase
 			return super.CanSwapItemInCargo(child_entity, new_entity);
 		}
 		return false;
-	} */
+	}
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{
-		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+			habPrint("CanReleaseAttachment Settings Not Definied - " + item_to_hands.GetType(), "Debug");
 			return super.CanReceiveItemIntoHands(item_to_hands);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (GetHeroesAndBanditsSettings().Mode == 1 && m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode != 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
-		} else if (GetHeroesAndBanditsSettings().Mode != 1){ //This is a bit more performance heavy so only useing if need to
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){ //This is a bit more performance heavy so only useing if need to
 			if (GetHaBPlayer().checkItem(item_to_hands.GetType(), "inhands")){
+				habPrint("CanReceiveItemIntoHands Item Blocked - "  + item_to_hands.GetType(), "Debug");
 				return super.CanReceiveItemIntoHands(item_to_hands);
 			} else {
 				return false;
@@ -307,7 +333,20 @@ modded class PlayerBase
 	
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
-		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+			if (!GetHeroesAndBanditsLevels()){
+				habPrint("CanReleaseAttachment Levels Not Definied", "Debug");
+			}
+			if (!GetHeroesAndBanditsSettings()){
+				habPrint("CanReleaseAttachment Settings Not Definied", "Debug");
+			}
+			if (!m_HeroesAndBandits_DataLoaded){
+				habPrint("CanReleaseAttachment Data Not Definied", "Debug");
+			}
+			return super.CanReleaseAttachment(attachment);
+		}
+		if ( GetHeroesAndBanditsSettings().Mode == 1 ){
+			habPrint("CanReleaseAttachment Mode == 1", "Debug");
 			return super.CanReleaseAttachment(attachment);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
@@ -316,8 +355,15 @@ modded class PlayerBase
 		}
 		ClothingBase mask = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 		if (mask){
-			if (attachment == mask && !GetHeroesAndBanditsSettings().BanditsCanRemoveMask && tempAffinity.Name == "bandit" && GetHeroesAndBanditsSettings().Mode != 1){
-				return false;
+			if (attachment == mask){
+				if (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit"){
+					habPrint("CanReleaseAttachment Item Blocked - "  + attachment.GetType(), "Debug");
+					return false;
+				}
+				if (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero"){
+					habPrint("CanReleaseAttachment Item Blocked - "  + attachment.GetType(), "Debug");
+					return false;
+				}
 			}
 		}
 		return super.CanReleaseAttachment(attachment);
@@ -326,16 +372,18 @@ modded class PlayerBase
 	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		if (!GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+			habPrint("CanReceiveAttachment Settings Not Definied"  + attachment.GetType(), "Debug" );
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (GetHeroesAndBanditsSettings().Mode == 0 && m_HeroesAndBandits_AffinityIndex != -1){
+		if (GetHeroesAndBanditsSettings().Mode != 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
-		} else if (GetHeroesAndBanditsSettings().Mode != 0){ //This is a bit more performance heavy so only useing if need to
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){ //This is a bit more performance heavy so only useing if need to
 			if (GetHaBPlayer().checkItem(attachment.GetType(), "attach")){
 				return super.CanReceiveAttachment(attachment, slotId);
 			} else {
+				habPrint("CanReceiveAttachment Item Blocked - "  + attachment.GetType(), "Debug");
 				return false;
 			}
 		}

@@ -15,7 +15,7 @@ modded class IngameHud
 	{
 		if (GetHeroesAndBanditsSettings())
 		{ 
-			if (GetHeroesAndBanditsSettings().EnableLevelImageOnPlayerTag)
+			if (GetHeroesAndBanditsSettings().EnableLevelImageOnExpansionPlayerTag)
 			{
 				Param2< string, string > data;
 				if ( !ctx.Read( data ) ) return;
