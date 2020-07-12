@@ -16,13 +16,11 @@ modded class PlayerBase
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_DataLoaded");
-		Print("[Client Pre Settings Debug]Player Init");
 	}
 	
 	override void OnSelectPlayer()
 	{
 		super.OnSelectPlayer();
-		SetSynchDirty();
 		if (GetGame().IsServer() && GetIdentity() ){ 
 			HeroesAndBanditsPlayer tempHABPlayer = GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
 			m_HeroesAndBandits_AffinityIndex = tempHABPlayer.getAffinityIndex();
@@ -30,20 +28,10 @@ modded class PlayerBase
 			m_HeroesAndBandits_LevelIndex= tempHABPlayer.getLevelIndex();
 			m_HeroesAndBandits_DataLoaded = true;
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
-		}
-		SetSynchDirty();	
-		
-		if ( GetIdentity() && !GetGame().IsServer()){ 
-			Print("[Client Pre Settings Debug]Player: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 501);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 1000);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "habPrintInfoClient", 3000, true);
+			SetSynchDirty();	
 		}
 	}
 	
-	void habPrintInfoClient(){
-		Print("[Client Pre Settings Debug]habPrintInfoClient: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
-	}
 	
 	void habLevelChange( int affinityIndex, float affinityPoints, int levelIndex){
 		m_HeroesAndBandits_AffinityIndex = affinityIndex;
@@ -52,7 +40,6 @@ modded class PlayerBase
 		m_HeroesAndBandits_LevelIndex = levelIndex;
 
 		SetSynchDirty();
-		Print("[Client Pre Settings Debug]habLevelChange: " + GetIdentity().GetPlainId() + " with Affinty Index of " + m_HeroesAndBandits_AffinityIndex +" Level index of " + m_HeroesAndBandits_LevelIndex + " Points: " + m_HeroesAndBandits_AffinityPoints);
 	}
 		
 	void habCurrentAffinityPointUpdate(float affinityPoints){
@@ -81,7 +68,7 @@ modded class PlayerBase
 		}
 		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
 	}
-	
+
 	void enteredZone(int zoneID, int index = 0)
 	{
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
