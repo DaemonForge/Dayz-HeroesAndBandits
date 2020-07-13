@@ -293,7 +293,6 @@ class HeroesAndBanditsGuard
 	              GetGame().RemoteObjectCreate( weaponInHandsMag );
 
 		      weaponInHands.SyncSelectionState(true,true);
-	              weaponInHands.UpdateVisuals();
 		}
 	}
 	
