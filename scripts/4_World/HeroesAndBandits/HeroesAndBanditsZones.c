@@ -272,7 +272,7 @@ class HeroesAndBanditsGuard
 		if (weaponInHands.IsWeapon())
 		{
 		
-                      int stateId = -1;
+                      int stateId = RBLStableStateID.RBL_CLO_BU0_MA0;//only for m4
 
                       if ( weaponInHands.IsInherited( Pistol_Base ) ) {
 	    	         stateId = PistolStableStateID.CLO_DIS_BU0_MA1;
