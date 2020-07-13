@@ -268,7 +268,7 @@ class HeroesAndBanditsGuard
 	{
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
 		EntityAI weaponInHands = Weapon_Base.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		EntityAI weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
+		EntityAI weaponInHandsMag = weaponInHands.GetInventory().CreateAttachment(WeaponInHandsMag);
 		if (weaponInHands.IsWeapon())
 		{
 		
