@@ -271,7 +271,29 @@ class HeroesAndBanditsGuard
 		EntityAI weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
 		if (weaponInHands.IsWeapon())
 		{
-			Guard.GetWeaponManager().AttachMagazine(Magazine.Cast(weaponInHandsMag));
+		
+                      int stateId = -1;
+
+                      if ( weaponInHands.IsInherited( Pistol_Base ) ) {
+	    	         stateId = PistolStableStateID.CLO_DIS_BU0_MA1;
+	              } else if ( weaponInHands.IsInherited( CZ527_Base ) {
+	    	         stateId = CZ527StableStateID.CZ527_CLO_BU0_MA1;
+                      }
+	              GetGame().RemoteObjectDelete( mag );
+	              GetGame().RemoteObjectDelete( weaponInHandsMag );
+		      weaponInHands.AttachMagazine(weaponInHands.GetCurrentMuzzle(),Magazine.Cast(weaponInHandsMag));
+
+	              pushToChamberFromAttachedMagazine( weaponInHands, weaponInHands.GetCurrentMuzzle() );
+
+	              ScriptReadWriteContext ctx = new ScriptReadWriteContext;
+	              ctx.GetWriteContext().Write( stateId );
+	              weaponInHands.LoadCurrentFSMState( ctx.GetReadContext(), GetGame().SaveVersion() );
+
+	              GetGame().RemoteObjectCreate( weaponInHands );
+	              GetGame().RemoteObjectCreate( weaponInHandsMag );
+
+		      weaponInHands.SyncSelectionState(true,true);
+	              weaponInHands.UpdateVisuals();
 		}
 	}
 	
