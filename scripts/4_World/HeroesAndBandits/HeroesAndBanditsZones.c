@@ -114,7 +114,13 @@ class HeroesAndBanditsZone
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
-				if ( OverrideSafeZone )
+				bool PlayerHasGodMode = false;
+				#ifdef JM_COT
+					if ( player.HasGodMode() ){
+						PlayerHasGodMode = true;
+					}
+				#endif
+				if ( OverrideSafeZone && !PlayerHasGodMode )
 				{
 					player.SetAllowDamage(true);
 				}
