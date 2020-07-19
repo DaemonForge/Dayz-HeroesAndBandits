@@ -41,6 +41,7 @@ class HeroesAndBanditsSettings
 	bool ExceptionLogs = true;
 	bool VerboseLogs = false;
 	bool DebugLogs = false;
+	bool DebugCommand = false;
 		
 	/*
 	Bambis

@@ -18,6 +18,8 @@ class HeroesAndBanditsZone
     float MaxHumanity;
 	bool OverrideSafeZone;
 	bool GodModPlayers;
+	bool PerventActions = false;
+	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
 
@@ -39,6 +41,8 @@ class HeroesAndBanditsZone
 		WarningMessage = zoneToLoad.WarningMessage;
 		OverrideSafeZone = zoneToLoad.OverrideSafeZone;
 		GodModPlayers = zoneToLoad.GodModPlayers;
+		PerventActions = zoneToLoad.PerventActions;
+		Affinities = zoneToLoad.Affinities;
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
 			{	
@@ -53,8 +57,8 @@ class HeroesAndBanditsZone
 				TStringArray guardGear = zoneToLoad.Guards.Get(j).GuardGear;
 				Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 				Guards.Get(j).Spawn();
-				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 160000, false); //Reload gun 3 minutes after server start
-				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeaponTest", 220000, false); //Reload gun 3 minutes after server start	
+				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 60000, false); //Reload gun 3 minutes after server start
+				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeaponTest", 440000, false); //Reload gun 3 minutes after server start	
 			}
 		}
 		if (zoneToLoad.SubZones) //Check if any Sub Zones are defined before loading
@@ -74,7 +78,7 @@ class HeroesAndBanditsZone
 		
 	void CheckPlayer(PlayerBase inPlayer){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		float playerHumanity = GetHeroesAndBandits().GetPlayerHumanity(player.GetIdentity().GetPlainId());
+		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		if ( !player )
 		{
 			return;
@@ -87,7 +91,7 @@ class HeroesAndBanditsZone
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				player.m_HeroesAndBandits_InZones.Debug();
 			}*/
-			if (validHumanity(playerHumanity) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.isInZone(ZoneID, Index)){
+			if (validPlayer(pdata) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.habIsInZone(ZoneID, Index)){
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
 				player.enteredZone(ZoneID, Index);
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
@@ -97,12 +101,12 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WelcomePlayer(Name, WelcomeMessage, WelcomeIcon, player.GetIdentity().GetPlainId(), WelcomeMessageColor);
 				}
-				if ( GodModPlayers && validHumanity(playerHumanity))
+				if ( GodModPlayers && validPlayer(pdata))
 				{
 					player.SetAllowDamage(false);
 				}
 			}
-			else if (!validHumanity(playerHumanity) && player.isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
+			else if (!validPlayer(pdata) && player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
 			{
 				//Player Entered Kill Zone Kill Player if warning has been given
 				player.leftZone(0); //Removed from all zones
@@ -117,7 +121,7 @@ class HeroesAndBanditsZone
 				FireWeaponClosestGuard(player.GetPosition());
 				player.SetHealth(0.0);
 			}
-			else if (!validHumanity(playerHumanity) && !player.isInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
+			else if (!validPlayer(pdata) && !player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
 			{
 				//Player Entered Warning Zone Issue Warning
 				player.enteredZone(ZoneID, Index);
@@ -130,7 +134,7 @@ class HeroesAndBanditsZone
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
 				}		
 			}
-			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.isInZone(ZoneID, Index))
+			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))
 			{
 				if ( GodModPlayers )
 				{
@@ -143,7 +147,7 @@ class HeroesAndBanditsZone
 					player.m_HeroesAndBandits_InZones.Debug();
 				}	
 			}
-			if ( SubZones && player.isInZone(ZoneID, Index) )
+			if ( SubZones && player.habIsInZone(ZoneID, Index) )
 			{ 
 				for (int subI = 0; subI < SubZones.Count(); subI++)
 				{
@@ -178,6 +182,33 @@ class HeroesAndBanditsZone
 		return false;
 	}
 	
+	bool validPlayer(HeroesAndBanditsPlayer pdata){
+		
+		if (GetHeroesAndBanditsSettings().Mode != 1 && Affinities.Count() > 0){
+			string affinity = pdata.getAffinity().Name;
+			for (int i = 0; i < Affinities.Count(); i++){
+				if (Affinities.Get(i).Check(pdata.getAffinityPoints(affinity) , affinity))
+				{
+					return true;
+				}
+			}
+		} 
+		if (GetHeroesAndBanditsSettings().Mode != 0 && Affinities.Count() > 0){
+			for (int j = 0; j < pdata.Affinities.Count(); j++){
+				if ( ( pdata.Affinities.Get(j).Name == "bandit" || pdata.Affinities.Get(j).Name == "hero" ) && GetHeroesAndBanditsSettings().Mode == 2 ){
+					//Skipping for Hero and Bandit as it was checked above if in mixed mode
+				} else {
+					for (int k = 0; k < Affinities.Count(); k++){
+						if ( Affinities.Get(i).Check(pdata.Affinities.Get(j).Points,  pdata.Affinities.Get(j).Name)){
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	void FireWeaponClosestGuard(vector playerPostion)
 	{
 		if (!Guards)//If no guards defined exit
@@ -202,125 +233,12 @@ class HeroesAndBanditsZone
 		} 
 	}
 	
-}
-
-class HeroesAndBanditsGuard
-{
-    float X;
-    float Y;
-    float Z;
-	float Orientation;
-	private PlayerBase Guard;
-	string Skin;
-	string WeaponInHands;
-	string WeaponInHandsMag;
-	ref TStringArray WeaponInHandsAttachments;
-	ref TStringArray GuardGear;
-
-    void HeroesAndBanditsGuard(float x, float y, float z, float orientation, string skin, string weaponInHands, string weaponInHandsMag, TStringArray weaponInHandsAttachments, TStringArray guardGear) 
-	{
-        X = x;
-		Y = y;
-        Z = z;
-		Orientation = orientation;
-		Skin = skin;
-		WeaponInHands = weaponInHands;
-		WeaponInHandsMag = weaponInHandsMag;
-		WeaponInHandsAttachments =  weaponInHandsAttachments;
-		GuardGear = guardGear;
-		
-    }
-	
-	void Spawn()
-	{
-			habPrint("Spawning Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-			Object obj = GetGame().CreateObject( Skin , getVector(), false, false, true );
-			obj.SetPosition(getVector());
-			EntityAI weaponInHands;
-			EntityAI weaponInHandsMag;
-			if (Class.CastTo(Guard, obj))
-			{	
-				Guard.SetAllowDamage(false);
-				for ( int i =0; i < GuardGear.Count(); i++ )
-				{
-					Guard.GetInventory().CreateAttachment(GuardGear.Get(i));
-				}
-				if (Guard.GetHumanInventory().GetEntityInHands()){
-					habPrint("Item spawned in Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " Item: " + Guard.GetHumanInventory().GetEntityInHands().GetDisplayName() +  " Removing it", "Exception");	
-					Guard.GetHumanInventory().GetEntityInHands().Delete(); //Remove any Items in Hand
-				}
-				weaponInHands = Guard.GetHumanInventory().CreateInHands(WeaponInHands);
-				for ( int j =0; j < WeaponInHandsAttachments.Count(); j++ )
-				{
-					weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
-				}
-				
-			}
-			vector guardOrientation = vector.Zero;
-			guardOrientation[0] = Orientation;
-			guardOrientation[1] = 0;
-			guardOrientation[2] = 0;
-			
-			obj.SetOrientation(guardOrientation);
-	}
-	
-	void ReloadWeapon()
-	{
-		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		EntityAI weaponInHands = Weapon_Base.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		EntityAI weaponInHandsMag = Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
-		if (weaponInHands.IsWeapon())
-		{
-		
-                      int stateId = -1;
-
-                      if ( weaponInHands.IsInherited( Pistol_Base ) ) {
-	    	         stateId = PistolStableStateID.CLO_DIS_BU0_MA1;
-	              } else if ( weaponInHands.IsInherited( CZ527_Base ) {
-	    	         stateId = CZ527StableStateID.CZ527_CLO_BU0_MA1;
-                      }
-	              GetGame().RemoteObjectDelete( mag );
-	              GetGame().RemoteObjectDelete( weaponInHandsMag );
-		      weaponInHands.AttachMagazine(weaponInHands.GetCurrentMuzzle(),Magazine.Cast(weaponInHandsMag));
-
-	              pushToChamberFromAttachedMagazine( weaponInHands, weaponInHands.GetCurrentMuzzle() );
-
-	              ScriptReadWriteContext ctx = new ScriptReadWriteContext;
-	              ctx.GetWriteContext().Write( stateId );
-	              weaponInHands.LoadCurrentFSMState( ctx.GetReadContext(), GetGame().SaveVersion() );
-
-	              GetGame().RemoteObjectCreate( weaponInHands );
-	              GetGame().RemoteObjectCreate( weaponInHandsMag );
-
-		      weaponInHands.SyncSelectionState(true,true);
-	              weaponInHands.UpdateVisuals();
+	HeroesAndBanditsZone GetChild( array< int > inZones){
+		int maxIndex = inZones.Count() - 1;
+		if (maxIndex == Index){
+			return this;
+		} else {
+			return SubZones.Get(inZones.Get(Index + 1)).GetChild( inZones );
 		}
-	}
-	
-	void ReloadWeaponTest()
-	{
-		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		EntityAI weaponInHands = Weapon_Base.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		EntityAI weaponInHandsMag = weaponInHands.GetInventory().CreateAttachment(WeaponInHandsMag);
-		if (weaponInHands.IsWeapon())
-		{
-				habPrint("Unjam Gun: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-				Guard.GetWeaponManager().Unjam();
-		}
-	}
-	
-	void FireWeapon()
-	{
-		habPrint("Firing Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		if (weaponInHands.IsWeapon())
-		{
-			WeaponManager(PlayerBase.Cast(Guard)).Fire(Weapon_Base.Cast(weaponInHands));
-		}
-	}
-
-	vector getVector(){
-		return Vector( X, Y, Z );
 	}
 }
-

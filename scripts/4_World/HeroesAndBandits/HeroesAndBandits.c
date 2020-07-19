@@ -85,6 +85,14 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  playerID)
 			{
+				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+				if (player.habIsInZone()){
+					if (player.habTopZoneIndex() != -1 ){
+						if (Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones).PerventActions){
+							return;
+						}
+					}
+				}
 				bool didLevelUp = p.NewAction(action);
 				habAction tempAction = GetHeroesAndBanditsActions().getAction(action);
 				if (tempAction.NotifiyPlayer){
@@ -103,7 +111,6 @@ class HeroesAndBandits
 					}
 					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + postix );	
 				}
-				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 				float affinityPoints = 0;
 				if (GetHeroesAndBanditsSettings().Mode != 1){
 					affinityPoints = p.getHumanity();

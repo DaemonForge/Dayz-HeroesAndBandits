@@ -32,6 +32,16 @@ modded class PlayerBase
 		}
 	}
 	
+	int habTopZoneIndex(){
+		if (m_HeroesAndBandits_InZones.Count() > 0){
+			return m_HeroesAndBandits_InZones.Get(0);
+		}
+		return -1;
+	}
+	
+	array< int > habGetInZones(){
+		return m_HeroesAndBandits_InZones;
+	}
 	
 	void habLevelChange( int affinityIndex, float affinityPoints, int levelIndex){
 		m_HeroesAndBandits_AffinityIndex = affinityIndex;
@@ -47,24 +57,26 @@ modded class PlayerBase
 		SetSynchDirty();
 	}
 	
-	int GetHeroesAndBanditsLevelIndex(){
+	int habGetLevelIndex(){
 		return m_HeroesAndBandits_LevelIndex;
 	}
 	
-	int GetHeroesAndBanditsAffinityIndex(){
+	int habGetAffinityIndex(){
 		return m_HeroesAndBandits_AffinityIndex;
 	}
 	
-	int GetHeroesAndBanditsAffinityPoints(){
+	int habGetAffinityPoints(){
 		return m_HeroesAndBandits_AffinityPoints;
 	}
 	
-	bool isInZone(int zoneID, int index = 0)
+	bool habIsInZone(int zoneID = -1, int index = 0)
 	{
 		if ( !m_HeroesAndBandits_InZones ){
 			return false;
 		} else if (m_HeroesAndBandits_InZones.Count() == 0) {
 			return false;
+		} else if ( zoneID == -1 && m_HeroesAndBandits_InZones.Count() >= 1 ){
+			return true;
 		}
 		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
 	}

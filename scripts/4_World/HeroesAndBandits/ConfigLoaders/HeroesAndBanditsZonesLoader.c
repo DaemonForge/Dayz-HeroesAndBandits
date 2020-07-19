@@ -3,7 +3,7 @@ static string HeroesAndBanditsZonesPATH = HeroesAndBanditsDirectory + "\\zones.j
 class HeroesAndBanditsConfigZones
 { 
 	//Default Values
-	string ConfigVersion = "4";
+	string ConfigVersion = "5";
 	
 	int ZoneCheckTimer = 3;
 	
@@ -22,7 +22,11 @@ class HeroesAndBanditsConfigZones
 		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsZonesPATH)) //If config exist load File
 		{
-	        	JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(HeroesAndBanditsZonesPATH, this);
+	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(HeroesAndBanditsZonesPATH, this);
+			if (ConfigVersion == "4"){
+				doV5Upgrade();
+				JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
+			}
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Zones Config", "Always");	
@@ -36,18 +40,31 @@ class HeroesAndBanditsConfigZones
 	}
 	
 	//Helper function for defaults to add Zones
-	void addZone(string name, int x, int z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = ""){
-		habZone tempZone = new ref habZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage);
+	void addZone(string name, int x, int z, int warningRadius, int killRadius, string warningMessage = ""){
+		habZone tempZone = new ref habZone(name, x, z, warningRadius, killRadius, warningMessage);
 		if (tempZone.Name == "Default Zone"){
 			tempZone.Guards.Insert(new ref habGuard(x, GetGame().SurfaceY(x, z), z));
+			tempZone.Affinities.Insert(new ref habZoneAffinity("bambi"));
 		}
 		Zones.Insert(tempZone);
 		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
 	}
 	
 	void createDefaults(){
-		addZone("Default Zone", 11250, 4300, -1000, 1000, 75, 50);
+		addZone("Default Zone", 11250, 4300, 75, 50);
 	}
+	
+	void doV5Upgrade(){
+		ConfigVersion = "5";
+		if (Zones){
+			if (Zones.Count() > 0){
+				for (int i = 0; Zones.Count() < i; i++){
+					
+				}
+			}
+		}
+	}
+	
 }
 
 
@@ -70,19 +87,19 @@ class habZone
 	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
+	bool PerventActions = false;
+	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	
 	ref array< ref habZone > SubZones = new ref array< ref habZone >;
 	
-	void habZone(string name, float x, float z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
+	void habZone(string name, float x, float z, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
 	{
 		Name = name;
 		X = x;
 		Z = z;
 		WarningRadius = warningRadius;
-		KillRadius = killRadius;
-		MinHumanity = minHumanity;
-		MaxHumanity = maxHumanity;
+		KillRadius = killRadius;		
 		OverrideSafeZone = overrideSafeZone;
 		GodModPlayers = godModPlayers;
 		if (warningMessage == ""){
@@ -115,8 +132,86 @@ class habZone
 	int getWelcomeMessageColor(){
 		return ARGB(WelcomeMessageColor[0], WelcomeMessageColor[1], WelcomeMessageColor[2], WelcomeMessageColor[3]);
 	}
+	
+	void convertHumanityToAffinty(){
+		//All Players
+		if (MaxHumanity == -1 && MinHumanity == -1){ //Allow all players
+			Affinities.Insert(new ref habZoneAffinity("bambi"));
+			Affinities.Insert(new ref habZoneAffinity("hero"));
+			Affinities.Insert(new ref habZoneAffinity("bandit"));
+			return;
+		}
+		if ((MaxHumanity <= 1000 && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -1000 && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
+			Affinities.Insert(new ref habZoneAffinity("bambi"));
+		}
+		
+		//Bandits
+		if (MinHumanity <= -1001 || MinHumanity == -1){
+			float newMax = -1;
+			float newMin = -1;
+			if (MaxHumanity >= 0){
+				newMin = 0;
+			} else {
+				newMin = 0 - MaxHumanity;
+			}
+			if (MinHumanity != -1){
+				newMax = 0 - MinHumanity;
+			}
+			Affinities.Insert(new ref habZoneAffinity("bandit", newMin, newMax));
+		}
+		
+		//Heroes
+		if (MaxHumanity >= 1001 || MaxHumanity == -1){
+			float newMax = -1;
+			float newMin = -1;
+			if (MinHumanity >= 0){
+				newMin = 0;
+			} else {
+				newMin = MinHumanity;
+			}
+			if (MaxHumanity != -1){
+				newMax = MaxHumanity;
+			}
+			Affinities.Insert(new ref habZoneAffinity("hero", newMin, newMax));
+		}
+		
+		
+	}
 }
 
+class habZoneAffinity{
+	string Affinity;
+	float MinPoints = -1;
+	float MaxPoints = -1;
+	
+	void habZoneAffinity(string affinity, float minPoints = -1, float maxPoints = -1){
+		Affinity = affinity;
+		MinPoints = minPoints;
+		MaxPoints = maxPoints;
+	}
+	
+	bool Check(float points, string affinity = Affinity){
+		if (Affinity != affinity)
+		{
+			return false;
+		}
+		if (Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name){ //Default affinity doesn't have points
+			return true; 
+		}
+		if ( MinPoints != -1 && MaxPoints != -1 && points >= MinPoints && points <= MaxPoints){
+			return true;
+		}else if (MinPoints == -1 && MaxPoints == -1){
+			return true;
+		}else if (MinPoints == -1 && MaxPoints != -1 && points <= MaxPoints){
+			return true;
+		}else if (MinPoints != -1 && MaxPoints == -1 && points >= MinPoints){
+			return true;
+		}
+		
+		return false;
+	}
+	
+}
 
 //Class for holding guard values
 class habGuard

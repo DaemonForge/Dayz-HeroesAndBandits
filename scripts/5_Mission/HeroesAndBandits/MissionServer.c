@@ -179,7 +179,7 @@ modded class MissionServer
 	//Adding so debuggin is easier :)
 	void RPCSendAffinityUpdate( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
-		if ( GetHeroesAndBanditsSettings().AllowStatCommand && GetHeroesAndBanditsSettings().DebugLogs )
+		if ( GetHeroesAndBanditsSettings().DebugCommand )
 		{
 			if (!sender)
 			{
@@ -192,7 +192,7 @@ modded class MissionServer
 			}
 			string statname = data.param2;
 			string playerID = sender.GetPlainId();
-			habPrint("AffinityUpdate from:" + playerID + " Command:" + data.param1 + " " + statname + " " + data.param3, "Debug");
+			habPrint("Affinity Update from:" + playerID + " Command:" + data.param1 + " " + statname + " " + data.param3, "Always");
 			GetHeroesAndBandits().GetPlayer(playerID).addAffinityPoints(statname, data.param3);
 			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 			player.habLevelChange( GetHeroesAndBandits().GetPlayer(playerID).getAffinityIndex() , GetHeroesAndBandits().GetPlayer(playerID).getAffinityPoints(GetHeroesAndBandits().GetPlayer(playerID).getAffinityName()), GetHeroesAndBandits().GetPlayer(playerID).getLevelIndex());
