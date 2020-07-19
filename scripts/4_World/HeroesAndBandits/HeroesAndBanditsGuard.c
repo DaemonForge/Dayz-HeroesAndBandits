@@ -66,7 +66,7 @@ class HeroesAndBanditsGuard
 		{
 			EntityAI mag = EntityAI.Cast(weaponInHands.GetInventory().CreateAttachment(WeaponInHandsMag));
 			habPrint("AttachMag", "Debug"); 
-			weaponInHands.AttachMagazine(Weapon_Base.GetCurrentMuzzle(), Magazine.Cast(mag));
+			weaponInHands.AttachMagazine(weaponInHands.GetCurrentMuzzle(), Magazine.Cast(mag));
 			habPrint("pushToChamberFromAttachedMagazine", "Debug");
 			pushToChamberFromAttachedMagazine( weaponInHands, weaponInHands.GetCurrentMuzzle() );
 

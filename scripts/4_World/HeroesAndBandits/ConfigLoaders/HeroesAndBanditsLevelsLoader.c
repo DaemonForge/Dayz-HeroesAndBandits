@@ -5,7 +5,7 @@ class HeroesAndBanditsConfigLevels
 	//Default Values
 	string ConfigVersion = "5";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
-	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1, 1000);
+	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1, -1);
 	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
 	ref habAffinity DefaultAffinity = new ref habAffinity("bambi", "#HAB_BAMBI");
 	

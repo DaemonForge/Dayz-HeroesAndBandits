@@ -59,7 +59,7 @@ class HeroesAndBanditsConfigZones
 		if (Zones){
 			if (Zones.Count() > 0){
 				for (int i = 0; Zones.Count() < i; i++){
-					
+					Zones.Get(i).convertHumanityToAffinty();
 				}
 			}
 		}
@@ -147,32 +147,32 @@ class habZone
 		
 		//Bandits
 		if (MinHumanity <= -1001 || MinHumanity == -1){
-			float newMax = -1;
-			float newMin = -1;
+			float newBanditsMax = -1;
+			float newBanditsMin = -1;
 			if (MaxHumanity >= 0){
-				newMin = 0;
+				newBanditsMin = 0;
 			} else {
-				newMin = 0 - MaxHumanity;
+				newBanditsMin = 0 - MaxHumanity;
 			}
 			if (MinHumanity != -1){
-				newMax = 0 - MinHumanity;
+				newBanditsMax = 0 - MinHumanity;
 			}
-			Affinities.Insert(new ref habZoneAffinity("bandit", newMin, newMax));
+			Affinities.Insert(new ref habZoneAffinity("bandit", newBanditsMin, newBanditsMax));
 		}
 		
 		//Heroes
 		if (MaxHumanity >= 1001 || MaxHumanity == -1){
-			float newMax = -1;
-			float newMin = -1;
+			float newHeroesMax = -1;
+			float newHeroesMin = -1;
 			if (MinHumanity >= 0){
-				newMin = 0;
+				newHeroesMin = 0;
 			} else {
-				newMin = MinHumanity;
+				newHeroesMin = MinHumanity;
 			}
 			if (MaxHumanity != -1){
-				newMax = MaxHumanity;
+				newHeroesMax = MaxHumanity;
 			}
-			Affinities.Insert(new ref habZoneAffinity("hero", newMin, newMax));
+			Affinities.Insert(new ref habZoneAffinity("hero", newHeroesMin, newHeroesMax));
 		}
 		
 		
@@ -190,12 +190,14 @@ class habZoneAffinity{
 		MaxPoints = maxPoints;
 	}
 	
-	bool Check(float points, string affinity = Affinity){
-		if (Affinity != affinity)
+	bool Check(float points, string affinity = ""){
+		if (affinity != "")
 		{
-			return false;
+			if (Affinity != affinity){
+				return false;
+			}
 		}
-		if (Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name){ //Default affinity doesn't have points
+		if ( Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name ){ //Default affinity doesn't have points
 			return true; 
 		}
 		if ( MinPoints != -1 && MaxPoints != -1 && points >= MinPoints && points <= MaxPoints){

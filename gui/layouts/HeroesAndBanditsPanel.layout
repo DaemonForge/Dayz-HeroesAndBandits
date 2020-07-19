@@ -71,8 +71,8 @@ FrameWidgetClass rootFrame {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       font "gui/fonts/Metron-Bold28"
        text "Affinity"
+       font "gui/fonts/Metron-Bold28"
        "text color" 0 0 0 1
        "exact text" 1
       }
@@ -88,8 +88,8 @@ FrameWidgetClass rootFrame {
      hexactsize 1
      vexactsize 1
      scaled 1
-     font "gui/fonts/Metron-Bold28"
      text "LevelName "
+     font "gui/fonts/Metron-Bold28"
      "text color" 0 0 0 1
      "exact text" 1
     }
@@ -102,8 +102,8 @@ FrameWidgetClass rootFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     font "gui/fonts/Metron-Bold28"
      text "Humanity"
+     font "gui/fonts/Metron-Bold28"
      "text color" 0 0 0 1
      "exact text" 1
     }

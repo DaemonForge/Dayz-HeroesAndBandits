@@ -18,7 +18,7 @@ class HeroesAndBanditsZone
     float MaxHumanity;
 	bool OverrideSafeZone;
 	bool GodModPlayers;
-	bool PerventActions = false;
+	bool PerventActions;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;

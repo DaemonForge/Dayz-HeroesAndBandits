@@ -7,7 +7,7 @@ modded class MissionServer
 		habPrint("Saving All Player Data From ~MissionServer", "Debug");
 		GetHeroesAndBandits().SaveAllPlayers();
 	}
-		
+	
 	override void OnInit()
 	{
 		super.OnInit();
@@ -63,7 +63,7 @@ modded class MissionServer
         string playerName = data.param1;
 		if ( playerName != "" ){
 			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByName(playerName));
-			GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( GetHeroesAndBanditsLevels().Levels.Get(player.GetHeroesAndBanditsLevelIndex()).LevelImage, playerName ), true, sender);
+			GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( GetHeroesAndBanditsLevels().Levels.Get(player.habGetLevelIndex()).LevelImage, playerName ), true, sender);
 		}
 	}
 	

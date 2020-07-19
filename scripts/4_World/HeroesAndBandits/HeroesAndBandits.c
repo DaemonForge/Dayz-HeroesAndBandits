@@ -88,7 +88,7 @@ class HeroesAndBandits
 				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 				if (player.habIsInZone()){
 					if (player.habTopZoneIndex() != -1 ){
-						if (Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones).PerventActions){
+						if (Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones()).PerventActions){
 							return;
 						}
 					}

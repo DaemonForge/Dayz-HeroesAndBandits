@@ -1,4 +1,3 @@
-
 class HeroesAndBanditsPanelUI extends UIScriptedMenu
 {	
 	private bool m_HeroesAndBanditsPanelIsOpen;

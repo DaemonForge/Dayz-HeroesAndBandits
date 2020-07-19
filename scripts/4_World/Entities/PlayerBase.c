@@ -1,12 +1,12 @@
 modded class PlayerBase
 {
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
-	protected bool  m_HeroesAndBandits_Killed = false;
+	private bool  m_HeroesAndBandits_Killed = false;
 	
-	protected int m_HeroesAndBandits_AffinityIndex = -1;
-	protected float m_HeroesAndBandits_AffinityPoints = 0;
-	protected bool m_HeroesAndBandits_DataLoaded = false;
-	protected int m_HeroesAndBandits_LevelIndex = -1;
+	private int m_HeroesAndBandits_AffinityIndex = -1;
+	private float m_HeroesAndBandits_AffinityPoints = 0;
+	private bool m_HeroesAndBandits_DataLoaded = false;
+	private int m_HeroesAndBandits_LevelIndex = -1;
 	
 	override void Init()
 	{
@@ -38,6 +38,7 @@ modded class PlayerBase
 		}
 		return -1;
 	}
+	
 	
 	array< int > habGetInZones(){
 		return m_HeroesAndBandits_InZones;
@@ -81,6 +82,7 @@ modded class PlayerBase
 		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
 	}
 
+	
 	void enteredZone(int zoneID, int index = 0)
 	{
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
@@ -391,7 +393,6 @@ modded class PlayerBase
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
 		return false;
-			
 	}
 
 }
