@@ -3,6 +3,9 @@ modded class PlayerBase
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;
 	
+	private bool  m_HeroesAndBandits_CanRaiseWeaponSync = true;
+	private bool  m_HeroesAndBandits_CanRaiseWeapon = true;
+	
 	private int m_HeroesAndBandits_AffinityIndex = -1;
 	private float m_HeroesAndBandits_AffinityPoints = 0;
 	private bool m_HeroesAndBandits_DataLoaded = false;
@@ -12,6 +15,7 @@ modded class PlayerBase
 	{
 		super.Init();
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_CanRaiseWeaponSync");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AffinityIndex");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
@@ -97,11 +101,51 @@ modded class PlayerBase
 		return PlayerHasGodMode;
 	}
 	
-	void enteredZone(int zoneID, int index = 0)
+	
+	//code for preventing raising weapons
+	bool habCanRaiseWeapon(){
+		return m_HeroesAndBandits_CanRaiseWeapon;
+	}
+	
+	void habSetCanRaiseWeapon( bool canRaiseWeapon ){
+		if (GetGame().IsServer()){
+			m_HeroesAndBandits_CanRaiseWeaponSync = canRaiseWeapon;
+			SetSynchDirty();
+		}
+	}
+	
+	override void OnVariablesSynchronized()
+	{
+		super.OnVariablesSynchronized();
+		
+
+		if ( !m_HeroesAndBandits_CanRaiseWeaponSync && m_HeroesAndBandits_CanRaiseWeapon )
+		{
+			habPreventRaiseWeapon();
+		} 
+		else if ( m_HeroesAndBandits_CanRaiseWeaponSync && !m_HeroesAndBandits_CanRaiseWeapon )
+		{
+			habAllowRaiseWeapon();
+		}
+	}
+	
+	void habPreventRaiseWeapon(){
+		m_HeroesAndBandits_CanRaiseWeapon = false;
+		GetInputController().OverrideRaise( true, false );
+		GetInputController().OverrideMeleeEvade( true, false );
+	}
+	
+	void habAllowRaiseWeapon(){
+		m_HeroesAndBandits_CanRaiseWeapon = true;
+		GetInputController().OverrideRaise( false, false );
+		GetInputController().OverrideMeleeEvade( false, false );
+	}
+	
+	void habEnteredZone(int zoneID, int index = 0)
 	{
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
 		if ( index <= maxIndex ){
-			leftZone(index);
+			habLeftZone(index);
 		}
 		habPrint("Player Entered Zone" + zoneID + " at index " + index, "Debug");
 		m_HeroesAndBandits_InZones.Insert(zoneID);
@@ -110,7 +154,7 @@ modded class PlayerBase
 		}
 	}
 	
-	void leftZone(int index){
+	void habLeftZone(int index){
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
 		if ( index == maxIndex ){
 			habPrint("Removing Player from zone" + index, "Debug");
@@ -274,6 +318,7 @@ modded class PlayerBase
 	}
 
 	// Doesn't seem to work removing for now will circle back at a later time
+	/*
 	override bool CanReceiveItemIntoCargo(EntityAI cargo)
 	{
 		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
@@ -321,6 +366,7 @@ modded class PlayerBase
 		}
 		return false;
 	}
+	*/
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{
@@ -349,15 +395,6 @@ modded class PlayerBase
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
 		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
-			if (!GetHeroesAndBanditsLevels()){
-				habPrint("CanReleaseAttachment Levels Not Definied", "Debug");
-			}
-			if (!GetHeroesAndBanditsSettings()){
-				habPrint("CanReleaseAttachment Settings Not Definied", "Debug");
-			}
-			if (!m_HeroesAndBandits_DataLoaded){
-				habPrint("CanReleaseAttachment Data Not Definied", "Debug");
-			}
 			return super.CanReleaseAttachment(attachment);
 		}
 		if ( GetHeroesAndBanditsSettings().Mode == 1 ){
@@ -404,6 +441,21 @@ modded class PlayerBase
 		}
 		if (tempAffinity.checkItem(m_HeroesAndBandits_AffinityPoints, attachment.GetType(), "attach"))
 		{
+			if (slotId == InventorySlots.MASK){
+				int index = -1;
+				string itemType = attachment.GetType();
+				if (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit"){
+					index = GetHeroesAndBanditsSettings().BanditMasks.Find(itemType);
+					habPrint("CanReceiveAttachment Item Mask Check - index: " + index + " Attachment "  + attachment.GetType(), "Debug");
+				}
+				if (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero"){
+					index = GetHeroesAndBanditsSettings().HeroMasks.Find(itemType);
+					habPrint("CanReceiveAttachment Item Mask Check - index: " + index + " Attachment "  + attachment.GetType(), "Debug");
+				}
+				if (index != -1){
+					return true;
+				}
+			}	
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
 		return false;

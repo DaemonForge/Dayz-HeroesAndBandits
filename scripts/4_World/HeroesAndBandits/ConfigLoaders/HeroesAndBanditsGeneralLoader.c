@@ -28,13 +28,17 @@ class HeroesAndBanditsSettings
 	bool HideKillsInGUI = false;
 	
 	bool BanditCanRemoveMask = false;
+	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
 	bool HeroCanRemoveMask = true;
+	ref TStringArray HeroMasks = {};
 	
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;
 	
 	//Expansion Settings 
-	bool EnableLevelImageOnExpansionPlayerTag = true;
+	bool Expansion_EnableIconOnPlayerTag = true;
+	int Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
+	bool Expansion_HideNameOnPlayerTag = false;
 	
 	
 	
@@ -118,8 +122,11 @@ class HeroesAndBanditsSettings
 		BanditCanRemoveMask = false;
 		HeroCanRemoveMask = true;
 		AffintyCantGoBelowZero = true;
-		EnableLevelImageOnExpansionPlayerTag = true;
-		
+		Expansion_EnableIconOnPlayerTag = true;
+		Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
+		Expansion_HideNameOnPlayerTag = false;
+		BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+		HeroMasks = {};
 	}
 	
 }

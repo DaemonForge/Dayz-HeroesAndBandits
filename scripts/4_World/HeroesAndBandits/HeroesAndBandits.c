@@ -478,7 +478,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 //Helper function to return Config
 static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 {
-	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsSettings)
 		{
 			m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
@@ -495,7 +495,7 @@ static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 {
-	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigLevels)
 		{
 			m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
@@ -512,7 +512,7 @@ static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 {
-	if ( GetGame().IsServer() || !GetGame().IsMultiplayer()){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigActions)
 		{
 			m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;

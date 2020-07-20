@@ -15,7 +15,7 @@ modded class IngameHud
 	{
 		if (GetHeroesAndBanditsSettings())
 		{ 
-			if (GetHeroesAndBanditsSettings().EnableLevelImageOnExpansionPlayerTag)
+			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag)
 			{
 				Param2< string, string > data;
 				if ( !ctx.Read( data ) ) return;
@@ -33,7 +33,7 @@ modded class IngameHud
 	{	
 		if (GetHeroesAndBanditsSettings())
 		{ 
-			if (GetHeroesAndBanditsSettings().EnableLevelImageOnExpansionPlayerTag)
+			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag)
 			{
 		
 				if ( m_CurrentTaggedPlayer && m_CurrentTaggedPlayer.GetIdentity() )

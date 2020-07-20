@@ -18,6 +18,7 @@ class HeroesAndBanditsZone
     float MaxHumanity;
 	bool OverrideSafeZone;
 	bool GodModPlayers;
+	bool PreventWeaponRaise;
 	bool PerventActions;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
@@ -41,6 +42,7 @@ class HeroesAndBanditsZone
 		WarningMessage = zoneToLoad.WarningMessage;
 		OverrideSafeZone = zoneToLoad.OverrideSafeZone;
 		GodModPlayers = zoneToLoad.GodModPlayers;
+		PreventWeaponRaise = zoneToLoad.PreventWeaponRaise;
 		PerventActions = zoneToLoad.PerventActions;
 		Affinities = zoneToLoad.Affinities;
 		if (zoneToLoad.Guards){
@@ -93,7 +95,7 @@ class HeroesAndBanditsZone
 			}*/
 			if (validPlayer(pdata) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.habIsInZone(ZoneID, Index)){
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
-				player.enteredZone(ZoneID, Index);
+				player.habEnteredZone(ZoneID, Index);
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
@@ -105,11 +107,14 @@ class HeroesAndBanditsZone
 				{
 					player.SetAllowDamage(false);
 				}
+				if (PreventWeaponRaise &&  validPlayer(pdata)){
+					player.habSetCanRaiseWeapon(false);
+				}
 			}
 			else if (!validPlayer(pdata) && player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
 			{
 				//Player Entered Kill Zone Kill Player if warning has been given
-				player.leftZone(0); //Removed from all zones
+				player.habLeftZone(0); //Removed from all zones
 				habPrint("Killed Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") for Entering Zone: " + Name, "Always");
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
@@ -118,13 +123,16 @@ class HeroesAndBanditsZone
 				{
 					player.SetAllowDamage(true);
 				}
+				if ( PreventWeaponRaise ){
+					player.habSetCanRaiseWeapon(true);
+				}
 				FireWeaponClosestGuard(player.GetPosition());
 				player.SetHealth(0.0);
 			}
 			else if (!validPlayer(pdata) && !player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
 			{
 				//Player Entered Warning Zone Issue Warning
-				player.enteredZone(ZoneID, Index);
+				player.habEnteredZone(ZoneID, Index);
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
@@ -140,9 +148,12 @@ class HeroesAndBanditsZone
 				{
 					player.SetAllowDamage(true);
 				}
+				if ( PreventWeaponRaise ){
+					player.habSetCanRaiseWeapon(true);
+				}
 				//Player Left Warning Radius
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Name, "Verbose");
-				player.leftZone(Index);		
+				player.habLeftZone(Index);		
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}	

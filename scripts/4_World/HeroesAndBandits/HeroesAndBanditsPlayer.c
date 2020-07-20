@@ -49,7 +49,7 @@ class HeroesAndBanditsPlayer
 		habLevel tempLevel = GetHeroesAndBanditsLevels().DefaultLevel;
 		float points = 0;
 		if (GetHeroesAndBanditsSettings().Mode != 2){
-			habPrint("Tried to use command in wrong mode", "Exception");
+			habPrint("Tried to use getSecondaryLevel in wrong mode", "Exception");
 			return tempLevel;
 		} else {
 			for (int i = 0; i < Affinities.Count(); i++)

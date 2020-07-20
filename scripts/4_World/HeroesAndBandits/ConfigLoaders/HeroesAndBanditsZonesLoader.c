@@ -100,6 +100,7 @@ class habZone
 	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
+	bool PreventWeaponRaise = false;
 	bool PerventActions = false;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
