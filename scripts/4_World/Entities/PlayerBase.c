@@ -89,6 +89,11 @@ modded class PlayerBase
 				PlayerHasGodMode = true;
 			}
 		#endif
+		#ifdef VPPADMINTOOLS
+			if ( GetGame().IsServer() && hasGodmode ){
+				PlayerHasGodMode = true;
+			}
+		#endif
 		return PlayerHasGodMode;
 	}
 	
