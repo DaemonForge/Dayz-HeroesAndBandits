@@ -25,13 +25,16 @@ class HeroesAndBanditsConfigZones
 	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(HeroesAndBanditsZonesPATH, this);
 			if (ConfigVersion == "4"){
 				doV5Upgrade();
-				JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
 			}
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Zones Config", "Always");	
-			JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
+			ReSave();
 		}
+	}
+	
+	void ReSave(){
+		JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
 	}
 	
 		//Returns the warning message color in an int value
@@ -60,9 +63,19 @@ class HeroesAndBanditsConfigZones
 			if (Zones.Count() > 0){
 				for (int i = 0; Zones.Count() < i; i++){
 					Zones.Get(i).convertHumanityToAffinty();
+					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BambiNotification.paa"){
+						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
+					}
+					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/HeroNotification.paa"){
+						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Hero.paa";
+					}
+					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BanditNotification.paa"){
+						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bandit.paa";
+					}
 				}
 			}
 		}
+		ReSave();
 	}
 	
 }
@@ -83,7 +96,7 @@ class habZone
 	string WarningMessage = "";
 	bool ShowWelcomeMsg = false;
 	string WelcomeMessage = "Welcome to the Default Zone";
-	string WelcomeIcon = "HeroesAndBandits/gui/images/BambiNotification.paa";
+	string WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
 	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;

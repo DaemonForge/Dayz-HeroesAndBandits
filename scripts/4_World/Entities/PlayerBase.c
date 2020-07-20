@@ -82,6 +82,15 @@ modded class PlayerBase
 		return (m_HeroesAndBandits_InZones.Get(index) == zoneID);
 	}
 
+	bool habCheckGodMod(){
+		bool PlayerHasGodMode = false;
+		#ifdef JM_COT
+			if ( GetGame().IsServer() && m_JMHasGodMode ){
+				PlayerHasGodMode = true;
+			}
+		#endif
+		return PlayerHasGodMode;
+	}
 	
 	void enteredZone(int zoneID, int index = 0)
 	{

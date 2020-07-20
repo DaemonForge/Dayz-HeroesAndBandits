@@ -45,6 +45,29 @@ class HeroesAndBanditsPlayer
 		return tempLevel;
 	}
 	
+	habLevel getSecondaryLevel(){
+		habLevel tempLevel = GetHeroesAndBanditsLevels().DefaultLevel;
+		float points = 0;
+		if (GetHeroesAndBanditsSettings().Mode != 2){
+			habPrint("Tried to use command in wrong mode", "Exception");
+			return tempLevel;
+		} else {
+			for (int i = 0; i < Affinities.Count(); i++)
+			{
+				if (Affinities.Get(i).Name == "hero" || Affinities.Get(i).Name == "bandit"){
+				} else{
+					if ( GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points) != GetHeroesAndBanditsLevels().DefaultLevel){
+						if (Affinities.Get(i).Points > points){
+							points = Affinities.Get(i).Points;
+							tempLevel = GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points);
+						}
+					}
+				}
+			}
+		}
+		return tempLevel;
+	}
+	
 	int getLevelIndex(){
 		int index = -1;
 		float points = 0;
@@ -80,6 +103,17 @@ class HeroesAndBanditsPlayer
 		return tempAffinity;
 	}
 	
+	habAffinity getSecondaryAffinity(){
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		habLevel tempLevel = getSecondaryLevel();
+		float points = 0;
+		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
+			//habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(tempLevel.Affinity);
+		}
+		return tempAffinity;
+	}
+	
 	int getAffinityIndex(){
 		int index = -1;
 		habLevel tempLevel = getLevel();
@@ -90,6 +124,8 @@ class HeroesAndBanditsPlayer
 		}
 		return index;
 	}
+	
+	
 	
 	float getAffinityPoints( string name){
 		if (GetHeroesAndBanditsSettings().Mode != 1){

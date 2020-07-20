@@ -5,7 +5,7 @@ class HeroesAndBanditsConfigLevels
 	//Default Values
 	string ConfigVersion = "5";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
-	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/BambiNotification.paa", -1, -1);
+	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
 	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
 	ref habAffinity DefaultAffinity = new ref habAffinity("bambi", "#HAB_BAMBI");
 	
@@ -165,6 +165,9 @@ class HeroesAndBanditsConfigLevels
 		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
 		getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
 		DefaultAffinity.addItemBlackList(-1, -1, "all", banditOnlyItems);
+		getAffinity("hero").Image = "HeroesAndBandits/gui/images/Hero.paa";
+		getAffinity("bandit").Image = "HeroesAndBandits/gui/images/Bandit.paa";
+		DefaultAffinity.Image = "HeroesAndBandits/gui/images/Bambi.paa";
 		ReSave();
 	}
 }
@@ -195,6 +198,7 @@ class habAffinity
 {
 	string Name;
 	string DisplayName;
+	string Image;
 	ref array< ref habItemList > ItemBlackList = new ref array< ref habItemList >;
 
 	void habAffinity(string name, string displayName) 

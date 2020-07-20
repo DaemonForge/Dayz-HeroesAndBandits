@@ -29,44 +29,37 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 		m_Raid			= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABRaid" ) );
 		m_Hunts			= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABHunt" ) );
 		m_Sucides		= RichTextWidget.Cast( layoutRoot.FindAnyWidget( "HABSucides" ) );
-		//Print("[HeroesAndBandits] [DebugClient] Init Panel ");
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsPlayer.getLevel().LevelImage , true );
-		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsPlayer.getLevel().LevelImage);
 		
 		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
 
 		m_Affinity.SetText("#HAB_AFFINITY: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		
 		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsPlayer.getLevel().Name);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsLevel.Name);
 		
-		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
-		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
+		if (GetHeroesAndBanditsSettings().Mode != 1){
+			m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
+		} else { // Temp fix till I can get it translated
+			m_Humanity.SetText("#HAB_AFFINITY Points: " + g_HeroesAndBanditsPlayer.getHumanity());
+		}
 		
 		if ( !GetHeroesAndBanditsSettings().HideKillsInGUI )
 		{
 			m_PlayerKills.SetText("#HAB_PLAYERKILLS: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
-			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 		} else {
 			m_PlayerKills.SetText(" ");
 			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 		}
 		
 		m_ZombieKills.SetText("#HAB_ZOMBIEKILLS: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting ZombieKill: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
 		
 		m_Medic.SetText("#HAB_MEDIC: " + g_HeroesAndBanditsPlayer.getStat("Medic"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Medic: " +  g_HeroesAndBanditsPlayer.getStat("Medic"));
 		
 		m_Raid.SetText("#HAB_RAID: " + g_HeroesAndBanditsPlayer.getStat("Raid"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Raid: " +  g_HeroesAndBanditsPlayer.getStat("Raid"));
 		
 		m_Hunts.SetText("#HAB_HUNTS: " + g_HeroesAndBanditsPlayer.getStat("Hunt"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Hunt: " +  g_HeroesAndBanditsPlayer.getStat("Hunt"));
 		
 		m_Sucides.SetText("#HAB_SUCIDES: " + g_HeroesAndBanditsPlayer.getStat("Sucide"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Sucide: " +  g_HeroesAndBanditsPlayer.getStat("Sucide"));
 		
         return layoutRoot; 
     }
@@ -74,44 +67,36 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 
 	void updateData()
 	{
-		//Print("[HeroesAndBandits] [DebugClient] Update Panel ");
 		m_LevelImage.LoadImageFile( 0, g_HeroesAndBanditsPlayer.getLevel().LevelImage , true );
 		
-		//Print("[HeroesAndBandits] [DebugClient] Loading Image: " + g_HeroesAndBanditsPlayer.getLevel().LevelImage);
 		m_Heading.SetText(GetHeroesAndBanditsSettings().GUIHeading);
 		
 		m_Affinity.SetText("#HAB_AFFINITY: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Affinity: " + g_HeroesAndBanditsPlayer.getAffinity().DisplayName);
 		
 		m_LevelName.SetText("#HAB_LEVEL: " + g_HeroesAndBanditsPlayer.getLevel().Name);
-		//Print("[HeroesAndBandits] [DebugClient] Setting Level Name: " + g_HeroesAndBanditsPlayer.getLevel().Name);
 		
-		m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
-		//Print("[HeroesAndBandits] [DebugClient] Setting Humanity: " + g_HeroesAndBanditsPlayer.getHumanity());
+		if (GetHeroesAndBanditsSettings().Mode != 1){
+			m_Humanity.SetText("#HAB_HUMANITY: " + g_HeroesAndBanditsPlayer.getHumanity());
+		} else { // Temp fix till I can get it translated
+			m_Humanity.SetText("#HAB_AFFINITY Points: " + g_HeroesAndBanditsPlayer.getHumanity());
+		}
 		
 		if ( !GetHeroesAndBanditsSettings().HideKillsInGUI )
 		{
 			m_PlayerKills.SetText("#HAB_PLAYERKILLS: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
-			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 		} else {
 			m_PlayerKills.SetText(" ");
-			//Print("[HeroesAndBandits] [DebugClient] Setting Player Kills: " + g_HeroesAndBanditsPlayer.getStat("Kill"));
 		}
 		
 		m_ZombieKills.SetText("#HAB_ZOMBIEKILLS: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting ZombieKill: " + g_HeroesAndBanditsPlayer.getStat("ZombieKill"));
 		
-		m_Medic.SetText("#HAB_MEDIC: " + g_HeroesAndBanditsPlayer.getStat("Medic"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Medic: " +  g_HeroesAndBanditsPlayer.getStat("Medic"));
+		m_Medic.SetText("#HAB_MEDIC_ACTIONS: " + g_HeroesAndBanditsPlayer.getStat("Medic"));
 		
 		m_Raid.SetText("#HAB_RAID: " + g_HeroesAndBanditsPlayer.getStat("Raid"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Raid: " +  g_HeroesAndBanditsPlayer.getStat("Raid"));
 		
 		m_Hunts.SetText("#HAB_HUNTS: " + g_HeroesAndBanditsPlayer.getStat("Hunt"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Hunt: " +  g_HeroesAndBanditsPlayer.getStat("Hunt"));
 		
 		m_Sucides.SetText("#HAB_SUCIDES: " + g_HeroesAndBanditsPlayer.getStat("Sucide"));
-		//Print("[HeroesAndBandits] [DebugClient] Setting Sucide: " +  g_HeroesAndBanditsPlayer.getStat("Sucide"));
 	}
 	
 	

@@ -114,13 +114,7 @@ class HeroesAndBanditsZone
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
-				bool PlayerHasGodMode = false;
-				#ifdef JM_COT
-					if ( player.HasGodMode() ){
-						PlayerHasGodMode = true;
-					}
-				#endif
-				if ( OverrideSafeZone && !PlayerHasGodMode )
+				if ( OverrideSafeZone && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(true);
 				}
@@ -200,6 +194,7 @@ class HeroesAndBanditsZone
 			}
 		} 
 		if (GetHeroesAndBanditsSettings().Mode != 0 && Affinities.Count() > 0){
+			bool DefaultAffinty = false;
 			for (int j = 0; j < pdata.Affinities.Count(); j++){
 				if ( ( pdata.Affinities.Get(j).Name == "bandit" || pdata.Affinities.Get(j).Name == "hero" ) && GetHeroesAndBanditsSettings().Mode == 2 ){
 					//Skipping for Hero and Bandit as it was checked above if in mixed mode
@@ -207,9 +202,15 @@ class HeroesAndBanditsZone
 					for (int k = 0; k < Affinities.Count(); k++){
 						if ( Affinities.Get(i).Check(pdata.Affinities.Get(j).Points,  pdata.Affinities.Get(j).Name)){
 							return true;
+						} else if (Affinities.Get(i).Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name){
+							DefaultAffinty = true;
 						}
 					}
 				}
+			}
+			if (DefaultAffinty && pdata.getAffinity() == GetHeroesAndBanditsLevels().DefaultAffinity)
+			{
+				return true;
 			}
 		}
 		return false;
