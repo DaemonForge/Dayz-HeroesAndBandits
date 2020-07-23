@@ -115,6 +115,10 @@ class HeroesAndBanditsConfigActions
 			addAction( "ExpansionSafeLargeRaid", "bandit", "none", 200);
 		#endif
 		
+		#ifdef EXPANSIONCODELOCKEXPANDED
+			addAction( "ExpansionCodeLockTentRaid", "bandit", "none", 150);
+		#endif
+		
 		addAction( "MedicBandagePlayer", "hero", "medic", 50);
 		addAction( "MedicGiveBlood", "hero", "medic",25);
 		addAction( "MedicGiveSaline", "hero","medic", 25);
