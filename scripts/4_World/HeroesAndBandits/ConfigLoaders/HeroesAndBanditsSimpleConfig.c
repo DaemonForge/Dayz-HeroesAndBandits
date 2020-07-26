@@ -13,7 +13,7 @@ class HeroesAndBanditsSimpleConfig
 	bool BanditCanRemoveMask = false;
 	ref TStringArray BanditOnlyMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
 	bool HeroCanRemoveMask = true;
-	ref TStringArray BanditOnlyMasks = {};
+	ref TStringArray HeroOnlyMasks = {};
 	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
@@ -59,61 +59,61 @@ class HeroesAndBanditsSimpleConfig
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv3", 12001));
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv2", 4001));
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv1", 1001));
-		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv1", -1001);
-		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv2", -4001);
-		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv3", -12001);
-		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv4", -20001);
-		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv5", -50001);
+		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv1", -1001));
+		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv2", -4001));
+		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv3", -12001));
+		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv4", -20001));
+		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv5", -50001));
 		
-		Actions.Insert(new ref HABSimpleAction( "ZombieKill", 5);
-		Actions.Insert(new ref HABSimpleAction( "heroSucide", -100);
-		Actions.Insert(new ref HABSimpleAction( "banditSucide", 100);
-		Actions.Insert(new ref HABSimpleAction( "heroVshero", -150);
-		Actions.Insert(new ref HABSimpleAction( "heroVsbambi", -300);
-		Actions.Insert(new ref HABSimpleAction( "heroVsbandit", 250);
-		Actions.Insert(new ref HABSimpleAction( "banditVshero", -250);
-		Actions.Insert(new ref HABSimpleAction( "banditVsbambi", -125);
-		Actions.Insert(new ref HABSimpleAction( "banditVsbandit", -150);
-		Actions.Insert(new ref HABSimpleAction( "bambiVshero", -250);
-		Actions.Insert(new ref HABSimpleAction( "bambiVsbambi", -100);
-		Actions.Insert(new ref HABSimpleAction( "bambiVsbandit",300);
-		Actions.Insert(new ref HABSimpleAction( "CombinationLockRaid", -150);
-		Actions.Insert(new ref HABSimpleAction( "FencePartRaid", -50);
-		Actions.Insert(new ref HABSimpleAction( "WatchtowerPartRaid", -30);
+		Actions.Insert(new ref HABSimpleAction( "ZombieKill", 5));
+		Actions.Insert(new ref HABSimpleAction( "heroSucide", -100));
+		Actions.Insert(new ref HABSimpleAction( "banditSucide", 100));
+		Actions.Insert(new ref HABSimpleAction( "heroVshero", -150));
+		Actions.Insert(new ref HABSimpleAction( "heroVsbambi", -300));
+		Actions.Insert(new ref HABSimpleAction( "heroVsbandit", 250));
+		Actions.Insert(new ref HABSimpleAction( "banditVshero", -250));
+		Actions.Insert(new ref HABSimpleAction( "banditVsbambi", -125));
+		Actions.Insert(new ref HABSimpleAction( "banditVsbandit", -150));
+		Actions.Insert(new ref HABSimpleAction( "bambiVshero", -250));
+		Actions.Insert(new ref HABSimpleAction( "bambiVsbambi", -100));
+		Actions.Insert(new ref HABSimpleAction( "bambiVsbandit",300));
+		Actions.Insert(new ref HABSimpleAction( "CombinationLockRaid", -150));
+		Actions.Insert(new ref HABSimpleAction( "FencePartRaid", -50));
+		Actions.Insert(new ref HABSimpleAction( "WatchtowerPartRaid", -30));
 		#ifdef EXPANSIONMOD
-			Actions.Insert(new ref HABSimpleAction( "ExpansionWall6x3Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionRamp6x1_5x6Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionRamp3x1_5x6Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionStairS1_5x3x3Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_6x6Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_3x3Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_3x6Raid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeMiniRaid", -100);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeMediumRaid", -150);
-			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeLargeRaid", -200);
+			Actions.Insert(new ref HABSimpleAction( "ExpansionWall6x3Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionRamp6x1_5x6Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionRamp3x1_5x6Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionStairS1_5x3x3Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_6x6Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_3x3Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionFloor_3x6Raid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeMiniRaid", -100));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeMediumRaid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionSafeLargeRaid", -200));
 		#endif
 		
 		#ifdef EXPANSIONCODELOCKEXPANDED
 			Actions.Insert(new ref HABSimpleAction( "ExpansionCodeLockTentRaid", -150));
 		#endif
 		
-		Actions.Insert(new ref HABSimpleAction( "MedicBandagePlayer", 50);
-		Actions.Insert(new ref HABSimpleAction( "MedicGiveBlood", 25);
-		Actions.Insert(new ref HABSimpleAction( "MedicGiveSaline", 25);
-		Actions.Insert(new ref HABSimpleAction( "MedicGiveCPR", 75);
-		Actions.Insert(new ref HABSimpleAction( "MedicFeedTetracycline", 15);
-		Actions.Insert(new ref HABSimpleAction( "MedicFeedPainkiller", 15);
-		Actions.Insert(new ref HABSimpleAction( "MedicFeedCharcoal", 15);
-		Actions.Insert(new ref HABSimpleAction( "MedicFeedVitamin", 10);
-		Zones.Insert(new ref HABSimpleZones( "Default Zone", 11250, 4300, 60);
+		Actions.Insert(new ref HABSimpleAction( "MedicBandagePlayer", 50));
+		Actions.Insert(new ref HABSimpleAction( "MedicGiveBlood", 25));
+		Actions.Insert(new ref HABSimpleAction( "MedicGiveSaline", 25));
+		Actions.Insert(new ref HABSimpleAction( "MedicGiveCPR", 75));
+		Actions.Insert(new ref HABSimpleAction( "MedicFeedTetracycline", 15));
+		Actions.Insert(new ref HABSimpleAction( "MedicFeedPainkiller", 15));
+		Actions.Insert(new ref HABSimpleAction( "MedicFeedCharcoal", 15));
+		Actions.Insert(new ref HABSimpleAction( "MedicFeedVitamin", 10));
+		Zones.Insert(new ref HABSimpleZones( "Default Zone", 11250, 4300, 60));
 	}
 	
 }
 
-class HABSimpleLevel{
+class HABSimpleLevel {
 	string Name;
 	float Humanity;
-	HABSimpleLevel(string name, float humanity){
+	void HABSimpleLevel(string name, float humanity){
 		Name = name;
 		Humanity = humanity;
 	}
@@ -122,7 +122,7 @@ class HABSimpleLevel{
 class HABSimpleAction{
 	string Name;
 	float Humanity;
-	HABSimpleAction(string name, float humanity){
+	void HABSimpleAction(string name, float humanity){
 		Name = name;
 		Humanity = humanity;
 	}
@@ -142,7 +142,7 @@ class HABSimpleZones{
 	bool PreventWeaponRaise = true;
 	bool PerventActions = true;
 	
-	HABSimpleZones(string name, float x, float y, float radius){
+	void HABSimpleZones(string name, float x, float y, float radius){
 		Name = name;
 		X = x;
 		Z = y;

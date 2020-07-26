@@ -4,7 +4,7 @@ modded class IngameHud
 {
 	string 						m_CurrentTaggedPlayer_HABicon = "";
 	string 						m_CurrentTaggedPlayer_LastRequested = "";
-	protected ImageWidget		m_PlayerTagHABIcon;
+	protected  ImageWidget		m_PlayerTagHABIcon;
 	
 	void IngameHud()
 	{

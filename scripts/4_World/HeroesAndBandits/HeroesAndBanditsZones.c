@@ -103,7 +103,7 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WelcomePlayer(Name, WelcomeMessage, WelcomeIcon, player.GetIdentity().GetPlainId(), WelcomeMessageColor);
 				}
-				if ( GodModPlayers && validPlayer(pdata))
+				if ( GodModPlayers && validPlayer(pdata) && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(false);
 				}
@@ -144,7 +144,7 @@ class HeroesAndBanditsZone
 			}
 			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))
 			{
-				if ( GodModPlayers )
+				if ( GodModPlayers  && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(true);
 				}

@@ -98,6 +98,11 @@ modded class PlayerBase
 				PlayerHasGodMode = true;
 			}
 		#endif
+		#ifdef ZOMBERRY_AT
+			if ( GetGame().IsServer() && ZBGodMode ){
+				PlayerHasGodMode = true;
+			}
+		#endif
 		return PlayerHasGodMode;
 	}
 	
@@ -118,7 +123,6 @@ modded class PlayerBase
 	{
 		super.OnVariablesSynchronized();
 		
-
 		if ( !m_HeroesAndBandits_CanRaiseWeaponSync && m_HeroesAndBandits_CanRaiseWeapon )
 		{
 			habPreventRaiseWeapon();
