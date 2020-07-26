@@ -28,9 +28,13 @@ class HeroesAndBanditsSettings
 	bool HideKillsInGUI = false;
 	
 	bool BanditCanRemoveMask = false;
+	bool BanditCanRemoveArmBand = true;
 	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	ref TStringArray BanditArmBads = {};
 	bool HeroCanRemoveMask = true;
+	bool HeroCanRemoveArmBand = true;
 	ref TStringArray HeroMasks = {};
+	ref TStringArray HeroArmBands = {};
 	
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;
