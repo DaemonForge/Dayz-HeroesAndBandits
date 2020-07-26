@@ -422,6 +422,20 @@ modded class PlayerBase
 				}
 			}
 		}
+		ClothingBase armband = ClothingBase.Cast(GetInventory().FindAttachment(InventorySlots.ARMBAND));
+		if (armband){
+			if (attachment == armband){
+				if (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit"){
+					habPrint("CanReleaseAttachment Item Blocked - "  + attachment.GetType(), "Debug");
+					return false;
+				}
+				if (!GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "hero"){
+					habPrint("CanReleaseAttachment Item Blocked - "  + attachment.GetType(), "Debug");
+					return false;
+				}
+			}
+		}
+
 		return super.CanReleaseAttachment(attachment);
 	}
 	
