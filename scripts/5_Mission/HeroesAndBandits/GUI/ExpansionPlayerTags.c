@@ -15,13 +15,12 @@ modded class IngameHud
 	{
 		if (GetHeroesAndBanditsSettings())
 		{ 
-			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag)
+			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag && m_PlayerTag && m_PlayerTagIcon)
 			{
 				Param2< string, string > data;
 				if ( !ctx.Read( data ) ) return;
 			        m_CurrentTaggedPlayer_HABicon = data.param1;
-					m_PlayerTagHABIcon.LoadImageFile( 0, m_CurrentTaggedPlayer_HABicon, true );
-					m_PlayerTagHABIcon.SetSize(32, 32);
+					m_PlayerTagIcon.LoadImageFile( 0, m_CurrentTaggedPlayer_HABicon, true );	
 			}
 		}
 	}
@@ -35,52 +34,24 @@ modded class IngameHud
 		{ 
 			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag)
 			{
-		
-				if ( m_CurrentTaggedPlayer && m_CurrentTaggedPlayer.GetIdentity() )
+				if ( m_PlayerTag && m_CurrentTaggedPlayer && m_CurrentTaggedPlayer.GetIdentity() )
 				{ 
 					if ( m_CurrentTaggedPlayer.GetIdentityName() != m_CurrentTaggedPlayer_LastRequested){ //perventing icon from being grabbed too manytimes
 						GetRPCManager().SendRPC("HaB", "RPCRequestHABIcon", new Param1< string >( m_CurrentTaggedPlayer.GetIdentityName() ), true);
 						m_CurrentTaggedPlayer_LastRequested = m_CurrentTaggedPlayer.GetIdentityName();
 					}
-						if ( !m_PlayerTag )
-						{
-							m_PlayerTag = GetGame().GetWorkspace().CreateWidgets("DayZExpansion/GUI/layouts/hud/expansion_hud_player_tag.layout");
-							m_PlayerTagText = TextWidget.Cast( m_PlayerTag.FindAnyWidget( "TagText" ) );	
-						}
-						m_PlayerTagHABIcon = ImageWidget.Cast( m_PlayerTag.FindAnyWidget( "TagIcon" ) );
-						m_PlayerTagHABIcon.SetSize(32, 32);
-						super.ShowPlayerTag( timeslice );
-						m_PlayerSpineIndex = m_CurrentTaggedPlayer.GetBoneIndex( "Spine2" );
-						vector player_pos = m_CurrentTaggedPlayer.GetBonePositionWS( m_PlayerSpineIndex );
-						vector screen_pos = GetGame().GetScreenPosRelative( player_pos );
-						
-						if ( screen_pos[2] > 0 )
-						{
-							if ( screen_pos[0] > 0 && screen_pos[0] < 1 )
-							{
-								if ( screen_pos[1] > 0 && screen_pos[1] < 1 )
-								{
-									m_PlayerTagHABIcon.SetAlpha( Math.Clamp( m_PlayerTagHABIcon.GetAlpha() + timeslice * 10, 0, 1 ) );
-									return;
-								}
-							}
-						}
-				} 
-				
-				if ( m_PlayerTag ) {
-					float new_alpha = Math.Clamp( m_PlayerTagHABIcon.GetAlpha() - timeslice * 10, 0, 1 );
-					m_PlayerTagHABIcon.SetAlpha( Math.Clamp( m_PlayerTagHABIcon.GetAlpha() - timeslice * 10, 0, 1 ) );
-					if ( new_alpha == 0 )
-					{
-						m_PlayerTagHABIcon.SetSize(0, 0);
-						m_CurrentTaggedPlayer_HABicon = "";
-						m_CurrentTaggedPlayer_LastRequested = "";
-					}
-					
 				}
 			}
 		}
 		super.ShowPlayerTag( timeslice );
+		if (GetHeroesAndBanditsSettings() && m_PlayerTagText){}
+			if (GetHeroesAndBanditsSettings().Expansion_HideNameOnPlayerTag){
+				m_PlayerTagText.SetText( "" );
+			}
+		}
+		if (m_CurrentTaggedPlayer == null){
+			m_CurrentTaggedPlayer_LastRequested = "";
+		}
 	}
 }
 #endif

@@ -20,9 +20,9 @@
 			}
 		}
 	
-		override void Trigger()
+		override void TriggerExplosion()
 		{
-			super.Trigger();
+			super.TriggerExplosion();
 			if (hab_ActivatedByID)
 			{
 				ref array<Object> objects = new array<Object>;
