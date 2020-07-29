@@ -63,9 +63,15 @@ modded class MissionServer
         string playerName = data.param1;
 		if ( playerName != "" ){
 			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByName(playerName));
-			string imageIcon = GetHeroesAndBanditsLevels().Affinities.Get(player.habGetAffinityIndex()).Image;
+			string imageIcon = GetHeroesAndBanditsLevels().DefaultAffinity.Image;
+			if (player.habGetAffinityIndex() != -1){
+				imageIcon = GetHeroesAndBanditsLevels().Affinities.Get(player.habGetAffinityIndex()).Image;
+			}
 			if ( GetHeroesAndBanditsSettings().Expansion_ImageTypePlayerTag == 1 ){
-				imageIcon = GetHeroesAndBanditsLevels().Levels.Get(player.habGetLevelIndex()).LevelImage;
+				imageIcon = GetHeroesAndBanditsLevels().DefaultLevel.LevelImage;
+				if (player.habGetAffinityIndex() != -1){
+					imageIcon =  GetHeroesAndBanditsLevels().Levels.Get(player.habGetLevelIndex()).LevelImage;
+				}
 			}
 			GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( imageIcon, playerName ), true, sender);
 		}

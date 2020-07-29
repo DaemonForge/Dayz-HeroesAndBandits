@@ -3,13 +3,24 @@ modded class PlayerBase
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;
 	
+	private int  m_HeroesAndBandits_CanRaiseWeaponIndex = -1;
 	private bool  m_HeroesAndBandits_CanRaiseWeaponSync = true;
 	private bool  m_HeroesAndBandits_CanRaiseWeapon = true;
+	
+	private int  m_HeroesAndBandits_AIHitSync = 0;
+	private int  m_HeroesAndBandits_AIHit = 0;
+	
+	private bool  m_HeroesAndBandits_AIRaiseWeaponSync = false;
+	private bool  m_HeroesAndBandits_AIRaiseWeapon = false;
 	
 	private int m_HeroesAndBandits_AffinityIndex = -1;
 	private float m_HeroesAndBandits_AffinityPoints = 0;
 	private bool m_HeroesAndBandits_DataLoaded = false;
 	private int m_HeroesAndBandits_LevelIndex = -1;
+	
+	private bool m_HeroesAndBandits_KilledByZone = false;
+	private string m_HeroesAndBandits_KilledByZoneName = "";
+	private string m_HeroesAndBandits_KilledByGun = "";
 	
 	override void Init()
 	{
@@ -20,6 +31,9 @@ modded class PlayerBase
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_AffinityPoints");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_LevelIndex");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_DataLoaded");
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_AIRaiseWeaponSync");
+		RegisterNetSyncVariableInt("m_HeroesAndBandits_AIHitSync");
+		RegisterNetSyncVariableInt("m_HeroesAndBandits_KilledByZone");
 	}
 	
 	override void OnSelectPlayer()
@@ -112,11 +126,16 @@ modded class PlayerBase
 		return m_HeroesAndBandits_CanRaiseWeapon;
 	}
 	
-	void habSetCanRaiseWeapon( bool canRaiseWeapon ){
+	void habSetCanRaiseWeapon( bool canRaiseWeapon, int index = 0){
 		if (GetGame().IsServer()){
+			m_HeroesAndBandits_CanRaiseWeaponIndex = index;
 			m_HeroesAndBandits_CanRaiseWeaponSync = canRaiseWeapon;
 			SetSynchDirty();
 		}
+	}
+	
+	bool habIsKilledByZone(){
+		return m_HeroesAndBandits_KilledByZone;
 	}
 	
 	override void OnVariablesSynchronized()
@@ -131,6 +150,20 @@ modded class PlayerBase
 		{
 			habAllowRaiseWeapon();
 		}
+		
+		if ( !m_HeroesAndBandits_AIRaiseWeaponSync && m_HeroesAndBandits_AIRaiseWeapon )
+		{
+			habAILowerWeapon();
+		} 
+		else if ( m_HeroesAndBandits_AIRaiseWeaponSync && !m_HeroesAndBandits_AIRaiseWeapon )
+		{
+			habAIRaiseWeapon();
+		}
+		
+		if ( m_HeroesAndBandits_AIHitSync != m_HeroesAndBandits_AIHit){
+			habHitByAIClient( 6.0 );
+		}
+		
 	}
 	
 	void habPreventRaiseWeapon(){
@@ -144,7 +177,7 @@ modded class PlayerBase
 		GetInputController().OverrideRaise( false, false );
 		GetInputController().OverrideMeleeEvade( false, false );
 	}
-	
+		
 	void habEnteredZone(int zoneID, int index = 0)
 	{
 		int maxIndex =  m_HeroesAndBandits_InZones.Count() - 1;
@@ -180,6 +213,10 @@ modded class PlayerBase
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				m_HeroesAndBandits_InZones.Debug();
 			}
+		}
+		
+		if (m_HeroesAndBandits_CanRaiseWeaponIndex >= index){
+			habSetCanRaiseWeapon( true, -1);
 		}
 	}
 	
@@ -256,11 +293,13 @@ modded class PlayerBase
 				}
 
 				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
-				if (sourcePlayerID == targetPlayerID){ //Sucide
+				if (m_HeroesAndBandits_KilledByZone){
+					   GetHeroesAndBandits().TriggerKillFeed(m_HeroesAndBandits_KilledByZoneName, targetPlayerID, m_HeroesAndBandits_KilledByGun);
+				} else if (sourcePlayerID == targetPlayerID){ //Sucide
 					if ( targetPlayer && !targetPlayer.IsInVehicle() ){//If not in Vehicle Crash
 						GetHeroesAndBandits().NewPlayerAction(targetPlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(targetPlayerID);
-					}
+					} 
 				}else {
 					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
 					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
@@ -303,6 +342,46 @@ modded class PlayerBase
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 
+	void habHitByAI(string zoneName, float dmg, HeroesAndBanditsGuard source, string dmgZone, string ammo, string zoneImage = "")
+	{	
+		if (GetIdentity()){
+			habPrint(GetIdentity().GetName() + " hit by " + ammo + " from " + zoneName + " for " + dmg + " damage", "Debug");
+		}	
+		int bleed = Math.RandomInt(0,100);
+		if ( dmg > 5 && GetBleedingManagerServer() && bleed < 20)
+		{
+			TStringArray bleedingSources = {"LeftForeArmRoll","RightFoot","LeftFoot","RightForeArmRoll","Neck","Spine2","Head"};
+			GetBleedingManagerServer().AttemptAddBleedingSourceBySelection(bleedingSources.GetRandomElement());
+		}
+		
+		if( m_ActionManager )
+			m_ActionManager.Interrupt();
+		
+		m_HeroesAndBandits_AIHitSync++;
+		m_HeroesAndBandits_AIHit = m_HeroesAndBandits_AIHitSync;
+		if (dmg > 30){
+			SendSoundEvent(EPlayerSoundEventID.TAKING_DMG_HEAVY);
+		} else {
+			SendSoundEvent(EPlayerSoundEventID.TAKING_DMG_LIGHT);
+		}
+		AddHealth("","Health",-dmg);
+		if (!IsAlive()){
+			m_HeroesAndBandits_KilledByZone = true;
+			m_HeroesAndBandits_KilledByZoneName = zoneName;
+			m_HeroesAndBandits_KilledByGun = "#HAB_KILLFEED_PRE " + source.GetWeaponName();
+		}
+		SetSynchDirty();
+	}
+	
+	void habHitByAIClient( float dmg ){
+		habPrint("Calling habHitByAIClient dmg is " + dmg, "Debug");
+		m_HeroesAndBandits_AIHit = m_HeroesAndBandits_AIHitSync;
+		if (dmg > 33){
+			RequestSoundEvent(EPlayerSoundEventID.TAKING_DMG_HEAVY, true );
+		} else {
+			RequestSoundEvent(EPlayerSoundEventID.TAKING_DMG_LIGHT, true );
+		}
+	}
 	
 	// making a safe way to grab the player withing the player class
 	HeroesAndBanditsPlayer GetHaBPlayer()
@@ -479,4 +558,37 @@ modded class PlayerBase
 		return false;
 	}
 
+	
+	void habAILowerWeaponServer(){
+		habPrint("habAILowerWeaponServer called", "Debug");
+		m_HeroesAndBandits_AIRaiseWeaponSync = false;
+		m_HeroesAndBandits_AIRaiseWeapon = false;
+		GetInputController().OverrideRaise( true, false );
+		SetSynchDirty();
+	}
+	
+	void habAILowerWeapon(){
+		habPrint("habAILowerWeapon called", "Debug");
+		m_HeroesAndBandits_AIRaiseWeapon = false;
+		GetInputController().OverrideRaise( true, false );
+	}
+	
+	void habAIRaiseWeaponServer(){
+		habPrint("habAIRaiseWeaponServer called", "Debug");
+		m_HeroesAndBandits_AIRaiseWeaponSync = true;
+		m_HeroesAndBandits_AIRaiseWeapon = true;
+		GetInputController().OverrideRaise( true, true );
+		SetSynchDirty();
+	}
+	
+	void habAIRaiseWeapon(){
+		habPrint("habAIRaiseWeapon called", "Debug");
+		m_HeroesAndBandits_AIRaiseWeapon = true;
+		GetInputController().OverrideRaise( true, true );
+	}
+	
+	void habAIAimWeapon(float x, float y){
+		GetInputController().OverrideAimChangeX(true, x);
+		GetInputController().OverrideAimChangeY(true, y);
+	}
 }

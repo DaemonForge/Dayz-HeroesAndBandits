@@ -241,6 +241,9 @@ class habGuard
 	string WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
 	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
 	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
+	string GunSound = "M4_Shot_SoundSet";
+	float DamagePerTick = 15;
+	float GunTickMulitplier = 2.0;
 
 	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "") 
 	{

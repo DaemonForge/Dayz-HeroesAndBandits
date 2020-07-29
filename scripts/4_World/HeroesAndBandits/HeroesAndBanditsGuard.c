@@ -10,6 +10,9 @@ class HeroesAndBanditsGuard
 	string WeaponInHandsMag;
 	ref TStringArray WeaponInHandsAttachments;
 	ref TStringArray GuardGear;
+	string GunSound;
+	float DamagePerTick;
+	float GunTickMulitplier;
 
     void HeroesAndBanditsGuard(float x, float y, float z, float orientation, string skin, string weaponInHands, string weaponInHandsMag, TStringArray weaponInHandsAttachments, TStringArray guardGear) 
 	{
@@ -69,9 +72,19 @@ class HeroesAndBanditsGuard
 			weaponInHands.AttachMagazine(weaponInHands.GetCurrentMuzzle(), Magazine.Cast(mag));
 			habPrint("pushToChamberFromAttachedMagazine", "Debug");
 			pushToChamberFromAttachedMagazine( weaponInHands, weaponInHands.GetCurrentMuzzle() );
-
 		}
 	}
+	
+	
+	void RaiseWeapon()
+	{
+		habPrint("Raise Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
+		if (Guard)
+		{
+			Guard.habAIRaiseWeaponServer();
+		}
+	}
+	
 	
 	void ReloadWeaponTest()
 	{
@@ -93,12 +106,36 @@ class HeroesAndBanditsGuard
 		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		if (weaponInHands.IsWeapon())
 		{
+			GetRPCManager().SendRPC("HaB", "RPCPlayGunShotSound", new Param2< string, vector >( "AK_Shot_SoundSet", GetPosition() ), false);
+			//GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLaterByName(this, "SendTailSound", 50, false);
 			WeaponManager(PlayerBase.Cast(Guard)).Fire(Weapon_Base.Cast(weaponInHands));
 		}
+	}
+	
+	void SendTailSound(){
+		GetRPCManager().SendRPC("HaB", "RPCPlayGunShotSound", new Param2< string, vector >( "AK_Tail_SoundSet", GetPosition() ), false);	
 	}
 
 	vector getVector(){
 		return Vector( X, Y, Z );
+	}
+	
+	vector GetPosition(){
+		return Vector( X, Y, Z );
+	}
+	
+	void SetOrientation(vector new_Orientation){
+		habPrint("Rotating Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " to " + new_Orientation, "Debug");	
+		Guard.SetOrientation(new_Orientation);
+	}
+	
+	string GetWeaponName(){
+		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
+		string weaponName = "";
+		if (weaponInHands){
+			weaponName = weaponInHands.GetDisplayName();
+		}
+		return weaponName;
 	}
 }
 

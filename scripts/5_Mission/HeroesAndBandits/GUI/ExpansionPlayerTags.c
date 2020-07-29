@@ -19,6 +19,7 @@ modded class IngameHud
 			{
 				Param2< string, string > data;
 				if ( !ctx.Read( data ) ) return;
+					habPrint("Icon for " + data.param2 + " icon " + data.param1 , "Debug");
 			        m_CurrentTaggedPlayer_HABicon = data.param1;
 					m_PlayerTagIcon.LoadImageFile( 0, m_CurrentTaggedPlayer_HABicon, true );	
 			}
@@ -44,7 +45,7 @@ modded class IngameHud
 			}
 		}
 		super.ShowPlayerTag( timeslice );
-		if (GetHeroesAndBanditsSettings() && m_PlayerTagText){}
+		if (GetHeroesAndBanditsSettings() && m_PlayerTagText){
 			if (GetHeroesAndBanditsSettings().Expansion_HideNameOnPlayerTag){
 				m_PlayerTagText.SetText( "" );
 			}

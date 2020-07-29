@@ -175,7 +175,7 @@ class HeroesAndBandits
 		}
 	}
 	
-	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName){
+	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName, string zoneImage = ""){
 		habPrint("Kill Feed Player: " + sourcePlayerID +" killed " + targetPlayerID + " with " + weaponName , "Debug");
 		if (GetHeroesAndBanditsSettings().KillFeed){
 			PlayerBase sourcePlayer = PlayerBase.Cast(habGetPlayerBaseByID(sourcePlayerID));
@@ -186,6 +186,15 @@ class HeroesAndBandits
 				float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
 				string message = "#HAB_KILLFEED_PRE " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
 				NotifyKillFeed(levelImage, message);
+			} else if ( targetPlayer ){
+				if (targetPlayer.habIsKilledByZone()){
+					string message2 = "#HAB_KILLFEED_PRE Guard From " + sourcePlayerID + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName ;
+					if ( zoneImage == "" )
+					{
+						zoneImage = GetHeroesAndBanditsZones().WarningMessageImagePath;
+					}
+					NotifyKillFeed(zoneImage, message2);
+				}
 			}
 		}
 	}

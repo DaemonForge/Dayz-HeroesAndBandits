@@ -17,6 +17,7 @@ modded class MissionGameplay
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABSettings", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABPlayerData", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCPlayGunShotSound", this, SingeplayerExecutionType.Both );
 	}
 	
 	void InitHabIcon(){
@@ -59,6 +60,15 @@ modded class MissionGameplay
 			}
 		}
 
+	}
+	
+	void RPCPlayGunShotSound( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		Param2< string, vector > data;
+		if ( !ctx.Read( data ) ) return;
+		string GunShot_Sound = data.param1;	
+		vector GunShot_Position = data.param2;
+		SEffectManager.PlaySound( GunShot_Sound, GunShot_Position);
 	}
 	
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )

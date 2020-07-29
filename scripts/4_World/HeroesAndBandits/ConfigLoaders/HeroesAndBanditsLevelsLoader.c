@@ -7,7 +7,7 @@ class HeroesAndBanditsConfigLevels
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
 	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
-	ref habAffinity DefaultAffinity = new ref habAffinity("bambi", "#HAB_BAMBI");
+	ref habAffinity DefaultAffinity = new ref habAffinity("bambi", "#HAB_BAMBI", "HeroesAndBandits/gui/images/Bambi.paa");
 	
 	bool ShowLevelIcon = true;
 	int  LevelIconLocation = 2;
@@ -122,8 +122,8 @@ class HeroesAndBanditsConfigLevels
 	}	
 	
 	//Helper function for adding levels
-	void addAffinity(string name, string displayName){
-		habAffinity tempAffinity = new ref habAffinity(name, displayName);
+	void addAffinity(string name, string displayName, string image = ""){
+		habAffinity tempAffinity = new ref habAffinity(name, displayName, image);
 		Affinities.Insert(tempAffinity);
 		habPrint("Affinity Added: " + name + " There are now " + Affinities.Count() + " Affinities", "Verbose");	
 	}
@@ -151,10 +151,10 @@ class HeroesAndBanditsConfigLevels
 		addLevel( "Hunter Lv4", "hunter", "HeroesAndBandits/gui/images/Hunterlv4.paa", 20001, 50000);
 		addLevel( "Hunter Lv5", "hunter", "HeroesAndBandits/gui/images/Hunterlv5.paa", 50001, -1);
 		
-		addAffinity("hero", "#HAB_HERO");
-		addAffinity("bandit", "#HAB_BANDIT");
-		addAffinity("medic", "#HAB_MEDIC");
-		addAffinity("hunter", "#HAB_HUNTER");
+		addAffinity("hero", "#HAB_HERO", "HeroesAndBandits/gui/images/Hero.paa");
+		addAffinity("bandit", "#HAB_BANDIT", "HeroesAndBandits/gui/images/Bandit.paa");
+		addAffinity("medic", "#HAB_MEDIC", "HeroesAndBandits/gui/images/Medic.paa");
+		addAffinity("hunter", "#HAB_HUNTER", "HeroesAndBandits/gui/images/Hunter.paa");
 		TStringArray banditOnlyItems = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern","Bandana_Blue", "Bandana_Pink", "Bandana_Yellow","Bandana_RedPattern","Bandana_BlackPattern","Bandana_CamoPattern","Bandana_GreenPattern","Bandana_PolkaPattern"};
 		getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
 		DefaultAffinity.addItemBlackList(-1, -1, "all", banditOnlyItems);
@@ -201,10 +201,11 @@ class habAffinity
 	string Image;
 	ref array< ref habItemList > ItemBlackList = new ref array< ref habItemList >;
 
-	void habAffinity(string name, string displayName) 
+	void habAffinity(string name, string displayName, string image) 
 	{
 		Name = name;
 		DisplayName = displayName;
+		Image = image;
 	}
 	
 	bool checkItem(float points, string itemType, string location){
