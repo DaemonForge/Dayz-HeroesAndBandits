@@ -173,11 +173,12 @@ class HeroesAndBanditsZone
 				}
 				if ((guard.GetClosetPlayerID() == player.GetIdentity().GetPlainId() || guard.GetClosetPlayerDistance() > vector.Distance(player.GetPosition(),guard.GetPosition())) && allowSpinOff ){
 					float maxDelayAim2 = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
-					for (float delayAim2 = 200; delay <= maxDelayAim2; delayAim2++){
+					for (float delayAim2 = 200; delayAim2 <= maxDelayAim2; delayAim2++){
 						GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.TrackPlayer, delayAim2, false, player, guard);
 						delayAim2 = delayAim2 + 200;
 					}
 				}
+				guard.RaiseWeapon();
 				
 			}
 			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))

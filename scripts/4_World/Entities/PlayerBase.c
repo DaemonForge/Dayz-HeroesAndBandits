@@ -761,13 +761,14 @@ modded class PlayerBase
 		m_HeroesAndBandits_AIRaiseWeapon = true;
 		//GetInputController().OverrideRaise( true, true );
 		//SendCompleteWeaponRaiseJuncture();
+		RunADSTimer();
 		SetSynchDirty();
 	}
 	
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		//RunADSTimer();
+		
 		//GetInputController().OverrideRaise( true, true );
 	}
 	

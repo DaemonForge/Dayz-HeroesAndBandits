@@ -16,6 +16,7 @@ class HeroesAndBanditsGuard
 	float DamagePerTickRand;
 	float HitChance;
 	bool IsTrackingPlayer = false;
+	bool WeaponIsRaised = true;
 	float ClosestPlayerDistance = 600;
 	string ClosestPlayerID = "";
 
@@ -84,8 +85,9 @@ class HeroesAndBanditsGuard
 	void RaiseWeapon()
 	{
 		habPrint("Raise Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
-		if (Guard)
-		{
+		if (Guard && !WeaponIsRaised)
+		{	
+			WeaponIsRaised = true;
 			Guard.habAIRaiseWeaponServer();
 		}
 	}
