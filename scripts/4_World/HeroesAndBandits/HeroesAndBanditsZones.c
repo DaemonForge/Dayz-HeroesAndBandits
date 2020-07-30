@@ -59,8 +59,10 @@ class HeroesAndBanditsZone
 				TStringArray guardGear = zoneToLoad.Guards.Get(j).GuardGear;
 				Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 				Guards.Get(j).GunSound = zoneToLoad.Guards.Get(j).GunSound;
-				Guards.Get(j).DamagePerTick = zoneToLoad.Guards.Get(j).DamagePerTick;
+				Guards.Get(j).DamagePerTickMin = zoneToLoad.Guards.Get(j).DamagePerTickMin;
+				Guards.Get(j).DamagePerTickRand = zoneToLoad.Guards.Get(j).DamagePerTickRand;
 				Guards.Get(j).GunTickMulitplier  = zoneToLoad.Guards.Get(j).GunTickMulitplier;
+				Guards.Get(j).HitChance  = zoneToLoad.Guards.Get(j).HitChance;
 
 				Guards.Get(j).Spawn();
 				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 60000, false); //Reload gun 3 minutes after server start
@@ -82,7 +84,7 @@ class HeroesAndBanditsZone
 		
 	}
 		
-	void CheckPlayer(PlayerBase inPlayer){
+	void CheckPlayer(PlayerBase inPlayer, bool allowSpinOff = true){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		if ( !player )
@@ -93,6 +95,7 @@ class HeroesAndBanditsZone
 		if (player.IsAlive())				
 		{
 			
+			HeroesAndBanditsGuard guard = GetClosestGuard(player.GetPosition());
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				player.m_HeroesAndBandits_InZones.Debug();
@@ -121,13 +124,25 @@ class HeroesAndBanditsZone
 				{
 					player.SetAllowDamage(true);
 				}
-				HeroesAndBanditsGuard guard = GetClosestGuard(player.GetPosition());
 				if (guard && !player.habCheckGodMod()){
-					RaiseWeaponClosestGuard(player.GetPosition());
-					FireWeaponClosestGuard(player.GetPosition());
-					string zoneImage = WelcomeIcon;
-					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(player.habHitByAI, 50 ,false, Name, guard.DamagePerTick, guard, "arm", "M4A1", zoneImage);
+					if ( (guard.GetClosetPlayerID() == player.GetIdentity().GetPlainId() || guard.GetClosetPlayerDistance() > vector.Distance(player.GetPosition(),guard.GetPosition())) && allowSpinOff){
+						float maxDelayAim = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
+						for (float delayAim = 140; delayAim <= maxDelayAim; delayAim++){
+							delayAim = delayAim + 140;
+							GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.TrackPlayer, delayAim, false, player, guard);
+						}
+					}
+					FireWeaponClosestGuard(player.GetPosition(), player);
+					if ( guard.GunTickMulitplier >= 2 && allowSpinOff){
+						float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
+						float delayadd = maxDelayGun / guard.GunTickMulitplier;
+						for (float delay = delayadd; delay < maxDelayGun; delay++){
+							GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, delay, false, player, false);
+							delay = delay + delayadd - 1;
+						}
+					}
 				} else {
+					player.habSetKilledByZone(Name);
 					player.SetHealth(0.0);
 				}
 				//Player Entered Kill Zone Kill Player if warning has been given
@@ -155,8 +170,15 @@ class HeroesAndBanditsZone
 				if ( ShowWarningMsg )
 				{
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
-				}		
-				RaiseWeaponClosestGuard(player.GetPosition());
+				}
+				if ((guard.GetClosetPlayerID() == player.GetIdentity().GetPlainId() || guard.GetClosetPlayerDistance() > vector.Distance(player.GetPosition(),guard.GetPosition())) && allowSpinOff ){
+					float maxDelayAim2 = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
+					for (float delayAim2 = 200; delay <= maxDelayAim2; delayAim2++){
+						GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.TrackPlayer, delayAim2, false, player, guard);
+						delayAim2 = delayAim2 + 200;
+					}
+				}
+				
 			}
 			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))
 			{
@@ -195,7 +217,6 @@ class HeroesAndBanditsZone
 	vector getVector(){
 		return Vector( X, GetGame().SurfaceY(X, Z), Z );
 	}
-	
 	
 	bool validHumanity(float humanity){
 			if ( MinHumanity != -1 && MaxHumanity != -1 && humanity >= MinHumanity && humanity <= MaxHumanity){
@@ -244,33 +265,10 @@ class HeroesAndBanditsZone
 		return false;
 	}
 	
-	void FireWeaponClosestGuard(vector playerPostion)
+	void FireWeaponClosestGuard(vector playerPostion, PlayerBase inPlayer)
 	{
-		if (!Guards)//If no guards defined exit
-		{
-			return;
-		}
-		int closestGuardIndex = -1;
-		float closestGuardDistance = 600;
-		for ( int i = 0; i < Guards.Count(); i++ )
-		{	
-			float currentGuardDistance = vector.Distance( Guards.Get(i).getVector(), playerPostion);
-			if ( currentGuardDistance < closestGuardDistance)
-			{
-				closestGuardIndex = i;
-				closestGuardDistance = currentGuardDistance;
-			}
-		}
-		if ( closestGuardIndex == -1 ){
-			return;
-		} else {
-			Guards.Get(closestGuardIndex).FireWeapon();
-		} 
-	}
-	
-	void RaiseWeaponClosestGuard(vector playerPostion)
-	{
-		if (!Guards)//If no guards defined exit
+		PlayerBase player = PlayerBase.Cast(inPlayer);
+		if (!Guards || !player)//If no guards defined exit
 		{
 			return;
 		}
@@ -290,6 +288,37 @@ class HeroesAndBanditsZone
 		} else {
 			Guards.Get(closestGuardIndex).SetOrientation(vector.Direction(Guards.Get(closestGuardIndex).GetPosition(),playerPostion).Normalized());
 			Guards.Get(closestGuardIndex).RaiseWeapon();
+			Guards.Get(closestGuardIndex).FireWeapon();
+			string zoneImage = WelcomeIcon;
+			float dmg = Guards.Get(closestGuardIndex).DamagePerTickMin;
+			if (Guards.Get(closestGuardIndex).DamagePerTickMin < Guards.Get(closestGuardIndex).DamagePerTickRand){
+				dmg = Math.RandomFloat(Guards.Get(closestGuardIndex).DamagePerTickMin, Guards.Get(closestGuardIndex).DamagePerTickRand);
+			}
+			float hitchance = Guards.Get(closestGuardIndex).HitChance + 0.01;
+			float hitrand = Math.RandomFloat(0,1);
+			if ( hitchance > hitrand ){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(player.habHitByAI, 50 ,false, Name, dmg, Guards.Get(closestGuardIndex), "chest", "m4a1", zoneImage);
+			}
+		} 
+	}
+	
+	void TrackPlayer(PlayerBase inPlayer, HeroesAndBanditsGuard inGuard)
+	{
+		PlayerBase player = PlayerBase.Cast(inPlayer);
+		HeroesAndBanditsGuard guard = HeroesAndBanditsGuard.Cast(inGuard);
+		if (!guard || !player)//If no guards defined exit
+		{
+			return;
+		}
+		vector playerPostion = player.GetPosition();
+		vector guardPostion = guard.GetPosition();
+		if (player.IsAlive() && player.GetIdentity().GetPlainId() == guard.GetClosetPlayerID()){
+			guard.SetClosetPlayerDistance( vector.Distance(guardPostion,playerPostion), player.GetIdentity().GetPlainId());
+			guard.SetOrientation(vector.Direction(guardPostion,playerPostion).Normalized());
+		} else if (!player.IsAlive() && player.GetIdentity().GetPlainId() == guard.GetClosetPlayerID()) {
+			guard.SetClosetPlayerDistance( 600, "");
+		} else if ( player.IsAlive() && vector.Distance(guardPostion,playerPostion) < guard.GetClosetPlayerDistance()){
+			guard.SetClosetPlayerDistance( vector.Distance(guardPostion,playerPostion), player.GetIdentity().GetPlainId());
 		} 
 	}
 	

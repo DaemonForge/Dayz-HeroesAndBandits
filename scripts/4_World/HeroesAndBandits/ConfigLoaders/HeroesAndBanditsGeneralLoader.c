@@ -130,7 +130,9 @@ class HeroesAndBanditsSettings
 		Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
 		Expansion_HideNameOnPlayerTag = false;
 		BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+		BanditArmBads = {};
 		HeroMasks = {};
+		HeroArmBands = {};
 	}
 	
 }

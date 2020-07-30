@@ -11,8 +11,13 @@ class HeroesAndBanditsGuard
 	ref TStringArray WeaponInHandsAttachments;
 	ref TStringArray GuardGear;
 	string GunSound;
-	float DamagePerTick;
 	float GunTickMulitplier;
+	float DamagePerTickMin;
+	float DamagePerTickRand;
+	float HitChance;
+	bool IsTrackingPlayer = false;
+	float ClosestPlayerDistance = 600;
+	string ClosestPlayerID = "";
 
     void HeroesAndBanditsGuard(float x, float y, float z, float orientation, string skin, string weaponInHands, string weaponInHandsMag, TStringArray weaponInHandsAttachments, TStringArray guardGear) 
 	{
@@ -100,6 +105,19 @@ class HeroesAndBanditsGuard
 		}
 	}
 	
+	void SetClosetPlayerDistance( float distance, string playerID ){
+		ClosestPlayerDistance = distance;
+		ClosestPlayerID = playerID;
+	}
+	
+	float GetClosetPlayerDistance(){
+		return ClosestPlayerDistance;
+	}
+	
+	string GetClosetPlayerID(){
+		return ClosestPlayerID;
+	}
+	
 	void FireWeapon()
 	{
 		habPrint("Firing Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
@@ -126,7 +144,8 @@ class HeroesAndBanditsGuard
 	
 	void SetOrientation(vector new_Orientation){
 		habPrint("Rotating Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " to " + new_Orientation, "Debug");	
-		Guard.SetOrientation(new_Orientation);
+		Guard.SetDirection(new_Orientation);
+
 	}
 	
 	string GetWeaponName(){
