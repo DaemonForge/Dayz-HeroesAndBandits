@@ -149,14 +149,14 @@ class HeroesAndBanditsZone
 				if (!player.IsAlive()){
 					player.habLeftZone(0); //Removed from all zones
 					habPrint("Killed Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") for Entering Zone: " + Name, "Always");
+					if ( PreventWeaponRaise ){
+						player.habSetCanRaiseWeapon(true, -1);
+					}
 				}
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
 
-				if ( PreventWeaponRaise ){
-					player.habSetCanRaiseWeapon(true, -1);
-				}
 				
 			}
 			else if (!validPlayer(pdata) && !player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)

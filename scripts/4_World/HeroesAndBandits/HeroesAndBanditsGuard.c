@@ -16,7 +16,7 @@ class HeroesAndBanditsGuard
 	float DamagePerTickRand;
 	float HitChance;
 	bool IsTrackingPlayer = false;
-	bool WeaponIsRaised = true;
+	bool WeaponIsRaised = false;
 	float ClosestPlayerDistance = 600;
 	string ClosestPlayerID = "";
 
@@ -129,6 +129,7 @@ class HeroesAndBanditsGuard
 			GetRPCManager().SendRPC("HaB", "RPCPlayGunShotSound", new Param2< string, vector >( "AK_Shot_SoundSet", GetPosition() ), false);
 			//GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLaterByName(this, "SendTailSound", 50, false);
 			WeaponManager(PlayerBase.Cast(Guard)).Fire(Weapon_Base.Cast(weaponInHands));
+			Guard.habAIFireWeaponServer();
 		}
 	}
 	

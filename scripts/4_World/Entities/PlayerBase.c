@@ -13,6 +13,9 @@ modded class PlayerBase
 	private bool  m_HeroesAndBandits_AIRaiseWeaponSync = false;
 	private bool  m_HeroesAndBandits_AIRaiseWeapon = false;
 	
+	private int  m_HeroesAndBandits_AIFireWeaponSync = 0;
+	private int  m_HeroesAndBandits_AIFireWeapon = 0;
+	
 	private int m_HeroesAndBandits_AffinityIndex = -1;
 	private float m_HeroesAndBandits_AffinityPoints = 0;
 	private bool m_HeroesAndBandits_DataLoaded = false;
@@ -38,6 +41,7 @@ modded class PlayerBase
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AIHitSync");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_KilledByZone");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_LatestZoneDmg");
+		RegisterNetSyncVariableInt("m_HeroesAndBandits_AIFireWeaponSync");
 	}
 	
 	override void OnSelectPlayer()
@@ -230,6 +234,10 @@ modded class PlayerBase
 		
 		if ( m_HeroesAndBandits_AIHitSync != m_HeroesAndBandits_AIHit){
 			habHitByAIClient();
+		}
+		
+		if ( m_HeroesAndBandits_AIFireWeaponSync != m_HeroesAndBandits_AIRaiseWeapon){
+			habAIFireWeapon();
 		}
 		
 	}
@@ -755,20 +763,44 @@ modded class PlayerBase
 		//GetInputController().OverrideRaise( true, false );
 	}
 	
+	void habAIFireWeaponServer(){
+		m_HeroesAndBandits_AIFireWeaponSync++;
+		m_HeroesAndBandits_AIFireWeapon = m_HeroesAndBandits_AIFireWeaponSync;
+		SetSynchDirty();
+	}
+	
+	
+	void habAIFireWeapon(){
+		m_HeroesAndBandits_AIFireWeapon = m_HeroesAndBandits_AIFireWeaponSync;
+		habPrint("habAIFireWeapon called", "Debug");
+		Weapon_Base gunInHands = Weapon_Base.Cast(this.GetHumanInventory().GetEntityInHands());
+		if (gunInHands){
+			ItemBase suppressor = gunInHands.GetAttachedSuppressor();
+			int muzzleType = gunInHands.GetCurrentMuzzle();
+			string ammoType = GetGame().ConfigGetTextOut( "CfgMagazines " + gunInHands.GetChamberAmmoTypeName(muzzleType) + " ammo" );
+			
+			habPrint("habAIFireWeapon gunInHands: " + gunInHands.GetType() + " muzzleType: " + muzzleType + " ammoType: " + ammoType + " GetChamberAmmoTypeName: " +  gunInHands.GetChamberAmmoTypeName(muzzleType), "Debug");
+			ItemBase.PlayFireParticles(gunInHands, muzzleType, ammoType, gunInHands, suppressor, "CfgWeapons" );
+			//gunInHands.PlayFireParticles(gunInHands, muzzleType, ammoType, NULL, NULL, "CfgVehicles" );
+			//GetInputController().OverrideRaise( true, false );
+		} else {
+			habPrint("habAIFireWeapon called Guns in hand not defined", "Debug");
+		}
+	}
+	
 	void habAIRaiseWeaponServer(){
 		habPrint("habAIRaiseWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = true;
 		m_HeroesAndBandits_AIRaiseWeapon = true;
+		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
 		//GetInputController().OverrideRaise( true, true );
-		//SendCompleteWeaponRaiseJuncture();
-		RunADSTimer();
 		SetSynchDirty();
 	}
 	
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		
+		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
 		//GetInputController().OverrideRaise( true, true );
 	}
 	
