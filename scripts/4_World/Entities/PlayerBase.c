@@ -3,6 +3,8 @@ modded class PlayerBase
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;
 	
+	private bool  m_HeroesAndBandits_IsGuard = false;
+	
 	private int  m_HeroesAndBandits_CanRaiseWeaponIndex = -1;
 	private bool  m_HeroesAndBandits_CanRaiseWeaponSync = true;
 	private bool  m_HeroesAndBandits_CanRaiseWeapon = true;
@@ -31,6 +33,7 @@ modded class PlayerBase
 	override void Init()
 	{
 		super.Init();
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_IsGuard");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_CanRaiseWeaponSync");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AffinityIndex");
@@ -56,6 +59,15 @@ modded class PlayerBase
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
 			SetSynchDirty();	
 		}
+	}
+	
+	bool habIsGuard(){
+		return m_HeroesAndBandits_IsGuard;
+	}
+	
+	void habSetGuard( bool isGaurd = true){
+		m_HeroesAndBandits_IsGuard = isGaurd;
+		SetSynchDirty();	
 	}
 	
 	int habTopZoneIndex(){
@@ -236,7 +248,7 @@ modded class PlayerBase
 			habHitByAIClient();
 		}
 		
-		if ( m_HeroesAndBandits_AIFireWeaponSync != m_HeroesAndBandits_AIRaiseWeapon){
+		if ( m_HeroesAndBandits_AIFireWeaponSync != m_HeroesAndBandits_AIFireWeapon){
 			habAIFireWeapon();
 		}
 		
@@ -415,24 +427,18 @@ modded class PlayerBase
 		} else  if ( damageType == DT_EXPLOSION && !source && !this.IsAlive() && GetGame().IsServer() && GetIdentity() ) {
 			habPrint( "" + GetIdentity().GetPlainId() + " killed by Explosion with no source", "Debug");
 		}
-		int animType;
-		float animHitDir;
-		bool animHitFullbody;
-		EvaluateDamageHitAnimation(damageResult, damageType, source, dmgZone, ammo, modelPos, animType, animHitDir, animHitFullbody);
-		habPrint("DamageHit Animation Info animType: " + animType + " animHitDir: " + animHitDir + " animHitFullbody: " + animHitFullbody, "Debug");
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 
-	void habHitByAI(string zoneName, float dmg, HeroesAndBanditsGuard source, string dmgZone, string ammo, string zoneImage = "")
+	void habHitByAI(float dmg, HeroesAndBanditsGuard source, string hitZone, string ammo)
 	{	
 		if (GetIdentity()){
-			habPrint(GetIdentity().GetName() + " hit by " + ammo + " from " + zoneName + " for " + dmg + " damage", "Debug");
+			habPrint(GetIdentity().GetName() + " hit in " + hitZone + " from " + source.ZoneName + " for " + dmg + " damage", "Debug");
 		}	
-		int bleed = Math.RandomInt(0,100);
-		if ( dmg > 5 && GetBleedingManagerServer() && bleed < 20)
+		float bleed = Math.RandomFloat(0,1);
+		if ( GetBleedingManagerServer() && bleed < 0.23)
 		{
-			TStringArray bleedingSources = {"LeftForeArmRoll","RightArm","LeftArm","RightLeg","LeftLeg","RightForeArmRoll","Torso","Neck","Head"};
-			GetBleedingManagerServer().AttemptAddBleedingSourceBySelection(bleedingSources.GetRandomElement());
+			GetBleedingManagerServer().AttemptAddBleedingSourceBySelection(hitZone);
 		}
 		
 		if ( m_ActionManager )
@@ -447,7 +453,7 @@ modded class PlayerBase
 		}
 		DayZPlayerSyncJunctures.SendDamageHit(this, 0, habGetAnimHitDir(source), false);
 		m_HeroesAndBandits_KilledByZone = true;
-		m_HeroesAndBandits_KilledByZoneName = zoneName;
+		m_HeroesAndBandits_KilledByZoneName = source.ZoneName;
 		m_HeroesAndBandits_KilledByGun = "#HAB_KILLFEED_PRE " + source.GetWeaponName();
 		m_HeroesAndBandits_LatestZoneDmg = dmg;
 		DecreaseHealth("","Health",dmg);
@@ -753,6 +759,7 @@ modded class PlayerBase
 		habPrint("habAILowerWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = false;
 		m_HeroesAndBandits_AIRaiseWeapon = false;
+		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_ERECT);
 		//GetInputController().OverrideRaise( true, false );
 		SetSynchDirty();
 	}
@@ -760,6 +767,7 @@ modded class PlayerBase
 	void habAILowerWeapon(){
 		habPrint("habAILowerWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = false;
+		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_ERECT);
 		//GetInputController().OverrideRaise( true, false );
 	}
 	

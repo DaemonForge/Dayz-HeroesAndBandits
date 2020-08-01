@@ -246,6 +246,9 @@ class habGuard
 	float DamagePerTickRand = 35;
 	float GunTickMulitplier = 2.0;
 	float HitChance = 1;
+	float RespawnTimer = 1200;
+	bool CanBeKilled = false;
+	bool RequireLightOfSight = false;
 
 	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "") 
 	{

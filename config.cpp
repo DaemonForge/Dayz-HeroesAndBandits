@@ -6,9 +6,6 @@ class CfgPatches
 		weapons[]={};
 		requiredVersion=0.1;
 		requiredAddons[]={
-			"RPC_Scripts",
-			"DZ_Scripts",
-			"DZ_Data"
 		};
 	};
 };

@@ -336,7 +336,6 @@ class HeroesAndBandits
 	    habPrint("Failed to get points for Affinity " + affinityName + " for Player " + pID , "Exception");	
 		return 0;
 	}
-	
 	habLevel GetPlayerLevel( string pID )
 	{
 		if (!IsPlayerLoaded(pID))
@@ -457,6 +456,8 @@ class HeroesAndBandits
 		}		
 		SaveAllPlayers();
 	}
+	
+	
 	
 }
 
