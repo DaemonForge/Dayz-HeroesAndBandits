@@ -36,9 +36,9 @@ FrameWidgetClass rootFrame {
      vexactsize 1
      fixaspect fixwidth
      mode blend
-     stretch 1
-     "no wrap" 1
      "src alpha" 1
+     "no wrap" 1
+     stretch 1
     }
    }
   }

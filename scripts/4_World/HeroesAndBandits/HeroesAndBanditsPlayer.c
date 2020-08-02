@@ -2,7 +2,6 @@ class HeroesAndBanditsPlayer
 {
 	//Default Values
     string PlayerID = "";
-	float Humanity = 0; //Legacy Will remove
 	ref array< ref habStat > Stats = new ref array< ref habStat >;
 	ref array< ref habPlayerAffinity > Affinities = new ref array< ref habPlayerAffinity >;
 	
@@ -27,11 +26,11 @@ class HeroesAndBanditsPlayer
 		float points = 0;
 		if (GetHeroesAndBanditsSettings().Mode == 0){
 			float humanity = getHumanity();
-			if ( humanity > 0 ){
+			if ( humanity >= 0 ){
 				tempLevel = GetHeroesAndBanditsLevels().getLevel("hero", humanity);	
 			} else if ( humanity < 0 ) {
 				tempLevel = GetHeroesAndBanditsLevels().getLevel("bandit", -humanity);	
-			} 
+			}
 		} else if (GetHeroesAndBanditsSettings().Mode == 1){
 			for (int i = 0; i < Affinities.Count(); i++)
 			{
@@ -46,26 +45,132 @@ class HeroesAndBanditsPlayer
 		return tempLevel;
 	}
 	
+	habLevel getSecondaryLevel(){
+		habLevel tempLevel = GetHeroesAndBanditsLevels().DefaultLevel;
+		float points = 0;
+		if (GetHeroesAndBanditsSettings().Mode != 2){
+			habPrint("Tried to use getSecondaryLevel in wrong mode", "Exception");
+			return tempLevel;
+		} else {
+			for (int i = 0; i < Affinities.Count(); i++)
+			{
+				if (Affinities.Get(i).Name == "hero" || Affinities.Get(i).Name == "bandit"){
+				} else{
+					if ( GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points) != GetHeroesAndBanditsLevels().DefaultLevel){
+						if (Affinities.Get(i).Points > points){
+							points = Affinities.Get(i).Points;
+							tempLevel = GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points);
+						}
+					}
+				}
+			}
+		}
+		return tempLevel;
+	}
+	
+	int getLevelIndex(){
+		int index = -1;
+		float points = 0;
+		if (GetHeroesAndBanditsSettings().Mode == 0){
+			float humanity = getHumanity();
+			if ( humanity > 0 ){
+				index = GetHeroesAndBanditsLevels().getLevelIndex("hero", humanity);	
+			} else if ( humanity < 0 ) {
+				index = GetHeroesAndBanditsLevels().getLevelIndex("bandit", -humanity);	
+			} 
+		} else if (GetHeroesAndBanditsSettings().Mode == 1){
+			for (int i = 0; i < Affinities.Count(); i++)
+			{
+				if (GetHeroesAndBanditsLevels().getLevel(Affinities.Get(i).Name, Affinities.Get(i).Points) != GetHeroesAndBanditsLevels().DefaultLevel){
+					if (Affinities.Get(i).Points > points){
+						points = Affinities.Get(i).Points;
+						index = GetHeroesAndBanditsLevels().getLevelIndex(Affinities.Get(i).Name, Affinities.Get(i).Points);
+					}
+				}
+			}
+		}
+		return index;
+	}
 	
 	habAffinity getAffinity(){
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
 		habLevel tempLevel = getLevel();
 		float points = 0;
 		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
-			habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			//habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
 			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(tempLevel.Affinity);
 		}
 		return tempAffinity;
 	}
 	
-	float getAffinityPoints( string name ){
-		for (int i = 0; i < Affinities.Count(); i++)
+	habAffinity getSecondaryAffinity(){
+		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+		habLevel tempLevel = getSecondaryLevel();
+		float points = 0;
+		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
+			//habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			tempAffinity = GetHeroesAndBanditsLevels().getAffinity(tempLevel.Affinity);
+		}
+		return tempAffinity;
+	}
+	
+	int getAffinityIndex(){
+		int index = -1;
+		habLevel tempLevel = getLevel();
+		float points = 0;
+		if (tempLevel != GetHeroesAndBanditsLevels().DefaultLevel){
+			//habPrint(PlayerID + " is level: " + tempLevel.Name + " with affinity " + tempLevel.Affinity, "Debug");
+			index = GetHeroesAndBanditsLevels().getAffinityIndex(tempLevel.Affinity);
+		}
+		return index;
+	}
+	
+	
+	
+	float getAffinityPoints( string name){
+		if (GetHeroesAndBanditsSettings().Mode != 1){
+			if ( name == "hero" ||  name == "bandit") {
+				float heroPoints = 0;
+				float banditPoints = 0;
+				for (int i = 0; i < Affinities.Count(); i++)
+				{
+					if (Affinities.Get(i).Name == "hero") {
+						heroPoints = Affinities.Get(i).getPoints();
+					} else if (Affinities.Get(i).Name == "bandit") {
+						banditPoints = Affinities.Get(i).getPoints();
+					}
+				}
+				if (name == "hero"){
+					return heroPoints - banditPoints;
+				} else {
+					return banditPoints - heroPoints;
+				}
+			} else if (GetHeroesAndBanditsSettings().Mode == 0) {
+				return 0;
+			}
+		}
+		for (int j = 0; j < Affinities.Count(); j++)
 		{
-			if (Affinities.Get(i).Name == name) {
-				return Affinities.Get(i).getPoints();
+			if (Affinities.Get(j).Name == name) {
+				return Affinities.Get(j).getPoints();
 			}
 		}
 		return 0;
+	}
+	
+	bool checkItem(string itemType, string location){
+		if (GetHeroesAndBanditsSettings().Mode == 0){// shouldn't get called in my mod alone but just encase someone else wants to use the check item in their own mods :)
+			return getAffinity().checkItem(getAffinityPoints(getAffinity().Name ), itemType, location );
+		}
+		bool canAttach = true;
+		for (int j = 0; j < Affinities.Count(); j++)
+		{
+			if ( !GetHeroesAndBanditsLevels().getAffinity(Affinities.Get(j).Name).checkItem(Affinities.Get(j).Points, itemType, location)){
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	void addAffinityPoints( string name, float points ){
@@ -121,7 +226,7 @@ class HeroesAndBanditsPlayer
 	}
 	
 	float getHumanity(){
-		return getAffinityPoints("hero") - getAffinityPoints("bandit");
+		return getAffinityPoints("hero");
 	}
 
 	float getStat(string statName){
@@ -312,6 +417,9 @@ class habPlayerAffinity
 	
 	void updatePoints(float amount){
 		Points = Points + amount;
+		if (Points < 0 && GetHeroesAndBanditsSettings().AffintyCantGoBelowZero){
+			Points = 0;
+		}
 	}
 	
 	void setPoints(float amount){

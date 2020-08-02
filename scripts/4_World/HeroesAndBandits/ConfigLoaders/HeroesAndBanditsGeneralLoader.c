@@ -6,9 +6,10 @@ static string HeroesAndBanditsSettingsPATH = HeroesAndBanditsDirectory + "\\sett
 class HeroesAndBanditsSettings
 { 
 	//Default Values
-	string ConfigVersion = "4";
+	string ConfigVersion = "5";
 	
-	int Mode = 0; // 0 is differantial / 1 is highest level
+	int Mode = 0; // 0 is differantial / 1 is highest level / 2 is Mixed
+	
 	
 	int NotificationMessageTime = 15;
 	
@@ -26,10 +27,29 @@ class HeroesAndBanditsSettings
 	string GUIHeading = "#HAB_TITLE";
 	bool HideKillsInGUI = false;
 	
+	bool BanditCanRemoveMask = false;
+	bool BanditCanRemoveArmBand = true;
+	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	ref TStringArray BanditArmBads = {};
+	bool HeroCanRemoveMask = true;
+	bool HeroCanRemoveArmBand = true;
+	ref TStringArray HeroMasks = {};
+	ref TStringArray HeroArmBands = {};
+	
+	//This doesn't affect Humanity as its the calcuation of two Affinities
+	bool AffintyCantGoBelowZero = true;
+	
+	//Expansion Settings 
+	bool Expansion_EnableIconOnPlayerTag = true;
+	int Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
+	bool Expansion_HideNameOnPlayerTag = false;
+	
+	
 	
 	bool ExceptionLogs = true;
 	bool VerboseLogs = false;
 	bool DebugLogs = false;
+	bool DebugCommand = false;
 		
 	/*
 	Bambis
@@ -81,8 +101,11 @@ class HeroesAndBanditsSettings
 		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsSettingsPATH)) //If config exist load File
 		{
-	        	JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
-
+	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
+			if (ConfigVersion == "4"){
+				doV5Upgrade();
+				JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
+			}
 			
 		}else{ //File does not exist create file
 			MakeDirectory(HeroesAndBanditsDirectory);
@@ -98,6 +121,18 @@ class HeroesAndBanditsSettings
 		return ARGB(KillFeedMessageColor[0], KillFeedMessageColor[1], KillFeedMessageColor[2], KillFeedMessageColor[3]);
 	}
 
+	void doV5Upgrade(){
+		ConfigVersion = "5";
+		BanditCanRemoveMask = false;
+		HeroCanRemoveMask = true;
+		AffintyCantGoBelowZero = true;
+		Expansion_EnableIconOnPlayerTag = true;
+		Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
+		Expansion_HideNameOnPlayerTag = false;
+		BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+		BanditArmBads = {};
+		HeroMasks = {};
+		HeroArmBands = {};
+	}
 	
 }
-

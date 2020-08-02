@@ -1,0 +1,177 @@
+{
+    "ConfigVersion": "4",
+    "Levels": [
+        {
+            "Name": "Hero Lv1",
+            "Affinity": "hero",
+            "LevelImage": "HeroesAndBandits/gui/images/HeroNotificationlv1.paa",
+            "MinPoints": 1001,
+            "MaxPoints": 4000
+        },
+        {
+            "Name": "Hero Lv2",
+            "Affinity": "hero",
+            "LevelImage": "HeroesAndBandits/gui/images/HeroNotificationlv2.paa",
+            "MinPoints": 4001,
+            "MaxPoints": 12000
+        },
+        {
+            "Name": "Hero Lv3",
+            "Affinity": "hero",
+            "LevelImage": "HeroesAndBandits/gui/images/HeroNotificationlv3.paa",
+            "MinPoints": 12001,
+            "MaxPoints": 20000
+        },
+        {
+            "Name": "Hero Lv4",
+            "Affinity": "hero",
+            "LevelImage": "HeroesAndBandits/gui/images/HeroNotificationlv4.paa",
+            "MinPoints": 20001,
+            "MaxPoints": 50000
+        },
+        {
+            "Name": "Hero Lv5",
+            "Affinity": "hero",
+            "LevelImage": "HeroesAndBandits/gui/images/HeroNotificationlv5.paa",
+            "MinPoints": 50001,
+            "MaxPoints": -1
+        },
+        {
+            "Name": "Bandit Lv1",
+            "Affinity": "bandit",
+            "LevelImage": "HeroesAndBandits/gui/images/BanditNotificationlv1.paa",
+            "MinPoints": 1001,
+            "MaxPoints": 4000
+        },
+        {
+            "Name": "Bandit Lv2",
+            "Affinity": "bandit",
+            "LevelImage": "HeroesAndBandits/gui/images/BanditNotificationlv2.paa",
+            "MinPoints": 4001,
+            "MaxPoints": 12000
+        },
+        {
+            "Name": "Bandit Lv3",
+            "Affinity": "bandit",
+            "LevelImage": "HeroesAndBandits/gui/images/BanditNotificationlv3.paa",
+            "MinPoints": 12001,
+            "MaxPoints": 20000
+        },
+        {
+            "Name": "Bandit Lv4",
+            "Affinity": "bandit",
+            "LevelImage": "HeroesAndBandits/gui/images/BanditNotificationlv4.paa",
+            "MinPoints": 20001,
+            "MaxPoints": 50000
+        },
+        {
+            "Name": "Bandit Lv5",
+            "Affinity": "bandit",
+            "LevelImage": "HeroesAndBandits/gui/images/BanditNotificationlv5.paa",
+            "MinPoints": 50001,
+            "MaxPoints": -1
+        },
+        {
+            "Name": "Medic Lv1",
+            "Affinity": "medic",
+            "LevelImage": "HeroesAndBandits/gui/images/Mediclv1.paa",
+            "MinPoints": 1001,
+            "MaxPoints": 4000
+        },
+        {
+            "Name": "Medic Lv2",
+            "Affinity": "medic",
+            "LevelImage": "HeroesAndBandits/gui/images/Mediclv2.paa",
+            "MinPoints": 4001,
+            "MaxPoints": 12000
+        },
+        {
+            "Name": "Medic Lv3",
+            "Affinity": "medic",
+            "LevelImage": "HeroesAndBandits/gui/images/Mediclv3.paa",
+            "MinPoints": 12001,
+            "MaxPoints": 20000
+        },
+        {
+            "Name": "Medic Lv4",
+            "Affinity": "medic",
+            "LevelImage": "HeroesAndBandits/gui/images/Mediclv4.paa",
+            "MinPoints": 20001,
+            "MaxPoints": 50000
+        },
+        {
+            "Name": "Medic Lv5",
+            "Affinity": "medic",
+            "LevelImage": "HeroesAndBandits/gui/images/Mediclv5.paa",
+            "MinPoints": 50001,
+            "MaxPoints": -1
+        },
+        {
+            "Name": "Hunter Lv1",
+            "Affinity": "hunter",
+            "LevelImage": "HeroesAndBandits/gui/images/Hunterlv1.paa",
+            "MinPoints": 1001,
+            "MaxPoints": 4000
+        },
+        {
+            "Name": "Hunter Lv2",
+            "Affinity": "hunter",
+            "LevelImage": "HeroesAndBandits/gui/images/Hunterlv2.paa",
+            "MinPoints": 4001,
+            "MaxPoints": 12000
+        },
+        {
+            "Name": "Hunter Lv3",
+            "Affinity": "hunter",
+            "LevelImage": "HeroesAndBandits/gui/images/Hunterlv3.paa",
+            "MinPoints": 12001,
+            "MaxPoints": 20000
+        },
+        {
+            "Name": "Hunter Lv4",
+            "Affinity": "hunter",
+            "LevelImage": "HeroesAndBandits/gui/images/Hunterlv4.paa",
+            "MinPoints": 20001,
+            "MaxPoints": 50000
+        },
+        {
+            "Name": "Hunter Lv5",
+            "Affinity": "hunter",
+            "LevelImage": "HeroesAndBandits/gui/images/Hunterlv5.paa",
+            "MinPoints": 50001,
+            "MaxPoints": -1
+        }
+    ],
+    "DefaultLevel": {
+        "Name": "Bambi",
+        "Affinity": "bambi",
+        "LevelImage": "HeroesAndBandits/gui/images/BambiNotification.paa",
+        "MinPoints": -1,
+        "MaxPoints": 1000
+    },
+    "Affinities": [
+        {
+            "Name": "hero",
+            "DisplayName": "#HAB_HERO"
+        },
+        {
+            "Name": "bandit",
+            "DisplayName": "#HAB_BANDIT"
+        },
+        {
+            "Name": "medic",
+            "DisplayName": "#HAB_MEDIC"
+        },
+        {
+            "Name": "hunter",
+            "DisplayName": "#HAB_HUNTER"
+        }
+    ],
+    "DefaultAffinity": {
+        "Name": "bambi",
+        "DisplayName": "#HAB_BAMBI"
+    },
+    "ShowLevelIcon": 1,
+    "LevelIconLocation": 2,
+    "NotifyLevelChange": 1
+}

@@ -205,17 +205,6 @@ class HeroesAndBanditsConfig
 	}
 
 
-	//Helper function for defaults to add Zones
-	void addZone(string name, int x, int z, float minHumanity, float maxHumanity, int warningRadius, int killRadius, string warningMessage = ""){
-		habZone tempZone = new ref habZone(name, x, z, minHumanity, maxHumanity, warningRadius, killRadius, warningMessage);
-		if (tempZone.Name == "Default Zone"){
-			tempZone.Guards.Insert(new ref habGuard(x, GetGame().SurfaceY(x, z), z));
-		}
-		Zones.Insert(tempZone);
-		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
-	}
-
-
 	//Helper function for adding levels
 	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
 		habOldLevel tempLevel = new ref habOldLevel(name, affinity, levelImage, minHumanity, maxHumanity);

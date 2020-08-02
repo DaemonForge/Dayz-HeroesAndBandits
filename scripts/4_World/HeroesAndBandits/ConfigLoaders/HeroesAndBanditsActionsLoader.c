@@ -88,7 +88,7 @@ class HeroesAndBanditsConfigActions
 		addAction( "ZombieKill", "hero", "none", 5);
 		addAction( "heroSucide", "bandit", "none",100);
 		addAction( "banditSucide", "hero", "none",100);
-		addAction( "bambiSucide", "bambi", "none",0, false);
+		addAction( "bambiSucide", "none", "none",0, false);
 		addAction( "heroVshero", "bandit", "none",150);
 		addAction( "heroVsbambi", "bandit","none", 300);
 		addAction( "heroVsbandit", "hero", "none",250);
@@ -101,15 +101,32 @@ class HeroesAndBanditsConfigActions
 		addAction( "CombinationLockRaid", "bandit", "none", 150);
 		addAction( "FencePartRaid", "bandit","none", 50);
 		addAction( "WatchtowerPartRaid", "bandit", "none", 30);
+		
+		#ifdef EXPANSIONMOD
+			addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionRamp6x1_5x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionRamp3x1_5x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionStairS1_5x3x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_6x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_3x3Raid", "bandit", "none", 150);
+			addAction( "ExpansionFloor_3x6Raid", "bandit", "none", 150);
+			addAction( "ExpansionSafeMiniRaid", "bandit", "none", 100);
+			addAction( "ExpansionSafeMediumRaid", "bandit", "none", 150);
+			addAction( "ExpansionSafeLargeRaid", "bandit", "none", 200);
+		#endif
+		
+		#ifdef EXPANSIONCODELOCKEXPANDED
+			addAction( "ExpansionCodeLockTentRaid", "bandit", "none", 150);
+		#endif
+		
 		addAction( "MedicBandagePlayer", "hero", "medic", 50);
 		addAction( "MedicGiveBlood", "hero", "medic",25);
 		addAction( "MedicGiveSaline", "hero","medic", 25);
 		addAction( "MedicGiveCPR", "hero", "medic" ,75);
-		addAction( "MedicFeedTetracycline", "hero", "medic", 25);
-		addAction( "MedicFeedPainkiller", "hero", "medic", 25);
-		addAction( "MedicFeedCharcoal", "hero", "medic", 25);
-		addAction( "MedicFeedVitamin", "hero", "medic", 25);
-		addAction( "MedicSplintPlayer", "hero", "medic", 75);
+		addAction( "MedicFeedTetracycline", "hero", "medic", 15);
+		addAction( "MedicFeedPainkiller", "hero", "medic", 15);
+		addAction( "MedicFeedCharcoal", "hero", "medic", 15);
+		addAction( "MedicFeedVitamin", "hero", "medic", 10);
 		addAction( "HuntAnimal_BosTaurus_Brown", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_White", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_Spotted", "hunter", "none", 25, false);
@@ -147,7 +164,7 @@ class HeroesAndBanditsConfigActions
 class habAction
 {
 	string Name;
-	string Affinity; //bandit / hero / bambi
+	string Affinity; //bandit / hero / none
 	string SecondaryAffinity = "none";
 	float Points;
 	bool NotifiyPlayer;

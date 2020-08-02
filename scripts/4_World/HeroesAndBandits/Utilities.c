@@ -31,10 +31,7 @@ TStringArray habFindFilesInDirectory(string directory)
 
 //Always Exception Verbose Debug
 static void habPrint(string message, string msgType){
-	if(!GetGame().IsServer())
-	{
-		return;
-	}
+	if (!GetHeroesAndBanditsSettings()){return;} //Preventing Null pointers on the client before the server has restarted
 	if (msgType == "Always"){
 		Print("[HeroesAndBandits]  " + message);
 	}else if (msgType == "Exception" && GetHeroesAndBanditsSettings().ExceptionLogs){
@@ -55,7 +52,7 @@ PlayerBase habGetPlayerBaseByID( string pID )
 	for ( int i = 0; i < players.Count(); i++ )
 	{
 		p = PlayerBase.Cast(players.Get(i));
-		if ( p.GetIdentity().GetPlainId() ==  pID)
+		if ( p.GetIdentity().GetPlainId() ==  pID )
 		{
 			habPrint("Found Player " + p.GetIdentity().GetName() + " with id " + pID, "Debug");	
 			return p;
@@ -151,7 +148,7 @@ bool habCheckUpgradeToConfigV4(){
 			for ( int j = 0; j < GetHeroesAndBanditsConfig().Actions.Count(); j++)
 			{//TODO
 				string tempActionName = GetHeroesAndBanditsConfig().Actions.Get(j).Name;
-				string tempActionAffinity = GetHeroesAndBanditsConfig().Actions.Get(j).Affinity; //bandit / hero / bambi
+				string tempActionAffinity = GetHeroesAndBanditsConfig().Actions.Get(j).Affinity; //bandit / hero
 				string tempActionSecondaryAffinity = "none";
 				string tempActionprefix = tempActionName.Substring(0,4);
 				if (tempActionprefix == "Hunt"){
@@ -177,16 +174,32 @@ bool habCheckUpgradeToConfigV4(){
 					tempActionName = "MedicGiveCPR";
 				
 				}
+				if (tempActionAffinity == "bambi" )	{
+					tempActionAffinity = "none";
+				}
 				float tempActionPoints = GetHeroesAndBanditsConfig().Actions.Get(j).Humanity;
 				bool tempActionNotifiyPlayer = GetHeroesAndBanditsConfig().Actions.Get(j).NotifiyPlayer;
 				temp_Actions.Actions.Insert( new ref habAction(tempActionName, tempActionAffinity, tempActionSecondaryAffinity, tempActionPoints, tempActionNotifiyPlayer));
 			}
 			temp_Actions.addAction( "WatchtowerPartRaid", "bandit", "none", 30);
-			temp_Actions.addAction( "MedicFeedTetracycline", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 25);
-			temp_Actions.addAction( "MedicSplintPlayer", "hero", "medic", 75);
+			temp_Actions.addAction( "MedicFeedTetracycline", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedPainkiller", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedCharcoal", "hero", "medic", 15);
+			temp_Actions.addAction( "MedicFeedVitamin", "hero", "medic", 15);
+			
+			#ifdef EXPANSIONMOD
+				temp_Actions.addAction( "ExpansionWall6x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionRamp6x1_5x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionRamp3x1_5x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionStairS1_5x3x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_6x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_3x3Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionFloor_3x6Raid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionSafeMiniRaid", "bandit", "none", 100);
+				temp_Actions.addAction( "ExpansionSafeMediumRaid", "bandit", "none", 150);
+				temp_Actions.addAction( "ExpansionSafeLargeRaid", "bandit", "none", 200);
+			
+			#endif
 			habPrint("Saving new actions.json","Always");
 			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, temp_Actions);
 			

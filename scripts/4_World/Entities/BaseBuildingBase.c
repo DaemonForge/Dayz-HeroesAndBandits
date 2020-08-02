@@ -3,9 +3,33 @@ modded class BaseBuildingBase
 	
 	string habLastHitBy;
 	
+	void habSetLastHitByObj(Object hitBy){
+		if ( hitBy ){
+			if (hitBy.IsInherited(TrapBase)){
+				TrapBase trap = TrapBase.Cast(hitBy);
+				if (trap && trap.habGetActivatedBy() != "null"){
+					habLastHitBy = trap.habGetActivatedBy();
+				}
+			} else if ( hitBy.IsInherited(Grenade_Base) ){
+				Grenade_Base grenade = Grenade_Base.Cast(hitBy);
+				if (grenade && grenade.habGetActivatedBy() != "null"){
+					habLastHitBy = grenade.habGetActivatedBy();
+				}
+			}
+			#ifdef EXPANSIONMOD
+			 else if ( hitBy.IsInherited(Expansion_C4_Explosion) ){
+				Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(hitBy);
+				if (expansionExplosive && expansionExplosive.habGetActivatedBy() != "null"){
+					habLastHitBy = expansionExplosive.habGetActivatedBy();
+				}
+			}
+			#endif
+		}
+	}
+	
 	override void OnPartDestroyedServer( Man player, string part_name, int action_id, bool destroyed_by_connected_part = false )
 	{
-		if (GetGame().IsServer()){
+		if ( GetGame().IsServer() ){
 			PlayerBase sourcePlayer = PlayerBase.Cast(player);
 			if ( sourcePlayer ){
 				habPrint("Player with ID" + sourcePlayer.GetIdentity().GetPlainId() + " Destroyed Item " + GetType() + " part " + part_name, "Debug");
@@ -48,7 +72,7 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + grenade.GetType() + " set by " + grenade.habGetActivatedBy(), "Debug");
 			} 
 			#ifdef EXPANSIONMOD
-			else if ( source.IsInherited(Expansion_C4_Explosion)){
+			else if ( source.IsInherited(Expansion_C4_Explosion) ){
 				Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(source);
 				if ( expansionExplosive ){
 					habPrint( GetType() + " hit by " + expansionExplosive.GetType() + " set by " + expansionExplosive.habGetActivatedBy() +  " in BaseBuildingBase Class", "Debug");
@@ -64,6 +88,8 @@ modded class BaseBuildingBase
 				habPrint( GetType() + " hit by " + sourcePlayer.GetIdentity().GetPlainId() + " with " + source.GetType(), "Debug");
 				habLastHitBy = sourcePlayer.GetIdentity().GetPlainId();
 			}
+		} else if ( damageType == DT_EXPLOSION ) {
+			habPrint( GetType() + " hit by Explosion with unknown source in BaseBuildingBase class" , "Debug");
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}

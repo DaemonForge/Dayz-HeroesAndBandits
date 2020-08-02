@@ -7,7 +7,7 @@ modded class MissionServer
 		habPrint("Saving All Player Data From ~MissionServer", "Debug");
 		GetHeroesAndBandits().SaveAllPlayers();
 	}
-		
+	
 	override void OnInit()
 	{
 		super.OnInit();
@@ -22,9 +22,11 @@ modded class MissionServer
 		}
 		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCSendAffinityUpdate", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABPlayerData", this, SingeplayerExecutionType.Both );
+		GetRPCManager().AddRPC( "HaB", "RPCRequestHABIcon", this, SingeplayerExecutionType.Both );
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "UpdateAllPlayersSettings", 600000, true);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "UpdateAllPlayersSettings", 300 * 1000, true);
 		
 	}
 	
@@ -36,9 +38,11 @@ modded class MissionServer
 		if ( identity )
 		{
 			string playerID = identity.GetPlainId();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 3000, false, new Param1<ref PlayerBase >( player ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 1500, false, new Param1<ref PlayerBase >( player ));
 		}
 	}
+	
+	
 	
 	override void InvokeOnDisconnect( PlayerBase player )
 	{
@@ -51,6 +55,27 @@ modded class MissionServer
 	}
 	
 	
+		
+	void RPCRequestHABIcon( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		Param1< string > data;
+		if ( !ctx.Read( data ) ) return;
+        string playerName = data.param1;
+		if ( playerName != "" ){
+			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByName(playerName));
+			string imageIcon = GetHeroesAndBanditsLevels().DefaultAffinity.Image;
+			if (player.habGetAffinityIndex() != -1){
+				imageIcon = GetHeroesAndBanditsLevels().Affinities.Get(player.habGetAffinityIndex()).Image;
+			}
+			if ( GetHeroesAndBanditsSettings().Expansion_ImageTypePlayerTag == 1 ){
+				imageIcon = GetHeroesAndBanditsLevels().DefaultLevel.LevelImage;
+				if (player.habGetAffinityIndex() != -1){
+					imageIcon =  GetHeroesAndBanditsLevels().Levels.Get(player.habGetLevelIndex()).LevelImage;
+				}
+			}
+			GetRPCManager().SendRPC("HaB", "RPCReceiveHABIcon", new Param2< string, string >( imageIcon, playerName ), true, sender);
+		}
+	}
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
 		if (player.IsPlayerDisconnected()) { return; }
@@ -158,6 +183,29 @@ modded class MissionServer
 				habMessage = "#HAB_CHECK_NOTFOUND '" + statname + "'";
 				GetHeroesAndBandits().NotifyPlayer( playerID, GetHeroesAndBandits().GetPlayerLevel(playerID).LevelImage , habMessage, GetHeroesAndBandits().GetPlayerLevel(playerID).Name);
 			}
+		}
+	}
+	
+	//Adding so debuggin is easier :)
+	void RPCSendAffinityUpdate( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	{
+		if ( GetHeroesAndBanditsSettings().DebugCommand )
+		{
+			if (!sender)
+			{
+				return;
+			}
+			Param3< string, string, int > data  //Player ID, Icon
+			if ( !ctx.Read( data ) ) 
+			{
+				return;
+			}
+			string statname = data.param2;
+			string playerID = sender.GetPlainId();
+			habPrint("Affinity Update from:" + playerID + " Command:" + data.param1 + " " + statname + " " + data.param3, "Always");
+			GetHeroesAndBandits().GetPlayer(playerID).addAffinityPoints(statname, data.param3);
+			PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+			player.habLevelChange( GetHeroesAndBandits().GetPlayer(playerID).getAffinityIndex() , GetHeroesAndBandits().GetPlayer(playerID).getAffinityPoints(GetHeroesAndBandits().GetPlayer(playerID).getAffinityName()), GetHeroesAndBandits().GetPlayer(playerID).getLevelIndex());
 		}
 	}
 	

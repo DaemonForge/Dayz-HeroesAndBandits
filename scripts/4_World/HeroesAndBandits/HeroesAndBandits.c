@@ -1,3 +1,4 @@
+//Server Variables
 ref HeroesAndBandits m_HeroesAndBandits;
 ref HeroesAndBanditsConfig m_HeroesAndBanditsConfig;
 ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
@@ -5,10 +6,12 @@ ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
 ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
 ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
 
-
+//Client Variables
+ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
 ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
 ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
 ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
+
 
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
@@ -33,7 +36,7 @@ class HeroesAndBandits
 				int x = GetHeroesAndBanditsZones().Zones.Get(i).X;
 				int z = GetHeroesAndBanditsZones().Zones.Get(i).Z;
 				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i);
+				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i + 1);
 			}
 		}
 	}
@@ -59,6 +62,7 @@ class HeroesAndBandits
 			return;
 		}else{
 			loadPlayer(playerIdent.GetPlainId());
+			
 		}
 	}
 	
@@ -81,29 +85,50 @@ class HeroesAndBandits
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
 			if ( p.PlayerID ==  playerID)
 			{
+				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
+				if (player.habIsInZone()){
+					if (player.habTopZoneIndex() != -1 ){
+						if (Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones()).PerventActions){
+							return;
+						}
+					}
+				}
 				bool didLevelUp = p.NewAction(action);
 				habAction tempAction = GetHeroesAndBanditsActions().getAction(action);
 				if (tempAction.NotifiyPlayer){
 					string prefix = "";
 					string postix = "";
 					float actionHumanity = tempAction.Points;
-					if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "hero"){
+					if (GetHeroesAndBanditsSettings().Mode != 1 && tempAction.Affinity == "hero"){
 						prefix = "+";
 						postix = " #HAB_HUMANITY";
-					} else if (GetHeroesAndBanditsSettings().Mode == 0 && tempAction.Affinity == "bandit") {
+					} else if (GetHeroesAndBanditsSettings().Mode != 1 && tempAction.Affinity == "bandit") {
 						prefix = "-";
 						postix = " #HAB_HUMANITY";
-					} else if (GetHeroesAndBanditsSettings().Mode == 1){
+					} else {
 						prefix = "+";
 						postix = " " + GetHeroesAndBanditsLevels().getAffinity(tempAction.Affinity).DisplayName;
 					}
 					NotifyPlayer(playerID, p.getLevel().LevelImage, prefix + actionHumanity + postix );	
 				}
-				if (didLevelUp)
-				{
-					PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
-					if (player){
-						GetRPCManager().SendRPC("HaB", "RPCUpdateHABIcon", new Param2< string, string >(playerID, p.getLevel().LevelImage), false, player.GetIdentity());
+				float affinityPoints = 0;
+				if (GetHeroesAndBanditsSettings().Mode != 1){
+					affinityPoints = p.getHumanity();
+					if (affinityPoints < 0 ){
+						affinityPoints = 0 - affinityPoints;
+					}
+				} else if ( GetHeroesAndBanditsSettings().Mode == 1 ){
+					affinityPoints = p.getAffinityPoints(p.getAffinityName());
+				}
+				if (player){
+					if (didLevelUp)
+					{
+						player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
+						if (player){
+							GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( p, p.getLevel() ), true, player.GetIdentity());
+						}
+					} else {
+						player.habCurrentAffinityPointUpdate(affinityPoints);
 					}
 				}
 				if (didLevelUp && GetHeroesAndBanditsLevels().NotifyLevelChange)
@@ -149,7 +174,7 @@ class HeroesAndBandits
 		}
 	}
 	
-	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName){
+	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName, string zoneImage = ""){
 		habPrint("Kill Feed Player: " + sourcePlayerID +" killed " + targetPlayerID + " with " + weaponName , "Debug");
 		if (GetHeroesAndBanditsSettings().KillFeed){
 			PlayerBase sourcePlayer = PlayerBase.Cast(habGetPlayerBaseByID(sourcePlayerID));
@@ -160,6 +185,15 @@ class HeroesAndBandits
 				float distance = Math.Round(vector.Distance(sourcePlayer.GetPosition(), targetPlayer.GetPosition()));
 				string message = "#HAB_KILLFEED_PRE " + levelName + " " + sourcePlayer.GetIdentity().GetName() + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName + " #HAB_KILLFEED_AT " + distance + " #HAB_KILLFEED_METERS" ;
 				NotifyKillFeed(levelImage, message);
+			} else if ( targetPlayer ){
+				if (targetPlayer.habIsKilledByZone()){
+					string message2 = "#HAB_KILLFEED_PRE Guard From " + sourcePlayerID + " #HAB_KILLFEED_KILLED " + targetPlayer.GetIdentity().GetName() + " #HAB_KILLFEED_WITH " + weaponName ;
+					if ( zoneImage == "" )
+					{
+						zoneImage = GetHeroesAndBanditsZones().WarningMessageImagePath;
+					}
+					NotifyKillFeed(zoneImage, message2);
+				}
 			}
 		}
 	}
@@ -204,6 +238,7 @@ class HeroesAndBandits
 		}
 		return false;
 	}
+	
 	
 	float GetPlayerHumanity( string pID )
 	{
@@ -283,6 +318,23 @@ class HeroesAndBandits
 		return GetHeroesAndBanditsLevels().DefaultLevel.Affinity;
 	}
 	
+	float GetPlayerAffinityPoints( string pID, string affinityName )
+	{
+		if (!IsPlayerLoaded(pID))
+		{
+			loadPlayer(pID);
+		}
+		for ( int i = 0; i < HeroesAndBanditsPlayers.Count(); i++ )
+		{
+			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);
+			if ( p.PlayerID ==  pID)
+			{
+				return p.getAffinityPoints(affinityName);
+			}
+		}
+	    habPrint("Failed to get points for Affinity " + affinityName + " for Player " + pID , "Exception");	
+		return 0;
+	}
 	habLevel GetPlayerLevel( string pID )
 	{
 		if (!IsPlayerLoaded(pID))
@@ -404,6 +456,8 @@ class HeroesAndBandits
 		SaveAllPlayers();
 	}
 	
+	
+	
 }
 
 
@@ -415,11 +469,15 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 		m_HeroesAndBandits = new HeroesAndBandits;
 		m_HeroesAndBandits.Init();
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "SaveAllPlayers", 300 * 1000, true);
-		if (GetHeroesAndBanditsZones().ZoneCheckTimer >= 1 && m_HeroesAndBandits.Zones ){
-			habPrint("Creating Zone Check Timer", "Debug");
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsZones().ZoneCheckTimer * 1000, true);
-		}else{
-			habPrint("Zone Check Time Less than 1 so not creating timer", "Debug");					
+		if (GetHeroesAndBanditsZones().ZoneCheckTimer >= 0.5 && m_HeroesAndBandits.Zones ){
+			if (m_HeroesAndBandits.Zones.Count() >= 1){
+				habPrint("Creating Zone Check Timer", "Debug");
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsZones().ZoneCheckTimer * 1000, true);
+			} else {
+				habPrint("No zones defined", "Debug");
+			}
+		} else {
+			habPrint("Zone Check Time Less than 0.5 so not creating timer", "Debug");					
 		}
 	}
 	return m_HeroesAndBandits;
@@ -429,7 +487,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 //Helper function to return Config
 static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsSettings)
 		{
 			m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
@@ -446,7 +504,7 @@ static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigLevels)
 		{
 			m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
@@ -463,7 +521,7 @@ static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 //Helper function to return Config
 static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 {
-	if ( GetGame().IsServer() ){
+	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigActions)
 		{
 			m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;
