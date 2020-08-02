@@ -142,7 +142,6 @@ class HeroesAndBandits
 		
 	void WelcomePlayer( string zoneName, string message, string welcomeImage, string playerID, int welcomeColor)
 	{
-			
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 		if (player){
 			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(zoneName), new ref StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
