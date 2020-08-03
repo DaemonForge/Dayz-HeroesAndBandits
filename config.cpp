@@ -2,11 +2,7 @@ class CfgPatches
 {
 	class HeroesAndBandits
 	{
-		units[]={};
-		weapons[]={};
 		requiredVersion=0.1;
-		requiredAddons[]={
-		};
 	};
 };
 
@@ -15,16 +11,13 @@ class CfgMods
 	class HeroesAndBandits
 	{
 		dir="HeroesAndBandits";
-        picture="";
-        action="";
         hideName=1;
         hidePicture=1;
         name="HeroesAndBandits";
         credits="DaemonForge";
         author="DaemonForge";
         authorID="0";
-        version="1.1";
-        extra=0;
+        version="1.2";
         type="mod";
 		inputs = "HeroesAndBandits/data/Inputs.xml";
 	    dependencies[]={ "Game", "World", "Mission" };

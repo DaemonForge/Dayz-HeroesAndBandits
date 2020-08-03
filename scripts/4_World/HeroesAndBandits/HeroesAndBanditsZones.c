@@ -269,18 +269,20 @@ class HeroesAndBanditsZone
 		return false;
 	}
 		
-	HeroesAndBanditsGuard GetClosestGuard(vector playerPostion)
+	HeroesAndBanditsGuard GetClosestGuard(PlayerBase inPlayer)
 	{
-		if (!Guards)//If no guards defined exit
+		PlayerBase player = PlayerBase.Cast(inPlayer);
+		if (!Guards || !player)//If no guards defined exit
 		{
 			return null;
 		}
+		vector playerPostion = player.GetPosition();
 		int closestGuardIndex = -1;
 		float closestGuardDistance = 600;
 		for ( int i = 0; i < Guards.Count(); i++ )
 		{	
 			float currentGuardDistance = vector.Distance( Guards.Get(i).getVector(), playerPostion);
-			if ( Guards.Get(i).IsAlive() && currentGuardDistance < closestGuardDistance)
+			if ( Guards.Get(i).IsAlive() && Guards.Get(i).HasLineOfSight(player) > 0  && currentGuardDistance < closestGuardDistance)
 			{
 				closestGuardIndex = i;
 				closestGuardDistance = currentGuardDistance;

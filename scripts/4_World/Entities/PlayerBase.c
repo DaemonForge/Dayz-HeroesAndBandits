@@ -28,6 +28,10 @@ modded class PlayerBase
 	private string m_HeroesAndBandits_KilledByGun = "";
 	private float m_HeroesAndBandits_LatestZoneDmg = 0;
 	
+	private bool m_HeroesAndBandits_ChangeAimSync = false;
+	private bool m_HeroesAndBandits_ChangeAim = false;
+	private float m_HeroesAndBandits_ChangeAimX = 0;
+	private float m_HeroesAndBandits_ChangeAimY = 0;
 
 	
 	override void Init()
@@ -45,6 +49,9 @@ modded class PlayerBase
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_KilledByZone");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_LatestZoneDmg");
 		RegisterNetSyncVariableInt("m_HeroesAndBandits_AIFireWeaponSync");
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_ChangeAimSync");
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_ChangeAimX");
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_ChangeAimY");
 	}
 	
 	override void OnSelectPlayer()
@@ -252,6 +259,10 @@ modded class PlayerBase
 			habAIFireWeapon();
 		}
 		
+		if ( m_HeroesAndBandits_ChangeAimSync != m_HeroesAndBandits_ChangeAim){
+			habAIFireWeapon();
+		}
+		
 	}
 	
 	void habPreventRaiseWeapon(){
@@ -436,7 +447,7 @@ modded class PlayerBase
 			habPrint(GetIdentity().GetName() + " hit in " + hitZone + " from " + source.ZoneName + " for " + dmg + " damage", "Debug");
 		}	
 		float bleed = Math.RandomFloat(0,1);
-		if ( GetBleedingManagerServer() && bleed < 0.23)
+		if ( hitZone != "" && GetBleedingManagerServer() && bleed < 0.23)
 		{
 			GetBleedingManagerServer().AttemptAddBleedingSourceBySelection(hitZone);
 		}
@@ -812,8 +823,19 @@ modded class PlayerBase
 		//GetInputController().OverrideRaise( true, true );
 	}
 	
-	void habAIAimWeapon(float x, float y){
+	void habAIAimWeaponServer(float x, float y = 0){
+		m_HeroesAndBandits_ChangeAimSync = !m_HeroesAndBandits_ChangeAimSync;
+		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
+		m_HeroesAndBandits_ChangeAimX = x;
+		m_HeroesAndBandits_ChangeAimY = y;
 		GetInputController().OverrideAimChangeX(true, x);
 		GetInputController().OverrideAimChangeY(true, y);
+		SetSynchDirty();
+	}
+	
+	void habAIAimWeaponClient(){
+		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
+		GetInputController().OverrideAimChangeX(true, m_HeroesAndBandits_ChangeAimX);
+		GetInputController().OverrideAimChangeY(true, m_HeroesAndBandits_ChangeAimY);
 	}
 }
