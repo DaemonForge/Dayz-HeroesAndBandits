@@ -260,7 +260,7 @@ modded class PlayerBase
 		}
 		
 		if ( m_HeroesAndBandits_ChangeAimSync != m_HeroesAndBandits_ChangeAim){
-			habAIFireWeapon();
+			habAIAimWeaponClient();
 		}
 		
 	}

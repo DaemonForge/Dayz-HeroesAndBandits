@@ -69,8 +69,7 @@ class HeroesAndBanditsZone
 				Guards.Get(j).CanBeKilled = zoneToLoad.Guards.Get(j).CanBeKilled;
 				Guards.Get(j).RequireLightOfSight = zoneToLoad.Guards.Get(j).RequireLightOfSight;
 				Guards.Get(j).Spawn();
-				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 60000, false); //Reload gun 3 minutes after server start
-				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeaponTest", 440000, false); //Reload gun 3 minutes after server start	
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 120 * 1000 , false); //Reload gun 2 minutes after server start
 			}
 		}
 		if (zoneToLoad.SubZones) //Check if any Sub Zones are defined before loading
@@ -91,15 +90,13 @@ class HeroesAndBanditsZone
 	void CheckPlayer(PlayerBase inPlayer, bool allowSpinOff = true){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
-		if ( !player )
-		{
+		if ( !player ){
 			return;
 		}
 			
-		if (player.IsAlive())				
-		{
+		if (player.IsAlive()){
 			
-			HeroesAndBanditsGuard guard = GetClosestGuard(player.GetPosition());
+			HeroesAndBanditsGuard guard = GetClosestGuard(player);
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				player.m_HeroesAndBandits_InZones.Debug();
@@ -132,7 +129,7 @@ class HeroesAndBanditsZone
 					if (allowSpinOff){
 						guard.TrackPlayer(player, GetHeroesAndBanditsZones().ZoneCheckTimer);
 					}
-					guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
+					//guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
 					guard.FireWeapon(player);
 					if ( guard.GunTickMulitplier >= 2 && allowSpinOff){
 						float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
@@ -274,7 +271,7 @@ class HeroesAndBanditsZone
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!Guards || !player)//If no guards defined exit
 		{
-			return null;
+			return NULL;
 		}
 		vector playerPostion = player.GetPosition();
 		int closestGuardIndex = -1;
@@ -282,16 +279,15 @@ class HeroesAndBanditsZone
 		for ( int i = 0; i < Guards.Count(); i++ )
 		{	
 			float currentGuardDistance = vector.Distance( Guards.Get(i).getVector(), playerPostion);
-			if ( Guards.Get(i).IsAlive() && Guards.Get(i).HasLineOfSight(player) > 0  && currentGuardDistance < closestGuardDistance)
-			{
+			if ( Guards.Get(i).IsAlive() && (Guards.Get(i).HasLineOfSight(player) > 0 || !Guards.Get(i).RequireLightOfSight)  && currentGuardDistance < closestGuardDistance) {
 				closestGuardIndex = i;
 				closestGuardDistance = currentGuardDistance;
 			}
 		}
 		if ( closestGuardIndex == -1 ){
-			return null;
+			return NULL;
 		} else {
-			return Guards.Get(closestGuardIndex);
+			return HeroesAndBanditsGuard.Cast(Guards.Get(closestGuardIndex));
 		} 
 	}
 	
