@@ -1,4 +1,4 @@
-modded class ActionUnpin
+modded class ActionUnpin: ActionSingleUseBase
 {
     override void OnStartServer(ActionData action_data)
     {

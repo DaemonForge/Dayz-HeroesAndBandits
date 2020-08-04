@@ -1,4 +1,4 @@
-modded class ActionDestroyCombinationLock
+modded class ActionDestroyCombinationLock: ActionContinuousBase
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{

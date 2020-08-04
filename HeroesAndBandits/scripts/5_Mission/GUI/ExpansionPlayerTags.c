@@ -1,6 +1,6 @@
 #ifdef EXPANSIONMOD
 
-modded class IngameHud
+modded class IngameHud extends Hud
 {
 	string 						m_CurrentTaggedPlayer_HABicon = "";
 	string 						m_CurrentTaggedPlayer_LastRequested = "";

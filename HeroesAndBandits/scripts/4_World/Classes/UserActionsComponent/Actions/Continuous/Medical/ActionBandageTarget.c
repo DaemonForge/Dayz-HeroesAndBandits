@@ -1,4 +1,4 @@
-modded class ActionBurnSewTarget
+modded class ActionBandageTarget: ActionBandageBase
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

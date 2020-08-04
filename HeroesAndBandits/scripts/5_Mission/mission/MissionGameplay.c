@@ -1,4 +1,3 @@
-
 ref habLevel 						g_HeroesAndBanditsLevel;
 
 modded class MissionGameplay extends MissionBase

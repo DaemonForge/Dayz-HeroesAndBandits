@@ -1,4 +1,4 @@
-modded class ActionCPR
+modded class ActionCPR: ActionContinuousBase
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

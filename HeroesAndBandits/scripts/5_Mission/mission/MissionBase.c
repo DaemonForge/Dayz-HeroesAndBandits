@@ -1,4 +1,5 @@
-modded class MissionBase {
+modded class MissionBase extends MissionBaseWorld
+{
 	
     override UIScriptedMenu CreateScriptedMenu (int id) {
         UIScriptedMenu menu = NULL;

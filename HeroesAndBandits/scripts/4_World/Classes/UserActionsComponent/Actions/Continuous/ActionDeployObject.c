@@ -1,4 +1,4 @@
-modded class ActionDeployObject
+modded class ActionDeployObject: ActionContinuousBase
 {	
 	
 	override void OnFinishProgressServer( ActionData action_data )

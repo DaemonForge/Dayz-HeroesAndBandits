@@ -1,4 +1,4 @@
-modded class ActionGiveBloodTarget
+modded class ActionGiveBloodTarget: ActionContinuousBase
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	

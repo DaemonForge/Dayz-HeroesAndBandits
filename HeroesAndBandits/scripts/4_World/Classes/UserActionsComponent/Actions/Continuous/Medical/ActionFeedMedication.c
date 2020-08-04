@@ -1,4 +1,4 @@
-modded class ActionFeedTetracyclineAntibiotics
+modded class ActionFeedTetracyclineAntibiotics: ActionForceConsume
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
@@ -9,7 +9,7 @@ modded class ActionFeedTetracyclineAntibiotics
 	}
 }
 
-modded class ActionFeedPainkillerTablets
+modded class ActionFeedPainkillerTablets: ActionForceConsume
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
@@ -21,7 +21,7 @@ modded class ActionFeedPainkillerTablets
 }
 
   
-modded class ActionFeedCharcoalTablets
+modded class ActionFeedCharcoalTablets: ActionForceConsume
 {
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
@@ -32,7 +32,7 @@ modded class ActionFeedCharcoalTablets
 	}
 }
 
-modded class ActionFeedVitaminBottle
+modded class ActionFeedVitaminBottle: ActionForceConsume
 {	
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
