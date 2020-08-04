@@ -1,5 +1,5 @@
 #ifdef EXPANSIONMOD
-	modded class ExpansionBaseBuilding
+	modded class ExpansionBaseBuilding extends BaseBuildingBase
 	{
 		override void EEKilled( Object killer )
 		{

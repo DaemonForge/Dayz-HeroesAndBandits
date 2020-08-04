@@ -1,4 +1,4 @@
-modded class Grenade_Base extends InventoryItemSuper
+modded class Grenade_Base
 {
     protected string hab_ActivatedByID;
 

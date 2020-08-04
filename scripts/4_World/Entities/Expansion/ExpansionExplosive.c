@@ -1,5 +1,5 @@
 #ifdef EXPANSIONMOD
-	modded class ExpansionExplosive
+	modded class ExpansionExplosive: Inventory_Base
 	{
 		protected string hab_ActivatedByID;		// ID for player who placed Explosive
 	    
@@ -46,7 +46,7 @@
 	}
 
 
-	modded class Expansion_C4_Explosion
+	modded class Expansion_C4_Explosion: BuildingBase
 	{
 		protected string hab_ActivatedByID;		// ID for player who placed Explosive
 	    

@@ -1,4 +1,4 @@
-modded class PlayerBase extends ManBase
+modded class PlayerBase
 {
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;

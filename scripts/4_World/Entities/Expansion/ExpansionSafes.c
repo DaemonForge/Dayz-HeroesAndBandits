@@ -1,5 +1,5 @@
 #ifdef EXPANSIONMOD
-	modded class ExpansionSafeBase
+	modded class ExpansionSafeBase extends Container_Base
 	{
 		string habLastHitBy;
 		bool habKilled = false;

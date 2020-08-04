@@ -69,7 +69,7 @@ class HeroesAndBanditsZone
 				Guards.Get(j).CanBeKilled = zoneToLoad.Guards.Get(j).CanBeKilled;
 				Guards.Get(j).RequireLightOfSight = zoneToLoad.Guards.Get(j).RequireLightOfSight;
 				Guards.Get(j).Spawn();
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 120 * 1000 , false); //Reload gun 2 minutes after server start
+				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 120 * 1000 , false); //Reload gun 2 minutes after server start
 			}
 		}
 		if (zoneToLoad.SubZones) //Check if any Sub Zones are defined before loading

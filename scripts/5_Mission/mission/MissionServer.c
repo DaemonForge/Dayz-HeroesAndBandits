@@ -1,6 +1,6 @@
 
 
-modded class MissionServer
+modded class MissionServer extends MissionBase
 {
     void ~MissionServer()
 	{

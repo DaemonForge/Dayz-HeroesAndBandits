@@ -85,7 +85,7 @@ class HeroesAndBanditsGuard
 	{
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
 		Weapon weapon = Weapon.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		DayZPlayer GuardZ = DayZPlayer.Cast(Guard);
+		DayZPlayer GuardZ = Guard;
 			if (weapon && GuardZ && WeaponInHandsMag != "") {	
 				Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
 				ref array<Magazine> mag_Array = new array<Magazine>;
@@ -349,14 +349,14 @@ class HeroesAndBanditsGuard
 		vector runTowardsDirection = vector.Direction(player.GetPosition(), Guard.GetPosition());
 		vector runAwayDirection = vector.Direction(Guard.GetPosition(), player.GetPosition());
 		vector playerDirection = player.GetDirection();
-		vector playerSpeed = player.GetSpeed();
+		float playerSpeed = player.GetCommand_Move().GetCurrentMovementSpeed();
 		float awayDif = GetRotateDiff(playerDirection, runTowardsDirection);
 		if ( awayDif < 0 ){ awayDif = -awayDif;}
 		habPrint("Away Dir: " + awayDif ,"Debug");
 		float toDif = GetRotateDiff(playerDirection, runAwayDirection);
 		if ( toDif < 0 ){ toDif = -toDif;}
 		habPrint("To Dir: " + toDif ,"Debug");
-		if (playerSpeed == vector.Zero || toDif < 0.5 ||  toDif < 0.5){
+		if (playerSpeed < 0.2 || toDif < 0.5 ||  toDif < 0.5){
 			habPrint("Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");
 		} else {
 			habPrint("Accuracy Reduction player moving Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");	
@@ -379,34 +379,41 @@ class HeroesAndBanditsGuard
 		float curX = curDirection[0];
 		float optimalX = optimalDirection[0];
 		float difX = vector.Distance(Vector(curX, 0, 0), Vector(optimalX, 0,0)); 
-		float checkX = curX + difX;
-		if ( checkX == optimalX){
+		vector dirX = vector.Direction(Vector(curX, 0, 0), Vector(optimalX, 0,0));
+		if ( dirX[0] < 0){
 			
-		} else {
 			difX = -difX;
 		}
-		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difX: " + difX, "Debug");
+		
+		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difX: " + difX + " dirX: " + dirX, "Debug");
 		return difX;
 	}
 	
 	protected void RotateToFaceTick(vector direction, int maxCount = 20, int tickInterval = 100){
-		float dir = GetRotateDiff(Guard.GetDirection(), direction);
-		if ( dir < 0.8 || dir > -0.8){
-			Guard.habAIAimWeaponServer( 0 );
+		vector curDir = Guard.GetDirection();
+		float dir = GetRotateDiff(curDir, direction);
+		float newX = curDir[0];
+		if ( dir < 0.4 || dir > -0.4){
+			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
-		} else if (dir >= 0.8 ){
-			Guard.habAIAimWeaponServer( 0.6 );
-		} else if (dir <= -0.8 ){
-			Guard.habAIAimWeaponServer( -0.6 );
+			Guard.SetDirection(Vector( direction[0],curDir[1],curDir[2]));
+		} else if (dir >= 0.4 ){
+			//Guard.habAIAimWeaponServer( 0.6 );
+			newX = newX + 0.4;
+			Guard.SetDirection(Vector( newX,curDir[1],curDir[2]));
+		} else if (dir <= -0.4 ){
+			//Guard.habAIAimWeaponServer( -0.6 );
+			newX = newX - 0.4;
+			Guard.SetDirection(Vector( newX,curDir[1],curDir[2]));
 		}
 		if (maxCount > 0 && tickInterval > 10 && !InteruptRotate){
 			float newCount = maxCount - 1;
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.RotateToFaceTick, tickInterval, false, direction, tickInterval, newCount );
-			if (InteruptRotate){
-				InteruptRotate = false;
-			}
+
 		}
-		
+		if (InteruptRotate){
+			InteruptRotate = false;
+		}
 	}
 	
 	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 150)

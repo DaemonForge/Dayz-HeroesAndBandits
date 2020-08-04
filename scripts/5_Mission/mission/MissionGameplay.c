@@ -1,7 +1,7 @@
 
 ref habLevel 						g_HeroesAndBanditsLevel;
 
-modded class MissionGameplay
+modded class MissionGameplay extends MissionBase
 {
 	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
 	ref HeroesAndBanditsStatusBarIconUI		m_HeroesAndBanditsStatusBarIconUI;
