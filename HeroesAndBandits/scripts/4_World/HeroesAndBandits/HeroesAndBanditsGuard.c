@@ -27,6 +27,7 @@ class HeroesAndBanditsGuard
 	bool StopTracking = true;
 	bool InteruptRotate = false;
 	string AmmoType = "";
+	vector DefaultDirection;
 	
     void HeroesAndBanditsGuard(float x, float y, float z, float orientation, string skin, string weaponInHands, string weaponInHandsMag, TStringArray weaponInHandsAttachments, TStringArray guardGear) 
 	{
@@ -73,11 +74,11 @@ class HeroesAndBanditsGuard
 					weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
 				}
 			}
-				
 		}
 		vector guardOrientation = Vector(Orientation, 0, 0);
 			
 		obj.SetOrientation(guardOrientation);
+		DefaultDirection = Guard.GetDirection();
 		RespawnTriggered = false;
 	}
 	
@@ -104,10 +105,14 @@ class HeroesAndBanditsGuard
 			habPrint("Raise Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
 			if (Guard && !WeaponIsRaised)
 			{	
-				WeaponIsRaised = true;
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.DelayedRaiseWeapon, 1000, false);
 				Guard.habAIRaiseWeaponServer();
 			}
 		}
+	}
+	
+	void DelayedRaiseWeapon(){
+		WeaponIsRaised = true;
 	}
 	
 	void LowerWeapon()
@@ -145,7 +150,8 @@ class HeroesAndBanditsGuard
 		}
 		bool lineOfSight = false;
 		bool possibleHits = HasLineOfSight(player) ;
-		if (possibleHits > 0){
+		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
+		if (possibleHits > 0 && (dirDiff < 0.8 || dirDiff > -0.8) || !RequireLightOfSight){
 			lineOfSight = true;
 		}
 		string hitZone = "";
@@ -162,10 +168,8 @@ class HeroesAndBanditsGuard
 		} else {
 			hitZone = FullHitZone.GetRandomElement();
 		}
-		if (IsAlive() && player.IsAlive() && (lineOfSight && RequireLightOfSight)){
-			if ( possibleHits == 1 ){
-				
-			}
+		
+		if (IsAlive() && player.IsAlive() && lineOfSight && WeaponIsRaised ){
 			habPrint("Firing Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
 			EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
 			if (weaponInHands.IsWeapon())
@@ -356,7 +360,7 @@ class HeroesAndBanditsGuard
 		float toDif = GetRotateDiff(playerDirection, runAwayDirection);
 		if ( toDif < 0 ){ toDif = -toDif;}
 		habPrint("To Dir: " + toDif ,"Debug");
-		if (playerSpeed < 0.2 || toDif < 0.5 ||  toDif < 0.5){
+		if (playerSpeed < 0.5 || toDif < 1.5 ||  toDif > -1.5){
 			habPrint("Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");
 		} else {
 			habPrint("Accuracy Reduction player moving Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");	
@@ -378,6 +382,22 @@ class HeroesAndBanditsGuard
 	float GetRotateDiff(vector curDirection, vector optimalDirection){
 		float curX = curDirection[0];
 		float optimalX = optimalDirection[0];
+		float curZ = curDirection[2];
+		float optimalZ = optimalDirection[2];
+		float dif = vector.Distance(Vector(curX, 0, curZ), Vector(optimalX, 0,optimalZ)); 
+		vector dir = vector.Direction(Vector(curX, 0, curZ), Vector(optimalX, 0,optimalZ));
+		if ( dir[0] < 0){
+			
+			dif = -dif;
+		}
+		
+		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " dif: " + dif + " dir: " + dir, "Debug");
+		return dif;
+	}
+	
+	float GetRotateDiffX(vector curDirection, vector optimalDirection){
+		float curX = curDirection[0];
+		float optimalX = optimalDirection[0];
 		float difX = vector.Distance(Vector(curX, 0, 0), Vector(optimalX, 0,0)); 
 		vector dirX = vector.Direction(Vector(curX, 0, 0), Vector(optimalX, 0,0));
 		if ( dirX[0] < 0){
@@ -389,23 +409,51 @@ class HeroesAndBanditsGuard
 		return difX;
 	}
 	
+	float GetRotateDiffZ(vector curDirection, vector optimalDirection){
+		float curZ = curDirection[2];
+		float optimalZ = optimalDirection[2];
+		float difZ = vector.Distance(Vector(0, 0, curZ), Vector(0, 0,optimalZ)); 
+		vector dirZ = vector.Direction(Vector(0, 0, curZ), Vector(0, 0,optimalZ));
+		if ( dirZ[2] < 0){
+			
+			difZ = -difZ;
+		}
+		
+		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difZ: " + difZ + " dirZ: " + dirZ, "Debug");
+		return difZ;
+	}
+	
 	protected void RotateToFaceTick(vector direction, int maxCount = 20, int tickInterval = 100){
 		vector curDir = Guard.GetDirection();
-		float dir = GetRotateDiff(curDir, direction);
+		float dirX = GetRotateDiffX(curDir, direction);
+		float dirZ = GetRotateDiffZ(curDir, direction);
 		float newX = curDir[0];
-		if ( dir < 0.4 || dir > -0.4){
+		float newZ = curDir[2];
+		if ( dirX < 1 || dirX > -1){
+			newX = direction[0];
 			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
-			Guard.SetDirection(Vector( direction[0],curDir[1],curDir[2]));
-		} else if (dir >= 0.4 ){
+		} else if (dirX >= 1 ){
 			//Guard.habAIAimWeaponServer( 0.6 );
-			newX = newX + 0.4;
-			Guard.SetDirection(Vector( newX,curDir[1],curDir[2]));
-		} else if (dir <= -0.4 ){
+			newX = newX + 1;
+			Guard.SetDirection(Vector( newX,direction[1],newZ));
+		} else if (dirX <= -1 ){
 			//Guard.habAIAimWeaponServer( -0.6 );
-			newX = newX - 0.4;
-			Guard.SetDirection(Vector( newX,curDir[1],curDir[2]));
+			newX = newX - 1;
 		}
+		if ( dirZ < 0.2 || dirZ > -0.2){
+			newZ = direction[2];
+			//Guard.habAIAimWeaponServer( 0 );
+			maxCount = 0;
+		} else if (dirZ >= 0.2 ){
+			//Guard.habAIAimWeaponServer( 0.6 );
+			newZ = newZ + 0.2;
+		} else if (dirZ <= -0.2 ){
+			//Guard.habAIAimWeaponServer( -0.6 );
+			newZ = newZ - 0.2;
+		}
+		Guard.SetDirection(Vector( newX,direction[1],newZ));
+		
 		if (maxCount > 0 && tickInterval > 10 && !InteruptRotate){
 			float newCount = maxCount - 1;
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.RotateToFaceTick, tickInterval, false, direction, tickInterval, newCount );

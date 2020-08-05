@@ -1,4 +1,4 @@
-modded class DayZPlayerImplement
+modded class DayZPlayerImplement extends DayZPlayer
 {
 	override void SetSuicide(bool state)
 	{
