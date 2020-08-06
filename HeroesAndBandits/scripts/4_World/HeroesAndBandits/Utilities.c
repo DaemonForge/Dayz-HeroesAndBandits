@@ -1,4 +1,3 @@
-
 //Return an array of file names for all the files in the specified directory
 TStringArray habFindFilesInDirectory(string directory) 
 { 

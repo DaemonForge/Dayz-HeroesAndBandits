@@ -36,7 +36,7 @@ class HeroesAndBandits
 				int x = GetHeroesAndBanditsZones().Zones.Get(i).X;
 				int z = GetHeroesAndBanditsZones().Zones.Get(i).Z;
 				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i + 1);
+				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i);
 			}
 		}
 	}
@@ -88,7 +88,16 @@ class HeroesAndBandits
 				PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 				if (player.habIsInZone()){
 					if (player.habTopZoneIndex() != -1 ){
-						if (Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones()).PerventActions){
+						HeroesAndBanditsZone tempZone;
+						if (player.habGetInZones().Count() == 1){
+							tempZone = Zones.Get(player.habTopZoneIndex());
+						} else {
+							tempZone = Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones());
+						}
+						habPrint("New Player Action Checking Zones: " + player.GetIdentity().GetName() + " habTopZoneIndex: " + player.habTopZoneIndex(), "Debug");
+						habPrint(" Zone:" + Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones()).Name, "Debug");
+						habPrint(" PreventActions:" + Zones.Get(player.habTopZoneIndex()).GetChild(player.habGetInZones()).PreventActions, "Debug");
+						if (tempZone && tempZone.PreventActions){
 							return;
 						}
 					}
@@ -174,7 +183,7 @@ class HeroesAndBandits
 		}
 	}
 	
-	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName, string zoneImage = ""){
+	void TriggerKillFeed(string sourcePlayerID, string targetPlayerID, string weaponName, int deathType = -1, string zoneImage = ""){
 		habPrint("Kill Feed Player: " + sourcePlayerID +" killed " + targetPlayerID + " with " + weaponName , "Debug");
 		if (GetHeroesAndBanditsSettings().KillFeed){
 			PlayerBase sourcePlayer = PlayerBase.Cast(habGetPlayerBaseByID(sourcePlayerID));

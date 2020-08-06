@@ -140,7 +140,7 @@ class HABSimpleZones{
 	bool OverrideSafeZone = true;
 	bool GodModPlayers = true;
 	bool PreventWeaponRaise = true;
-	bool PerventActions = true;
+	bool PreventActions = true;
 	
 	void HABSimpleZones(string name, float x, float y, float radius){
 		Name = name;

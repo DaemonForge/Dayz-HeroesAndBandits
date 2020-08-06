@@ -38,7 +38,7 @@ class HeroesAndBanditsGuard
 		Skin = skin;
 		WeaponInHands = weaponInHands;
 		WeaponInHandsMag = weaponInHandsMag;
-		WeaponInHandsAttachments =  weaponInHandsAttachments;
+		WeaponInHandsAttachments = weaponInHandsAttachments;
 		GuardGear = guardGear;
 		
     }
@@ -75,6 +75,10 @@ class HeroesAndBanditsGuard
 				}
 			}
 		}
+		ClosestPlayerDistance = 600;
+		ClosestPlayerID = "";
+		WeaponIsRaised = false;
+		IsTrackingPlayer = false;
 		vector guardOrientation = Vector(Orientation, 0, 0);
 			
 		obj.SetOrientation(guardOrientation);
@@ -151,7 +155,7 @@ class HeroesAndBanditsGuard
 		bool lineOfSight = false;
 		bool possibleHits = HasLineOfSight(player) ;
 		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
-		if (possibleHits > 0 && (dirDiff < 0.8 || dirDiff > -0.8) || !RequireLightOfSight){
+		if ((possibleHits > 0 && (dirDiff < 0.8 || dirDiff > -0.8)) || !RequireLightOfSight){
 			lineOfSight = true;
 		}
 		string hitZone = "";
@@ -333,6 +337,8 @@ class HeroesAndBanditsGuard
 	bool IsAlive(){
 		if (!Guard.IsAlive() && !RespawnTriggered){
 			RespawnTriggered = true;
+			StopTracking = true;
+			InteruptRotate = false;
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.Spawn, RespawnTimer * 1000 ,false);
 		}
 		return Guard.IsAlive();
@@ -423,48 +429,50 @@ class HeroesAndBanditsGuard
 		return difZ;
 	}
 	
-	protected void RotateToFaceTick(vector direction, int maxCount = 20, int tickInterval = 100){
+	protected void RotateToFaceTick(vector direction, int maxCount = 25, int tickInterval = 80){
 		vector curDir = Guard.GetDirection();
 		float dirX = GetRotateDiffX(curDir, direction);
 		float dirZ = GetRotateDiffZ(curDir, direction);
 		float newX = curDir[0];
 		float newZ = curDir[2];
-		if ( dirX < 1 || dirX > -1){
+		if ( dirX < 0.8 || dirX > -0.8){
 			newX = direction[0];
 			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
-		} else if (dirX >= 1 ){
+		} else if (dirX >= 0.8 ){
 			//Guard.habAIAimWeaponServer( 0.6 );
-			newX = newX + 1;
-			Guard.SetDirection(Vector( newX,direction[1],newZ));
-		} else if (dirX <= -1 ){
+			newX = newX + 0.8;
+		} else if (dirX <= -0.8 ){
 			//Guard.habAIAimWeaponServer( -0.6 );
-			newX = newX - 1;
+			newX = newX - 0.8;
 		}
-		if ( dirZ < 0.2 || dirZ > -0.2){
+		if ( dirZ < 0.15 || dirZ > -0.15){
 			newZ = direction[2];
 			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
-		} else if (dirZ >= 0.2 ){
+		} else if (dirZ >= 0.15 ){
 			//Guard.habAIAimWeaponServer( 0.6 );
-			newZ = newZ + 0.2;
-		} else if (dirZ <= -0.2 ){
+			newZ = newZ + 0.15;
+		} else if (dirZ <= -0.15 ){
 			//Guard.habAIAimWeaponServer( -0.6 );
-			newZ = newZ - 0.2;
+			newZ = newZ - 0.15;
 		}
 		Guard.SetDirection(Vector( newX,direction[1],newZ));
-		
+		if (GetRotateDiff(curDir, direction) < 0.8){
+			maxCount = 0;
+			Guard.SetDirection(Vector( direction[0],direction[1],direction[2]));
+		}
 		if (maxCount > 0 && tickInterval > 10 && !InteruptRotate){
 			float newCount = maxCount - 1;
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.RotateToFaceTick, tickInterval, false, direction, tickInterval, newCount );
 
 		}
-		if (InteruptRotate){
+		if (maxCount != 0 && InteruptRotate){ //Currently only way to intrupt a rotate is via TrackPlayer
 			InteruptRotate = false;
 		}
 	}
 	
-	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 150)
+	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 110)
 	{
 		StopTracking = false;
 		PlayerBase player = PlayerBase.Cast(inPlayer);
@@ -512,7 +520,7 @@ class HeroesAndBanditsGuard
 		}
 		if (StopTracking && player.GetIdentity().GetPlainId() == GetClosetPlayerID()){
 			vector guardOrientation = Vector(Orientation, 0, 0);
-			RotateToFace(guardOrientation, 3, 100);
+			RotateToFace(guardOrientation, 3, 80);
 			SetClosetPlayerDistance( 600, "");
 			LowerWeapon();
 		} else if (StopTracking && GetClosetPlayerID() != player.GetIdentity().GetPlainId()) {

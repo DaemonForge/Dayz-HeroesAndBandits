@@ -1,5 +1,5 @@
 #ifdef EXPANSIONMOD
-	modded class ExpansionExplosive: Inventory_Base
+	modded class ExpansionExplosive extends Inventory_Base
 	{
 		protected string hab_ActivatedByID;		// ID for player who placed Explosive
 	    
@@ -20,9 +20,9 @@
 			}
 		}
 	
-		override void TriggerExplosion()
+		override void Trigger()
 		{
-			super.TriggerExplosion();
+			super.Trigger();
 			if (hab_ActivatedByID)
 			{
 				ref array<Object> objects = new array<Object>;
@@ -46,7 +46,7 @@
 	}
 
 
-	modded class Expansion_C4_Explosion: BuildingBase
+	modded class Expansion_C4_Explosion extends BuildingBase
 	{
 		protected string hab_ActivatedByID;		// ID for player who placed Explosive
 	    

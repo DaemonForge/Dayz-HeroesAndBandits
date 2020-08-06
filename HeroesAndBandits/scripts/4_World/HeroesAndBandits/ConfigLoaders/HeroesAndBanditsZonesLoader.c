@@ -101,7 +101,7 @@ class habZone
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
 	bool PreventWeaponRaise = false;
-	bool PerventActions = false;
+	bool PreventActions = false;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	

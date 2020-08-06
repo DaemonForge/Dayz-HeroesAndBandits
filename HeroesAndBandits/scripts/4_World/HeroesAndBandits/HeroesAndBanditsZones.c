@@ -1,4 +1,3 @@
-
 class HeroesAndBanditsZone
 {
 	int Index; //0 top level zones, 1 sub zone, 2 sub zone of a sub zone etc.
@@ -19,13 +18,14 @@ class HeroesAndBanditsZone
 	bool OverrideSafeZone;
 	bool GodModPlayers;
 	bool PreventWeaponRaise;
-	bool PerventActions;
+	bool PreventActions;
 	float MaxDistance = 600;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
 
 	void Init(habZone zoneToLoad, int zoneID, int index = 0){
+		
 		Index = index;
 		ZoneID = zoneID;
 		Name = zoneToLoad.Name;
@@ -44,8 +44,9 @@ class HeroesAndBanditsZone
 		OverrideSafeZone = zoneToLoad.OverrideSafeZone;
 		GodModPlayers = zoneToLoad.GodModPlayers;
 		PreventWeaponRaise = zoneToLoad.PreventWeaponRaise;
-		PerventActions = zoneToLoad.PerventActions;
+		PreventActions = zoneToLoad.PreventActions;
 		Affinities = zoneToLoad.Affinities;
+		habPrint("[Zone] " + Name + " at X: "+ X + " Z:" + Z + " Index: " + Index + " ZoneID: "+ ZoneID + " PreventActions: " + PreventActions,"Debug");
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
 			{	
@@ -81,7 +82,7 @@ class HeroesAndBanditsZone
 				int x = zoneToLoad.SubZones.Get(i).X;
 				int z = zoneToLoad.SubZones.Get(i).Z;
 				SubZones.Insert(new ref HeroesAndBanditsZone(name, x, z));
-				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), i + 1, Index + 1);
+				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), i, Index + 1);
 			}
 		}
 		
@@ -90,6 +91,7 @@ class HeroesAndBanditsZone
 	void CheckPlayer(PlayerBase inPlayer, bool allowSpinOff = true){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
+		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
 		if ( !player ){
 			return;
 		}
@@ -143,6 +145,9 @@ class HeroesAndBanditsZone
 				} else if (!Guards || Guards.Count() == 0){
 					player.habSetKilledByZone(Name);
 					player.SetHealth(0.0);
+				} else if ( allowSpinOff ){
+				
+					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, trackingBonus * 1000, false, player, false);
 				}
 				//Player Entered Kill Zone Kill Player if warning has been given
 				if (!player.IsAlive()){
@@ -170,8 +175,9 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
 				}
-				if (allowSpinOff){
+				if (guard && allowSpinOff){
 					guard.TrackPlayer(player, GetHeroesAndBanditsZones().ZoneCheckTimer, 220);
+					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, trackingBonus * 1000, false, player, false);
 				}
 				
 				

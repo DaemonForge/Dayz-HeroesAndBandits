@@ -33,6 +33,8 @@ modded class PlayerBase extends ManBase
 	private float m_HeroesAndBandits_ChangeAimX = 0;
 	private float m_HeroesAndBandits_ChangeAimY = 0;
 
+	private int  m_HeroesAndBandits_LastBleedingSourceType = -1;
+	private string  m_HeroesAndBandits_LastBleedingSourceID = "";
 	
 	override void Init()
 	{
@@ -84,6 +86,18 @@ modded class PlayerBase extends ManBase
 		return -1;
 	}
 	
+	int habGetBleedingSourceType(){
+		return m_HeroesAndBandits_LastBleedingSourceType;
+	}
+	
+	string habGetLastBleedingSourceID(){
+		return m_HeroesAndBandits_LastBleedingSourceID;
+	}
+	
+	void habResetBleedingSource(){
+		m_HeroesAndBandits_LastBleedingSourceType = -1;
+		m_HeroesAndBandits_LastBleedingSourceID = "";
+	}
 	
 	array< int > habGetInZones(){
 		return m_HeroesAndBandits_InZones;
@@ -322,14 +336,28 @@ modded class PlayerBase extends ManBase
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
-		if (!GetIdentity()){ return; } //If this isn't Player return
+		if (!GetIdentity()){ 
+			if (m_HeroesAndBandits_IsGuard){
+				
+			} else { 
+				return;
+			}
+		} 
+		PlayerBase targetPlayer = PlayerBase.Cast(this);
+		PlayerBase sourcePlayer;
+		string targetPlayerID = "";
+		string sourcePlayerID = "";
+		string weaponName = "";
+		bool killedByObject = false;
+		bool killedByZombie = false;
+		int deathType = habDeathType.ByUnknown;
+		
+		if (targetPlayer && targetPlayer.GetIdentity()) {
+			targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
+		}
+		
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
-		if (GetGame().IsServer() && GetIdentity()){
-			bool killedByObject = false;
-			string objectPlacerID = "";
-			PlayerBase sourcePlayer;
-			PlayerBase targetPlayer = this;
-			string weaponName = "";
+		if (GetGame().IsServer() && (GetIdentity() || m_HeroesAndBandits_IsGuard)){
 			if (killer.IsMan())	{
 				sourcePlayer = PlayerBase.Cast(killer);
 				weaponName = "#HAB_KILLFEED_FISTS";
@@ -339,7 +367,7 @@ modded class PlayerBase extends ManBase
 			} else if (killer.IsMeleeWeapon()) {
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
 				weaponName = "#HAB_KILLFEED_PRE "+ killer.GetDisplayName();
-			} else if (killer.IsTransport()){
+			} else if (killer.IsTransport() && !m_HeroesAndBandits_IsGuard){
 				CarScript vehicle;
 				if (Class.CastTo(vehicle, killer))
 				{
@@ -355,45 +383,74 @@ modded class PlayerBase extends ManBase
 			} else if (killer.IsInherited(TrapBase)){
 				TrapBase trap = TrapBase.Cast(killer);
 				killedByObject = true;
-				objectPlacerID = trap.habGetActivatedBy();
+				sourcePlayerID = trap.habGetActivatedBy();
 				weaponName =  "#HAB_KILLFEED_PRE " + trap.GetDisplayName();
-				habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectPlacerID,"Debug");
+				habPrint("Player " + targetPlayerID + " Killed by " + weaponName + " placed by " + sourcePlayerID,"Debug");
 			} 
 			#ifdef EXPANSIONMOD
 				else if ( killer.IsInherited(Expansion_C4_Explosion)){
 					Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(killer);
 					if ( expansionExplosive ){
 						killedByObject = true;
-						objectPlacerID = expansionExplosive.habGetActivatedBy();
+						sourcePlayerID = expansionExplosive.habGetActivatedBy();
 						weaponName = "#HAB_KILLFEED_PRE " + "Home Made Explosive"; //TODO
 
-						habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectPlacerID, "Debug");
+						habPrint("Player " + targetPlayerID + " Killed by " + weaponName + " placed by " + sourcePlayerID, "Debug");
 					}
 				}
 			#endif
+			else if (killer.IsInherited(ZombieBase)){
+				killedByZombie = true;
+				deathType = habDeathType.ByZombie;
+			}
+			else if (GetBleedingManagerServer().GetBleedingSourcesCount() > 0){
+				deathType = habDeathType.ByBleeding;
+				if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.ByZombie){
+					killedByZombie = true;
+					deathType = habDeathType.ByZombieBleeding;
+				}
+				sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
+			}
 			else {
 				if ( killer )
 				{
-					habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Killed by " + killer.GetType() ,"Debug");
+					habPrint("Player " + targetPlayerID + " Killed by " + killer.GetType() ,"Debug");
+				}
+				return;
+			}
+			if (m_HeroesAndBandits_IsGuard){
+				if (sourcePlayer.GetIdentity()){
+					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), "GuardKill");
 				}
 				return;
 			}
 			
 			if (( sourcePlayer && targetPlayer ) || ( killedByObject && targetPlayer )) {//Make sure Players are valid
-				string sourcePlayerID;
-				if (killedByObject){
-					sourcePlayerID = objectPlacerID;
-				}else if ( sourcePlayer ) {
+				if ( !killedByObject && sourcePlayer ) {
 					sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 				} else {
 					//Something went wrong perventing a crash
 					habPrint("Something went wrong with Player Killed" ,"Debug");
 					return;
 				}
-
-				string targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
+				
+				string killerAffinity = GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID);
 				if (m_HeroesAndBandits_KilledByZone){
-					   GetHeroesAndBandits().TriggerKillFeed(m_HeroesAndBandits_KilledByZoneName, targetPlayerID, m_HeroesAndBandits_KilledByGun);
+					deathType = habDeathType.ByGuardAI;
+				} else if (sourcePlayerID == targetPlayerID){
+					deathType = habDeathType.BySucide;
+				} else if ( killerAffinity == "hero") {
+					deathType = habDeathType.ByHero;
+				} else if (killerAffinity == "bandit") {
+					deathType = habDeathType.ByBandit;
+				} else if (killerAffinity == "bambi") {
+					deathType = habDeathType.ByBambi;
+				} else {
+					deathType = habDeathType.ByOtherAffinity;
+				}
+				
+				if (m_HeroesAndBandits_KilledByZone){
+					   GetHeroesAndBandits().TriggerKillFeed(m_HeroesAndBandits_KilledByZoneName, targetPlayerID, m_HeroesAndBandits_KilledByGun, deathType);
 				} else if (sourcePlayerID == targetPlayerID){ //Sucide
 					if ( targetPlayer && !targetPlayer.IsInVehicle() ){//If not in Vehicle Crash
 						GetHeroesAndBandits().NewPlayerAction(targetPlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID)+"Sucide");
@@ -401,19 +458,36 @@ modded class PlayerBase extends ManBase
 					} 
 				}else {
 					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
-					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
+					GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName, deathType);
 				}
 			}
+		}
+		if (GetIdentity() && habIsInZone()){
+			habLeftZone(0); 
+			habSetCanRaiseWeapon(true, -1);
 		}
 	}
 	
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
 
+		int beforeHitBleedingSources = 0;
+		
+		string targetPlayerID = "";
+		string sourcePlayerID = "";
+		bool hitByObject = false;
+		bool hitByZombie = false;
+		PlayerBase targetPlayer = PlayerBase.Cast(this);
+		PlayerBase sourcePlayer;
+		
+		if (targetPlayer && targetPlayer.GetIdentity()) {
+			targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
+		}
+		if (GetGame().IsServer() && GetIdentity()){
+			beforeHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
+		}
 		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed && GetGame().IsServer() && GetIdentity()) {
 			m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
-			string sourcePlayerID;
-			string targetPlayerID;
 			string weaponName;
 			if (source.IsInherited(Grenade_Base)){
 				Grenade_Base grenade = Grenade_Base.Cast(source);
@@ -422,14 +496,27 @@ modded class PlayerBase extends ManBase
 				habPrint("Player " + GetIdentity().GetPlainId() + " Killed by " + weaponName + " placed by " + objectActivatedByID,"Debug");
 				sourcePlayerID = objectActivatedByID;
 				targetPlayerID = GetIdentity().GetPlainId();
+				int deathType = habDeathType.ByUnknown;
+				string killerAffinity = GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID);
 				if ( sourcePlayerID != "null" )
 				{
+					if (sourcePlayerID == targetPlayerID){
+						deathType = habDeathType.BySucide;
+					} else if ( killerAffinity == "hero") {
+						deathType = habDeathType.ByHero;
+					} else if (killerAffinity == "bandit") {
+						deathType = habDeathType.ByBandit;
+					} else if (killerAffinity == "bambi") {
+						deathType = habDeathType.ByBambi;
+					} else {
+						deathType = habDeathType.ByOtherAffinity;
+					}
 					if (sourcePlayerID == targetPlayerID){ //Sucide
 						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
 						GetHeroesAndBandits().TriggerSucideFeed(sourcePlayerID);
 					}else {
 						GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
-						GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName);
+						GetHeroesAndBandits().TriggerKillFeed(sourcePlayerID, targetPlayerID, weaponName, deathType);
 					}
 				}
 			} else {
@@ -438,9 +525,87 @@ modded class PlayerBase extends ManBase
 		} else  if ( damageType == DT_EXPLOSION && !source && !this.IsAlive() && GetGame().IsServer() && GetIdentity() ) {
 			habPrint( "" + GetIdentity().GetPlainId() + " killed by Explosion with no source", "Debug");
 		}
+		
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+		int afterHitBleedingSources = 0;
+			if (GetGame().IsServer() && GetIdentity()){
+				afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
+			}
+		if (GetGame().IsServer() && beforeHitBleedingSources < afterHitBleedingSources){
+			if (source.IsMan())	{
+				sourcePlayer = PlayerBase.Cast(source);
+			} else if (source.IsWeapon()) {
+				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
+			} else if (source.IsMeleeWeapon()) {
+				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
+			} else if (source.IsTransport()){
+				CarScript vehicle;
+				if (Class.CastTo(vehicle, source))
+				{
+					if ( vehicle.CrewSize() > 0 )
+					{
+						PlayerBase driver = PlayerBase.Cast(vehicle.CrewMember( 0 ));
+						if ( driver ){
+							sourcePlayer = PlayerBase.Cast(driver);
+						}
+					}
+				}
+			} else if (source.IsInherited(TrapBase)){
+				TrapBase trap = TrapBase.Cast(source);
+				hitByObject = true;
+				sourcePlayerID = trap.habGetActivatedBy();
+				habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Hit by TrapBase placed by " + sourcePlayerID,"Debug");
+			} 
+			#ifdef EXPANSIONMOD
+				else if ( source.IsInherited(Expansion_C4_Explosion)){
+					Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(source);
+					if ( expansionExplosive ){
+						hitByObject = true;
+						sourcePlayerID = expansionExplosive.habGetActivatedBy();
+						
+						habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Hit by Expansion_C4_Explosion placed by " + sourcePlayerID, "Debug");
+					}
+				}
+			#endif
+			else if (source.IsInherited(ZombieBase)){
+				hitByZombie = true;
+				m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByZombie;
+			}
+			else {
+				if ( source )
+				{
+					habPrint("Player " + targetPlayer.GetIdentity().GetPlainId() + " Hit by " + source.GetType() ,"Debug");
+				}
+				return;
+			}
+			if (sourcePlayer){
+				
+				string hitByAffinity = "";
+				if (sourcePlayer.GetIdentity()){
+					sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
+					hitByAffinity = GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID);
+				}
+				if (sourcePlayerID == targetPlayerID){
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.BySucide;
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				} else if ( hitByAffinity == "hero") {
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByHero;
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				} else if (hitByAffinity == "bandit") {
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByBandit;
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				} else if (hitByAffinity == "bambi") {
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByBambi;
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				} else {
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByOtherAffinity;
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				}
+			}
+		}
 	}
 
+	
 	void habHitByAI(float dmg, HeroesAndBanditsGuard source, string hitZone, string ammo)
 	{	
 		if (GetIdentity()){
@@ -450,6 +615,8 @@ modded class PlayerBase extends ManBase
 		if ( hitZone != "" && GetBleedingManagerServer() && bleed < 0.23)
 		{
 			GetBleedingManagerServer().AttemptAddBleedingSourceBySelection(hitZone);
+			m_HeroesAndBandits_LastBleedingSourceType = habDeathType.ByGuardAI;
+			m_HeroesAndBandits_LastBleedingSourceID = source.ZoneName;
 		}
 		
 		if ( m_ActionManager )
@@ -807,6 +974,7 @@ modded class PlayerBase extends ManBase
 		}
 	}
 	
+	
 	void habAIRaiseWeaponServer(){
 		habPrint("habAIRaiseWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = true;
@@ -815,6 +983,7 @@ modded class PlayerBase extends ManBase
 		//GetInputController().OverrideRaise( true, true );
 		SetSynchDirty();
 	}
+	
 	
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
