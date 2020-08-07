@@ -98,7 +98,9 @@ class HeroesAndBanditsZone
 			
 		if (player.IsAlive()){
 			
-			HeroesAndBanditsGuard guard = GetClosestGuard(player);
+			if (!validPlayer(pdata)){
+				HeroesAndBanditsGuard guard = GetClosestGuard(player);
+			}
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				player.m_HeroesAndBandits_InZones.Debug();
