@@ -36,6 +36,11 @@ modded class PlayerBase extends ManBase
 	private int  m_HeroesAndBandits_LastBleedingSourceType = -1;
 	private string  m_HeroesAndBandits_LastBleedingSourceID = "";
 	
+	private bool m_HeroesAndBandits_TraderIsBlocked = false;
+	private int m_HeroesAndBandits_TraderIsBlockedIndex = -1;
+	
+	private float m_HeroesAndBandits_Aggressor = 0;
+	
 	override void Init()
 	{
 		super.Init();
@@ -54,6 +59,12 @@ modded class PlayerBase extends ManBase
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_ChangeAimSync");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_ChangeAimX");
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_ChangeAimY");
+		
+		RegisterNetSyncVariableBool("m_HeroesAndBandits_TraderIsBlocked");
+		
+		
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_Aggressor");
+		
 	}
 	
 	override void OnSelectPlayer()
@@ -68,6 +79,16 @@ modded class PlayerBase extends ManBase
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
 			SetSynchDirty();	
 		}
+	}
+	
+	bool habTraderIsBlocked(){
+		return m_HeroesAndBandits_TraderIsBlocked;
+	}
+	
+	bool habSetTraderBlocked(bool blockTrader = true, int index = 0 ){
+		m_HeroesAndBandits_TraderIsBlockedIndex = index;
+		m_HeroesAndBandits_TraderIsBlocked = blockTrader;
+		SetSynchDirty();
 	}
 	
 	bool habIsGuard(){
@@ -126,39 +147,92 @@ modded class PlayerBase extends ManBase
 		bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
 		bool CheckArmbandBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit" );
 		bool CheckArmbandHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "hero" );
+		
+		bool CheckMaskBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && !GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "bambi" );
+		bool CheckArmbandBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && !GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "bambi" );
 		int index = -1;
+		bool FixMask = false;
+		bool FixArmband = false;
 		if ( createItem ){
 			EntityAI mask = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
 			EntityAI armband = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.ARMBAND));
 			if (CheckMaskBandit && GetHeroesAndBanditsSettings().BanditMasks.Count() > 0){ 
 				if ( mask ){ 
-					
-					
-				} else {
-					
+					index = -1;
+					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(mask.GetType());
+					if (index == -1){
+						GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+						FixMask = true;
+					}
+				} else { //Not Already wearing a mask
+					FixMask = true;
 				}
 			}
 			if (CheckMaskHero && GetHeroesAndBanditsSettings().HeroMasks.Count() > 0){
 				if ( mask ){
-					
-					
-				} else {
-					
+					index = -1;
+					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(mask.GetType());
+					if (index == -1){
+						GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+						FixMask = true;
+					}
+				} else { //Not Already wearing a mask
+					FixMask = true;		
 				}
 			}
-			if (CheckArmbandBandit && GetHeroesAndBanditsSettings().BanditArmBads.Count() > 0){
+			if (CheckArmbandBandit && GetHeroesAndBanditsSettings().BanditArmBands.Count() > 0){
 				if ( armband ){
-					
-				} else {
-					
+					index = -1;
+					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
+					if (index == -1){
+						GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+						FixArmband = true;
+					}
+				} else { //Not Already wearing an Armband
+					FixArmband = true;
 				}
 			}
 			if (CheckArmbandHero && GetHeroesAndBanditsSettings().HeroArmBands.Count() > 0){
 				if ( armband ){
-					
-				} else {
-					
+					index = -1;
+					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
+					if (index == -1){
+						GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+						FixArmband = true;
+					}
+				} else { //Not Already wearing an Armband
+					FixArmband = true;
 				}
+			}
+			if (CheckMaskBambi && mask){
+				index = -1;
+				index = GetHeroesAndBanditsSettings().HeroMasks.Find(mask.GetType());
+				if (index == -1){
+					index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
+				}
+				if (index != 1){
+					GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+				}
+			}
+			if (CheckArmbandBambi && armband){
+				index = -1;
+				index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
+				if (index == -1){
+					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
+				}
+				if (index != 1){
+					GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+				}
+			}
+			if (FixMask && tempAffinity.Name == "bandit"){
+				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().BanditMasks.GetRandomElement());
+			} else if (FixMask && tempAffinity.Name == "hero"){
+				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().HeroMasks.GetRandomElement());
+			}
+			if (FixArmband && tempAffinity.Name == "bandit"){
+				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().BanditArmBands.GetRandomElement());
+			} else if (FixArmband && tempAffinity.Name == "hero"){
+				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().HeroArmBands.GetRandomElement());
 			}
 		}
 	}
@@ -331,6 +405,11 @@ modded class PlayerBase extends ManBase
 		if (m_HeroesAndBandits_CanRaiseWeaponIndex >= index){
 			habSetCanRaiseWeapon( true, -1);
 		}
+		
+		if (m_HeroesAndBandits_TraderIsBlockedIndex >= index){
+			habSetTraderBlocked( false, -1 )
+		}
+	
 	}
 	
 	override void EEKilled(Object killer)
@@ -767,7 +846,7 @@ modded class PlayerBase extends ManBase
 				if (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit"){
 					habPrint("CanReleaseAttachment Item Blocked - "  + attachment.GetType(), "Debug");
 					if (itemInHands){
-						index = GetHeroesAndBanditsSettings().BanditArmBads.Find(itemInHands.GetType());
+						index = GetHeroesAndBanditsSettings().BanditArmBands.Find(itemInHands.GetType());
 						if (index != -1){
 							habPrint("CanReleaseAttachment Item In Hands - " + itemInHands.GetType() + " attachment: "  + attachment.GetType(), "Debug");
 							return super.CanReleaseAttachment(attachment); 
@@ -841,7 +920,7 @@ modded class PlayerBase extends ManBase
 				if ( CheckArmbandHero ){
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
 				} else if (CheckArmbandBandit){
-					index = GetHeroesAndBanditsSettings().BanditArmBads.Find(armband.GetType());
+					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
 				}
 				if (index != -1){
 					habPrint("habRestoreClothing Item Valid index:" + index, "Debug");
@@ -912,7 +991,7 @@ modded class PlayerBase extends ManBase
 			}
 			if (slotId == InventorySlots.ARMBAND){
 				if (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit"){
-					index = GetHeroesAndBanditsSettings().BanditArmBads.Find(itemType);
+					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(itemType);
 					whitelistMode = true;
 					habPrint("CanReceiveAttachment Item Mask Check - index: " + index + " Attachment "  + attachment.GetType(), "Debug");
 				}

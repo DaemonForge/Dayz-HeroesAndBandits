@@ -102,6 +102,8 @@ class habZone
 	bool GodModPlayers = false;
 	bool PreventWeaponRaise = false;
 	bool PreventActions = false;
+	bool BlockTrader = false;
+	bool KillAggressors = false;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	

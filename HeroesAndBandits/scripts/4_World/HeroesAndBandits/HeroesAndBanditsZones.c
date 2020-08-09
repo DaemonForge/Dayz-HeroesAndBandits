@@ -19,6 +19,8 @@ class HeroesAndBanditsZone
 	bool GodModPlayers;
 	bool PreventWeaponRaise;
 	bool PreventActions;
+	bool BlockTrader;
+	bool KillAggressors;
 	float MaxDistance = 600;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
@@ -46,6 +48,8 @@ class HeroesAndBanditsZone
 		PreventWeaponRaise = zoneToLoad.PreventWeaponRaise;
 		PreventActions = zoneToLoad.PreventActions;
 		Affinities = zoneToLoad.Affinities;
+		BlockTrader = zoneToLoad.BlockTrader;
+		KillAggressors = zoneToLoad.KillAggressors;
 		habPrint("[Zone] " + Name + " at X: "+ X + " Z:" + Z + " Index: " + Index + " ZoneID: "+ ZoneID + " PreventActions: " + PreventActions,"Debug");
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
@@ -177,6 +181,14 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
 				}
+				if ( BlockTrader )
+				{
+					player.habSetTraderBlocked(true, -1);
+				}
+				if ( PreventWeaponRaise )
+				{
+					player.habSetCanRaiseWeapon(true, -1);
+				}
 				if (guard && allowSpinOff){
 					guard.TrackPlayer(player, GetHeroesAndBanditsZones().ZoneCheckTimer, 220);
 					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, trackingBonus * 1000, false, player, false);
@@ -189,9 +201,6 @@ class HeroesAndBanditsZone
 				if ( GodModPlayers  && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(true);
-				}
-				if ( PreventWeaponRaise ){
-					player.habSetCanRaiseWeapon(true, -1);
 				}
 				//Player Left Warning Radius
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Name, "Verbose");

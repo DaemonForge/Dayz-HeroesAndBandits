@@ -30,7 +30,7 @@ class HeroesAndBanditsSettings
 	bool BanditCanRemoveMask = false;
 	bool BanditCanRemoveArmBand = true;
 	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
-	ref TStringArray BanditArmBads = {};
+	ref TStringArray BanditArmBands = {};
 	bool HeroCanRemoveMask = true;
 	bool HeroCanRemoveArmBand = true;
 	ref TStringArray HeroMasks = {};
@@ -130,7 +130,7 @@ class HeroesAndBanditsSettings
 		Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
 		Expansion_HideNameOnPlayerTag = false;
 		BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
-		BanditArmBads = {};
+		BanditArmBands = {};
 		HeroMasks = {};
 		HeroArmBands = {};
 	}
