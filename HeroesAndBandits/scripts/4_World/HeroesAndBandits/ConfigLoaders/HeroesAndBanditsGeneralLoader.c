@@ -8,8 +8,7 @@ class HeroesAndBanditsSettings
 	//Default Values
 	string ConfigVersion = "5";
 	
-	int Mode = 0; // 0 is differantial / 1 is highest level / 2 is Mixed
-	
+	int Mode = 0; // 0 is differantial / 1 is highest level / 2 is Mixed 
 	
 	int NotificationMessageTime = 15;
 	
@@ -35,6 +34,7 @@ class HeroesAndBanditsSettings
 	bool HeroCanRemoveArmBand = true;
 	ref TStringArray HeroMasks = {};
 	ref TStringArray HeroArmBands = {};
+	
 	
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;

@@ -21,7 +21,7 @@ class HeroesAndBanditsZone
 	bool PreventActions;
 	bool BlockTrader;
 	bool KillAggressors;
-	float MaxDistance = 600;
+	float MaxDistance = 999;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
@@ -91,19 +91,29 @@ class HeroesAndBanditsZone
 		}
 		
 	}
-		
-	void CheckPlayer(PlayerBase inPlayer, bool allowSpinOff = true){
+	
+	//Returns True if player left the zone
+	bool CheckPlayer(PlayerBase inPlayer, bool allowSpinOff = true){
+		bool PlayerLeftZone = false;
+		bool PlayerLeftSubZone = false;
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
 		if ( !player ){
-			return;
+			return PlayerLeftZone;
 		}
-			
+		
 		if (player.IsAlive()){
 			
 			if (!validPlayer(pdata)){
-				HeroesAndBanditsGuard guard = GetClosestGuard(player);
+				ref HeroesAndBanditsGuard guard = GetClosestGuard(player);
+				if (guard){
+					habPrint("Guard is not null", "Debug");
+				} else {
+					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
+					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
+					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
+				}
 			}
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
@@ -129,17 +139,20 @@ class HeroesAndBanditsZone
 			}
 			else if (!validPlayer(pdata) && player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
 			{
+				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name + " Kill Radius trying to kill them", "Debug");
 				if ( OverrideSafeZone && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(true);
 				}
 				if (!player.habCheckGodMod() && guard){
-					if (allowSpinOff){
-						guard.TrackPlayer(player, GetHeroesAndBanditsZones().ZoneCheckTimer);
+					habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Doesn't have god mod and is has a guard assigned", "Debug");
+					if (guard.IsReadyToTrack()){
+						habPrint("Tracking: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+")", "Debug");
+						guard.TrackPlayer(player, trackingBonus);
 					}
 					//guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
 					guard.FireWeapon(player);
-					if ( guard.GunTickMulitplier >= 2 && allowSpinOff){
+					if ( guard.GunTickMulitplier > 2 && allowSpinOff){
 						float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
 						float delayadd = maxDelayGun / guard.GunTickMulitplier;
 						float delay = delayadd;
@@ -171,6 +184,7 @@ class HeroesAndBanditsZone
 			}
 			else if (!validPlayer(pdata) && !player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
 			{
+				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name + " Warning Radius sending warning", "Verbose");
 				//Player Entered Warning Zone Issue Warning
 				player.habEnteredZone(ZoneID, Index);
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
@@ -190,11 +204,12 @@ class HeroesAndBanditsZone
 					player.habSetCanRaiseWeapon(true, -1);
 				}
 				if (guard && allowSpinOff){
-					guard.TrackPlayer(player, GetHeroesAndBanditsZones().ZoneCheckTimer, 220);
 					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, trackingBonus * 1000, false, player, false);
 				}
-				
-				
+				if (guard && guard.IsReadyToTrack()){
+					habPrint("Tracking: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+")", "Debug");
+					guard.TrackPlayer(player, trackingBonus);
+				}
 			}
 			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))
 			{
@@ -210,17 +225,38 @@ class HeroesAndBanditsZone
 				player.habLeftZone(Index);		
 				if ( GetHeroesAndBanditsSettings().DebugLogs ){
 					player.m_HeroesAndBandits_InZones.Debug();
-				}	
+				}
+				PlayerLeftZone = true;
+				if (!validPlayer(pdata) && BlockTrader )
+				{
+					player.habSetTraderBlocked(false, Index);
+				}
 			}
 			if ( SubZones && player.habIsInZone(ZoneID, Index) )
 			{ 
 				for (int subI = 0; subI < SubZones.Count(); subI++)
 				{
-					SubZones.Get(subI).CheckPlayer(player);
+					if (SubZones.Get(subI).CheckPlayer(player)){
+						PlayerLeftSubZone = true;
+					}
 				}
 			}
 		}
+		if (PlayerLeftSubZone){ //Left Subzone make sure all the required restrictions are renabled
 		
+			if ( validPlayer(pdata) && GodModPlayers  && !player.habCheckGodMod() )
+			{
+				player.SetAllowDamage(true);
+			}
+			if (PreventWeaponRaise && !player.habCanRaiseWeapon()){
+				player.habSetCanRaiseWeapon(false, Index);
+			}
+			if (!validPlayer(pdata) && BlockTrader )
+			{
+				player.habSetTraderBlocked(true, Index);
+			}		
+		}
+		return PlayerLeftZone;
 	}
 	
     void HeroesAndBanditsZone(string name, float x, float z) 
@@ -281,9 +317,9 @@ class HeroesAndBanditsZone
 			}
 		}
 		return false;
-	}
+	} 
 		
-	HeroesAndBanditsGuard GetClosestGuard(PlayerBase inPlayer)
+	ref HeroesAndBanditsGuard GetClosestGuard(PlayerBase inPlayer)
 	{ 
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!Guards || !player)//If no guards defined exit
@@ -292,20 +328,32 @@ class HeroesAndBanditsZone
 		}
 		vector playerPostion = player.GetPosition();
 		int closestGuardIndex = -1;
-		float closestGuardDistance = 600;
+		float closestGuardDistance = MaxDistance;
 		for ( int i = 0; i < Guards.Count(); i++ )
 		{	
 			float currentGuardDistance = vector.Distance( Guards.Get(i).getVector(), playerPostion);
 			bool lineOfSight = (Guards.Get(i).HasLineOfSight(player) > 0 || !Guards.Get(i).RequireLightOfSight);
-			if ( Guards.Get(i).IsAlive() && ( lineOfSight ||  Guards.Get(i).GetClosetPlayerID() == player.GetIdentity().GetPlainId() ) && currentGuardDistance < closestGuardDistance) {
+			if (lineOfSight)
+			{
+				habPrint("Guard has line of sight", "Debug");
+			}
+			if (Guards.Get(i).IsAlive() && Guards.Get(i).GetClosetPlayerID() == player.GetIdentity().GetPlainId() && currentGuardDistance < MaxDistance && lineOfSight){
+				
+				habPrint("Guard is already tracking player", "Debug");
+				return Guards.Get(i);
+			}
+			if ( Guards.Get(i).IsAlive() && lineOfSight && currentGuardDistance < closestGuardDistance) {
 				closestGuardIndex = i;
 				closestGuardDistance = currentGuardDistance;
 			}
 		}
 		if ( closestGuardIndex == -1 ){
+			habPrint("No close enough Guard", "Debug");
 			return NULL;
 		} else {
-			return HeroesAndBanditsGuard.Cast(Guards.Get(closestGuardIndex));
+			habPrint("Getting Guard at Index: " + closestGuardIndex, "Debug");
+			habPrint("Getting Guard at Zone: " + Guards.Get(closestGuardIndex).ZoneName, "Debug");
+			return Guards.Get(closestGuardIndex);
 		} 
 	}
 	

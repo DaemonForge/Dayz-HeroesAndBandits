@@ -28,6 +28,7 @@ class HeroesAndBanditsGuard
 	bool InteruptRotate = false;
 	string AmmoType = "";
 	vector DefaultDirection;
+	bool ReadyForTracking = true;
 	
     void HeroesAndBanditsGuard(float x, float y, float z, float orientation, string skin, string weaponInHands, string weaponInHandsMag, TStringArray weaponInHandsAttachments, TStringArray guardGear) 
 	{
@@ -88,7 +89,7 @@ class HeroesAndBanditsGuard
 	
 	void ReloadWeapon()
 	{
-		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
+		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		Weapon weapon = Weapon.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		DayZPlayer GuardZ = Guard;
 			if (weapon && GuardZ && WeaponInHandsMag != "") {	
@@ -106,10 +107,10 @@ class HeroesAndBanditsGuard
 	void RaiseWeapon()
 	{
 		if (IsAlive()){
-			habPrint("Raise Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Verbose");	
+			habPrint("Raise Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 			if (Guard && !WeaponIsRaised)
 			{	
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.DelayedRaiseWeapon, 1000, false);
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.DelayedRaiseWeapon, 1300, false);
 				Guard.habAIRaiseWeaponServer();
 			}
 		}
@@ -147,6 +148,7 @@ class HeroesAndBanditsGuard
 	
 	void FireWeapon(PlayerBase inPlayer)
 	{
+		habPrint("Attempt Fire Weapon Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!player)
 		{
@@ -155,8 +157,10 @@ class HeroesAndBanditsGuard
 		bool lineOfSight = false;
 		bool possibleHits = HasLineOfSight(player) ;
 		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
-		if ((possibleHits > 0 && (dirDiff < 0.8 || dirDiff > -0.8)) || !RequireLightOfSight){
+		if ((possibleHits > 0 && (dirDiff < 2 || dirDiff > -2)) || !RequireLightOfSight){
 			lineOfSight = true;
+		} else {
+			habPrint("Guard tried to shoot but couldn't possibleHits: " + possibleHits + " dirDiff: " + dirDiff + " RequireLightOfSight: " + RequireLightOfSight,"Debug");
 		}
 		string hitZone = "";
 		TStringArray FullHitZone = {"LeftForeArmRoll","RightArm","LeftArm","RightLeg","LeftLeg","RightForeArmRoll","Torso","Neck","Head","Pelvis","Spine","RightArmExtra","LeftArmExtra","LeftKneeExtra","RightKneeExtra"};
@@ -259,14 +263,14 @@ class HeroesAndBanditsGuard
 		for (int i = headStartIndex;  i >= 0; i--){
 			if ( Object.Cast(results_head.Get( i ).obj)  ){
 				if ( results_head.Get( i ).obj == player){
-					habPrint("RaycastRVProxy results_head (Found Player) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Found Player) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 					found = found + 1;
 					break;
 				} else if (!results_head.Get( i ).obj.IsBush()) {
-					habPrint("RaycastRVProxy results_head (Is Not Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Is Not Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 					break;
 				} else {
-					habPrint("RaycastRVProxy results_head (Is Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Is Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 				}
 			}
 		}
@@ -274,14 +278,14 @@ class HeroesAndBanditsGuard
 		for (int j =  RightArmStartIndex; j >= 0; j--){
 			if ( Object.Cast(results_RightArm.Get( j ).obj) ){
 				if ( results_RightArm.Get( j ).obj == player){
-					habPrint("RaycastRVProxy results_RightArm (Found Player) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_RightArm (Found Player) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
 					found = found + 2;
 					break;
 				} else if (!results_RightArm.Get( j ).obj.IsBush()) {
-					habPrint("RaycastRVProxy results_RightArm (Is Not Bush) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_RightArm (Is Not Bush) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
 					break;
 				} else {
-					habPrint("RaycastRVProxy results_RightArm (Is Bush) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_RightArm (Is Bush) id: " + j + " obj: " + results_RightArm.Get( j ).obj.GetType() + " at pos: " + results_RightArm.Get( j ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_RightArm.Get( j ).obj.GetPosition()), "Debug");
 				}
 			}
 		}
@@ -289,17 +293,18 @@ class HeroesAndBanditsGuard
 		for (int k =  LeftArmStartIndex; k >= 0; k--){
 			if ( Object.Cast(results_LeftArm.Get( k ).obj) ){
 				if ( results_LeftArm.Get( k ).obj == player){
-					habPrint("RaycastRVProxy results_LeftArm (Found Player) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_LeftArm (Found Player) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
 					found = found + 4;
 					break;
 				} else if (!results_LeftArm.Get( k ).obj.IsBush()) {
-					habPrint("RaycastRVProxy results_LeftArm ( Can't Shoot Through) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_LeftArm ( Can't Shoot Through) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
 					break;
 				} else {
-					habPrint("RaycastRVProxy results_LeftArm ( Can Shoot Through) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_LeftArm ( Can Shoot Through) id: " + k + " obj: " + results_LeftArm.Get( k ).obj.GetType() + " at pos: " + results_LeftArm.Get( k ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_LeftArm.Get( k ).obj.GetPosition()), "Debug");
 				}
 			}
 		}
+		habPrint("Found Player " + player.GetIdentity().GetName() + " with LineofSight: " + found, "Debug");
 		return found; 
 	}
 		
@@ -435,26 +440,31 @@ class HeroesAndBanditsGuard
 		float dirZ = GetRotateDiffZ(curDir, direction);
 		float newX = curDir[0];
 		float newZ = curDir[2];
+		
+		/*
+		float dir  = GetRotateDiff(curDir, direction);
+		if ( dir < 0.8 || dir > -0.8){
+			Guard.habAIAimWeaponServer( 0 );
+		} else if (dir >= 0.8 ){
+			Guard.habAIAimWeaponServer( 20 );
+		} else if (dir <= -0.8 ){
+			Guard.habAIAimWeaponServer( 20);
+		}*/
+		
 		if ( dirX < 0.8 || dirX > -0.8){
 			newX = direction[0];
-			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
 		} else if (dirX >= 0.8 ){
-			//Guard.habAIAimWeaponServer( 0.6 );
 			newX = newX + 0.8;
 		} else if (dirX <= -0.8 ){
-			//Guard.habAIAimWeaponServer( -0.6 );
 			newX = newX - 0.8;
 		}
 		if ( dirZ < 0.15 || dirZ > -0.15){
 			newZ = direction[2];
-			//Guard.habAIAimWeaponServer( 0 );
 			maxCount = 0;
 		} else if (dirZ >= 0.15 ){
-			//Guard.habAIAimWeaponServer( 0.6 );
 			newZ = newZ + 0.15;
 		} else if (dirZ <= -0.15 ){
-			//Guard.habAIAimWeaponServer( -0.6 );
 			newZ = newZ - 0.15;
 		}
 		Guard.SetDirection(Vector( newX,direction[1],newZ));
@@ -472,8 +482,17 @@ class HeroesAndBanditsGuard
 		}
 	}
 	
+	bool IsReadyToTrack(){
+		return ReadyForTracking && IsAlive();
+	}
+	
+	void MakeReadyToTrack(){
+		ReadyForTracking = true;
+	}
+	
 	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 110)
 	{
+		ReadyForTracking = false;
 		StopTracking = false;
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!player || intervalMiliSeconds < 10)
@@ -488,6 +507,7 @@ class HeroesAndBanditsGuard
 			interval = interval + intervalMiliSeconds;
 			GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.TrackingPlayerTick, interval, false, player);
 		}
+		GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.MakeReadyToTrack, interval - intervalMiliSeconds, false);
 		GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.UnTrackPlayer, interval + intervalMiliSeconds, false, player);
 	}
 	

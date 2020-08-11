@@ -85,7 +85,7 @@ modded class PlayerBase extends ManBase
 		return m_HeroesAndBandits_TraderIsBlocked;
 	}
 	
-	bool habSetTraderBlocked(bool blockTrader = true, int index = 0 ){
+	void habSetTraderBlocked(bool blockTrader = true, int index = 0 ){
 		m_HeroesAndBandits_TraderIsBlockedIndex = index;
 		m_HeroesAndBandits_TraderIsBlocked = blockTrader;
 		SetSynchDirty();
@@ -270,16 +270,19 @@ modded class PlayerBase extends ManBase
 		bool PlayerHasGodMode = false;
 		#ifdef JM_COT
 			if ( GetGame().IsServer() && m_JMHasGodMode ){
+				habPrint("CheckGodMod COT ADMIN TOOLS ACTIVE", "Debug");
 				PlayerHasGodMode = true;
 			}
 		#endif
 		#ifdef VPPADMINTOOLS
 			if ( GetGame().IsServer() && hasGodmode ){
+				habPrint("CheckGodMod VPP ADMIN TOOLS ACTIVE", "Debug");
 				PlayerHasGodMode = true;
 			}
 		#endif
 		#ifdef ZOMBERRY_AT
 			if ( GetGame().IsServer() && ZBGodMode ){
+				habPrint("CheckGodMod ZOMBERRY ADMIN TOOLS ACTIVE", "Debug");
 				PlayerHasGodMode = true;
 			}
 		#endif
@@ -407,7 +410,7 @@ modded class PlayerBase extends ManBase
 		}
 		
 		if (m_HeroesAndBandits_TraderIsBlockedIndex >= index){
-			habSetTraderBlocked( false, -1 )
+			habSetTraderBlocked( false, -1 );
 		}
 	
 	}
