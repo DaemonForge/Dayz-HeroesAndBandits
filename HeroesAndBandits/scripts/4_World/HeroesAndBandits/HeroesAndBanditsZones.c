@@ -72,7 +72,7 @@ class HeroesAndBanditsZone
 				Guards.Get(j).ZoneName = Name;
 				Guards.Get(j).RespawnTimer = zoneToLoad.Guards.Get(j).RespawnTimer;
 				Guards.Get(j).CanBeKilled = zoneToLoad.Guards.Get(j).CanBeKilled;
-				Guards.Get(j).RequireLightOfSight = zoneToLoad.Guards.Get(j).RequireLightOfSight;
+				Guards.Get(j).RequireLineOfSight = zoneToLoad.Guards.Get(j).RequireLineOfSight;
 				Guards.Get(j).Spawn();
 				//GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(Guards.Get(j), "ReloadWeapon", 120 * 1000 , false); //Reload gun 2 minutes after server start
 			}
@@ -99,6 +99,7 @@ class HeroesAndBanditsZone
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
+		ref HeroesAndBanditsGuard guard;
 		if ( !player ){
 			return PlayerLeftZone;
 		}
@@ -106,12 +107,10 @@ class HeroesAndBanditsZone
 		if (player.IsAlive()){
 			
 			if (!validPlayer(pdata)){
-				ref HeroesAndBanditsGuard guard = GetClosestGuard(player);
+				guard = GetClosestGuard(player);
 				if (guard){
 					habPrint("Guard is not null", "Debug");
 				} else {
-					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
-					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
 					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
 				}
 			}
@@ -332,7 +331,7 @@ class HeroesAndBanditsZone
 		for ( int i = 0; i < Guards.Count(); i++ )
 		{	
 			float currentGuardDistance = vector.Distance( Guards.Get(i).getVector(), playerPostion);
-			bool lineOfSight = (Guards.Get(i).HasLineOfSight(player) > 0 || !Guards.Get(i).RequireLightOfSight);
+			bool lineOfSight = (Guards.Get(i).HasLineOfSight(player) > 0 || !Guards.Get(i).RequireLineOfSight);
 			if (lineOfSight)
 			{
 				habPrint("Guard has line of sight", "Debug");

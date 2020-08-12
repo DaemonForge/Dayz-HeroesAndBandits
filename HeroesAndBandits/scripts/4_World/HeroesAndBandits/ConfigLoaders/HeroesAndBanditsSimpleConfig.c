@@ -1,19 +1,27 @@
- 
 static string HeroesAndBanditsSimpleConfigPATH = HeroesAndBanditsDirectory + "\\simple.json";
 
 class HeroesAndBanditsSimpleConfig
 { 
 	string ConfigVersion = "5";
-	bool UseSimple = true;
+	int UseSimple = 1; //1 use simple 2 convert and save simple to advanced 0 use advanced (2 will set this to 0)
 	
 	//Default Values
 	bool KillFeed = true;
 	bool SucideFeed = false;
 		
 	bool BanditCanRemoveMask = false;
-	ref TStringArray BanditOnlyMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	bool BanditCanRemoveArmBand = true;
+	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	ref TStringArray BanditArmBands = {};
 	bool HeroCanRemoveMask = true;
-	ref TStringArray HeroOnlyMasks = {};
+	bool HeroCanRemoveArmBand = true;
+	ref TStringArray HeroMasks = {};
+	ref TStringArray HeroArmBands = {};
+	
+	
+	ref TStringArray HeroOnlyItems = {};
+	ref TStringArray BadnitOnlyItems = {};
+	
 	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
@@ -30,6 +38,8 @@ class HeroesAndBanditsSimpleConfig
 	// Load config file or create default file if config doesn't exsit
 	bool Load(){
 		if(GetGame().IsServer()){
+			MakeDirectory(HeroesAndBanditsDirectory);
+			MakeDirectory(HeroesAndBanditsPlayerDB);
 			if (FileExist(HeroesAndBanditsSimpleConfigPATH)) //If config exist load File
 			{
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(HeroesAndBanditsSimpleConfigPATH, this);
@@ -141,11 +151,44 @@ class HABSimpleZones{
 	bool GodModPlayers = true;
 	bool PreventWeaponRaise = true;
 	bool PreventActions = true;
+	bool PreventTrade = true;
 	
 	void HABSimpleZones(string name, float x, float y, float radius){
 		Name = name;
 		X = x;
 		Z = y;
 		Radius = radius;
+	}
+}
+
+//Class for holding guard values
+class habSimpleGuard
+{
+	float X;
+	float Y;
+	float Z;
+	float Orientation;
+	string Skin = "";
+	string WeaponInHands = "M4A1";
+	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
+	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
+	int Difficulty = 5; 
+	//5 OP can't be killed Can Shot Throw Objects, and 100% HitChance, 
+	//4 Require Line Of Sight 90% HitChance can't be killed, medium high fire rate 
+	//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
+	//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
+	//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
+
+	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "", string weaponInHands = "") 
+	{
+		X = x;
+		Y = y;
+		Z = z;
+		Orientation = orientation;
+		if ( skin == ""){
+		 	Skin = GetHeroesAndBanditsSettings().BanditSkins.GetRandomElement();
+		}else {
+			Skin = skin;
+		}
 	}
 }

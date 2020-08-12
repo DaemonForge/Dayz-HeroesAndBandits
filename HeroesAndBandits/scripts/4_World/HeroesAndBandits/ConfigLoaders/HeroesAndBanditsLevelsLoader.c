@@ -16,7 +16,6 @@ class HeroesAndBanditsConfigLevels
 	
 		
 	void Load(){
-		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsLevelsPATH)) //If config exist load File
 		{
 	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(HeroesAndBanditsLevelsPATH, this);

@@ -98,7 +98,6 @@ class HeroesAndBanditsSettings
 	
 		// Load config file or create default file if config doesn't exsit
 	void Load(){
-		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsSettingsPATH)) //If config exist load File
 		{
 	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);

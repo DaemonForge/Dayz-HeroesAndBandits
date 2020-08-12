@@ -23,7 +23,7 @@ class HeroesAndBanditsGuard
 	float RespawnTimer = 60;
 	bool RespawnTriggered = true;
 	bool CanBeKilled = false;
-	bool RequireLightOfSight = true;
+	bool RequireLineOfSight = true;
 	bool StopTracking = true;
 	bool InteruptRotate = false;
 	string AmmoType = "";
@@ -46,6 +46,9 @@ class HeroesAndBanditsGuard
 	
 	void Spawn()
 	{		
+		if(!RespawnTriggered){
+			return;
+		}
 		if (PlayerBase.Cast(Guard)){
 			Guard.Delete();
 		}
@@ -58,9 +61,11 @@ class HeroesAndBanditsGuard
 		{	
 			Guard.habSetGuard();
 			Guard.SetAllowDamage(CanBeKilled);
-			for ( int i =0; i < GuardGear.Count(); i++ )
-			{
-				Guard.GetInventory().CreateAttachment(GuardGear.Get(i));
+			if(GuardGear && GuardGear.Count() > 0){
+				for ( int i =0; i < GuardGear.Count(); i++ )
+				{
+					Guard.GetInventory().CreateAttachment(GuardGear.Get(i));
+				}
 			}
 			if (Guard.GetHumanInventory().GetEntityInHands()){
 				habPrint("Item spawned in Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " Item: " + Guard.GetHumanInventory().GetEntityInHands().GetDisplayName() +  " Removing it", "Exception");	
@@ -70,9 +75,11 @@ class HeroesAndBanditsGuard
 			if (weaponInHands){
 				int muzzleType = weaponInHands.GetCurrentMuzzle();
 				AmmoType = GetGame().ConfigGetTextOut( "CfgMagazines " + weaponInHands.GetChamberAmmoTypeName(muzzleType) + " ammo" );
-				for ( int j =0; j < WeaponInHandsAttachments.Count(); j++ )
-				{
-					weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
+				if(WeaponInHandsAttachments && WeaponInHandsAttachments.Count() > 0){
+					for ( int j =0; j < WeaponInHandsAttachments.Count(); j++ )
+					{
+						weaponInHands.GetInventory().CreateAttachment(WeaponInHandsAttachments.Get(j));
+					}
 				}
 			}
 		}
@@ -85,6 +92,7 @@ class HeroesAndBanditsGuard
 		obj.SetOrientation(guardOrientation);
 		DefaultDirection = Guard.GetDirection();
 		RespawnTriggered = false;
+		habPrint("Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z + " Finished Spawning", "Debug");	
 	}
 	
 	void ReloadWeapon()
@@ -157,10 +165,10 @@ class HeroesAndBanditsGuard
 		bool lineOfSight = false;
 		bool possibleHits = HasLineOfSight(player) ;
 		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
-		if ((possibleHits > 0 && (dirDiff < 2 || dirDiff > -2)) || !RequireLightOfSight){
+		if ((possibleHits > 0 && (dirDiff < 2 || dirDiff > -2)) || !RequireLineOfSight){
 			lineOfSight = true;
 		} else {
-			habPrint("Guard tried to shoot but couldn't possibleHits: " + possibleHits + " dirDiff: " + dirDiff + " RequireLightOfSight: " + RequireLightOfSight,"Debug");
+			habPrint("Guard tried to shoot but couldn't possibleHits: " + possibleHits + " dirDiff: " + dirDiff + " RequireLineOfSight: " + RequireLineOfSight,"Debug");
 		}
 		string hitZone = "";
 		TStringArray FullHitZone = {"LeftForeArmRoll","RightArm","LeftArm","RightLeg","LeftLeg","RightForeArmRoll","Torso","Neck","Head","Pelvis","Spine","RightArmExtra","LeftArmExtra","LeftKneeExtra","RightKneeExtra"};
@@ -443,32 +451,32 @@ class HeroesAndBanditsGuard
 		
 		/*
 		float dir  = GetRotateDiff(curDir, direction);
-		if ( dir < 0.8 || dir > -0.8){
+		if ( dir < 1 || dir > -1){
 			Guard.habAIAimWeaponServer( 0 );
-		} else if (dir >= 0.8 ){
+		} else if (dir >= 1 ){
 			Guard.habAIAimWeaponServer( 20 );
-		} else if (dir <= -0.8 ){
+		} else if (dir <= -1 ){
 			Guard.habAIAimWeaponServer( 20);
 		}*/
 		
-		if ( dirX < 0.8 || dirX > -0.8){
+		if ( dirX < 0.6 || dirX > -0.6){
 			newX = direction[0];
 			maxCount = 0;
-		} else if (dirX >= 0.8 ){
-			newX = newX + 0.8;
-		} else if (dirX <= -0.8 ){
-			newX = newX - 0.8;
+		} else if (dirX >= 0.6 ){
+			newX = newX + 0.6;
+		} else if (dirX <= -0.6 ){
+			newX = newX - 0.6;
 		}
-		if ( dirZ < 0.15 || dirZ > -0.15){
+		if ( dirZ < 0.12 || dirZ > -0.12){
 			newZ = direction[2];
 			maxCount = 0;
-		} else if (dirZ >= 0.15 ){
-			newZ = newZ + 0.15;
-		} else if (dirZ <= -0.15 ){
-			newZ = newZ - 0.15;
+		} else if (dirZ >= 0.12 ){
+			newZ = newZ + 0.12;
+		} else if (dirZ <= -0.12 ){
+			newZ = newZ - 0.12;
 		}
 		Guard.SetDirection(Vector( newX,direction[1],newZ));
-		if (GetRotateDiff(curDir, direction) < 0.8){
+		if (GetRotateDiff(curDir, direction) < 0.7){
 			maxCount = 0;
 			Guard.SetDirection(Vector( direction[0],direction[1],direction[2]));
 		}
@@ -489,7 +497,7 @@ class HeroesAndBanditsGuard
 	void MakeReadyToTrack(){
 		ReadyForTracking = true;
 	}
-	
+
 	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 110)
 	{
 		ReadyForTracking = false;

@@ -3,7 +3,7 @@ static string HeroesAndBanditsActionsPATH = HeroesAndBanditsDirectory + "\\actio
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
-	string ConfigVersion = "4";
+	string ConfigVersion = "5";
 	
 	int NotificationMessageTime = 10;
 	
@@ -12,15 +12,21 @@ class HeroesAndBanditsConfigActions
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
 	
 	void Load(){
-		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsActionsPATH)) //If config exist load File
 		{
 	        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(HeroesAndBanditsActionsPATH, this);
+				if(ConfigVersion == "4"){
+					DoV5Upgrade();
+				}
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Actions Config", "Always");	
-			JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, this);
+			Save();
 		}
+	}
+	
+	void Save(){
+		JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, this);
 	}
 	
 	//Returns the Humanity value for the action requested
@@ -156,6 +162,11 @@ class HeroesAndBanditsConfigActions
 	
 	}
 	
+	void DoV5Upgrade(){
+		
+					ConfigVersion = "5";
+					Save();
+	}
 }
 
 

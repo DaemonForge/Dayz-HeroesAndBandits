@@ -9,15 +9,11 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
-		bool didUpgradeToV4 = habCheckUpgradeToConfigV4();
 		GetHeroesAndBanditsSettings();
 		GetHeroesAndBanditsZones();
 		GetHeroesAndBanditsActions();
 		GetHeroesAndBanditsLevels();
 		GetHeroesAndBandits();
-		if (didUpgradeToV4){
-			GetHeroesAndBandits().updatePlayerTotals();
-		}
 		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendAffinityUpdate", this, SingeplayerExecutionType.Both );

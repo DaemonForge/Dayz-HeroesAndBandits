@@ -1,6 +1,5 @@
 //Server Variables
 ref HeroesAndBandits m_HeroesAndBandits;
-ref HeroesAndBanditsConfig m_HeroesAndBanditsConfig;
 ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
 ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
 ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
@@ -464,8 +463,6 @@ class HeroesAndBandits
 		}		
 		SaveAllPlayers();
 	}
-	
-	
 	
 }
 

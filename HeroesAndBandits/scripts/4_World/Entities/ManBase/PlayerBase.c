@@ -40,7 +40,7 @@ modded class PlayerBase extends ManBase
 	private int m_HeroesAndBandits_TraderIsBlockedIndex = -1;
 	
 	private float m_HeroesAndBandits_Aggressor = 0;
-	
+
 	override void Init()
 	{
 		super.Init();
@@ -210,7 +210,7 @@ modded class PlayerBase extends ManBase
 				if (index == -1){
 					index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
 				}
-				if (index != 1){
+				if (index == -1){
 					GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
 				}
 			}
@@ -220,7 +220,7 @@ modded class PlayerBase extends ManBase
 				if (index == -1){
 					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
 				}
-				if (index != 1){
+				if (index == -1){
 					GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
 				}
 			}
@@ -550,9 +550,17 @@ modded class PlayerBase extends ManBase
 		}
 	}
 	
+	void habGuardKillZombie(EntityAI zombie){
+		ZombieBase Zoombie = ZombieBase.Cast(zombie); //Cause I can't use Zombie
+		if (Zoombie){
+			Zoombie.SetHealth("","Health",0);
+		}
+	}
+	
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
 
+		
 		int beforeHitBleedingSources = 0;
 		
 		string targetPlayerID = "";
@@ -561,6 +569,11 @@ modded class PlayerBase extends ManBase
 		bool hitByZombie = false;
 		PlayerBase targetPlayer = PlayerBase.Cast(this);
 		PlayerBase sourcePlayer;
+		
+		if (source.IsInherited(ZombieBase) && habIsGuard()){
+			hitByZombie = true;
+			habGuardKillZombie(source);
+		}
 		
 		if (targetPlayer && targetPlayer.GetIdentity()) {
 			targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
@@ -609,10 +622,19 @@ modded class PlayerBase extends ManBase
 		}
 		
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+
 		int afterHitBleedingSources = 0;
-			if (GetGame().IsServer() && GetIdentity()){
-				afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
-			}
+		if (GetGame().IsServer() && GetIdentity()){
+			afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
+		}
+				
+		if (GetGame().IsServer() && hitByZombie  && habIsGuard() && IsAlive() ){//Heal back after Zombie Hits if guard unless it was a killing blow
+			this.AddHealth("","Health", damageResult.GetDamage( "", "Health" ));
+			if (beforeHitBleedingSources < afterHitBleedingSources){
+				this.GetBleedingManagerServer().RemoveMostSignificantBleedingSource();
+			} 
+		} 
+		
 		if (GetGame().IsServer() && beforeHitBleedingSources < afterHitBleedingSources){
 			if (source.IsMan())	{
 				sourcePlayer = PlayerBase.Cast(source);
@@ -660,6 +682,7 @@ modded class PlayerBase extends ManBase
 				}
 				return;
 			}
+						
 			if (sourcePlayer){
 				
 				string hitByAffinity = "";
@@ -885,7 +908,6 @@ modded class PlayerBase extends ManBase
 			}
 		}
 	}
-
 	
 	void habRestoreClothing(EntityAI item, string slot_name){
 		string slotName = slot_name; 
@@ -1079,14 +1101,14 @@ modded class PlayerBase extends ManBase
 		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
 		m_HeroesAndBandits_ChangeAimX = x;
 		m_HeroesAndBandits_ChangeAimY = y;
-		GetInputController().OverrideAimChangeX(true, x);
-		GetInputController().OverrideAimChangeY(true, y);
+		this.GetInputController().OverrideAimChangeX(true, x);
+		this.GetInputController().OverrideAimChangeY(true, y);
 		SetSynchDirty();
 	}
 	
 	void habAIAimWeaponClient(){
 		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
-		GetInputController().OverrideAimChangeX(true, m_HeroesAndBandits_ChangeAimX);
-		GetInputController().OverrideAimChangeY(true, m_HeroesAndBandits_ChangeAimY);
+		this.GetInputController().OverrideAimChangeX(true, m_HeroesAndBandits_ChangeAimX);
+		this.GetInputController().OverrideAimChangeY(true, m_HeroesAndBandits_ChangeAimY);
 	}
 }

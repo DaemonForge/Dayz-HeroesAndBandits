@@ -19,7 +19,6 @@ class HeroesAndBanditsConfigZones
 	
 	
 	void Load(){
-		habCheckUpgradeToConfigV4();
 		if (FileExist(HeroesAndBanditsZonesPATH)) //If config exist load File
 		{
 	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(HeroesAndBanditsZonesPATH, this);
@@ -59,6 +58,7 @@ class HeroesAndBanditsConfigZones
 	
 	void doV5Upgrade(){
 		ConfigVersion = "5";
+		
 		if (Zones){
 			if (Zones.Count() > 0){
 				for (int i = 0; Zones.Count() < i; i++){
@@ -71,6 +71,26 @@ class HeroesAndBanditsConfigZones
 					}
 					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BanditNotification.paa"){
 						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bandit.paa";
+					}
+					ref array< ref habGuard > TempGuards = Zones.Get(i).Guards;
+					if(TempGuards && TempGuards.Count() > 0){
+						for(int j = 0; j < TempGuards.Count(); j++){
+							string soundset = habConverter.GunToSound.Get(TempGuards.Get(j).WeaponInHands);
+							float damage = 24
+							if (soundset){
+								TempGuards.Get(j).GunSound = soundset;
+								damage = habConverter.GunToDmg.Get(TempGuards.Get(j).WeaponInHands);
+							} else {
+								TempGuards.Get(j).GunSound = "M4_Shot_SoundSet";
+							}
+							TempGuards.Get(j).DamagePerTickMin = damage;
+							TempGuards.Get(j).DamagePerTickRand = damage + 8;
+							TempGuards.Get(j).GunTickMulitplier = 3.0;
+							TempGuards.Get(j).HitChance = 1;
+							TempGuards.Get(j).RespawnTimer = 1200;
+							TempGuards.Get(j).CanBeKilled = false;
+							TempGuards.Get(j).RequireLineOfSight = true;
+						}
 					}
 				}
 			}
@@ -250,7 +270,7 @@ class habGuard
 	float HitChance = 1;
 	float RespawnTimer = 1200;
 	bool CanBeKilled = false;
-	bool RequireLightOfSight = false;
+	bool RequireLineOfSight = true;
 
 	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "") 
 	{
