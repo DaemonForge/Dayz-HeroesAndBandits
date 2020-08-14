@@ -73,10 +73,10 @@ class HeroesAndBanditsConfigZones
 						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bandit.paa";
 					}
 					ref array< ref habGuard > TempGuards = Zones.Get(i).Guards;
-					if(TempGuards && TempGuards.Count() > 0){
+					if (TempGuards && TempGuards.Count() > 0){
 						for(int j = 0; j < TempGuards.Count(); j++){
 							string soundset = habConverter.GunToSound.Get(TempGuards.Get(j).WeaponInHands);
-							float damage = 24
+							float damage = 24;
 							if (soundset){
 								TempGuards.Get(j).GunSound = soundset;
 								damage = habConverter.GunToDmg.Get(TempGuards.Get(j).WeaponInHands);
@@ -91,6 +91,7 @@ class HeroesAndBanditsConfigZones
 							TempGuards.Get(j).CanBeKilled = false;
 							TempGuards.Get(j).RequireLineOfSight = true;
 						}
+						Zones.Get(i).Guards = TempGuards;
 					}
 				}
 			}

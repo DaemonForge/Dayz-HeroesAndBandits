@@ -106,13 +106,8 @@ class HeroesAndBanditsZone
 		
 		if (player.IsAlive()){
 			
-			if (!validPlayer(pdata)){
+			if (!validPlayer(pdata) && vector.Distance(player.GetPosition(), getVector()) <= Radius){
 				guard = GetClosestGuard(player);
-				if (guard){
-					habPrint("Guard is not null", "Debug");
-				} else {
-					habPrint("GUARD IS NULL !!!!!!!!!!!!!!!!!!!!!!!!!!! BUT WHY", "Debug");
-				}
 			}
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){

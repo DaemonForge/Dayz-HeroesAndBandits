@@ -5,6 +5,8 @@ modded class ActionTrade: ActionInteractBase
 	{
         PlayerBase sourcePlayer = PlayerBase.Cast(player);
 		if (sourcePlayer.habTraderIsBlocked()){
+			habPrint("BLOCKING TRADE!!!!!!!!!","Debug")
+			
 			return false;
 		}
 		
