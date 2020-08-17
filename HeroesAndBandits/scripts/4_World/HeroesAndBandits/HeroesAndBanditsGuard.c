@@ -548,8 +548,7 @@ class HeroesAndBanditsGuard
 			return;
 		}
 		if (StopTracking && player.GetIdentity().GetPlainId() == GetClosetPlayerID()){
-			vector guardOrientation = Vector(Orientation, 0, 0);
-			RotateToFace(guardOrientation, 3, 80);
+			RotateToFace(DefaultDirection, 3, 80);
 			SetClosetPlayerDistance( 600, "");
 			LowerWeapon();
 		} else if (StopTracking && GetClosetPlayerID() != player.GetIdentity().GetPlainId()) {
