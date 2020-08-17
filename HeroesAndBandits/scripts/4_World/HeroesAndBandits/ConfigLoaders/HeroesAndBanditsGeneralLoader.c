@@ -103,14 +103,14 @@ class HeroesAndBanditsSettings
 	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
 			if (ConfigVersion == "4"){
 				doV5Upgrade();
-				JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
+				Save();
 			}
 			
 		}else{ //File does not exist create file
 			MakeDirectory(HeroesAndBanditsDirectory);
 			MakeDirectory(HeroesAndBanditsPlayerDB);
 			habPrint("Creating Default Settings Config", "Always");	
-			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
+			Save();
 		}
 	}
 	
@@ -132,6 +132,10 @@ class HeroesAndBanditsSettings
 		BanditArmBands = {};
 		HeroMasks = {};
 		HeroArmBands = {};
+	}
+	
+	void Save(){
+			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
 	}
 	
 }

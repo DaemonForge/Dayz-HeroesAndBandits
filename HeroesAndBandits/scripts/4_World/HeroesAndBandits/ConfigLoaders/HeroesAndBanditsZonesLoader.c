@@ -28,11 +28,11 @@ class HeroesAndBanditsConfigZones
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Zones Config", "Always");	
-			ReSave();
+			Save();
 		}
 	}
 	
-	void ReSave(){
+	void Save(){
 		JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
 	}
 	
@@ -96,7 +96,7 @@ class HeroesAndBanditsConfigZones
 				}
 			}
 		}
-		ReSave();
+		Save();
 	}
 	
 }

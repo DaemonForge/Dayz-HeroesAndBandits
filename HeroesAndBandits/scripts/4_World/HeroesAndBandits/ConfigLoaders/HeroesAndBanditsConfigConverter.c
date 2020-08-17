@@ -116,9 +116,12 @@ class habConverter
 	static ref HeroesAndBanditsConfigZones ConvertZones(ref HeroesAndBanditsSimpleConfig simpConfig){
 		ref HeroesAndBanditsConfigZones tempSettings = new ref HeroesAndBanditsConfigZones();
 		if (simpConfig.Zones.Count() > 0){
+			tempSettings.ZoneCheckTimer = 3;
 			for (int i = 0; i < simpConfig.Zones.Count(); i++){
 				tempSettings.Zones.Insert(ConvertZone(simpConfig.Zones.Get(i)));
 			}
+		} else {
+			tempSettings.ZoneCheckTimer = 0;
 		}
 		return tempSettings;
 	}
@@ -284,7 +287,64 @@ class habConverter
 		if (combinedItems.Count() > 0){
 			tempSettings.DefaultAffinity.addItemBlackList(-1, -1, "all", combinedItems );
 		}
-		
+		float MaxHumanity; 
+		float MinHumanity;
+		float TempHumanity;
+		string Affinity;
+		string Image;
+		string ImagePath = "HeroesAndBandits/gui/images/";
+		string ImageHeroFile = "HeroNotificationlv";
+		string ImageBanditFile = "BanditNotificationlv";
+		string ImageFileExt = ".paa";
+		int lastIndex = simpConfig.Levels.Count() - 1;
+		int count = lastIndex / 2;
+		if (count > 5){
+			habPrint("[SIMPLE CONFIG ERROR] Too many levels added you must use advanced configs Level Images will not be correct","Always");
+			count = 5;
+		}
+		for (int i = 0; i < simpConfig.Levels.Count(); i++){
+			bool isNotDefault = true;
+			if (i == 0){
+				MaxHumanity = -1;
+				MinHumanity = simpConfig.Levels.Get(i).Humanity;
+				TempHumanity = simpConfig.Levels.Get(i).Humanity;
+				Affinity = "hero";
+				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				count--;
+			} else if (i == lastIndex){
+				MinHumanity = 0 - simpConfig.Levels.Get(i).Humanity;
+				MaxHumanity = -1;
+				Affinity = "bandit";
+				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				count++;
+			} else if (simpConfig.Levels.Get(i).Humanity == 0){
+				MinHumanity = simpConfig.Levels.Get(i+1).Humanity;
+				MaxHumanity = TempHumanity;
+				isNotDefault = false;
+				Affinity = "bambi";
+				count++;
+			} else if (simpConfig.Levels.Get(i).Humanity > 0){
+				MaxHumanity = simpConfig.Levels.Get(i).Humanity;
+				MinHumanity = TempHumanity;
+				TempHumanity = simpConfig.Levels.Get(i).Humanity;
+				Affinity = "hero";
+				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				count--;
+			} else if (simpConfig.Levels.Get(i).Humanity < 0){
+				MinHumanity = 0 - simpConfig.Levels.Get(i).Humanity;
+				MaxHumanity = 0 - simpConfig.Levels.Get(i+1).Humanity;
+				Affinity = "bandit";
+				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				count++;
+			}
+			if (isNotDefault){
+				tempSettings.addLevel(simpConfig.Levels.Get(i).Name, Affinity, Image, MinHumanity, MaxHumanity);
+			} else {
+				tempSettings.DefaultLevel.Name = simpConfig.Levels.Get(i).Name;
+				tempSettings.DefaultLevel.MinPoints = MinHumanity;
+				tempSettings.DefaultLevel.MaxPoints = MaxHumanity;
+			}
+		}
 		return tempSettings;
 	}
 	

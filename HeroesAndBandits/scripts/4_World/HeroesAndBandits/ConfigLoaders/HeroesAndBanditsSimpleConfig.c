@@ -20,7 +20,7 @@ class HeroesAndBanditsSimpleConfig
 	
 	
 	ref TStringArray HeroOnlyItems = {};
-	ref TStringArray BadnitOnlyItems = {};
+	ref TStringArray BanditOnlyItems = {};
 	
 	
 	//Expansion Settings 
@@ -36,7 +36,7 @@ class HeroesAndBanditsSimpleConfig
 	}
 	
 	// Load config file or create default file if config doesn't exsit
-	bool Load(){
+	int Load(){
 		if (GetGame().IsServer()){
 			MakeDirectory(HeroesAndBanditsDirectory);
 			MakeDirectory(HeroesAndBanditsPlayerDB);
@@ -46,17 +46,20 @@ class HeroesAndBanditsSimpleConfig
 			}else{ //File does not exist create file
 				SetDefaults();
 				if (FileExist(HeroesAndBanditsSettingsPATH) || FileExist(HeroesAndBanditsActionsPATH) || FileExist(HeroesAndBanditsLevelsPATH) || FileExist(HeroesAndBanditsZonesPATH)){
-					UseSimple = false;
+					UseSimple = 0;
 				}
-				SetDefaults();
-				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(HeroesAndBanditsSimpleConfigPATH, this);
+				Save();
 			}
-			if (UseSimple){
+			if (UseSimple != 0){
 				ConvertToFull();
 			}
 			return UseSimple;
 		}
-		return false; //If client return false
+		return 0; //If client return 0
+	}
+	
+	void Save(){	
+		JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(HeroesAndBanditsSimpleConfigPATH, this);
 	}
 	
 	void ConvertToFull(){
@@ -72,6 +75,7 @@ class HeroesAndBanditsSimpleConfig
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv3", 12001));
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv2", 4001));
 		Levels.Insert(new ref HABSimpleLevel( "Hero Lv1", 1001));
+		Levels.Insert(new ref HABSimpleLevel( "Bambi", 0));
 		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv1", -1001));
 		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv2", -4001));
 		Levels.Insert(new ref HABSimpleLevel( "Bandit Lv3", -12001));
@@ -107,7 +111,9 @@ class HeroesAndBanditsSimpleConfig
 		#endif
 		
 		#ifdef EXPANSIONCODELOCKEXPANDED
-			Actions.Insert(new ref HABSimpleAction( "ExpansionCodeLockTentRaid", -150));
+			Actions.Insert(new ref HABSimpleAction( "ExpansionCodeLockTentRaid", -100));
+			Actions.Insert(new ref HABSimpleAction( "HackExpansionCodeLockTentRaid", -100));
+			Actions.Insert(new ref HABSimpleAction( "HackExpansionCodeLockDoorRaid", -200));
 		#endif
 		
 		Actions.Insert(new ref HABSimpleAction( "MedicBandagePlayer", 50));
@@ -119,6 +125,7 @@ class HeroesAndBanditsSimpleConfig
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedCharcoal", 15));
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedVitamin", 10));
 		Zones.Insert(new ref HABSimpleZone( "Default Zone", 11250, 4300, 60));
+		Zones.Get(0).Guards.Insert(new ref habSimpleGuard( 11250, 290.2, 4300));
 	}
 	
 }
@@ -150,11 +157,11 @@ class HABSimpleZone{
 	float MaxHumanity = 1000;
 	string WelcomeMessage = "Welcome to the Default Zone";
 	string WarningMessage = "!!Warning!! you are about to enter Default Zone if you continue you will be shot!";
-	bool OverrideSafeZone = true;
-	bool GodModPlayers = true;
-	bool PreventWeaponRaise = true;
-	bool PreventActions = true;
-	bool PreventTrade = true;
+	bool OverrideSafeZone = false;
+	bool GodModPlayers = false;
+	bool PreventWeaponRaise = false;
+	bool PreventActions = false;
+	bool PreventTrade = false;
 	bool KillAggressors = false;
 	float RespawnTimer = 600;
 	int GuardDifficulty = 5; 
@@ -165,7 +172,7 @@ class HABSimpleZone{
 	//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
 	//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
 	
-	void HABSimpleZones(string name, float x, float y, float radius){
+	void HABSimpleZone(string name, float x, float y, float radius){
 		Name = name;
 		X = x;
 		Z = y;
@@ -182,11 +189,10 @@ class habSimpleGuard
 	float Orientation;
 	string Skin;
 	string WeaponInHands;
-	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
 	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
 
 
-	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "SurvivorM_Hassan", string weaponInHands = "M4A1") 
+	void habSimpleGuard(float x, float y, float z, float orientation = 0.0, string skin = "SurvivorM_Hassan", string weaponInHands = "M4A1") 
 	{
 		X = x;
 		Y = y;

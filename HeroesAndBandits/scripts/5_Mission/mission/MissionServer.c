@@ -9,6 +9,16 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
+		ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+		int useSimple = simpleConfig.Load();
+		if (useSimple == 2){
+			GetHeroesAndBanditsSettings().Save();
+			GetHeroesAndBanditsZones().Save();
+			GetHeroesAndBanditsActions().Save();
+			GetHeroesAndBanditsLevels().Save();
+			simpleConfig.UseSimple = 0;
+			simpleConfig.Save();
+		}
 		GetHeroesAndBanditsSettings();
 		GetHeroesAndBanditsZones();
 		GetHeroesAndBanditsActions();

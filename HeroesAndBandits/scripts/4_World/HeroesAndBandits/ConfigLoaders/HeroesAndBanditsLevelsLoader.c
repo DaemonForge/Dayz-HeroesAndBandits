@@ -25,11 +25,11 @@ class HeroesAndBanditsConfigLevels
 		}else{ //File does not exist create file
 			createDefaults();
 			habPrint("Creating Default Actions Config", "Always");	
-			ReSave();
+			Save();
 		}
 	}
 	
-	void ReSave(){
+	void Save(){
 		JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
 	}
 	
@@ -167,7 +167,7 @@ class HeroesAndBanditsConfigLevels
 		getAffinity("hero").Image = "HeroesAndBandits/gui/images/Hero.paa";
 		getAffinity("bandit").Image = "HeroesAndBandits/gui/images/Bandit.paa";
 		DefaultAffinity.Image = "HeroesAndBandits/gui/images/Bambi.paa";
-		ReSave();
+		Save();
 	}
 }
 
