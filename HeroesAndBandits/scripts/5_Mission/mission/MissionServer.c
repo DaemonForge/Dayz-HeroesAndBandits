@@ -11,18 +11,19 @@ modded class MissionServer extends MissionBase
 		super.OnInit();
 		ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 		int useSimple = simpleConfig.Load();
-		if (useSimple == 2){
+		if (simpleConfig.UseSimple == 2){
+			habPrint("Converting Simple Config", "Always");
 			GetHeroesAndBanditsSettings().Save();
-			GetHeroesAndBanditsZones().Save();
-			GetHeroesAndBanditsActions().Save();
 			GetHeroesAndBanditsLevels().Save();
+			GetHeroesAndBanditsActions().Save();
+			GetHeroesAndBanditsZones().Save();
 			simpleConfig.UseSimple = 0;
 			simpleConfig.Save();
 		}
 		GetHeroesAndBanditsSettings();
-		GetHeroesAndBanditsZones();
-		GetHeroesAndBanditsActions();
 		GetHeroesAndBanditsLevels();
+		GetHeroesAndBanditsActions();
+		GetHeroesAndBanditsZones();
 		GetHeroesAndBandits();
 		GetRPCManager().AddRPC( "HaB", "RPCSendHumanityNotification", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCSendStatNotification", this, SingeplayerExecutionType.Both );

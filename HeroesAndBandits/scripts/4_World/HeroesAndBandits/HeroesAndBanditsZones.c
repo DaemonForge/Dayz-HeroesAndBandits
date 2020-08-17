@@ -139,22 +139,23 @@ class HeroesAndBanditsZone
 					player.SetAllowDamage(true);
 				}
 				if (!player.habCheckGodMod() && guard){
-					habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Doesn't have god mod and is has a guard assigned", "Debug");
-					if (guard.IsReadyToTrack()){
-						habPrint("Tracking: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+")", "Debug");
-						guard.TrackPlayer(player, trackingBonus);
-					}
-					//guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
-					guard.FireWeapon(player);
+					float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
+					float delayadd = maxDelayGun / guard.GunTickMulitplier;
 					if ( guard.GunTickMulitplier > 2 && allowSpinOff){
-						float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
-						float delayadd = maxDelayGun / guard.GunTickMulitplier;
 						float delay = delayadd;
 						while( delay < maxDelayGun){
 							GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, delay, false, player, false);
 							delay = delay + delayadd;
 						}
 					}
+					habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Doesn't have god mod and is has a guard assigned", "Debug");
+					if (guard.IsReadyToTrack()){
+						habPrint("Tracking: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+")", "Debug");
+						guard.TrackPlayer(player, delayadd);
+					}
+					//guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
+					guard.FireWeapon(player);
+					
 				} else if (!Guards || Guards.Count() == 0){
 					player.habSetKilledByZone(Name);
 					player.SetHealth(0.0);

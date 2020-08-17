@@ -51,6 +51,7 @@ class HeroesAndBanditsSimpleConfig
 				Save();
 			}
 			if (UseSimple != 0){
+				habPrint("Loading Simple Config", "Always");
 				ConvertToFull();
 			}
 			return UseSimple;
@@ -189,8 +190,8 @@ class habSimpleGuard
 	float Orientation;
 	string Skin;
 	string WeaponInHands;
+	ref TStringArray WeaponInHandsAttachments = {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
 	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
-
 
 	void habSimpleGuard(float x, float y, float z, float orientation = 0.0, string skin = "SurvivorM_Hassan", string weaponInHands = "M4A1") 
 	{

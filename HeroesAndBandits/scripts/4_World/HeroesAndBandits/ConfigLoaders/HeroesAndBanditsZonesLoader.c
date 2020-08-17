@@ -171,19 +171,23 @@ class habZone
 	}
 	
 	void convertHumanityToAffinty(){
-		//All Players
+		
+		if (MaxHumanity == 0 && MinHumanity == 0){ //Allow all no players
+			return;
+		}
+		
 		if (MaxHumanity == -1 && MinHumanity == -1){ //Allow all players
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 			Affinities.Insert(new ref habZoneAffinity("hero"));
 			Affinities.Insert(new ref habZoneAffinity("bandit"));
 			return;
 		}
-		if ((MaxHumanity <= 1000 && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -1000 && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
+		if ((MinHumanity < GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MaxHumanity > GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints) || (MaxHumanity <= GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 		}
 		
 		//Bandits
-		if (MinHumanity <= -1001 || MinHumanity == -1){
+		if (GetHeroesAndBanditsLevels().DefaultLevel.MinPoints || MinHumanity == -1){
 			float newBanditsMax = -1;
 			float newBanditsMin = -1;
 			if (MaxHumanity >= 0){
@@ -198,10 +202,10 @@ class habZone
 		}
 		
 		//Heroes
-		if (MaxHumanity >= 1001 || MaxHumanity == -1){
+		if (MaxHumanity >= GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints || MaxHumanity == -1){
 			float newHeroesMax = -1;
 			float newHeroesMin = -1;
-			if (MinHumanity >= 0){
+			if (MinHumanity <= 0){
 				newHeroesMin = 0;
 			} else {
 				newHeroesMin = MinHumanity;

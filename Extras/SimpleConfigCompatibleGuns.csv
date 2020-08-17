@@ -1,0 +1,16 @@
+"Gun","Sound","Mag","Damage"
+"M4A1", "M4_Shot_SoundSet", "Mag_STANAGCoupled_30Rnd", 18
+"M4A1_Green", "M4_Shot_SoundSet", "Mag_STANAGCoupled_30Rnd", 18	
+"M4A1_Black", "M4_Shot_SoundSet", "Mag_STANAGCoupled_30Rnd", 18	
+"AK74", "AK_Shot_SoundSet", "Mag_AK74_30Rnd", 28
+"AK74_Black", "AK_Shot_SoundSet", "Mag_AK74_30Rnd_Black", 28
+"AK74_Green", "AK_Shot_SoundSet", "Mag_AK74_30Rnd_Green", 28			
+"UMP45", "UMP45_Shot_SoundSet", "Mag_UMP_25Rnd", 16
+"SKS", "SKS_Shot_SoundSet", "Mag_CLIP762x39_10Rnd", 65
+"SKS_Black", "SKS_Shot_SoundSet", "Mag_CLIP762x39_10Rnd", 65
+"SVD", "SVD_Shot_SoundSet", "", 80
+"FAL", "FNFAL_Shot_SoundSet", "Mag_FAL_20Rnd", 80
+"Expansion_AWM", "SVD_Shot_SoundSet", "Mag_Expansion_AWM_5rnd", 80
+"Expansion_G36", "M4_Shot_SoundSet", "Mag_STANAG_30Rnd", 20
+"ussr_m200", "m200_silencerHomeMade_SoundSet", "Mag_ussrm200_7Rnd", 100
+"ussr_m200_black", "m200_Shot_SoundSet", "Mag_ussrm200_7Rnd", 100

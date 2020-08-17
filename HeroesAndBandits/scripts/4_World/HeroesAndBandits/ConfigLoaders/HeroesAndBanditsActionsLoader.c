@@ -163,9 +163,8 @@ class HeroesAndBanditsConfigActions
 	}
 	
 	void DoV5Upgrade(){
-		
-					ConfigVersion = "5";
-					Save();
+		ConfigVersion = "5";
+		Save();
 	}
 }
 

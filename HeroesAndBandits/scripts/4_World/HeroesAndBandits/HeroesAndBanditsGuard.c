@@ -530,10 +530,10 @@ class HeroesAndBanditsGuard
 		vector playerPostion = player.GetPosition();
 		vector guardPostion = GetPosition();
 		InteruptRotate = true;
-		if (player.IsAlive() && player.GetIdentity().GetPlainId() == GetClosetPlayerID()){
+		if (player.IsAlive() && !player.IsPlayerDisconnected() && player.GetIdentity().GetPlainId() == GetClosetPlayerID()){
 			SetClosetPlayerDistance( vector.Distance(guardPostion,playerPostion), player.GetIdentity().GetPlainId());
 			RotateToFaceTick(vector.Direction(guardPostion, playerPostion), 0, 0);
-		} else if (!player.IsAlive() && player.GetIdentity().GetPlainId() == GetClosetPlayerID()) {
+		} else if ((!player.IsAlive() || player.IsPlayerDisconnected()) && player.GetIdentity().GetPlainId() == GetClosetPlayerID()) {
 			UnTrackPlayer(player);
 		} else if ( player.IsAlive() && vector.Distance(guardPostion,playerPostion) < GetClosetPlayerDistance()){
 			SetClosetPlayerDistance( vector.Distance(guardPostion,playerPostion), player.GetIdentity().GetPlainId());

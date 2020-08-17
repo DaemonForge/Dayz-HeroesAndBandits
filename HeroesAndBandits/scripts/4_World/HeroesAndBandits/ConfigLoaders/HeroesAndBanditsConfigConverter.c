@@ -1,96 +1,81 @@
 class habConverter
 {
-	ref static map<string, string> GunToSound = new ref map<string, string>;
-	ref static map<string, string> GunToMag= new ref map<string, string>;
-	ref static map<string, float> GunToDmg = new ref map<string, float>;
-	ref static map<string, TStringArray> GunToAttachments = new ref map<string, TStringArray>;
-	
+	static ref map<string, string> GunToSound = new ref map<string, string>;
+	static ref map<string, string> GunToMag= new ref map<string, string>;
+	static ref map<string, float> GunToDmg = new ref map<string, float>;
+
 	void habConverter(){
-		GunToSound.Insert("M4A1", "M4_Shot_SoundSet");
-		GunToMag.Insert("M4A1", "Mag_STANAGCoupled_30Rnd");
-		GunToDmg.Insert("M4A1", 24);
-		GunToAttachments.Insert("M4A1", {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"});
-		
-		GunToSound.Insert("M4A1_Green", "M4_Shot_SoundSet");
-		GunToMag.Insert("M4A1_Green", "Mag_STANAGCoupled_30Rnd");
-		GunToDmg.Insert("M4A1_Green", 24);
-		GunToAttachments.Insert("M4A1_Green", {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"});
-		
-		GunToSound.Insert("M4A1_Black", "M4_Shot_SoundSet");
-		GunToMag.Insert("M4A1_Black", "Mag_STANAGCoupled_30Rnd");
-		GunToDmg.Insert("M4A1_Black", 24);
-		GunToAttachments.Insert("M4A1_Black", {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"});
-		
-		GunToSound.Insert("AK74", "AK_Shot_SoundSet");
-		GunToMag.Insert("AK74", "Mag_AK74_30Rnd");
-		GunToDmg.Insert("AK74", 28);
-		GunToAttachments.Insert("AK74", {"AK74_Hndgrd", "AK74_WoodBttstck"});
-		
-		GunToSound.Insert("AK74_Black", "AK_Shot_SoundSet");
-		GunToMag.Insert("AK74_Black", "Mag_AK74_30Rnd_Black");
-		GunToDmg.Insert("AK74_Black", 28);
-		GunToAttachments.Insert("AK74_Black", {"AK74_Hndgrd", "AK74_WoodBttstck"});
-		
-		GunToSound.Insert("AK74_Green", "AK_Shot_SoundSet");
-		GunToMag.Insert("AK74_Green", "Mag_AK74_30Rnd_Green");
-		GunToDmg.Insert("AK74_Green", 28);
-		GunToAttachments.Insert("AK74_Green", {"AK74_Hndgrd", "AK74_WoodBttstck"});
-		
-		GunToSound.Insert("UMP45", "UMP45_Shot_SoundSet");
-		GunToMag.Insert("UMP45", "Mag_UMP_25Rnd");
-		GunToDmg.Insert("UMP45", 16);
-		GunToAttachments.Insert("UMP45", {"ReflexOptic"});
-		
-		GunToSound.Insert("SKS", "SKS_Shot_SoundSet");
-		GunToMag.Insert("SKS", "Mag_CLIP762x39_10Rnd");
-		GunToDmg.Insert("SKS", 65);
-		GunToAttachments.Insert("SKS", {"PUScopeOptic"});
-		
-		GunToSound.Insert("SKS_Black", "SKS_Shot_SoundSet");
-		GunToMag.Insert("SKS_Black", "Mag_CLIP762x39_10Rnd");
-		GunToDmg.Insert("SKS_Black", 65);
-		GunToAttachments.Insert("SKS_Black", {"PUScopeOptic"});
-		
-		GunToSound.Insert("SKS_Black", "SKS_Shot_SoundSet");
-		GunToMag.Insert("SKS_Black", "Mag_CLIP762x39_10Rnd");
-		GunToDmg.Insert("SKS_Black", 65);
-		GunToAttachments.Insert("SKS_Black", {"PUScopeOptic"});
-		
-		GunToSound.Insert("SVD", "SVD_Shot_SoundSet");
-		GunToMag.Insert("SVD", "");
-		GunToDmg.Insert("SVD", 80);
-		GunToAttachments.Insert("SVD", {"KobraOptic"});
-		
-		GunToSound.Insert("FAL", "FNFAL_Shot_SoundSet");
-		GunToMag.Insert("FAL", "Mag_FAL_20Rnd");
-		GunToDmg.Insert("FAL", 80);
-		GunToAttachments.Insert("FAL", {"M68Optic"});
-		
-		GunToSound.Insert("FAL", "FNFAL_Shot_SoundSet");
-		GunToMag.Insert("FAL", "Mag_FAL_20Rnd");
-		GunToDmg.Insert("FAL", 80);
-		GunToAttachments.Insert("FAL", {"M68Optic"});
-		
-		GunToSound.Insert("Expansion_AWM", "SVD_Shot_SoundSet");
-		GunToMag.Insert("Expansion_AWM", "Mag_Expansion_AWM_5rnd");
-		GunToDmg.Insert("Expansion_AWM", 80);
-		GunToAttachments.Insert("Expansion_AWM", {"M68Optic"});
-		
-		GunToSound.Insert("Expansion_G36", "M4_Shot_SoundSet");
-		GunToMag.Insert("Expansion_G36", "Mag_STANAG_30Rnd");
-		GunToDmg.Insert("Expansion_G36", 25);
-		GunToAttachments.Insert("Expansion_G36", {"ACOGOptic"});
-		
-		GunToSound.Insert("ussr_m200", "m200_silencerHomeMade_SoundSet");
-		GunToMag.Insert("ussr_m200", "Mag_ussrm200_7Rnd");
-		GunToDmg.Insert("ussr_m200", 100);
-		GunToAttachments.Insert("ussr_m200", {"M200Optic", "M200Suppressor"});
-		
-		GunToSound.Insert("ussr_m200_black", "m200_Shot_SoundSet");
-		GunToMag.Insert("ussr_m200_black", "Mag_ussrm200_7Rnd");
-		GunToDmg.Insert("ussr_m200_black", 100);
-		GunToAttachments.Insert("ussr_m200_black", {"M200Optic"});
-		
+	}
+	
+	static void init(){
+		if (GunToSound.Count() <= 0){
+			GunToSound.Insert("M4A1", "M4_Shot_SoundSet");
+			GunToMag.Insert("M4A1", "Mag_STANAGCoupled_30Rnd");
+			GunToDmg.Insert("M4A1", 18);
+			
+			GunToSound.Insert("M4A1_Green", "M4_Shot_SoundSet");
+			GunToMag.Insert("M4A1_Green", "Mag_STANAGCoupled_30Rnd");
+			GunToDmg.Insert("M4A1_Green", 18);
+			
+			GunToSound.Insert("M4A1_Black", "M4_Shot_SoundSet");
+			GunToMag.Insert("M4A1_Black", "Mag_STANAGCoupled_30Rnd");
+			GunToDmg.Insert("M4A1_Black", 18);
+			
+			GunToSound.Insert("AK74", "AK_Shot_SoundSet");
+			GunToMag.Insert("AK74", "Mag_AK74_30Rnd");
+			GunToDmg.Insert("AK74", 28);
+			
+			GunToSound.Insert("AK74_Black", "AK_Shot_SoundSet");
+			GunToMag.Insert("AK74_Black", "Mag_AK74_30Rnd_Black");
+			GunToDmg.Insert("AK74_Black", 28);
+			
+			GunToSound.Insert("AK74_Green", "AK_Shot_SoundSet");
+			GunToMag.Insert("AK74_Green", "Mag_AK74_30Rnd_Green");
+			GunToDmg.Insert("AK74_Green", 28);
+			
+			GunToSound.Insert("UMP45", "UMP45_Shot_SoundSet");
+			GunToMag.Insert("UMP45", "Mag_UMP_25Rnd");
+			GunToDmg.Insert("UMP45", 16);
+			
+			GunToSound.Insert("SKS", "SKS_Shot_SoundSet");
+			GunToMag.Insert("SKS", "Mag_CLIP762x39_10Rnd");
+			GunToDmg.Insert("SKS", 65);
+			
+			GunToSound.Insert("SKS_Black", "SKS_Shot_SoundSet");
+			GunToMag.Insert("SKS_Black", "Mag_CLIP762x39_10Rnd");
+			GunToDmg.Insert("SKS_Black", 65);
+			
+			GunToSound.Insert("SKS_Black", "SKS_Shot_SoundSet");
+			GunToMag.Insert("SKS_Black", "Mag_CLIP762x39_10Rnd");
+			GunToDmg.Insert("SKS_Black", 65);
+			
+			GunToSound.Insert("SVD", "SVD_Shot_SoundSet");
+			GunToMag.Insert("SVD", "");
+			GunToDmg.Insert("SVD", 80);
+			
+			GunToSound.Insert("FAL", "FNFAL_Shot_SoundSet");
+			GunToMag.Insert("FAL", "Mag_FAL_20Rnd");
+			GunToDmg.Insert("FAL", 80);
+			
+			GunToMag.Insert("FAL", "Mag_FAL_20Rnd");
+			GunToDmg.Insert("FAL", 80);
+			
+			GunToSound.Insert("Expansion_AWM", "SVD_Shot_SoundSet");
+			GunToMag.Insert("Expansion_AWM", "Mag_Expansion_AWM_5rnd");
+			GunToDmg.Insert("Expansion_AWM", 80);
+			
+			GunToSound.Insert("Expansion_G36", "M4_Shot_SoundSet");
+			GunToMag.Insert("Expansion_G36", "Mag_STANAG_30Rnd");
+			GunToDmg.Insert("Expansion_G36", 20);
+			
+			GunToSound.Insert("ussr_m200", "m200_silencerHomeMade_SoundSet");
+			GunToMag.Insert("ussr_m200", "Mag_ussrm200_7Rnd");
+			GunToDmg.Insert("ussr_m200", 100);
+			
+			GunToSound.Insert("ussr_m200_black", "m200_Shot_SoundSet");
+			GunToMag.Insert("ussr_m200_black", "Mag_ussrm200_7Rnd");
+			GunToDmg.Insert("ussr_m200_black", 100);
+		}
 	}
 	
 	static ref HeroesAndBanditsSettings ConvertSettings(ref HeroesAndBanditsSimpleConfig simpConfig){
@@ -135,8 +120,12 @@ class habConverter
 		float WarnRadius = simpZone.Radius * 1.15;
 		float MinHumanity = simpZone.MinHumanity;
 		float MaxHumanity = simpZone.MaxHumanity;
+		if (MinHumanity == -1 && MaxHumanity == -1){
+			Radius = Radius;
+			WarnRadius = Radius;
+		}
 		if (MinHumanity == 0 && MaxHumanity == 0){
-			Radius = 0;
+			Radius = Radius;
 			WarnRadius = Radius;
 		}
 		string WelcomeMessage =  simpZone.WelcomeMessage;
@@ -213,11 +202,13 @@ class habConverter
 		for (int i = 0; i < simpZone.Guards.Count(); i++){
 			ref habGuard tmpGuard = new ref habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
 			string WeaponInHands = simpZone.Guards.Get(i).WeaponInHands;
-			string GunSound;
-			string Mag;
-			float Dmg;
-			TStringArray WeaponInHandsAttachments;
-			if (GunToSound.Find(WeaponInHands, GunSound) && GunToMag.Find(WeaponInHands, Mag) && GunToDmg.Find(WeaponInHands, Dmg) && GunToAttachments.Find(WeaponInHands, WeaponInHandsAttachments)) {
+			habConverter().init();
+			string GunSound =  habConverter().GunToSound.Get(WeaponInHands);
+			string Mag =  habConverter().GunToMag.Get(WeaponInHands);
+			float Dmg =  habConverter().GunToDmg.Get(WeaponInHands);
+			TStringArray WeaponInHandsAttachments =  simpZone.Guards.Get(i).WeaponInHandsAttachments;
+			habPrint("WeaponInHands: " + WeaponInHands + " GunSound: " + GunSound + " Mag: " + Mag + " Dmg: " + Dmg, "Verbose");
+			if ( GunSound && Mag && Dmg ) {
 				tmpGuard.WeaponInHands = WeaponInHands;
 				tmpGuard.WeaponInHandsMag = Mag;
 				tmpGuard.WeaponInHandsAttachments = WeaponInHandsAttachments;
@@ -229,8 +220,8 @@ class habConverter
 				tmpGuard.WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
 				tmpGuard.WeaponInHandsAttachments = {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
 				tmpGuard.GunSound = "M4_Shot_SoundSet";
-				tmpGuard.DamagePerTickMin = 22;
-				tmpGuard.DamagePerTickRand = 26.4;
+				tmpGuard.DamagePerTickMin = 18;
+				tmpGuard.DamagePerTickRand = 21.6;
 			}
 			tmpGuard.GunTickMulitplier = GunTickMulitplier;
 			tmpGuard.HitChance = HitChance;
@@ -276,6 +267,17 @@ class habConverter
 		if (!HeroCanRemoveArmBand){
 			heroOnlyItems.InsertAll(HeroArmBands);
 			combinedItems.InsertAll(HeroArmBands);
+		
+		}
+		
+		if (simpConfig.HeroOnlyItems.Count() > 0){
+			heroOnlyItems.InsertAll(simpConfig.HeroOnlyItems);
+			combinedItems.InsertAll(simpConfig.HeroOnlyItems);
+		
+		}
+		if (simpConfig.BanditOnlyItems.Count() > 0){
+			heroOnlyItems.InsertAll(simpConfig.BanditOnlyItems);
+			combinedItems.InsertAll(simpConfig.BanditOnlyItems);
 		
 		}
 		if (banditOnlyItems.Count() > 0){
