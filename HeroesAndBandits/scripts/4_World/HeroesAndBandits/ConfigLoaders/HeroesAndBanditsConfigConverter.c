@@ -267,9 +267,7 @@ class habConverter
 		if (!HeroCanRemoveArmBand){
 			heroOnlyItems.InsertAll(HeroArmBands);
 			combinedItems.InsertAll(HeroArmBands);
-		
 		}
-		
 		if (simpConfig.HeroOnlyItems.Count() > 0){
 			heroOnlyItems.InsertAll(simpConfig.HeroOnlyItems);
 			combinedItems.InsertAll(simpConfig.HeroOnlyItems);

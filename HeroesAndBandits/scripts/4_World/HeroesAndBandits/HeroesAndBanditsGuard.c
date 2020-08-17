@@ -165,7 +165,7 @@ class HeroesAndBanditsGuard
 		bool lineOfSight = !RequireLineOfSight;
 		bool possibleHits = HasLineOfSight(player) ;
 		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
-		if (possibleHits > 0 && dirDiff < 1.5 && dirDiff > -1.5){
+		if (possibleHits > 0 && dirDiff < 20 && dirDiff > -20){
 			habPrint("Guard tried to shoot with possibleHits: " + possibleHits + " dirDiff: " + dirDiff + " RequireLineOfSight: " + RequireLineOfSight,"Debug");
 			lineOfSight = true;
 		} else {
@@ -272,14 +272,14 @@ class HeroesAndBanditsGuard
 		for (int i = headStartIndex;  i >= 0; i--){
 			if ( Object.Cast(results_head.Get( i ).obj)  ){
 				if ( results_head.Get( i ).obj == player){
-					habPrint("RaycastRVProxy results_head (Found Player) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Found Player) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 					found = found + 1;
 					break;
 				} else if (!results_head.Get( i ).obj.IsBush()) {
-					habPrint("RaycastRVProxy results_head (Is Not Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Is Not Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 					break;
 				} else {
-					habPrint("RaycastRVProxy results_head (Is Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
+					//habPrint("RaycastRVProxy results_head (Is Bush) id: " + i + " obj: " + results_head.Get( i ).obj.GetType() + " at pos: " + results_head.Get( i ).obj.GetPosition() + " distance from gaurd: " + vector.Distance(guard_head_pos, results_head.Get( i ).obj.GetPosition()), "Debug");
 				}
 			}
 		}
@@ -374,13 +374,13 @@ class HeroesAndBanditsGuard
 		vector runAwayDirection = vector.Direction(Guard.GetPosition(), player.GetPosition());
 		vector playerDirection = player.GetDirection();
 		float playerSpeed = player.GetCommand_Move().GetCurrentMovementSpeed();
-		float awayDif = GetRotateDiff(playerDirection, runTowardsDirection);
+		float awayDif = GetRotateDiffX(playerDirection, runTowardsDirection);
 		if ( awayDif < 0 ){ awayDif = -awayDif;}
 		habPrint("Away Dir: " + awayDif ,"Debug");
-		float toDif = GetRotateDiff(playerDirection, runAwayDirection);
+		float toDif = GetRotateDiffX(playerDirection, runAwayDirection);
 		if ( toDif < 0 ){ toDif = -toDif;}
 		habPrint("To Dir: " + toDif ,"Debug");
-		if (playerSpeed < 0.5 || toDif < 1.5 ||  toDif > -1.5){
+		if (playerSpeed < 0.8 || toDif < 15 ||  toDif > -15){
 			habPrint("Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");
 		} else {
 			habPrint("Accuracy Reduction player moving Player Direction: " + playerDirection + " Player Speed: " + playerSpeed + " runTowardsDirection: " + runTowardsDirection + " runAwayDirection: " + runAwayDirection ,"Debug");	
@@ -411,7 +411,7 @@ class HeroesAndBanditsGuard
 			dif = -dif;
 		}
 		
-		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " dif: " + dif + " dir: " + dir, "Debug");
+		//habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " dif: " + dif + " dir: " + dir, "Debug");
 		return dif;
 	}
 	
@@ -425,7 +425,7 @@ class HeroesAndBanditsGuard
 			difX = -difX;
 		}
 		
-		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difX: " + difX + " dirX: " + dirX, "Debug");
+		//habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difX: " + difX + " dirX: " + dirX, "Debug");
 		return difX;
 	}
 	
@@ -439,11 +439,11 @@ class HeroesAndBanditsGuard
 			difZ = -difZ;
 		}
 		
-		habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difZ: " + difZ + " dirZ: " + dirZ, "Debug");
+		//habPrint("curDirection: " + curDirection + " optimalDirection: " + optimalDirection + " difZ: " + difZ + " dirZ: " + dirZ, "Debug");
 		return difZ;
 	}
 	
-	protected void RotateToFaceTick(vector direction, int maxCount = 25, int tickInterval = 80){
+	protected void RotateToFaceTick(vector direction, int maxCount = 32, int tickInterval = 60){
 		vector curDir = Guard.GetDirection();
 		float dirX = GetRotateDiffX(curDir, direction);
 		float dirZ = GetRotateDiffZ(curDir, direction);
@@ -452,32 +452,32 @@ class HeroesAndBanditsGuard
 		
 		
 		float dir  = GetRotateDiff(curDir, direction);
-		if ( dir < 1 || dir > -1){
+		/*if ( dir < 1 || dir > -1){
 			Guard.habAIAimWeaponServer( 0 );
 		} else if (dir >= 1 ){
 			Guard.habAIAimWeaponServer( 10 );
 		} else if (dir <= -1 ){
 			Guard.habAIAimWeaponServer( 10 );
-		}
+		}*/
 		
-		if ( dirX < 0.5 || dirX > -0.5){
+		if ( dirX < 0.4 && dirX > -0.4){
 			newX = direction[0];
 			maxCount = 0;
-		} else if (dirX >= 0.5 ){
-			newX = newX + 0.5;
-		} else if (dirX <= -0.5 ){
-			newX = newX - 0.5;
+		} else if (dirX >= 0.4 ){
+			newX = newX + 0.25;
+		} else if (dirX <= -0.4 ){
+			newX = newX - 0.25;
 		}
-		if ( dirZ < 0.08 || dirZ > -0.08){
+		if ( dirZ < 3 && dirZ > -3){
 			newZ = direction[2];
 			maxCount = 0;
-		} else if (dirZ >= 0.08 ){
-			newZ = newZ + 0.08;
-		} else if (dirZ <= -0.08 ){
-			newZ = newZ - 0.08;
+		} else if (dirZ >= 3 ){
+			newZ = newZ + 1.2;
+		} else if (dirZ <= -3 ){
+			newZ = newZ - 1.2;
 		}
 		Guard.SetDirection(Vector( newX,direction[1],newZ));
-		if (GetRotateDiff(curDir, direction) < 0.4){
+		if (GetRotateDiff(curDir, direction) < 10){
 			maxCount = 0;
 			Guard.SetDirection(Vector( direction[0],direction[1],direction[2]));
 		}
@@ -499,7 +499,7 @@ class HeroesAndBanditsGuard
 		ReadyForTracking = true;
 	}
 
-	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 80)
+	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 60)
 	{
 		ReadyForTracking = false;
 		StopTracking = false;
@@ -523,7 +523,7 @@ class HeroesAndBanditsGuard
 	protected void TrackingPlayerTick(PlayerBase inPlayer){
 		
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player)
+		if (!player || !player.GetIdentity())
 		{
 			return;
 		}
@@ -543,7 +543,7 @@ class HeroesAndBanditsGuard
 	void UnTrackPlayer(PlayerBase inPlayer){
 		
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player)
+		if (!player || !player.GetIdentity())
 		{
 			return;
 		}
