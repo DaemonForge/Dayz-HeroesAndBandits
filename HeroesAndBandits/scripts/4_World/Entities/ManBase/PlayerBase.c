@@ -2,7 +2,7 @@ modded class PlayerBase extends ManBase
 {
 	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;
-	
+
 	private bool  m_HeroesAndBandits_IsGuard = false;
 	
 	private int  m_HeroesAndBandits_CanRaiseWeaponIndex = -1;
@@ -1078,7 +1078,6 @@ modded class PlayerBase extends ManBase
 		}
 	}
 	
-	
 	void habAIRaiseWeaponServer(){
 		habPrint("habAIRaiseWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = true;
@@ -1088,7 +1087,7 @@ modded class PlayerBase extends ManBase
 		SetSynchDirty();
 	}
 	
-	
+
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = true;
@@ -1101,14 +1100,24 @@ modded class PlayerBase extends ManBase
 		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
 		m_HeroesAndBandits_ChangeAimX = x;
 		m_HeroesAndBandits_ChangeAimY = y;
-		this.GetInputController().OverrideAimChangeX(true, x);
-		this.GetInputController().OverrideAimChangeY(true, y);
+		bool doOverride = true;
+		if (m_HeroesAndBandits_ChangeAimX == 0){
+			doOverride = false;
+		}
+		//this.GetInputController().OverrideMovementAngle(doOverride, m_HeroesAndBandits_ChangeAimX);
+		//this.GetInputController().OverrideMovementSpeed(doOverride, 1);
+		//this.GetInputController().OverrideAimChangeX(true, x);
+		//this.GetInputController().OverrideAimChangeY(true, y);
 		SetSynchDirty();
 	}
 	
 	void habAIAimWeaponClient(){
 		m_HeroesAndBandits_ChangeAim = m_HeroesAndBandits_ChangeAimSync;
-		this.GetInputController().OverrideAimChangeX(true, m_HeroesAndBandits_ChangeAimX);
-		this.GetInputController().OverrideAimChangeY(true, m_HeroesAndBandits_ChangeAimY);
+		bool doOverride = true;
+		if (m_HeroesAndBandits_ChangeAimX == 0){
+			doOverride = false;
+		} 
+		//this.GetInputController().OverrideMovementAngle(doOverride, m_HeroesAndBandits_ChangeAimX);
+		//this.GetInputController().OverrideMovementSpeed(doOverride, 1);
 	}
 }
