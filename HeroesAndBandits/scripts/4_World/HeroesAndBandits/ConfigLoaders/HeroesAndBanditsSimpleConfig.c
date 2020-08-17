@@ -28,7 +28,7 @@ class HeroesAndBanditsSimpleConfig
 	
 	ref array< ref HABSimpleLevel > Levels = new ref array< ref HABSimpleLevel >;
 	ref array< ref HABSimpleAction > Actions = new ref array< ref HABSimpleAction >;
-	ref array< ref HABSimpleZones > Zones = new ref array< ref HABSimpleZones >;
+	ref array< ref HABSimpleZone > Zones = new ref array< ref HABSimpleZone >;
 	
 	void HeroesAndBanditsSimpleConfig()
 	{
@@ -37,7 +37,7 @@ class HeroesAndBanditsSimpleConfig
 	
 	// Load config file or create default file if config doesn't exsit
 	bool Load(){
-		if(GetGame().IsServer()){
+		if (GetGame().IsServer()){
 			MakeDirectory(HeroesAndBanditsDirectory);
 			MakeDirectory(HeroesAndBanditsPlayerDB);
 			if (FileExist(HeroesAndBanditsSimpleConfigPATH)) //If config exist load File
@@ -45,13 +45,13 @@ class HeroesAndBanditsSimpleConfig
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(HeroesAndBanditsSimpleConfigPATH, this);
 			}else{ //File does not exist create file
 				SetDefaults();
-				if(FileExist(HeroesAndBanditsSettingsPATH) || FileExist(HeroesAndBanditsActionsPATH) || FileExist(HeroesAndBanditsLevelsPATH) || FileExist(HeroesAndBanditsZonesPATH)){
+				if (FileExist(HeroesAndBanditsSettingsPATH) || FileExist(HeroesAndBanditsActionsPATH) || FileExist(HeroesAndBanditsLevelsPATH) || FileExist(HeroesAndBanditsZonesPATH)){
 					UseSimple = false;
 				}
 				SetDefaults();
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(HeroesAndBanditsSimpleConfigPATH, this);
 			}
-			if(UseSimple){
+			if (UseSimple){
 				ConvertToFull();
 			}
 			return UseSimple;
@@ -60,7 +60,10 @@ class HeroesAndBanditsSimpleConfig
 	}
 	
 	void ConvertToFull(){
-		
+		m_HeroesAndBanditsSettings = habConverter.ConvertSettings(this);
+		m_HeroesAndBanditsConfigActions = habConverter.ConvertActions(this);
+		m_HeroesAndBanditsConfigLevels = habConverter.ConvertLevels(this);
+		m_HeroesAndBanditsConfigZones = habConverter.ConvertZones(this);
 	}
 	
 	void SetDefaults(){
@@ -115,7 +118,7 @@ class HeroesAndBanditsSimpleConfig
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedPainkiller", 15));
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedCharcoal", 15));
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedVitamin", 10));
-		Zones.Insert(new ref HABSimpleZones( "Default Zone", 11250, 4300, 60));
+		Zones.Insert(new ref HABSimpleZone( "Default Zone", 11250, 4300, 60));
 	}
 	
 }
@@ -138,7 +141,7 @@ class HABSimpleAction{
 	}
 }
 
-class HABSimpleZones{
+class HABSimpleZone{
     string Name;
 	float X;
 	float Z;
@@ -152,6 +155,15 @@ class HABSimpleZones{
 	bool PreventWeaponRaise = true;
 	bool PreventActions = true;
 	bool PreventTrade = true;
+	bool KillAggressors = false;
+	float RespawnTimer = 600;
+	int GuardDifficulty = 5; 
+	ref array<ref habSimpleGuard> Guards = new ref array<ref habSimpleGuard>;
+	//5 OP can't be killed Can Shot Throw Objects, and 100% HitChance, 
+	//4 Require Line Of Sight 92% HitChance can't be killed, medium high fire rate 
+	//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
+	//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
+	//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
 	
 	void HABSimpleZones(string name, float x, float y, float radius){
 		Name = name;
@@ -168,18 +180,13 @@ class habSimpleGuard
 	float Y;
 	float Z;
 	float Orientation;
-	string Skin = "";
-	string WeaponInHands = "M4A1";
+	string Skin;
+	string WeaponInHands;
 	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
 	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
-	int Difficulty = 5; 
-	//5 OP can't be killed Can Shot Throw Objects, and 100% HitChance, 
-	//4 Require Line Of Sight 90% HitChance can't be killed, medium high fire rate 
-	//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
-	//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
-	//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
 
-	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "", string weaponInHands = "") 
+
+	void habGuard(float x, float y, float z, float orientation = 0.0, string skin = "SurvivorM_Hassan", string weaponInHands = "M4A1") 
 	{
 		X = x;
 		Y = y;

@@ -90,10 +90,11 @@ class habConverter
 		GunToMag.Insert("ussr_m200_black", "Mag_ussrm200_7Rnd");
 		GunToDmg.Insert("ussr_m200_black", 100);
 		GunToAttachments.Insert("ussr_m200_black", {"M200Optic"});
+		
 	}
 	
 	static ref HeroesAndBanditsSettings ConvertSettings(ref HeroesAndBanditsSimpleConfig simpConfig){
-		HeroesAndBanditsSettings tempSettings = new ref HeroesAndBanditsSettings();
+		ref HeroesAndBanditsSettings tempSettings = new ref HeroesAndBanditsSettings();
 		tempSettings.KillFeed = simpConfig.KillFeed;
 		tempSettings.SucideFeed = simpConfig.SucideFeed;
 		tempSettings.BanditCanRemoveMask = simpConfig.BanditCanRemoveMask;
@@ -112,35 +113,183 @@ class habConverter
 		return tempSettings;
 	}
 	
-	static ref HeroesAndBanditsConfigZones ConvertZonesConfig(ref HeroesAndBanditsSimpleConfig simpConfig){
-		HeroesAndBanditsConfigZones tempSettings = new ref HeroesAndBanditsConfigZones();
-
-		
+	static ref HeroesAndBanditsConfigZones ConvertZones(ref HeroesAndBanditsSimpleConfig simpConfig){
+		ref HeroesAndBanditsConfigZones tempSettings = new ref HeroesAndBanditsConfigZones();
+		if (simpConfig.Zones.Count() > 0){
+			for (int i = 0; i < simpConfig.Zones.Count(); i++){
+				tempSettings.Zones.Insert(ConvertZone(simpConfig.Zones.Get(i)));
+			}
+		}
 		return tempSettings;
 	}
 	
 	
-	static ref habZone ConvertZone(ref HABSimpleZones simpZone){
-		habZone tempZone;
+	static ref habZone ConvertZone(ref HABSimpleZone simpZone){
+		string Name = simpZone.Name;
+		float X = simpZone.X;
+		float Z = simpZone.Z;
+		float Radius = simpZone.Radius;
+		float WarnRadius = simpZone.Radius * 1.15;
+		float MinHumanity = simpZone.MinHumanity;
+		float MaxHumanity = simpZone.MaxHumanity;
+		if (MinHumanity == 0 && MaxHumanity == 0){
+			Radius = 0;
+			WarnRadius = Radius;
+		}
+		string WelcomeMessage =  simpZone.WelcomeMessage;
+		string WarningMessage =  simpZone.WarningMessage;
+		bool OverrideSafeZone =  simpZone.OverrideSafeZone;
+		bool GodModPlayers =  simpZone.GodModPlayers;
+		bool PreventWeaponRaise =  simpZone.PreventWeaponRaise;
+		bool PreventActions =  simpZone.PreventActions;
+		bool PreventTrade =  simpZone.PreventTrade;
+		bool KillAggressors = simpZone.KillAggressors;
+		float RespawnTimer = simpZone.RespawnTimer;
+		int GuardDifficulty =  simpZone.GuardDifficulty;
+		ref habZone tempZone =  new ref  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
+		tempZone.MinHumanity = MinHumanity;
+		tempZone.MaxHumanity = MaxHumanity;
+		tempZone.convertHumanityToAffinty();
+		if (WelcomeMessage == ""){
+			tempZone.ShowWelcomeMsg = false;
+			tempZone.WelcomeMessage = "";
+		} else {
+			tempZone.ShowWelcomeMsg = true;
+			tempZone.WelcomeMessage = WelcomeMessage;
+		}
+		if (WarningMessage == ""){
+			tempZone.ShowWarningMsg = false;
+			tempZone.WarningMessage = WarningMessage;
+		} else {
+			tempZone.ShowWarningMsg = true;
+			tempZone.WarningMessage = WarningMessage;
+		}
+		tempZone.OverrideSafeZone = OverrideSafeZone;
+		tempZone.GodModPlayers = GodModPlayers;
+		tempZone.PreventWeaponRaise = PreventWeaponRaise;
+		tempZone.PreventActions = PreventActions;
+		tempZone.BlockTrader = PreventTrade;
+		tempZone.KillAggressors = KillAggressors;
+		float DamagePerTickMin = 28;
+		float DamagePerTickRand = 35;
+		float GunTickMulitplier = 2.0;
+		float HitChance = 1;
+		float CanBeKilled = false;
+		float RequireLineOfSight = false;
+		//5 OP can't be killed Can Shoot Throw Objects, and 100% HitChance, 
+		//4 Require Line Of Sight 92% HitChance can't be killed, medium high fire rate 
+		//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
+		//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
+		//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
+		if (GuardDifficulty == 5){
+			GunTickMulitplier = 2.0;
+			HitChance = 1.0;
+			CanBeKilled = false;
+			RequireLineOfSight = true;
+		} else if (GuardDifficulty == 4){
+			GunTickMulitplier = 2.0;
+			HitChance = 0.92;
+			CanBeKilled = false;
+			RequireLineOfSight = true;
+		} else if (GuardDifficulty == 3){
+			GunTickMulitplier = 3.0;
+			HitChance = 0.90;
+			CanBeKilled = true;
+			RequireLineOfSight = true;
+		} else if (GuardDifficulty == 2){
+			GunTickMulitplier = 2.0;
+			HitChance = 0.85;
+			CanBeKilled = true;
+			RequireLineOfSight = true;
+		} else if (GuardDifficulty == 1){
+			GunTickMulitplier = 1.0;
+			HitChance = 0.80;
+			CanBeKilled = true;
+			RequireLineOfSight = true;
+		}
+		for (int i = 0; i < simpZone.Guards.Count(); i++){
+			ref habGuard tmpGuard = new ref habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
+			string WeaponInHands = simpZone.Guards.Get(i).WeaponInHands;
+			string GunSound;
+			string Mag;
+			float Dmg;
+			TStringArray WeaponInHandsAttachments;
+			if (GunToSound.Find(WeaponInHands, GunSound) && GunToMag.Find(WeaponInHands, Mag) && GunToDmg.Find(WeaponInHands, Dmg) && GunToAttachments.Find(WeaponInHands, WeaponInHandsAttachments)) {
+				tmpGuard.WeaponInHands = WeaponInHands;
+				tmpGuard.WeaponInHandsMag = Mag;
+				tmpGuard.WeaponInHandsAttachments = WeaponInHandsAttachments;
+				tmpGuard.GunSound = GunSound;
+				tmpGuard.DamagePerTickMin = Dmg;
+				tmpGuard.DamagePerTickRand = Dmg * 1.2;
+			} else {
+				tmpGuard.WeaponInHands = "M4A1";
+				tmpGuard.WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
+				tmpGuard.WeaponInHandsAttachments = {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
+				tmpGuard.GunSound = "M4_Shot_SoundSet";
+				tmpGuard.DamagePerTickMin = 22;
+				tmpGuard.DamagePerTickRand = 26.4;
+			}
+			tmpGuard.GunTickMulitplier = GunTickMulitplier;
+			tmpGuard.HitChance = HitChance;
+			tmpGuard.CanBeKilled = CanBeKilled;
+			tmpGuard.RequireLineOfSight = RequireLineOfSight;
+			tmpGuard.RespawnTimer = RespawnTimer;
+			tempZone.Guards.Insert(tmpGuard);		
+		}
 		
 		return tempZone;
 	}
-	
-	static ref habGuard ConvertGuard(ref habSimpleGuard simpGuard){
-		habGuard tempGuard;
 		
-		return tempGuard;
-	}
 	
-	
-	static ref HeroesAndBanditsConfigLevels ConvertLevelsConfig(ref habSimpleGuard simpGuard){
-		HeroesAndBanditsConfigLevels tempSettings = new ref HeroesAndBanditsConfigLevels();
+	static ref HeroesAndBanditsConfigLevels ConvertLevels(ref HeroesAndBanditsSimpleConfig simpConfig){
+		ref HeroesAndBanditsConfigLevels tempSettings = new ref HeroesAndBanditsConfigLevels();
+		tempSettings.addAffinity("hero", "#HAB_HERO", "HeroesAndBandits/gui/images/Hero.paa");
+		tempSettings.addAffinity("bandit", "#HAB_BANDIT", "HeroesAndBandits/gui/images/Bandit.paa");
+		
+		ref TStringArray banditOnlyItems = {};
+		ref TStringArray heroOnlyItems = {};
+		ref TStringArray combinedItems = {};
+		bool BanditCanRemoveMask = simpConfig.BanditCanRemoveMask;
+		bool BanditCanRemoveArmBand = simpConfig.BanditCanRemoveArmBand;
+		ref TStringArray BanditMasks = simpConfig.BanditMasks;
+		ref TStringArray BanditArmBands = simpConfig.BanditArmBands;
+		bool HeroCanRemoveMask = simpConfig.HeroCanRemoveMask;
+		bool HeroCanRemoveArmBand = simpConfig.HeroCanRemoveArmBand;
+		ref TStringArray HeroMasks = simpConfig.HeroMasks;
+		ref TStringArray HeroArmBands = simpConfig.HeroArmBands;
+		if (!BanditCanRemoveMask){
+			banditOnlyItems.InsertAll(BanditMasks);
+			combinedItems.InsertAll(BanditMasks);
+		}
+		if (!BanditCanRemoveArmBand){
+			banditOnlyItems.InsertAll(BanditArmBands);
+			combinedItems.InsertAll(BanditArmBands);
+		}
+		if (!HeroCanRemoveMask){
+			heroOnlyItems.InsertAll(HeroMasks);
+			combinedItems.InsertAll(HeroMasks);
+		
+		}
+		if (!HeroCanRemoveArmBand){
+			heroOnlyItems.InsertAll(HeroArmBands);
+			combinedItems.InsertAll(HeroArmBands);
+		
+		}
+		if (banditOnlyItems.Count() > 0){
+			tempSettings.getAffinity("hero").addItemBlackList(-1, -1, "all", banditOnlyItems );
+		}
+		if (heroOnlyItems.Count() > 0){
+			tempSettings.getAffinity("bandit").addItemBlackList(-1, -1, "all", heroOnlyItems );
+		}
+		if (combinedItems.Count() > 0){
+			tempSettings.DefaultAffinity.addItemBlackList(-1, -1, "all", combinedItems );
+		}
 		
 		return tempSettings;
 	}
 	
 	static ref HeroesAndBanditsConfigActions ConvertActions(ref HeroesAndBanditsSimpleConfig simpConfig){
-		HeroesAndBanditsConfigActions tempSettings = new ref HeroesAndBanditsConfigActions();
+		ref HeroesAndBanditsConfigActions tempSettings = new ref HeroesAndBanditsConfigActions();
 		for (int i = 0; i < simpConfig.Actions.Count(); i++){
 			string Name = simpConfig.Actions.Get(i).Name;
 			string Affinity = "none"; //bandit / hero / none
