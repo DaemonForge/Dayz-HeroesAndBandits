@@ -68,11 +68,6 @@ modded class PlayerBase extends ManBase
 		
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_Aggressor");
 		
-	}
-	
-	override void OnSelectPlayer()
-	{
-		super.OnSelectPlayer();
 		if (GetGame().IsServer() && GetIdentity() ){ 
 			HeroesAndBanditsPlayer tempHABPlayer = GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
 			m_HeroesAndBandits_AffinityIndex = tempHABPlayer.getAffinityIndex();
@@ -80,8 +75,13 @@ modded class PlayerBase extends ManBase
 			m_HeroesAndBandits_LevelIndex= tempHABPlayer.getLevelIndex();
 			m_HeroesAndBandits_DataLoaded = true;
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
+			
+			m_HeroesAndBandits_OverrideItemBlocks = true;
 			SetSynchDirty();
+			
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 2000, false, -1);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 2800, false); //Should Restore on its own this is a double check
+		
 		}
 	}
 	
