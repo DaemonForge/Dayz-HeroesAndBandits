@@ -419,7 +419,7 @@ class HeroesAndBandits
 		{
 			PlayerBase player = PlayerBase.Cast(players.Get(j));
 			if ( player ){	
-				if (player.IsAlive())
+				if (player.IsAlive()&& !player.IsPlayerDisconnected())
 				{				
 					for (int k = 0; k < Zones.Count(); k++)
 					{	

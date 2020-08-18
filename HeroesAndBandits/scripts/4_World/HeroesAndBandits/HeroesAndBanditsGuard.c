@@ -20,7 +20,7 @@ class HeroesAndBanditsGuard
 	bool WeaponIsRaised = false;
 	float ClosestPlayerDistance = 600;
 	string ClosestPlayerID = "";
-	float RespawnTimer = 60;
+	float RespawnTimer = 600;
 	bool RespawnTriggered = true;
 	bool CanBeKilled = false;
 	bool RequireLineOfSight = true;
@@ -162,9 +162,12 @@ class HeroesAndBanditsGuard
 		{
 			return;
 		}
+		if (!WeaponIsRaised){
+			RaiseWeapon();
+		}
 		bool lineOfSight = !RequireLineOfSight;
 		bool possibleHits = HasLineOfSight(player) ;
-		float dirDiff = GetRotateDiff(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
+		float dirDiff = GetRotateDiffX(Guard.GetDirection(), vector.Direction(Guard.GetPosition(), player.GetPosition()));
 		if (possibleHits > 0 && dirDiff < 20 && dirDiff > -20){
 			habPrint("Guard tried to shoot with possibleHits: " + possibleHits + " dirDiff: " + dirDiff + " RequireLineOfSight: " + RequireLineOfSight,"Debug");
 			lineOfSight = true;
@@ -462,24 +465,26 @@ class HeroesAndBanditsGuard
 		
 		if ( dirX < 0.4 && dirX > -0.4){
 			newX = direction[0];
+			newZ = direction[2];
 			maxCount = 0;
 		} else if (dirX >= 0.4 ){
-			newX = newX + 0.25;
+			newX = newX + 0.28;
 		} else if (dirX <= -0.4 ){
-			newX = newX - 0.25;
+			newX = newX - 0.28;
 		}
 		if ( dirZ < 3 && dirZ > -3){
 			newZ = direction[2];
+			newX = direction[0];
 			maxCount = 0;
 		} else if (dirZ >= 3 ){
-			newZ = newZ + 1.2;
+			newZ = newZ + 2;
 		} else if (dirZ <= -3 ){
-			newZ = newZ - 1.2;
+			newZ = newZ - 2;
 		}
 		Guard.SetDirection(Vector( newX,direction[1],newZ));
-		if (GetRotateDiff(curDir, direction) < 10){
+		if (GetRotateDiffX(curDir, direction) < 14){
 			maxCount = 0;
-			Guard.SetDirection(Vector( direction[0],direction[1],direction[2]));
+			Guard.SetDirection(direction);
 		}
 		if (maxCount > 0 && tickInterval > 10 && !InteruptRotate){
 			float newCount = maxCount - 1;
@@ -499,7 +504,7 @@ class HeroesAndBanditsGuard
 		ReadyForTracking = true;
 	}
 
-	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 60)
+	void TrackPlayer(PlayerBase inPlayer, float timeSeconds = 0, float intervalMiliSeconds = 50)
 	{
 		ReadyForTracking = false;
 		StopTracking = false;

@@ -40,6 +40,8 @@ modded class PlayerBase extends ManBase
 	private int m_HeroesAndBandits_TraderIsBlockedIndex = -1;
 	
 	private float m_HeroesAndBandits_Aggressor = 0;
+	
+	private bool m_HeroesAndBandits_OverrideItemBlocks = false;
 
 	override void Init()
 	{
@@ -61,6 +63,7 @@ modded class PlayerBase extends ManBase
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_ChangeAimY");
 		
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_TraderIsBlocked");
+		RegisterNetSyncVariableFloat("m_HeroesAndBandits_OverrideItemBlocks");
 		
 		
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_Aggressor");
@@ -77,7 +80,8 @@ modded class PlayerBase extends ManBase
 			m_HeroesAndBandits_LevelIndex= tempHABPlayer.getLevelIndex();
 			m_HeroesAndBandits_DataLoaded = true;
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
-			SetSynchDirty();	
+			SetSynchDirty();
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 2000, false, -1);
 		}
 	}
 	
@@ -131,17 +135,30 @@ modded class PlayerBase extends ManBase
 	
 		m_HeroesAndBandits_LevelIndex = levelIndex;
 		if (oldAffinity != m_HeroesAndBandits_AffinityIndex){
-			habAffinityChange( oldAffinity );
+			m_HeroesAndBandits_OverrideItemBlocks = true;
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 150, false, oldAffinity);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 800, false); //Should Restore on its own this is a double check
 		}
+	}
+	
+	void habResetOverrideItemBlocks(){
+		m_HeroesAndBandits_OverrideItemBlocks = false;
 		SetSynchDirty();
 	}
 	
 	void habAffinityChange( int oldAffinity ){
+		if (oldAffinity == m_HeroesAndBandits_AffinityIndex || !GetGame().IsServer()){ 
+			m_HeroesAndBandits_OverrideItemBlocks = true;
+			SetSynchDirty();
+			return; 
+		}
 		bool createItem = false;
 		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
 		if (GetHeroesAndBanditsSettings().Mode != 1 && m_HeroesAndBandits_AffinityIndex != -1){
 			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(m_HeroesAndBandits_AffinityIndex);
 			createItem = true;
+		} else if (GetHeroesAndBanditsSettings().Mode != 1){
+		createItem = true;
 		}
 		bool CheckMaskBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit" );
 		bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
@@ -161,7 +178,7 @@ modded class PlayerBase extends ManBase
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(mask.GetType());
 					if (index == -1){
-						GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+						this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
 						FixMask = true;
 					}
 				} else { //Not Already wearing a mask
@@ -173,7 +190,7 @@ modded class PlayerBase extends ManBase
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(mask.GetType());
 					if (index == -1){
-						GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+						this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
 						FixMask = true;
 					}
 				} else { //Not Already wearing a mask
@@ -185,7 +202,7 @@ modded class PlayerBase extends ManBase
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
 					if (index == -1){
-						GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+						this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
 						FixArmband = true;
 					}
 				} else { //Not Already wearing an Armband
@@ -197,7 +214,7 @@ modded class PlayerBase extends ManBase
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
 					if (index == -1){
-						GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+						this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
 						FixArmband = true;
 					}
 				} else { //Not Already wearing an Armband
@@ -211,7 +228,7 @@ modded class PlayerBase extends ManBase
 					index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
 				}
 				if (index == -1){
-					GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+					this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
 				}
 			}
 			if (CheckArmbandBambi && armband){
@@ -221,21 +238,43 @@ modded class PlayerBase extends ManBase
 					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
 				}
 				if (index == -1){
-					GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+					this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
 				}
 			}
+			//Call Laters cause for some reason just does work at the same time as removing the items
 			if (FixMask && tempAffinity.Name == "bandit"){
-				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().BanditMasks.GetRandomElement());
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().BanditMasks, InventorySlots.MASK);
 			} else if (FixMask && tempAffinity.Name == "hero"){
-				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().HeroMasks.GetRandomElement());
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().HeroMasks, InventorySlots.MASK);
 			}
 			if (FixArmband && tempAffinity.Name == "bandit"){
-				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().BanditArmBands.GetRandomElement());
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 155, false, GetHeroesAndBanditsSettings().BanditArmBands, InventorySlots.ARMBAND);
 			} else if (FixArmband && tempAffinity.Name == "hero"){
-				GetHumanInventory().CreateAttachment(GetHeroesAndBanditsSettings().HeroArmBands.GetRandomElement());
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 155, false, GetHeroesAndBanditsSettings().HeroArmBands, InventorySlots.ARMBAND);
+			}
+			if ( (!FixMask && !FixArmband) || tempAffinity.Name == "bambi"){
+				m_HeroesAndBandits_OverrideItemBlocks = false;
+				SetSynchDirty();
 			}
 		}
 	}
+	
+	void habFixClothing(TStringArray clothingArray, int slotId,  bool tryAgain = true){
+		string itemType = clothingArray.GetRandomElement();
+		EntityAI item = EntityAI.Cast(GetGame().CreateObjectEx(itemType, GetPosition(), ECE_PLACE_ON_SURFACE));
+		if (item){
+			GetHumanInventory().TakeEntityAsAttachment(InventoryMode.SERVER, item);
+			m_HeroesAndBandits_OverrideItemBlocks = false;
+			SetSynchDirty();
+		} else if (!item && tryAgain){
+			habPrint("Item didn't get created on the ground", "Debug");
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 300, false, clothingArray, slotId, false);
+		} else {
+			m_HeroesAndBandits_OverrideItemBlocks = false;
+			SetSynchDirty();
+		}
+		
+	} 
 		
 	void habCurrentAffinityPointUpdate(float affinityPoints){
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
@@ -825,7 +864,7 @@ modded class PlayerBase extends ManBase
 	
 	override bool CanReleaseAttachment(EntityAI attachment)
 	{
-		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded || m_HeroesAndBandits_OverrideItemBlocks){
 			return super.CanReleaseAttachment(attachment);
 		}
 		if ( GetHeroesAndBanditsSettings().Mode == 1 ){
@@ -904,7 +943,10 @@ modded class PlayerBase extends ManBase
 		habPrint("Item " + item.GetType() + " Removed from " + slot_name, "Debug");
 		if ((slot_name == "mask" || slot_name ==  "Armband") && GetHeroesAndBanditsSettings() && GetIdentity()){
 			if (GetGame().IsServer()){
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.habRestoreClothing, 50, false, item, slot_name); //Call later so the item is actually removed
+				m_HeroesAndBandits_OverrideItemBlocks = true;
+				SetSynchDirty();
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.habRestoreClothing, 100, false, item, slot_name); //Call later so the item is actually removed
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 800, false); //Should Restore on its own this is a double check
 			}
 		}
 	}
@@ -971,11 +1013,13 @@ modded class PlayerBase extends ManBase
 		
 		habPrint("habRestoreClothing detachedItem:" + detachedItem.GetType(), "Debug");
 		GetHumanInventory().TakeEntityAsAttachment(InventoryMode.SERVER, detachedItem);
+		m_HeroesAndBandits_OverrideItemBlocks = false;
+		SetSynchDirty();
 	}
 	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded){
+		if (!GetIdentity() || !GetHeroesAndBanditsLevels() || !GetHeroesAndBanditsSettings() || !m_HeroesAndBandits_DataLoaded || m_HeroesAndBandits_OverrideItemBlocks){
 			habPrint("CanReceiveAttachment Settings Not Definied"  + attachment.GetType(), "Debug" );
 			return super.CanReceiveAttachment(attachment, slotId);
 		}
