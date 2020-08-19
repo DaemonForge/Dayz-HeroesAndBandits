@@ -43,11 +43,10 @@ modded class PlayerBase extends ManBase
 	private float m_HeroesAndBandits_Aggressor = 0;
 	
 	private bool m_HeroesAndBandits_OverrideItemBlocks = true;
-
 	
-	override void OnPlayerLoaded()
+	override void Init()
 	{
-		super.OnPlayerLoaded();
+		super.Init();
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_IsGuard");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_Killed");
 		RegisterNetSyncVariableBool("m_HeroesAndBandits_CanRaiseWeaponSync");
@@ -70,6 +69,11 @@ modded class PlayerBase extends ManBase
 		
 		
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_Aggressor");
+	}
+	override void OnPlayerLoaded()
+	{
+		super.OnPlayerLoaded();
+		
 		if ( GetGame().IsServer() && GetIdentity() ){ 
 			HeroesAndBanditsPlayer tempHABPlayer = GetHeroesAndBandits().GetPlayer(GetIdentity().GetPlainId());
 			m_HeroesAndBandits_AffinityIndex = tempHABPlayer.getAffinityIndex();
@@ -78,10 +82,11 @@ modded class PlayerBase extends ManBase
 			m_HeroesAndBandits_DataLoaded = true;
 			habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
 			m_HeroesAndBandits_OverrideItemBlocks = true;
-			SetSynchDirty();
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 1000, false, -1, m_HeroesAndBandits_AffinityIndex); //making sure the player is set up correctly encase settings have changed or new player
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 1800, false);
 		}
+		SetSynchDirty();
+		habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
 	}
 	
 	bool habTraderIsBlocked(){
@@ -133,13 +138,14 @@ modded class PlayerBase extends ManBase
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
 	
 		m_HeroesAndBandits_LevelIndex = levelIndex;
+		m_HeroesAndBandits_DataLoaded = true;
 		if (oldAffinity != m_HeroesAndBandits_AffinityIndex){
 			habPrint("habResetOverrideItemBlocks now true" , "Debug");
 			m_HeroesAndBandits_OverrideItemBlocks = true;
-			SetSynchDirty();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 200, false, oldAffinity, affinityIndex);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 800, false); //Should Restore on its own this is a double check
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habAffinityChange, 400, false, oldAffinity, affinityIndex);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 1200, false); //Should Restore on its own this is a double check
 		}
+		SetSynchDirty();
 	}
 	
 	void habResetOverrideItemBlocks(){
@@ -256,21 +262,26 @@ modded class PlayerBase extends ManBase
 			//Call Laters cause for some reason just does work at the same time as removing the items
 			if (FixMask && tempAffinity.Name == "bandit"){
 				habPrint("Player is Banidit fixing mask", "Debug");
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 100, false, GetHeroesAndBanditsSettings().BanditMasks, InventorySlots.MASK);
+				m_HeroesAndBandits_OverrideItemBlocks = true;
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().BanditMasks, InventorySlots.MASK);
 			} else if (FixMask && tempAffinity.Name == "hero"){
 				habPrint("Player is hero fixing mask", "Debug");
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 100, false, GetHeroesAndBanditsSettings().HeroMasks, InventorySlots.MASK);
+				m_HeroesAndBandits_OverrideItemBlocks = true;
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().HeroMasks, InventorySlots.MASK);
 			}
 			if (FixArmband && tempAffinity.Name == "bandit"){
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().BanditArmBands, InventorySlots.ARMBAND);
+				m_HeroesAndBandits_OverrideItemBlocks = true;
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().BanditArmBands, InventorySlots.ARMBAND);
 			} else if (FixArmband && tempAffinity.Name == "hero"){
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().HeroArmBands, InventorySlots.ARMBAND);
+				m_HeroesAndBandits_OverrideItemBlocks = true;
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().HeroArmBands, InventorySlots.ARMBAND);
 			}
 			if ( (!FixMask && !FixArmband) || tempAffinity.Name == "bambi"){
 				habPrint("habResetOverrideItemBlocks now false No fix was required", "Debug");
 				m_HeroesAndBandits_OverrideItemBlocks = false;
-				SetSynchDirty();
+				
 			}
+			SetSynchDirty();
 		}
 	}
 	
@@ -283,7 +294,7 @@ modded class PlayerBase extends ManBase
 			if (item){
 				habPrint("Item created trying to attach to the player", "Debug");
 				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.GetHumanInventory().TakeEntityAsAttachment, 100, false, InventoryMode.SERVER, item); //maybe this will help with desync?
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 250, false); 
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 350, false); 
 			} else {
 				habPrint("Item couldn't get created", "Debug");
 				habPrint("habResetOverrideItemBlocks now false", "Debug");
@@ -292,7 +303,7 @@ modded class PlayerBase extends ManBase
 			}
 		} else {
 			habPrint("Item created on first Attempt ", "Debug");
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 150, false); //if I resync to fast I get client desync
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 250, false); //if I resync to fast I get client desync
 		}
 	} 
 		
@@ -382,6 +393,8 @@ modded class PlayerBase extends ManBase
 	override void OnVariablesSynchronized()
 	{
 		super.OnVariablesSynchronized();
+		habPrint("Var sync m_HeroesAndBandits_DataLoaded:"  + m_HeroesAndBandits_DataLoaded, "Debug");
+		
 		
 		if ( !m_HeroesAndBandits_CanRaiseWeaponSync && m_HeroesAndBandits_CanRaiseWeapon )
 		{
