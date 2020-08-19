@@ -1,5 +1,6 @@
 class HeroesAndBanditsZone
 {
+	
 	int Index; //0 top level zones, 1 sub zone, 2 sub zone of a sub zone etc.
 	int ZoneID;
     string Name;

@@ -2,6 +2,7 @@ static string HeroesAndBanditsSimpleConfigPATH = HeroesAndBanditsDirectory + "\\
 
 class HeroesAndBanditsSimpleConfig
 { 
+	
 	string ConfigVersion = "5";
 	int UseSimple = 1; //1 use simple 2 convert and save simple to advanced 0 use advanced (2 will set this to 0)
 	
@@ -29,11 +30,6 @@ class HeroesAndBanditsSimpleConfig
 	ref array< ref HABSimpleLevel > Levels = new ref array< ref HABSimpleLevel >;
 	ref array< ref HABSimpleAction > Actions = new ref array< ref HABSimpleAction >;
 	ref array< ref HABSimpleZone > Zones = new ref array< ref HABSimpleZone >;
-	
-	void HeroesAndBanditsSimpleConfig()
-	{
-
-	}
 	
 	// Load config file or create default file if config doesn't exsit
 	int Load(){

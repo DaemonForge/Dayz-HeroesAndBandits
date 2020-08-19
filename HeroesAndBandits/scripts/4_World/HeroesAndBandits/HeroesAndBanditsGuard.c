@@ -1,5 +1,6 @@
 class HeroesAndBanditsGuard
 {
+	
 	float X;
 	float Y;
 	float Z;

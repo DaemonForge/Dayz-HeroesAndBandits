@@ -58,40 +58,39 @@ class HeroesAndBanditsConfigZones
 	
 	void doV5Upgrade(){
 		ConfigVersion = "5";
-		
-		if (Zones){
-			if (Zones.Count() > 0){
-				for (int i = 0; Zones.Count() < i; i++){
-					Zones.Get(i).convertHumanityToAffinty();
-					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BambiNotification.paa"){
-						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
-					}
-					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/HeroNotification.paa"){
-						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Hero.paa";
-					}
-					if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BanditNotification.paa"){
-						Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bandit.paa";
-					}
-					ref array< ref habGuard > TempGuards = Zones.Get(i).Guards;
-					if (TempGuards && TempGuards.Count() > 0){
-						for(int j = 0; j < TempGuards.Count(); j++){
-							string soundset = habConverter.GunToSound.Get(TempGuards.Get(j).WeaponInHands);
-							float damage = 24;
-							if (soundset){
-								TempGuards.Get(j).GunSound = soundset;
-								damage = habConverter.GunToDmg.Get(TempGuards.Get(j).WeaponInHands);
-							} else {
-								TempGuards.Get(j).GunSound = "M4_Shot_SoundSet";
-							}
-							TempGuards.Get(j).DamagePerTickMin = damage;
-							TempGuards.Get(j).DamagePerTickRand = damage + 8;
-							TempGuards.Get(j).GunTickMulitplier = 3.0;
-							TempGuards.Get(j).HitChance = 1;
-							TempGuards.Get(j).RespawnTimer = 1200;
-							TempGuards.Get(j).CanBeKilled = false;
-							TempGuards.Get(j).RequireLineOfSight = true;
+		habPrint("Upgrading Zones to Version 5", "Debug");
+		if (Zones.Count() > 0){
+			habPrint("Upgrading " + Zones.Count() + " Zones", "Debug");
+			for (int i = 0; i < Zones.Count(); i++){
+				habPrint("Converting Zone ID: " + i + " Name: " + Zones.Get(i).Name, "Debug");
+				Zones.Get(i).convertHumanityToAffinty();
+				if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BambiNotification.paa"){
+					Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
+				}
+				if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/HeroNotification.paa"){
+					Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Hero.paa";
+				}
+				if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BanditNotification.paa"){
+					Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bandit.paa";
+				}
+				if (Zones.Get(i).Guards && Zones.Get(i).Guards.Count() > 0){
+					for(int j = 0; j < Zones.Get(i).Guards.Count(); j++){
+						habConverter().init();
+						string soundset = habConverter().GunToSound.Get(Zones.Get(i).Guards.Get(j).WeaponInHands);
+						float damage = 24;
+						if (soundset && soundset != ""){
+							Zones.Get(i).Guards.Get(j).GunSound = soundset;
+							damage = habConverter().GunToDmg.Get(Zones.Get(i).Guards.Get(j).WeaponInHands);
+						} else {
+							Zones.Get(i).Guards.Get(j).GunSound = "M4_Shot_SoundSet";
 						}
-						Zones.Get(i).Guards = TempGuards;
+						Zones.Get(i).Guards.Get(j).DamagePerTickMin = damage;
+						Zones.Get(i).Guards.Get(j).DamagePerTickRand = damage * 1.2;
+						Zones.Get(i).Guards.Get(j).GunTickMulitplier = 3.0;
+						Zones.Get(i).Guards.Get(j).HitChance = 1;
+						Zones.Get(i).Guards.Get(j).RespawnTimer = 1200;
+						Zones.Get(i).Guards.Get(j).CanBeKilled = false;
+						Zones.Get(i).Guards.Get(j).RequireLineOfSight = true;
 					}
 				}
 			}
@@ -173,16 +172,19 @@ class habZone
 	void convertHumanityToAffinty(){
 		
 		if (MaxHumanity == 0 && MinHumanity == 0){ //Allow all no players
+			habPrint("[HumanityToAffinty][" + Name + "] Max and Min Humanity both 0 so adding no Affinities", "Verbose");
 			return;
 		}
 		
 		if (MaxHumanity == -1 && MinHumanity == -1){ //Allow all players
+			habPrint("[HumanityToAffinty][" + Name + "] Max and Min Humanity both -1 so adding all Affinities", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 			Affinities.Insert(new ref habZoneAffinity("hero"));
 			Affinities.Insert(new ref habZoneAffinity("bandit"));
 			return;
 		}
 		if ((MinHumanity < GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MaxHumanity > GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints) || (MaxHumanity <= GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
+			habPrint("[HumanityToAffinty][" + Name + "] Adding Bambi", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 		}
 		
@@ -198,6 +200,7 @@ class habZone
 			if (MinHumanity != -1){
 				newBanditsMax = 0 - MinHumanity;
 			}
+			habPrint("[HumanityToAffinty][" + Name + "] Adding bandit", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bandit", newBanditsMin, newBanditsMax));
 		}
 		
@@ -213,6 +216,7 @@ class habZone
 			if (MaxHumanity != -1){
 				newHeroesMax = MaxHumanity;
 			}
+			habPrint("[HumanityToAffinty][" + Name + "] Adding hero", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("hero", newHeroesMin, newHeroesMax));
 		}
 		

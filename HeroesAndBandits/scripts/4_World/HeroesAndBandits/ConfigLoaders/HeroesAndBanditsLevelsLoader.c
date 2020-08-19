@@ -37,7 +37,7 @@ class HeroesAndBanditsConfigLevels
 	habLevel getLevel(string affinity, float points){
 		for ( int i =0; i < Levels.Count(); i++ )
 		{
-			if( Levels.Get(i).Affinity ==  affinity)
+			if ( Levels.Get(i).Affinity ==  affinity)
 			{
 				float minPoints = Levels.Get(i).MinPoints;
 				float maxPoints = Levels.Get(i).MaxPoints;

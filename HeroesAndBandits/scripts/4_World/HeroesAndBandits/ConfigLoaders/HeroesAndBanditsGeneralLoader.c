@@ -122,14 +122,17 @@ class HeroesAndBanditsSettings
 
 	void doV5Upgrade(){
 		ConfigVersion = "5";
-		BanditCanRemoveMask = false;
+		BanditCanRemoveMask = true;
 		HeroCanRemoveMask = true;
 		AffintyCantGoBelowZero = true;
 		Expansion_EnableIconOnPlayerTag = true;
 		Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
 		Expansion_HideNameOnPlayerTag = false;
-		BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+		BanditCanRemoveArmBand = true;
+		BanditMasks = {};
 		BanditArmBands = {};
+		HeroCanRemoveMask = true;
+		HeroCanRemoveArmBand = true;
 		HeroMasks = {};
 		HeroArmBands = {};
 	}
