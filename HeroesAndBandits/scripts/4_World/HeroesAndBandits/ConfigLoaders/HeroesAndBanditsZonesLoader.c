@@ -94,7 +94,7 @@ class HeroesAndBanditsConfigZones
 		Save();
 	}
 	
-}
+};
 
 
 
@@ -221,7 +221,7 @@ class habZone
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 		}
 	}
-}
+};
 
 class habZoneAffinity{
 	string Affinity;
@@ -257,7 +257,7 @@ class habZoneAffinity{
 		return false;
 	}
 	
-}
+};
 
 //Class for holding guard values
 class habGuard
@@ -297,4 +297,4 @@ class habGuard
 	vector getVector(){
 		return Vector( X, Y, Z );
 	}
-}
+};

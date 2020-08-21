@@ -133,7 +133,7 @@ class HeroesAndBanditsSettings
 	}
 	
 	void Save(){
-			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(habContant.SettingsPATH, this);
+			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(habConstant.SettingsPATH, this);
 	}
 	
-}
+};

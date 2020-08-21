@@ -649,7 +649,7 @@ modded class PlayerBase extends ManBase
 		if (targetPlayer && targetPlayer.GetIdentity()) {
 			targetPlayerID = targetPlayer.GetIdentity().GetPlainId();
 		}
-		if (GetGame().IsServer() && GetIdentity()){
+		if (GetGame().IsServer() && GetIdentity() && GetBleedingManagerServer()){
 			beforeHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
 		}
 		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed && GetGame().IsServer() && GetIdentity()) {
@@ -695,13 +695,13 @@ modded class PlayerBase extends ManBase
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
 		int afterHitBleedingSources = 0;
-		if (GetGame().IsServer() && GetIdentity()){
+		if (GetGame().IsServer() && GetIdentity() && GetBleedingManagerServer()){
 			afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
 		}
 				
 		if (GetGame().IsServer() && hitByZombie  && habIsGuard() && IsAlive() ){//Heal back after Zombie Hits if guard unless it was a killing blow
 			this.AddHealth("","Health", damageResult.GetDamage( "", "Health" ));
-			if (beforeHitBleedingSources < afterHitBleedingSources){
+			if (beforeHitBleedingSources < afterHitBleedingSources && GetBleedingManagerServer()){
 				this.GetBleedingManagerServer().RemoveMostSignificantBleedingSource();
 			} 
 		} 

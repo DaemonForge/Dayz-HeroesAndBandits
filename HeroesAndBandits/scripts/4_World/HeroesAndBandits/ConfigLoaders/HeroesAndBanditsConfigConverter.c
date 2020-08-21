@@ -373,4 +373,4 @@ class habConverter
 		return tempSettings;
 	}
 
-}
+};

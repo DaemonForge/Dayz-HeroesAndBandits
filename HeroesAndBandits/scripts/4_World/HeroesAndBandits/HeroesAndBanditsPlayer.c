@@ -8,15 +8,15 @@ class HeroesAndBanditsPlayer
 	void HeroesAndBanditsPlayer(string pID = "") 
 	{
         PlayerID = pID;
-		if (FileExist(HeroesAndBanditsPlayerDB+"\\" + pID + ".json")) //If config file exsit load the file
+		if (FileExist(habConstant.PlayerDB + "\\" + pID + ".json")) //If config file exsit load the file
         {
-            JsonFileLoader<HeroesAndBanditsPlayer>.JsonLoadFile(HeroesAndBanditsPlayerDB+"\\" + pID + ".json", this);
+            JsonFileLoader<HeroesAndBanditsPlayer>.JsonLoadFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
         }
         else //If config file doesn't exsit create the file
         {
             if (GetGame().IsServer() || !GetGame().IsMultiplayer())
             {
-                JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(HeroesAndBanditsPlayerDB+"\\" + pID + ".json", this);
+                JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
             }
         }
     }
@@ -221,7 +221,7 @@ class HeroesAndBanditsPlayer
 	void saveData(){
 		if (GetGame().IsServer())
 		{
-			JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(HeroesAndBanditsPlayerDB + "\\" + PlayerID + ".json", this);
+			JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(habConstant.PlayerDB + "\\" + PlayerID + ".json", this);
 	    }
 	}
 	
@@ -381,7 +381,7 @@ class HeroesAndBanditsPlayer
 	}
 	
 	
-}
+};
 
 class habStat
 {
@@ -397,7 +397,7 @@ class habStat
 	void updateStat(){
 		Stat++;
 	}
-}
+};
 
 
 class habPlayerAffinity
@@ -425,4 +425,4 @@ class habPlayerAffinity
 	void setPoints(float amount){
 		Points = amount;
 	}
-}
+};

@@ -34,9 +34,9 @@ class HeroesAndBanditsSimpleConfig
 		if (GetGame().IsServer()){
 			MakeDirectory(habConstant.Directory);
 			MakeDirectory(habConstant.PlayerDB);
-			if (FileExist(habConstant.SimpleConfigPATH)) //If config exist load File
+			if (FileExist(habConstant.ConfigPATH)) //If config exist load File
 			{
-				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.SimpleConfigPATH, this);
+				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.ConfigPATH, this);
 			}else{ //File does not exist create file
 				SetDefaults();
 				if (FileExist(habConstant.SettingsPATH) || FileExist(habConstant.ActionsPATH) || FileExist(habConstant.LevelsPATH) || FileExist(habConstant.ZonesPATH)){
@@ -54,7 +54,7 @@ class HeroesAndBanditsSimpleConfig
 	}
 	
 	void Save(){	
-		JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(habConstant.SimpleConfigPATH, this);
+		JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(habConstant.ConfigPATH, this);
 	}
 	
 	void ConvertToFull(){
@@ -123,7 +123,7 @@ class HeroesAndBanditsSimpleConfig
 		Zones.Get(0).Guards.Insert(new ref habSimpleGuard( 11250, 290.2, 4300));
 	}
 	
-}
+};
 
 class HABSimpleLevel {
 	string Name;
@@ -132,7 +132,7 @@ class HABSimpleLevel {
 		Name = name;
 		Humanity = humanity;
 	}
-}
+};
 
 class HABSimpleAction{
 	string Name;
@@ -141,7 +141,7 @@ class HABSimpleAction{
 		Name = name;
 		Humanity = humanity;
 	}
-}
+};
 
 class HABSimpleZone{
     string Name;
@@ -173,7 +173,7 @@ class HABSimpleZone{
 		Z = y;
 		Radius = radius;
 	}
-}
+};
 
 //Class for holding guard values
 class habSimpleGuard
@@ -199,4 +199,4 @@ class habSimpleGuard
 			Skin = skin;
 		}
 	}
-}
+};

@@ -435,8 +435,8 @@ class HeroesAndBandits
 		habPrint("Updating Player Totals", "Verbose");
 		ref array<string> playerDataBaseFiles = new array<string>;
 		ref array<string> playerList = new array<string>;
-		playerDataBaseFiles = habFindFilesInDirectory(HeroesAndBanditsPlayerDB);
-		habPrint("Found " + playerDataBaseFiles.Count() + " Players in database Located: " + HeroesAndBanditsPlayerDB, "Verbose");
+		playerDataBaseFiles = habFindFilesInDirectory(habConstant.PlayerDB);
+		habPrint("Found " + playerDataBaseFiles.Count() + " Players in database Located: " + habConstant.PlayerDB, "Verbose");
 		string tempFileName = "";
 		string jsonName = "";
 		int nameLength = 0;

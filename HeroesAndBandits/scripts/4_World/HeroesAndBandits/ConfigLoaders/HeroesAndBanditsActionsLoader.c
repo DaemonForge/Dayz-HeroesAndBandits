@@ -164,7 +164,7 @@ class HeroesAndBanditsConfigActions
 		ConfigVersion = "5";
 		Save();
 	}
-}
+};
 
 
 
@@ -185,4 +185,4 @@ class habAction
 		Points = points;
 		NotifiyPlayer = notifiyPlayer;
 	}
-}
+};

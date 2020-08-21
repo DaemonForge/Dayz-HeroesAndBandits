@@ -23,7 +23,7 @@ class habDeathType
 	
 	static int ByZombieBleeding = 11;
 	
-}
+};
 
 class habConstant
 {
@@ -36,4 +36,4 @@ class habConstant
 	static string ZonesPATH = Directory + "\\zones.json";
 	static string ConfigPATH = Directory + "\\simple.json";
 	static string LevelsPATH = Directory + "\\levels.json";
-}
+};
