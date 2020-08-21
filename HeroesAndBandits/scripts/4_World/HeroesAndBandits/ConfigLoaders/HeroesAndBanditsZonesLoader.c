@@ -1,7 +1,6 @@
-static string HeroesAndBanditsZonesPATH = HeroesAndBanditsDirectory + "\\zones.json";
-
 class HeroesAndBanditsConfigZones
 { 
+	//Has to be in world as it uses other configs for refernce
 	//Default Values
 	string ConfigVersion = "5";
 	
@@ -19,21 +18,21 @@ class HeroesAndBanditsConfigZones
 	
 	
 	void Load(){
-		if (FileExist(HeroesAndBanditsZonesPATH)) //If config exist load File
+		if (FileExist(habConstant.ZonesPATH)) //If config exist load File
 		{
-	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(HeroesAndBanditsZonesPATH, this);
+	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
 			if (ConfigVersion == "4"){
 				doV5Upgrade();
 			}
 		}else{ //File does not exist create file
 			createDefaults();
-			habPrint("Creating Default Zones Config", "Always");	
+			Print("Creating Default Zones Config");	
 			Save();
 		}
 	}
 	
 	void Save(){
-		JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(HeroesAndBanditsZonesPATH, this);
+		JsonFileLoader<HeroesAndBanditsConfigZones>.JsonSaveFile(habConstant.ZonesPATH, this);
 	}
 	
 		//Returns the warning message color in an int value
@@ -49,7 +48,7 @@ class HeroesAndBanditsConfigZones
 			tempZone.Affinities.Insert(new ref habZoneAffinity("bambi"));
 		}
 		Zones.Insert(tempZone);
-		habPrint("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones", "Verbose");	
+		Print("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones");	
 	}
 	
 	void createDefaults(){
@@ -58,11 +57,8 @@ class HeroesAndBanditsConfigZones
 	
 	void doV5Upgrade(){
 		ConfigVersion = "5";
-		habPrint("Upgrading Zones to Version 5", "Debug");
 		if (Zones.Count() > 0){
-			habPrint("Upgrading " + Zones.Count() + " Zones", "Debug");
 			for (int i = 0; i < Zones.Count(); i++){
-				habPrint("Converting Zone ID: " + i + " Name: " + Zones.Get(i).Name, "Debug");
 				Zones.Get(i).convertHumanityToAffinty();
 				if (Zones.Get(i).WelcomeIcon == "HeroesAndBandits/gui/images/BambiNotification.paa"){
 					Zones.Get(i).WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
@@ -171,21 +167,22 @@ class habZone
 	
 	void convertHumanityToAffinty(){
 		
+		bool HeroesAdded = false;
+		bool BanditsAdded = false;
+		bool BambiAdded = false;
 		if (MaxHumanity == 0 && MinHumanity == 0){ //Allow all no players
-			habPrint("[HumanityToAffinty][" + Name + "] Max and Min Humanity both 0 so adding no Affinities", "Verbose");
 			return;
 		}
 		
 		if (MaxHumanity == -1 && MinHumanity == -1){ //Allow all players
-			habPrint("[HumanityToAffinty][" + Name + "] Max and Min Humanity both -1 so adding all Affinities", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
 			Affinities.Insert(new ref habZoneAffinity("hero"));
 			Affinities.Insert(new ref habZoneAffinity("bandit"));
 			return;
 		}
 		if ((MinHumanity < GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MaxHumanity > GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints) || (MaxHumanity <= GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
-			habPrint("[HumanityToAffinty][" + Name + "] Adding Bambi", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bambi"));
+			BambiAdded = true;
 		}
 		
 		//Bandits
@@ -200,8 +197,8 @@ class habZone
 			if (MinHumanity != -1){
 				newBanditsMax = 0 - MinHumanity;
 			}
-			habPrint("[HumanityToAffinty][" + Name + "] Adding bandit", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("bandit", newBanditsMin, newBanditsMax));
+			BanditsAdded = true;
 		}
 		
 		//Heroes
@@ -216,11 +213,13 @@ class habZone
 			if (MaxHumanity != -1){
 				newHeroesMax = MaxHumanity;
 			}
-			habPrint("[HumanityToAffinty][" + Name + "] Adding hero", "Verbose");
 			Affinities.Insert(new ref habZoneAffinity("hero", newHeroesMin, newHeroesMax));
+			HeroesAdded = true;
 		}
 		
-		
+		if (HeroesAdded && BanditsAdded && !BambiAdded){
+			Affinities.Insert(new ref habZoneAffinity("bambi"));
+		}
 	}
 }
 
@@ -298,15 +297,4 @@ class habGuard
 	vector getVector(){
 		return Vector( X, Y, Z );
 	}
-}
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
-{
-	if (!m_HeroesAndBanditsConfigZones)
-	{
-		m_HeroesAndBanditsConfigZones = new HeroesAndBanditsConfigZones;
-		m_HeroesAndBanditsConfigZones.Load();
-	}
-	return m_HeroesAndBanditsConfigZones;
 }

@@ -20,7 +20,7 @@
 			}
 		}
 	
-		override void Trigger()
+		override void TriggerExplosion()
 		{
 			super.Trigger();
 			if (hab_ActivatedByID)

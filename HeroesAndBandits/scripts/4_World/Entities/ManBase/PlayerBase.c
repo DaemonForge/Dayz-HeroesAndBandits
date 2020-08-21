@@ -86,7 +86,6 @@ modded class PlayerBase extends ManBase
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habResetOverrideItemBlocks, 1800, false);
 		}
 		SetSynchDirty();
-		habPrint("Player: " + GetIdentity().GetPlainId() + " Loaded with Affinty Index of " + m_HeroesAndBandits_AffinityIndex + " Points: " + m_HeroesAndBandits_AffinityPoints, "Debug");
 	}
 	
 	bool habTraderIsBlocked(){

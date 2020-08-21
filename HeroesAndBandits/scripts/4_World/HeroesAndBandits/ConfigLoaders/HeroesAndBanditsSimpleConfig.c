@@ -1,5 +1,3 @@
-static string HeroesAndBanditsSimpleConfigPATH = HeroesAndBanditsDirectory + "\\simple.json";
-
 class HeroesAndBanditsSimpleConfig
 { 
 	
@@ -34,20 +32,20 @@ class HeroesAndBanditsSimpleConfig
 	// Load config file or create default file if config doesn't exsit
 	int Load(){
 		if (GetGame().IsServer()){
-			MakeDirectory(HeroesAndBanditsDirectory);
-			MakeDirectory(HeroesAndBanditsPlayerDB);
-			if (FileExist(HeroesAndBanditsSimpleConfigPATH)) //If config exist load File
+			MakeDirectory(habConstant.Directory);
+			MakeDirectory(habConstant.PlayerDB);
+			if (FileExist(habConstant.SimpleConfigPATH)) //If config exist load File
 			{
-				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(HeroesAndBanditsSimpleConfigPATH, this);
+				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.SimpleConfigPATH, this);
 			}else{ //File does not exist create file
 				SetDefaults();
-				if (FileExist(HeroesAndBanditsSettingsPATH) || FileExist(HeroesAndBanditsActionsPATH) || FileExist(HeroesAndBanditsLevelsPATH) || FileExist(HeroesAndBanditsZonesPATH)){
+				if (FileExist(habConstant.SettingsPATH) || FileExist(habConstant.ActionsPATH) || FileExist(habConstant.LevelsPATH) || FileExist(habConstant.ZonesPATH)){
 					UseSimple = 0;
 				}
 				Save();
 			}
 			if (UseSimple != 0){
-				habPrint("Loading Simple Config", "Always");
+				Print("Loading Simple Config");
 				ConvertToFull();
 			}
 			return UseSimple;
@@ -56,7 +54,7 @@ class HeroesAndBanditsSimpleConfig
 	}
 	
 	void Save(){	
-		JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(HeroesAndBanditsSimpleConfigPATH, this);
+		JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonSaveFile(habConstant.SimpleConfigPATH, this);
 	}
 	
 	void ConvertToFull(){

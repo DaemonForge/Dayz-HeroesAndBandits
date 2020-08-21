@@ -207,7 +207,7 @@ class habConverter
 			string Mag =  habConverter().GunToMag.Get(WeaponInHands);
 			float Dmg =  habConverter().GunToDmg.Get(WeaponInHands);
 			TStringArray WeaponInHandsAttachments =  simpZone.Guards.Get(i).WeaponInHandsAttachments;
-			habPrint("WeaponInHands: " + WeaponInHands + " GunSound: " + GunSound + " Mag: " + Mag + " Dmg: " + Dmg, "Verbose");
+			Print("WeaponInHands: " + WeaponInHands + " GunSound: " + GunSound + " Mag: " + Mag + " Dmg: " + Dmg);
 			if ( GunSound && Mag && Dmg ) {
 				tmpGuard.WeaponInHands = WeaponInHands;
 				tmpGuard.WeaponInHandsMag = Mag;
@@ -299,7 +299,7 @@ class habConverter
 		int lastIndex = simpConfig.Levels.Count() - 1;
 		int count = lastIndex / 2;
 		if (count > 5){
-			habPrint("[SIMPLE CONFIG ERROR] Too many levels added you must use advanced configs Level Images will not be correct","Always");
+			Print("[SIMPLE CONFIG ERROR] Too many levels added you must use advanced configs Level Images will not be correct");
 			count = 5;
 		}
 		for (int i = 0; i < simpConfig.Levels.Count(); i++){

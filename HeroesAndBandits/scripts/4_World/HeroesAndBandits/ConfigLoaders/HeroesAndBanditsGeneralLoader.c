@@ -1,8 +1,3 @@
-static string HeroesAndBanditsDirectory = "$profile:HeroesAndBandits";
-static string HeroesAndBanditsPlayerDB =  HeroesAndBanditsDirectory + "\\PlayerDB";
-static string HeroesAndBanditsSettingsPATH = HeroesAndBanditsDirectory + "\\settings.json";
-
-
 class HeroesAndBanditsSettings
 { 
 	//Default Values
@@ -98,18 +93,18 @@ class HeroesAndBanditsSettings
 	
 		// Load config file or create default file if config doesn't exsit
 	void Load(){
-		if (FileExist(HeroesAndBanditsSettingsPATH)) //If config exist load File
+		if (FileExist(habConstant.SettingsPATH)) //If config exist load File
 		{
-	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(HeroesAndBanditsSettingsPATH, this);
+	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(habConstant.SettingsPATH, this);
 			if (ConfigVersion == "4"){
 				doV5Upgrade();
 				Save();
 			}
 			
 		}else{ //File does not exist create file
-			MakeDirectory(HeroesAndBanditsDirectory);
-			MakeDirectory(HeroesAndBanditsPlayerDB);
-			habPrint("Creating Default Settings Config", "Always");	
+			MakeDirectory(habConstant.Directory);
+			MakeDirectory(habConstant.PlayerDB);
+			Print("Creating Default Settings Config");	
 			Save();
 		}
 	}
@@ -138,7 +133,7 @@ class HeroesAndBanditsSettings
 	}
 	
 	void Save(){
-			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(HeroesAndBanditsSettingsPATH, this);
+			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(habContant.SettingsPATH, this);
 	}
 	
 }

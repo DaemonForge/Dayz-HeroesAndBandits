@@ -538,3 +538,15 @@ static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 		return g_HeroesAndBanditsConfigActions;
 	}
 }
+
+
+//Helper function to return Config
+static ref HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
+{
+	if (!m_HeroesAndBanditsConfigZones)
+	{
+		m_HeroesAndBanditsConfigZones = new HeroesAndBanditsConfigZones;
+		m_HeroesAndBanditsConfigZones.Load();
+	}
+	return m_HeroesAndBanditsConfigZones;
+}

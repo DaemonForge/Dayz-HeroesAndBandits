@@ -1,5 +1,3 @@
-static string HeroesAndBanditsLevelsPATH = HeroesAndBanditsDirectory + "\\levels.json";
-
 class HeroesAndBanditsConfigLevels
 { 
 	//Default Values
@@ -16,21 +14,21 @@ class HeroesAndBanditsConfigLevels
 	
 		
 	void Load(){
-		if (FileExist(HeroesAndBanditsLevelsPATH)) //If config exist load File
+		if (FileExist(habConstant.LevelsPATH)) //If config exist load File
 		{
-	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(HeroesAndBanditsLevelsPATH, this);
+	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(habConstant.LevelsPATH, this);
 				if (ConfigVersion == "4"){
 					doV5Upgrade();
 				}
 		}else{ //File does not exist create file
 			createDefaults();
-			habPrint("Creating Default Actions Config", "Always");	
+			Print("Creating Default Actions Config");	
 			Save();
 		}
 	}
 	
 	void Save(){
-		JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(HeroesAndBanditsLevelsPATH, this);
+		JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonSaveFile(habConstant.LevelsPATH, this);
 	}
 	
 	//Returns the level based on points value
@@ -117,14 +115,14 @@ class HeroesAndBanditsConfigLevels
 	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
 		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
 		Levels.Insert(tempLevel);
-		habPrint("Level Added: " + name + " There are now " + Levels.Count() + " Levels", "Verbose");	
+		Print("Level Added: " + name + " There are now " + Levels.Count() + " Levels");	
 	}	
 	
 	//Helper function for adding levels
 	void addAffinity(string name, string displayName, string image = ""){
 		habAffinity tempAffinity = new ref habAffinity(name, displayName, image);
 		Affinities.Insert(tempAffinity);
-		habPrint("Affinity Added: " + name + " There are now " + Affinities.Count() + " Affinities", "Verbose");	
+		Print("Affinity Added: " + name + " There are now " + Affinities.Count() + " Affinities");	
 	}
 	
 	void createDefaults(){
@@ -271,7 +269,6 @@ class habItemList
 		
 		if (doCheck){
 			int index = Items.Find(itemType);
-				habPrint("Checking for " + itemType + " Found " + index, "Debug");
 				if (index != -1){
 						check = !check;
 				}

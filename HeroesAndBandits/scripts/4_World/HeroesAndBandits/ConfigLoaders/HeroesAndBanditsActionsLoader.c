@@ -1,5 +1,3 @@
-static string HeroesAndBanditsActionsPATH = HeroesAndBanditsDirectory + "\\actions.json";
-
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
@@ -12,21 +10,21 @@ class HeroesAndBanditsConfigActions
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
 	
 	void Load(){
-		if (FileExist(HeroesAndBanditsActionsPATH)) //If config exist load File
+		if (FileExist(habConstant.ActionsPATH)) //If config exist load File
 		{
-	        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(HeroesAndBanditsActionsPATH, this);
+	        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);
 				if(ConfigVersion == "4"){
 					DoV5Upgrade();
 				}
 		}else{ //File does not exist create file
 			createDefaults();
-			habPrint("Creating Default Actions Config", "Always");	
+			Print("Creating Default Actions Config");	
 			Save();
 		}
 	}
 	
 	void Save(){
-		JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(HeroesAndBanditsActionsPATH, this);
+		JsonFileLoader<HeroesAndBanditsConfigActions>.JsonSaveFile(habConstant.ActionsPATH, this);
 	}
 	
 	//Returns the Humanity value for the action requested
@@ -46,7 +44,7 @@ class HeroesAndBanditsConfigActions
 				}
 			}
 		}
-		habPrint("Action: " +actionName+ " not found", "Exception");	
+		Print("Action: " +actionName+ " not found");	
 		return 0;
 	}
 	
@@ -58,7 +56,7 @@ class HeroesAndBanditsConfigActions
 				return Actions.Get(i).Points;
 			}
 		}
-		habPrint("Action: " +actionName+ " not found", "Exception");	
+		Print("Action: " +actionName+ " not found");	
 		return 0;
 	}
 
@@ -74,7 +72,7 @@ class HeroesAndBanditsConfigActions
 					return Actions.Get(i);
 			}
 		}
-		habPrint("Action: " + actionName + " not found", "Exception");	
+		Print("Action: " + actionName + " not found");	
 		return new habAction("Null", "Null", "Null", 0, false);
 	}
 	
@@ -82,7 +80,7 @@ class HeroesAndBanditsConfigActions
 	void addAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifyPlayer = true){
 		habAction tempAction = new ref habAction(actionName, affinity, secondaryAffinity, points, notifyPlayer);
 		Actions.Insert(tempAction);
-		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Verbose");	
+		Print("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions");	
 	}
 	
 	//Returns the Notification color in an int value
