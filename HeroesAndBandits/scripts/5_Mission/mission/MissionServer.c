@@ -43,7 +43,9 @@ modded class MissionServer extends MissionBase
 		if ( identity )
 		{
 			string playerID = identity.GetPlainId();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 1500, false, new Param1<ref PlayerBase >( player ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 2000, false, new Param1<ref PlayerBase >( player ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5500, false, new Param1<ref PlayerBase >( player ));
+		
 		}
 	}
 	
