@@ -9,9 +9,8 @@ modded class MissionGameplay extends MissionBase
 	bool									m_HeroesAndBanditsPanelOpening = false;
 	string									m_HeroesAndBanditsCurrentIcon;
 	
-	override void OnInit()
+	void MissionGameplay()
 	{
-		super.OnInit();
 		m_HeroesAndBanditsIconsInitialized = false;
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABIcon", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCUpdateHABSettings", this, SingeplayerExecutionType.Both );
