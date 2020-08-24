@@ -10,16 +10,22 @@ class HeroesAndBanditsConfigActions
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
 	
 	void Load(){
-		if (FileExist(habConstant.ActionsPATH)) //If config exist load File
-		{
-	        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);
-				if(ConfigVersion == "4"){
-					DoV5Upgrade();
+		if (GetGame().IsServer()){
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			simpleConfig.Load();
+			if (simpleConfig.UseSimple != 0){
+				if (FileExist(habConstant.ActionsPATH)) //If config exist load File
+				{
+			        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);
+						if(ConfigVersion == "4"){
+							DoV5Upgrade();
+						}
+				}else{ //File does not exist create file
+					createDefaults();
+					Print("Creating Default Actions Config");	
+					Save();
 				}
-		}else{ //File does not exist create file
-			createDefaults();
-			Print("Creating Default Actions Config");	
-			Save();
+			}
 		}
 	}
 	

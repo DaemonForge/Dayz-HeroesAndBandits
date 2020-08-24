@@ -92,9 +92,18 @@ class habConverter
 		tempSettings.HeroMasks = simpConfig.HeroMasks;
 		tempSettings.HeroArmBands = simpConfig.HeroArmBands;
 		tempSettings.Expansion_EnableIconOnPlayerTag = simpConfig.Expansion_EnableIconOnPlayerTag;
+		tempSettings.AllowGUI = true;
+		tempSettings.GUIHeading = "#HAB_TITLE";
+		tempSettings.HideKillsInGUI = false;
+		tempSettings.AllowStatCommand = false;
 		tempSettings.AllowStatCommand = false;
 		tempSettings.AllowHumanityCommand = false;
 		tempSettings.VerboseLogs = true;
+		
+		tempSettings.BambiSkins = {"SurvivorM_Boris", "SurvivorM_Hassan", "SurvivorF_Frida", "SurvivorM_Jose", "SurvivorM_Cyril", "SurvivorF_Gabi"};
+		tempSettings.HeroSkins = {"SurvivorM_Indar","SurvivorM_Lewis","SurvivorF_Linda","SurvivorM_Taiki","SurvivorM_Mirek","SurvivorM_Oliver","SurvivorF_Irena","SurvivorF_Judy","SurvivorF_Keiko","SurvivorM_Niki","SurvivorM_Rolf"};
+		tempSettings.BanditSkins = {"SurvivorM_Peter","SurvivorM_Kaito","SurvivorF_Naomi","SurvivorM_Francis","SurvivorM_Elias","SurvivorM_Manua","SurvivorM_Denis","SurvivorM_Quinn","SurvivorM_Guo","SurvivorM_Seth","SurvivorF_Maria","SurvivorF_Eva", "SurvivorF_Helga"};
+			
 		return tempSettings;
 	}
 	
@@ -239,7 +248,9 @@ class habConverter
 		ref HeroesAndBanditsConfigLevels tempSettings = new ref HeroesAndBanditsConfigLevels();
 		tempSettings.addAffinity("hero", "#HAB_HERO", "HeroesAndBandits/gui/images/Hero.paa");
 		tempSettings.addAffinity("bandit", "#HAB_BANDIT", "HeroesAndBandits/gui/images/Bandit.paa");
-		
+		tempSettings.LevelIconLocation = 2;
+		tempSettings.ShowLevelIcon = true;
+		tempSettings.NotifyLevelChange = true;
 		ref TStringArray banditOnlyItems = {};
 		ref TStringArray heroOnlyItems = {};
 		ref TStringArray combinedItems = {};

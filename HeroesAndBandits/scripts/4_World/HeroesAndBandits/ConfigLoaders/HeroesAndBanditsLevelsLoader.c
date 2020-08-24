@@ -14,16 +14,22 @@ class HeroesAndBanditsConfigLevels
 	
 		
 	void Load(){
-		if (FileExist(habConstant.LevelsPATH)) //If config exist load File
-		{
-	        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(habConstant.LevelsPATH, this);
-				if (ConfigVersion == "4"){
-					doV5Upgrade();
+		if (GetGame().IsServer()){
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			simpleConfig.Load();
+			if (simpleConfig.UseSimple != 0){
+				if (FileExist(habConstant.LevelsPATH)) //If config exist load File
+				{
+			        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(habConstant.LevelsPATH, this);
+						if (ConfigVersion == "4"){
+							doV5Upgrade();
+						}
+				}else{ //File does not exist create file
+					createDefaults();
+					Print("Creating Default Actions Config");	
+					Save();
 				}
-		}else{ //File does not exist create file
-			createDefaults();
-			Print("Creating Default Actions Config");	
-			Save();
+			}
 		}
 	}
 	

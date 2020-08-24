@@ -18,16 +18,22 @@ class HeroesAndBanditsConfigZones
 	
 	
 	void Load(){
-		if (FileExist(habConstant.ZonesPATH)) //If config exist load File
-		{
-	        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
-			if (ConfigVersion == "4"){
-				doV5Upgrade();
+		if (GetGame().IsServer()){
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			simpleConfig.Load();
+			if (simpleConfig.UseSimple != 0){
+				if (FileExist(habConstant.ZonesPATH)) //If config exist load File
+				{
+			        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
+					if (ConfigVersion == "4"){
+						doV5Upgrade();
+					}
+				}else{ //File does not exist create file
+					createDefaults();
+					Print("Creating Default Zones Config");	
+					Save();
+				}
 			}
-		}else{ //File does not exist create file
-			createDefaults();
-			Print("Creating Default Zones Config");	
-			Save();
 		}
 	}
 	

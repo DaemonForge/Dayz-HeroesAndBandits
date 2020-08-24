@@ -93,19 +93,25 @@ class HeroesAndBanditsSettings
 	
 		// Load config file or create default file if config doesn't exsit
 	void Load(){
-		if (FileExist(habConstant.SettingsPATH)) //If config exist load File
-		{
-	        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(habConstant.SettingsPATH, this);
-			if (ConfigVersion == "4"){
-				doV5Upgrade();
-				Save();
+		if (GetGame().IsServer()){
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			simpleConfig.Load();
+			if (simpleConfig.UseSimple != 0){
+				if (FileExist(habConstant.SettingsPATH)) //If config exist load File
+				{
+			        JsonFileLoader<HeroesAndBanditsSettings>.JsonLoadFile(habConstant.SettingsPATH, this);
+					if (ConfigVersion == "4"){
+						doV5Upgrade();
+						Save();
+					}
+					
+				}else{ //File does not exist create file
+					MakeDirectory(habConstant.Directory);
+					MakeDirectory(habConstant.PlayerDB);
+					Print("Creating Default Settings Config");	
+					Save();
+				}
 			}
-			
-		}else{ //File does not exist create file
-			MakeDirectory(habConstant.Directory);
-			MakeDirectory(habConstant.PlayerDB);
-			Print("Creating Default Settings Config");	
-			Save();
 		}
 	}
 	
