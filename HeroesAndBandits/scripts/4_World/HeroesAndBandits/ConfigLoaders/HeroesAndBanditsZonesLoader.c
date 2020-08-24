@@ -192,7 +192,7 @@ class habZone
 		}
 		
 		//Bandits
-		if (GetHeroesAndBanditsLevels().DefaultLevel.MinPoints || MinHumanity == -1){
+		if (MinHumanity <= GetHeroesAndBanditsLevels().DefaultLevel.MinPoints || MinHumanity == -1){
 			float newBanditsMax = -1;
 			float newBanditsMin = -1;
 			if (MaxHumanity >= 0){
