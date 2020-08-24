@@ -95,4 +95,4 @@ modded class BaseBuildingBase
 	}
 	
 
-}
+};

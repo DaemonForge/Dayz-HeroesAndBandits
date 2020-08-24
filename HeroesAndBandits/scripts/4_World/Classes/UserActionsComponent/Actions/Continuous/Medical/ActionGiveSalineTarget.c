@@ -7,4 +7,4 @@ modded class ActionGiveSalineTarget: ActionContinuousBase
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicGiveSaline");
 	}
-}
+};

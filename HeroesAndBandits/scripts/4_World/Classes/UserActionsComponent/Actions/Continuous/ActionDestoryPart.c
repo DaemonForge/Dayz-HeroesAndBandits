@@ -7,4 +7,4 @@ modded class ActionDestroyPart: ActionContinuousBase
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "FencePartRaid");
 	}
-}
+};

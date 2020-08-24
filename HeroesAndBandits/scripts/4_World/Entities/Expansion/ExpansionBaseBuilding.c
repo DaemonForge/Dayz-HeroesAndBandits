@@ -16,5 +16,5 @@
 			}
 			super.EEKilled( killer );
 		}
-	}
+	};
 #endif

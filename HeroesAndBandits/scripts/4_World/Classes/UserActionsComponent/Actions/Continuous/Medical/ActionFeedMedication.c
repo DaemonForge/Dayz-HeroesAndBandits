@@ -7,7 +7,7 @@ modded class ActionFeedTetracyclineAntibiotics: ActionForceConsume
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedTetracycline");
 	}
-}
+};
 
 modded class ActionFeedPainkillerTablets: ActionForceConsume
 {
@@ -18,7 +18,7 @@ modded class ActionFeedPainkillerTablets: ActionForceConsume
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedPainkiller");
 	}
-}
+};
 
   
 modded class ActionFeedCharcoalTablets: ActionForceConsume
@@ -30,7 +30,7 @@ modded class ActionFeedCharcoalTablets: ActionForceConsume
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedCharcoal");
 	}
-}
+};
 
 modded class ActionFeedVitaminBottle: ActionForceConsume
 {	
@@ -42,4 +42,4 @@ modded class ActionFeedVitaminBottle: ActionForceConsume
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedVitamin");
 	}
 	
-}
+};

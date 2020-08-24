@@ -7,4 +7,4 @@ modded class ActionBandageTarget: ActionBandageBase
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicBandagePlayer");
 	}
-}
+};

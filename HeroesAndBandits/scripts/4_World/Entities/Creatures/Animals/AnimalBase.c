@@ -40,4 +40,4 @@ modded class AnimalBase
 			}
 		}
     }
-}
+};

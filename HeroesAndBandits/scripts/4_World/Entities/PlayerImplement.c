@@ -7,4 +7,4 @@ modded class DayZPlayerImplement extends DayZPlayer
 		if (state && GetGame().IsServer())
 			SetAllowDamage(true);
 	}
-}
+};

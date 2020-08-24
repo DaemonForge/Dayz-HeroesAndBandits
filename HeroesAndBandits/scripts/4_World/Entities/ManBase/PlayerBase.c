@@ -1230,4 +1230,4 @@ modded class PlayerBase extends ManBase
 		//this.GetInputController().OverrideMovementAngle(doOverride, m_HeroesAndBandits_ChangeAimX);
 		//this.GetInputController().OverrideMovementSpeed(doOverride, 1);
 	}
-}
+};

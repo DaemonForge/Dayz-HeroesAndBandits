@@ -464,7 +464,7 @@ class HeroesAndBandits
 		SaveAllPlayers();
 	}
 	
-}
+};
 
 
 static ref HeroesAndBandits GetHeroesAndBandits()
@@ -487,7 +487,7 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 		}
 	}
 	return m_HeroesAndBandits;
-}
+};
 
 
 //Helper function to return Config
@@ -504,7 +504,7 @@ static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 		
 		return g_HeroesAndBanditsSettings;
 	}
-}
+};
 
 
 //Helper function to return Config
@@ -520,7 +520,7 @@ static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 	} else {
 		return g_HeroesAndBanditsConfigLevels;
 	}
-}
+};
 
 
 
@@ -537,16 +537,16 @@ static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 	} else {
 		return g_HeroesAndBanditsConfigActions;
 	}
-}
+};
 
 
 //Helper function to return Config
 static ref HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
 {
-	if (!m_HeroesAndBanditsConfigZones)
+	if (!m_HeroesAndBanditsConfigZones && GetGame().IsServer())
 	{
 		m_HeroesAndBanditsConfigZones = new HeroesAndBanditsConfigZones;
 		m_HeroesAndBanditsConfigZones.Load();
 	}
 	return m_HeroesAndBanditsConfigZones;
-}
+};

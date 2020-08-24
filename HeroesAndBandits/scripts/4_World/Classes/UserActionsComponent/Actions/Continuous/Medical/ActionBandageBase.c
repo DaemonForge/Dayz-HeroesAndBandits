@@ -9,4 +9,4 @@ modded class ActionBandageBase extends ActionContinuousBase
 		}
 	}
 	
-}
+};

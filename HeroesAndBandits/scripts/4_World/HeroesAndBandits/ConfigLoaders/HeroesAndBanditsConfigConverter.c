@@ -326,7 +326,7 @@ class habConverter
 				MinHumanity = 0 - simpConfig.Levels.Get(i).Humanity;
 				MaxHumanity = -1;
 				Affinity = "bandit";
-				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				Image = ImagePath + ImageBanditFile + count + ImageFileExt;
 				count++;
 			} else if (simpConfig.Levels.Get(i).Humanity == 0){
 				MinHumanity = simpConfig.Levels.Get(i+1).Humanity;
@@ -335,8 +335,8 @@ class habConverter
 				Affinity = "bambi";
 				count++;
 			} else if (simpConfig.Levels.Get(i).Humanity > 0){
-				MaxHumanity = simpConfig.Levels.Get(i).Humanity;
-				MinHumanity = TempHumanity;
+				MaxHumanity = TempHumanity;
+				MinHumanity = simpConfig.Levels.Get(i).Humanity;
 				TempHumanity = simpConfig.Levels.Get(i).Humanity;
 				Affinity = "hero";
 				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
@@ -345,7 +345,7 @@ class habConverter
 				MinHumanity = 0 - simpConfig.Levels.Get(i).Humanity;
 				MaxHumanity = 0 - simpConfig.Levels.Get(i+1).Humanity;
 				Affinity = "bandit";
-				Image = ImagePath + ImageHeroFile + count + ImageFileExt;
+				Image = ImagePath + ImageBanditFile + count + ImageFileExt;
 				count++;
 			}
 			if (isNotDefault){

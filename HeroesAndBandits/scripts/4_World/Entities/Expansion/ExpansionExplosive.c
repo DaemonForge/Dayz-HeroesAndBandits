@@ -43,7 +43,7 @@
 				}
 			}
 		}
-	}
+	};
 
 
 	modded class Expansion_C4_Explosion extends BuildingBase
@@ -66,5 +66,5 @@
 				return "null";
 			}
 		}
-	}
+	};
 #endif

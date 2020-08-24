@@ -173,7 +173,7 @@ class HeroesAndBanditsConfigLevels
 		DefaultAffinity.Image = "HeroesAndBandits/gui/images/Bambi.paa";
 		Save();
 	}
-}
+};
 
 
 
@@ -194,7 +194,7 @@ class habLevel
 		MinPoints = minPoints;
 		MaxPoints = maxPoints;
 	}
-}
+};
 
 //Class for holding Actions
 class habAffinity
@@ -245,7 +245,7 @@ class habAffinity
 		int index = ItemBlackList.Count() - 1;
 		ItemBlackList.Get(index).Items = items;
 	}
-}
+};
 
 
 class habItemList
@@ -281,4 +281,4 @@ class habItemList
 		}
 		return check;
 	}	
-}
+};

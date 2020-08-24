@@ -13,4 +13,4 @@ modded class ActionCPR: ActionContinuousBase
 			GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicGiveCPR");
 		}
 	}
-}
+};

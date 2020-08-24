@@ -31,8 +31,7 @@ modded class MissionServer extends MissionBase
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABPlayerData", this, SingeplayerExecutionType.Both );
 		GetRPCManager().AddRPC( "HaB", "RPCRequestHABIcon", this, SingeplayerExecutionType.Both );
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "UpdateAllPlayersSettings", 300 * 1000, true);
-		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "UpdateAllPlayersSettings", 600 * 1000, true);
 	}
 	
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity)
@@ -232,6 +231,4 @@ modded class MissionServer extends MissionBase
 		}
 	}
 		
-}
-
-
+};

@@ -107,4 +107,4 @@ class HeroesAndBanditsPanelUI extends UIScriptedMenu
 	void SetOpen (bool open) {
 		m_HeroesAndBanditsPanelIsOpen = open;
 	}
-}
+};

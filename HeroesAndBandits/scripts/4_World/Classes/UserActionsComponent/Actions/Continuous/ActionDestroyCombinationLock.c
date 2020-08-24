@@ -18,4 +18,4 @@ modded class ActionDestroyCombinationLock: ActionContinuousBase
 			}
 		}
 	}
-}
+};

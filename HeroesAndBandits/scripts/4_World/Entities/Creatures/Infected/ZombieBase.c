@@ -38,4 +38,4 @@ modded class ZombieBase
 			}
 		}
     }
-}
+};

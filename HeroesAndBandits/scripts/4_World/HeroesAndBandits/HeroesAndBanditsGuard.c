@@ -563,7 +563,4 @@ class HeroesAndBanditsGuard
 			StopTracking = true;
 		}
 	}
-}
-
-
-
+};

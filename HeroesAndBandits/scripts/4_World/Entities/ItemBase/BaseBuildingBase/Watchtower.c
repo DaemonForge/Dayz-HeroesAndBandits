@@ -13,4 +13,4 @@ modded class Watchtower
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
-}
+};

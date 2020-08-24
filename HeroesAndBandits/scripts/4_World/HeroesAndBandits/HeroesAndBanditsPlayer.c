@@ -359,11 +359,6 @@ class HeroesAndBanditsPlayer
 		float subTotal = 0;
 		for ( int j =0; j < Stats.Count(); j++ )
 		{
-			string statName = habUpdateStat(Stats.Get(j).Name);
-			if (statName != Stats.Get(j).Name) {
-				habPrint( "Player: " + PlayerID + " updating stat from Stats.Get(j).Name to " + statName, "Always");
-				Stats.Get(j).Name = statName;
-			}
 			habAction tempAction = GetHeroesAndBanditsActions().getAction(Stats.Get(j).Name);
 			
 			if (tempAction.Name != "Null"){

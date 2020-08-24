@@ -13,4 +13,4 @@ modded class Fence
 		}
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
-}
+};

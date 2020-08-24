@@ -22,5 +22,5 @@ modded class BuildingBase: Building
 		
 		super.Explode(damageType, ammoType);
 	}
-}
+};
 #endif

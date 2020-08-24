@@ -7,4 +7,4 @@ modded class ActionSplintTarget: ActionContinuousBase
 		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicSplintPlayer");
 	}
-}
+};

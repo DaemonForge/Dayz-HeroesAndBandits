@@ -22,5 +22,5 @@ modded class ItemBase extends InventoryItem
 		
 		super.Explode(damageType, ammoType);
 	}
-}
+};
 #endif

@@ -393,4 +393,4 @@ class HeroesAndBanditsZone
 			return SubZones.Get(inZones.Get(Index + 1)).GetChild( inZones );
 		}
 	}
-}
+};

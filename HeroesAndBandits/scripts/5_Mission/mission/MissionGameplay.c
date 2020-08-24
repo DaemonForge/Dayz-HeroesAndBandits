@@ -321,4 +321,4 @@ modded class MissionGameplay extends MissionBase
         GetGame().GetInput().ResetGameFocus();
         GetGame().GetUIManager().ShowUICursor(false);
     }
-}
+};

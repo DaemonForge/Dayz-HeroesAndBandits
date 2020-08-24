@@ -25,7 +25,7 @@ TStringArray habFindFilesInDirectory(string directory)
         }
 
 	return fileList; 
-}
+};
 
 
 //Always Exception Verbose Debug
@@ -40,7 +40,7 @@ static void habPrint(string message, string msgType){
 	}else if (msgType == "Debug" && GetHeroesAndBanditsSettings().DebugLogs){
 		Print("[HeroesAndBandits] [Debug]  " + message);
 	}
-}
+};
 
 
 PlayerBase habGetPlayerBaseByID( string pID )
@@ -59,7 +59,7 @@ PlayerBase habGetPlayerBaseByID( string pID )
 	}
 	habPrint("Failed to GetPlayerBaseByID for Player " + pID , "Exception");
 	return null;
-}
+};
 
 PlayerBase habGetPlayerBaseByName( string pName )
 {
@@ -78,22 +78,4 @@ PlayerBase habGetPlayerBaseByName( string pName )
 	}
 	habPrint("Failed to GetPlayerBaseByName for Player " + pName , "Verbose");
 	return null;
-}
-
-
-string habUpdateStat(string statName){
-	if ( statName == "BandagePlayer") {
-		statName = "MedicBandagePlayer";
-	}
-	if (statName == "GiveBloodPlayer" ) {
-		statName = "MedicGiveBlood";	
-	}
-	if (statName == "GiveSalinePlayer" ) {
-		statName = "MedicGiveSaline";
-				
-	}
-	if (statName == "GivePlayerCPR" ) {
-		statName = "MedicGiveCPR";
-	}
-	return statName;
-}
+};

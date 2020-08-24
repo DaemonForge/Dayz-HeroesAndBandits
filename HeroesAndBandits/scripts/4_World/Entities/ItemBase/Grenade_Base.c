@@ -18,4 +18,4 @@ modded class Grenade_Base
 			return "null";
 		}
 	}
-}
+};
