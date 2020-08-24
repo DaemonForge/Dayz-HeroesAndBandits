@@ -13,7 +13,7 @@ class HeroesAndBanditsConfigActions
 		if (GetGame().IsServer()){
 			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
-			if (simpleConfig.UseSimple != 0){
+			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.ActionsPATH)) //If config exist load File
 				{
 			        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);

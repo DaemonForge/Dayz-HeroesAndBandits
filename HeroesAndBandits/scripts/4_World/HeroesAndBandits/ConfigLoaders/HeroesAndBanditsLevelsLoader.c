@@ -17,7 +17,7 @@ class HeroesAndBanditsConfigLevels
 		if (GetGame().IsServer()){
 			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
-			if (simpleConfig.UseSimple != 0){
+			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.LevelsPATH)) //If config exist load File
 				{
 			        	JsonFileLoader<HeroesAndBanditsConfigLevels>.JsonLoadFile(habConstant.LevelsPATH, this);

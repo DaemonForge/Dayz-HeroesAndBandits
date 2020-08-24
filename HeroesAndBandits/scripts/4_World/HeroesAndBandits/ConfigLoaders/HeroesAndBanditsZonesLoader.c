@@ -21,7 +21,7 @@ class HeroesAndBanditsConfigZones
 		if (GetGame().IsServer()){
 			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
-			if (simpleConfig.UseSimple != 0){
+			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.ZonesPATH)) //If config exist load File
 				{
 			        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
