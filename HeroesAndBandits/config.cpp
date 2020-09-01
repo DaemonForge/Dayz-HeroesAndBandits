@@ -4,6 +4,7 @@ class CfgPatches
 	{
 		requiredVersion=0.1;
 		requiredAddons[]={
+			"JM_CF_Scripts",
 			"DZ_Data"
 		};
 	};
@@ -35,6 +36,7 @@ class CfgMods
 			};
 			class gameScriptModule
             {
+				value = "";
                 files[]={
 					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/3_Game"
@@ -43,6 +45,7 @@ class CfgMods
 			
 			class worldScriptModule
             {
+				value = "";
                 files[]={ 
 					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/4_World" 
@@ -51,6 +54,7 @@ class CfgMods
 			
 	        class missionScriptModule
             {
+				value = "";
                 files[]={ 
 					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/5_Mission" 

@@ -127,6 +127,8 @@ class HeroesAndBanditsConfigActions
 		
 		#ifdef EXPANSIONCODELOCKEXPANDED
 			addAction( "ExpansionCodeLockTentRaid", "bandit", "none", 150);
+			addAction( "HackExpansionCodeLockTentRaid", "bandit", "none", 100);
+			addAction( "HackExpansionCodeLockDoorRaid", "bandit", "none", 200);
 		#endif
 		
 		addAction( "MedicBandagePlayer", "hero", "medic", 50);
@@ -169,26 +171,5 @@ class HeroesAndBanditsConfigActions
 	void DoV5Upgrade(){
 		ConfigVersion = "5";
 		Save();
-	}
-};
-
-
-
-//Class for holding Actions
-class habAction
-{
-	string Name;
-	string Affinity; //bandit / hero / none
-	string SecondaryAffinity = "none";
-	float Points;
-	bool NotifiyPlayer;
-
-	void habAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifiyPlayer = true) 
-	{
-		Name = actionName;
-		Affinity = affinity;
-		SecondaryAffinity =  secondaryAffinity;
-		Points = points;
-		NotifiyPlayer = notifiyPlayer;
 	}
 };

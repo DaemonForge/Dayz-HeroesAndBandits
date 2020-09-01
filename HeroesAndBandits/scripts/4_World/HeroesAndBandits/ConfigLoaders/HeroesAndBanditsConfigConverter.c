@@ -129,6 +129,7 @@ class habConverter
 		float WarnRadius = simpZone.Radius * 1.15;
 		float MinHumanity = simpZone.MinHumanity;
 		float MaxHumanity = simpZone.MaxHumanity;
+		
 		if (MinHumanity == -1 && MaxHumanity == -1){
 			Radius = Radius;
 			WarnRadius = Radius;
@@ -137,6 +138,7 @@ class habConverter
 			Radius = Radius;
 			WarnRadius = Radius;
 		}
+		
 		string WelcomeMessage =  simpZone.WelcomeMessage;
 		string WarningMessage =  simpZone.WarningMessage;
 		bool OverrideSafeZone =  simpZone.OverrideSafeZone;
@@ -147,6 +149,11 @@ class habConverter
 		bool KillAggressors = simpZone.KillAggressors;
 		float RespawnTimer = simpZone.RespawnTimer;
 		int GuardDifficulty =  simpZone.GuardDifficulty;
+		
+		if (simpZone.Guards.Count() == 0 || GuardDifficulty == 0){
+			Radius = 0;
+		}
+		
 		ref habZone tempZone =  new ref  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
 		tempZone.MinHumanity = MinHumanity;
 		tempZone.MaxHumanity = MaxHumanity;
@@ -182,6 +189,7 @@ class habConverter
 		//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
 		//2 Require Line Of Sight 85% HitChance can be killed, medium high fire rate  
 		//1 Require Line Of Sight 80% HitChance can be killed, low high fire rate 
+		//0 They do nothing ever
 		if (GuardDifficulty == 5){
 			GunTickMulitplier = 2.0;
 			HitChance = 1.0;

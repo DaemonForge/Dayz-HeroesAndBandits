@@ -245,7 +245,7 @@ modded class MissionGameplay extends MissionBase
 	
 	
 	override void OnUpdate (float timeslice) {
-        super.OnUpdate (timeslice);
+        super.OnUpdate(timeslice);
 
         Input input = GetGame().GetInput();
         if (input.LocalPress("UAUIBack", false)) {

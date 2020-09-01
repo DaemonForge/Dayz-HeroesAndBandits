@@ -179,6 +179,9 @@ class HeroesAndBanditsPlayer
 		{
 			if (Affinities.Get(i).Name == name) {
 				Affinities.Get(i).updatePoints(points);
+				if (Affinities.Get(i).Points < 0 && GetHeroesAndBanditsSettings().AffintyCantGoBelowZero){
+					Affinities.Get(i).setPoints(0);
+				}
 				found = true;
 			}
 		}
@@ -375,49 +378,4 @@ class HeroesAndBanditsPlayer
 		}
 	}
 	
-	
-};
-
-class habStat
-{
-    string Name;
-	int Stat;
-
-    void habStat(string statName, int stat) 
-	{
-        Name = statName;
-		Stat = stat;
-    }
-	
-	void updateStat(){
-		Stat++;
-	}
-};
-
-
-class habPlayerAffinity
-{
-    string Name;
-	float Points;
-
-    void habPlayerAffinity(string affinityName, float points = 0) 
-	{
-        Name = affinityName;
-		Points = points;
-    }
-	
-	float getPoints(){
-		return Points;
-	}
-	
-	void updatePoints(float amount){
-		Points = Points + amount;
-		if (Points < 0 && GetHeroesAndBanditsSettings().AffintyCantGoBelowZero){
-			Points = 0;
-		}
-	}
-	
-	void setPoints(float amount){
-		Points = amount;
-	}
 };

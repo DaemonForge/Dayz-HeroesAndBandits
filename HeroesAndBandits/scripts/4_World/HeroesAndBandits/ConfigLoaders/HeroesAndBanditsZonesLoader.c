@@ -28,6 +28,7 @@ class HeroesAndBanditsConfigZones
 					if (ConfigVersion == "4"){
 						doV5Upgrade();
 					}
+					ConvertHumanityToAffinity();
 				}else{ //File does not exist create file
 					createDefaults();
 					Print("Creating Default Zones Config");	
@@ -98,6 +99,23 @@ class HeroesAndBanditsConfigZones
 			}
 		}
 		Save();
+	}
+	
+	void ConvertHumanityToAffinity(){
+		bool SaveNeeded = false;
+		if (Zones.Count() > 0){
+			for (int i = 0; i < Zones.Count(); i++){
+				if (Zones.Get(i).MinHumanity != 0 && Zones.Get(i).MaxHumanity != 0 && Zones.Get(i).Affinities.Count() == 0){
+					Zones.Get(i).convertHumanityToAffinty();
+					Zones.Get(i).MinHumanity = 0;
+					Zones.Get(i).MaxHumanity = 0;
+					SaveNeeded = true;
+				}
+			}
+		}
+		if(SaveNeeded){
+			Save();
+		}
 	}
 	
 };
