@@ -25,12 +25,9 @@ Each command and the GUI can be disabled in the server configuration
 
 
 ## To Do List
-- Get guards to shoot guns at players when the zone kills them
 - Add custom skins for Hero's and Bandits so they are more easily identifiable
-- Add the ability for certain clothing to only be wear able by certain affinities
 - Create a export function for server leaderboards and a basic web app to view
 - Change Icon location settings to be client side so that way players can choose where to show it
-- Add secondary affinities, eg Hunter, and Medic and make it expandable
 
 For questions or help feel free to contact me on discord: DaemonForge#5454
 
