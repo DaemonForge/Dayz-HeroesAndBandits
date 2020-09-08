@@ -1,15 +1,8 @@
 //Server Variables
 ref HeroesAndBandits m_HeroesAndBandits;
-ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
-ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
-ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
-ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
 
 //Client Variables
 ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
-ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
-ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
-ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
 
 
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
@@ -489,64 +482,3 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 	return m_HeroesAndBandits;
 };
 
-
-//Helper function to return Config
-static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
-{
-	if ( GetGame().IsServer()){
-		if (!m_HeroesAndBanditsSettings)
-		{
-			m_HeroesAndBanditsSettings = new HeroesAndBanditsSettings;
-			m_HeroesAndBanditsSettings.Load();
-		}
-		return m_HeroesAndBanditsSettings;
-	} else {
-		
-		return g_HeroesAndBanditsSettings;
-	}
-};
-
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
-{
-	if ( GetGame().IsServer()){
-		if (!m_HeroesAndBanditsConfigLevels)
-		{
-			m_HeroesAndBanditsConfigLevels = new HeroesAndBanditsConfigLevels;
-			m_HeroesAndBanditsConfigLevels.Load();
-		}
-		return m_HeroesAndBanditsConfigLevels;
-	} else {
-		return g_HeroesAndBanditsConfigLevels;
-	}
-};
-
-
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
-{
-	if ( GetGame().IsServer()){
-		if (!m_HeroesAndBanditsConfigActions)
-		{
-			m_HeroesAndBanditsConfigActions = new HeroesAndBanditsConfigActions;
-			m_HeroesAndBanditsConfigActions.Load();
-		}
-		return m_HeroesAndBanditsConfigActions;
-	} else {
-		return g_HeroesAndBanditsConfigActions;
-	}
-};
-
-
-//Helper function to return Config
-static ref HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
-{
-	if (!m_HeroesAndBanditsConfigZones && GetGame().IsServer())
-	{
-		m_HeroesAndBanditsConfigZones = new HeroesAndBanditsConfigZones;
-		m_HeroesAndBanditsConfigZones.Load();
-	}
-	return m_HeroesAndBanditsConfigZones;
-};

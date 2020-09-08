@@ -40,6 +40,8 @@ modded class PlayerBase extends ManBase
 	private bool m_HeroesAndBandits_TraderIsBlocked = false;
 	private int m_HeroesAndBandits_TraderIsBlockedIndex = -1;
 	
+	private string m_HeroesAndBandits_GuardPrefix = "";
+	
 	private float m_HeroesAndBandits_Aggressor = 0;
 	
 	private bool m_HeroesAndBandits_OverrideItemBlocks = true;
@@ -573,7 +575,7 @@ modded class PlayerBase extends ManBase
 			}
 			if (m_HeroesAndBandits_IsGuard){
 				if (sourcePlayer.GetIdentity()){
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), "GuardKill");
+					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), m_HeroesAndBandits_GuardPrefix+"GuardKill");
 				}
 				return;
 			}

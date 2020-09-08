@@ -13,7 +13,7 @@ modded class IngameHud extends Hud
 	{
 		if (GetHeroesAndBanditsSettings())
 		{ 
-			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag && m_PlayerTag && m_PlayerTagHABIcon)
+			if (GetHeroesAndBanditsSettings().Expansion_EnableIconOnPlayerTag && m_PlayerTag && m_PlayerTagIcon)
 			{
 				Param2< string, string > data;
 				if ( !ctx.Read( data ) ) return;

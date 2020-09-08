@@ -290,6 +290,7 @@ class habGuard
 	float Y;
 	float Z;
 	float Orientation;
+	string ActionPrefix = "";
 	string Skin = "";
 	string WeaponInHands = "M4A1";
 	string WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";

@@ -7,6 +7,7 @@ class HeroesAndBanditsGuard
 	float Orientation;
 	private PlayerBase Guard;
 	string Skin;
+	string ActionPrefix;
 	string WeaponInHands;
 	string WeaponInHandsMag;
 	ref TStringArray WeaponInHandsAttachments;
