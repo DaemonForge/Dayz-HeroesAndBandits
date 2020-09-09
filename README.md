@@ -41,3 +41,4 @@ For anyone interested in repacking please read all this
 - 5th Please ask for permission prior to repacking, almost all request will be approved as long as you have a valid reason to repack
 - 6th Also note that the Source Code is the activly developing version so it may not work as it sits here right now so just be warnned.
 - 7th Must include this [Notice File](https://raw.githubusercontent.com/daemonforge/Dayz-HeroesAndBandits/master/NOTICE) in your code (If you are just copying the PBOs then it will already be in there)
+- 8th I will only work to support 1 version upgrades, so make sure to follow the updates and update as I update the main mod or you may have issue upgradeing the mod.
