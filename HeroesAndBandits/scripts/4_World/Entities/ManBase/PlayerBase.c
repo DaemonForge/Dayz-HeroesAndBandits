@@ -558,13 +558,15 @@ modded class PlayerBase extends ManBase
 				killedByZombie = true;
 				deathType = habDeathType.ByZombie;
 			}
-			else if (GetBleedingManagerServer().GetBleedingSourcesCount() > 0){
-				deathType = habDeathType.ByBleeding;
-				if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.ByZombie){
-					killedByZombie = true;
-					deathType = habDeathType.ByZombieBleeding;
+			else if (GetBleedingManagerServer()){
+				if (GetBleedingManagerServer().GetBleedingSourcesCount() > 0){
+					deathType = habDeathType.ByBleeding;
+					if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.ByZombie){
+						killedByZombie = true;
+						deathType = habDeathType.ByZombieBleeding;
+					}
+					sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
 				}
-				sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
 			}
 			else {
 				if ( killer )
