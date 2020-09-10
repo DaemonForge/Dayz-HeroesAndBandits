@@ -1,13 +1,14 @@
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
-	string ConfigVersion = "5";
+	string ConfigVersion = "6";
 	
 	int NotificationMessageTime = 10;
 	
 	ref array<int> NotificationColor = {200, 0, 200, 200};
 	
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
+	ref array< ref habAggressorAction > AggressorActions = new ref array< ref habAggressorAction >;
 	
 	void Load(){
 		if (GetGame().IsServer()){
@@ -19,6 +20,9 @@ class HeroesAndBanditsConfigActions
 			        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);
 						if(ConfigVersion == "4"){
 							DoV5Upgrade();
+						}
+						if(ConfigVersion == "5"){
+							DoV6Upgrade();
 						}
 				}else{ //File does not exist create file
 					createDefaults();
@@ -172,4 +176,17 @@ class HeroesAndBanditsConfigActions
 		ConfigVersion = "5";
 		Save();
 	}
+	
+	void DoV6Upgrade(){
+		ConfigVersion = "6";
+		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		Save();
+	}
+	
+	
 };

@@ -163,3 +163,16 @@ class habAction
 		NotifiyPlayer = notifiyPlayer;
 	}
 };
+
+//Class for holding Actions
+class habAggressorAction
+{
+	string Name;
+	string Ammount;
+
+	void habAction(string actionName, string amount) 
+	{
+		Name= actionName;
+		Amount = amount;
+	}
+};

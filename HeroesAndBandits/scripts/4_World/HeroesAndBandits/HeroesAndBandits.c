@@ -407,14 +407,15 @@ class HeroesAndBandits
 		}
 		//habPrint("Checking if Players are in Zones", "Debug");			
 		ref array<Man> players = new array<Man>;
-		GetGame().GetPlayers(players);
-		for (int j = 0; j < players.Count(); j++)
-		{
-			PlayerBase player = PlayerBase.Cast(players.Get(j));
-			if ( player ){	
-				if (player.IsAlive()&& !player.IsPlayerDisconnected())
-				{				
-					for (int k = 0; k < Zones.Count(); k++)
+		GetGame().GetPlayers(players);			
+		for (int k = 0; k < Zones.Count(); k++)
+		{	
+			Zones.Get(k).ReduceAggressors();
+			for (int j = 0; j < players.Count(); j++)
+			{
+				PlayerBase player = PlayerBase.Cast(players.Get(j));
+				if ( player ){	
+					if (player.IsAlive()&& !player.IsPlayerDisconnected())
 					{	
 						Zones.Get(k).CheckPlayer(player);
 					}

@@ -21,14 +21,19 @@ class HeroesAndBanditsZone
 	bool PreventWeaponRaise;
 	bool PreventActions;
 	bool BlockTrader;
-	bool KillAggressors;
+	float KillAggressors;
+	float AggressorThreshold = 100;
+	float AggressorReduction;
+	float AggressorGlobal;
 	float MaxDistance = 999;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
 	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
 	protected bool GuardsActive = false;
 	protected ref TStringArray TrackedPlayersInZone = {};
-
+	
+	protected ref map<ref PlayerBase, float> Aggressors = new ref map<ref PlayerBase, float>;
+	
 	void Init(habZone zoneToLoad, int zoneID, int index = 0){
 		
 		Index = index;
@@ -53,6 +58,9 @@ class HeroesAndBanditsZone
 		Affinities = zoneToLoad.Affinities;
 		BlockTrader = zoneToLoad.BlockTrader;
 		KillAggressors = zoneToLoad.KillAggressors;
+		AggressorThreshold = zoneToLoad.AggressorThreshold;
+		AggressorReduction = zoneToLoad.AggressorReduction;
+		AggressorGlobal = zoneToLoad.AggressorGlobal;
 		habPrint("[Zone] " + Name + " at X: "+ X + " Z:" + Z + " Index: " + Index + " ZoneID: "+ ZoneID + " PreventActions: " + PreventActions,"Debug");
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
@@ -392,5 +400,19 @@ class HeroesAndBanditsZone
 		} else {
 			return SubZones.Get(inZones.Get(Index + 1)).GetChild( inZones );
 		}
+	}
+	
+	void ReduceAggressors(){
+		int maxI = Aggressors.Count() - 1;
+		for (int i = 0; maxI > 0; maxI--){
+			Aggressors.GetElement(i) = Aggressors.GetElement(maxI) - AggressorsReduction;
+			if (Aggressors.GetElement(maxI) < 0){
+				Aggressors.Remove(Aggressors.GetKey(maxI));
+			}
+		}
+	}
+	
+	void RegisterAggressorsAction(PlayerBase source, string action){
+		
 	}
 };
