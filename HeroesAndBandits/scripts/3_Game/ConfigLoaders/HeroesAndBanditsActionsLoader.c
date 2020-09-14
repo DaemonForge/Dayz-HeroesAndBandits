@@ -169,6 +169,13 @@ class HeroesAndBanditsConfigActions
 		addAction( "HuntAnimal_SusScrofa", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_LepusEuropaeus", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_UrsusArctos", "hunter", "none", 200, false);
+		
+		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 	
 	}
 	
@@ -187,6 +194,5 @@ class HeroesAndBanditsConfigActions
 		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 		Save();
 	}
-	
 	
 };

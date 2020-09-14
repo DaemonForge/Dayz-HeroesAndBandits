@@ -48,7 +48,7 @@ class HeroesAndBanditsGuard
 	
 	void Spawn()
 	{		
-		if(!RespawnTriggered){
+		if (!RespawnTriggered){
 			return;
 		}
 		if (PlayerBase.Cast(Guard)){
