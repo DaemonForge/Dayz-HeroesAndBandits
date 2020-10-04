@@ -378,7 +378,10 @@ class HeroesAndBanditsGuard
 		vector runTowardsDirection = vector.Direction(player.GetPosition(), Guard.GetPosition());
 		vector runAwayDirection = vector.Direction(Guard.GetPosition(), player.GetPosition());
 		vector playerDirection = player.GetDirection();
-		float playerSpeed = player.GetCommand_Move().GetCurrentMovementSpeed();
+		float playerSpeed = 0;
+		if (player.GetCommand_Move()){
+			playerSpeed = player.GetCommand_Move().GetCurrentMovementSpeed();
+		}
 		float awayDif = GetRotateDiffX(playerDirection, runTowardsDirection);
 		if ( awayDif < 0 ){ awayDif = -awayDif;}
 		habPrint("Away Dir: " + awayDif ,"Debug");

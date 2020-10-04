@@ -71,7 +71,7 @@ class HeroesAndBanditsPlayer
 	int getLevelIndex(){
 		int index = -1;
 		float points = 0;
-		if (GetHeroesAndBanditsSettings().Mode == 0){
+		if (GetHeroesAndBanditsSettings().Mode != 1){
 			float humanity = getHumanity();
 			if ( humanity > 0 ){
 				index = GetHeroesAndBanditsLevels().getLevelIndex("hero", humanity);	
@@ -145,8 +145,6 @@ class HeroesAndBanditsPlayer
 				} else {
 					return banditPoints - heroPoints;
 				}
-			} else if (GetHeroesAndBanditsSettings().Mode == 0) {
-				return 0;
 			}
 		}
 		for (int j = 0; j < Affinities.Count(); j++)

@@ -52,8 +52,8 @@ modded class MissionServer extends MissionBase
 	
 	override void InvokeOnDisconnect( PlayerBase player )
 	{
-		habPrint("InvokeOnDisconnect Player Disconneted", "Debug");
 		if ( player.GetIdentity() ){
+			habPrint("InvokeOnDisconnect Player Disconneted", "Debug");
 			GetHeroesAndBandits().OnPlayerDisconnect(player);
 		}
 		
@@ -85,14 +85,16 @@ modded class MissionServer extends MissionBase
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
 		if (player.IsPlayerDisconnected()) { return; }
-		PlayerIdentity identity = player.GetIdentity();
-		string playerID = identity.GetPlainId();
-		habPrint("Sending Settings to Player: " + playerID, "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, identity);
-		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
-		habLevel playerLevel = playerData.getLevel();
-		
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
+		PlayerIdentity identity = PlayerIdentity.Cast(player.GetIdentity());
+		if (identity){
+			string playerID = identity.GetPlainId();
+			habPrint("Sending Settings to Player: " + playerID, "Debug");
+			GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, identity);
+			HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
+			habLevel playerLevel = playerData.getLevel();
+			
+			GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
+		}
 	}
 	
 	
