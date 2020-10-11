@@ -84,6 +84,7 @@ class HeroesAndBanditsZone
 				Guards.Get(j).GunTickMulitplier  = zoneToLoad.Guards.Get(j).GunTickMulitplier;
 				Guards.Get(j).HitChance  = zoneToLoad.Guards.Get(j).HitChance;
 				Guards.Get(j).ZoneName = Name;
+				Guards.Get(j).ActionPrefix = zoneToLoad.Guards.Get(j).ActionPrefix;
 				Guards.Get(j).RespawnTimer = zoneToLoad.Guards.Get(j).RespawnTimer;
 				Guards.Get(j).CanBeKilled = zoneToLoad.Guards.Get(j).CanBeKilled;
 				Guards.Get(j).RequireLineOfSight = zoneToLoad.Guards.Get(j).RequireLineOfSight;
@@ -107,17 +108,9 @@ class HeroesAndBanditsZone
 	}
 	
 	void LoadAgressionData(){
-		ref array<ref habAgressionZoneData> AgressionData;
 		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 		if (KillAggressors && FileExist(fileName)){
-			JsonFileLoader< array<ref habAgressionZoneData> >.JsonLoadFile(fileName, AgressionData);
-			if (AgressionData){
-				if (AgressionData.Count() > 0){
-					for (int i = 0; i < AgressionData.Count(); i++){
-						Aggressors.Insert(AgressionData.Get(i).id, AgressionData.Get(i).ag);
-					}
-				}
-			}
+			Aggressors = habLoadAgressionData(UID);
 		}
 	}
 	
@@ -133,17 +126,8 @@ class HeroesAndBanditsZone
 		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 		if (KillAggressors){
 			if (Aggressors){
-				if (Aggressors.Count() > 0){
-					habPrint("Aggressors Count: " + Aggressors.Count(), "Debug");
-					for (int j = 0; j < Aggressors.Count(); j++){
-						if (Aggressors.GetElement(j) > AggressorThreshold){
-							habPrint("Saving Aggressor Count: " + Aggressors.GetKey(j) + " with "  + Aggressors.GetElement(j) + " Aggression", "Debug");
-							AgressionData.Insert(new ref habAgressionZoneData(Aggressors.GetKey(j),Aggressors.GetElement(j)));
-						}
-					}
-				}
+				habSaveAgressionData(Aggressors, AggressorThreshold, UID);
 			}
-			JsonFileLoader< array<ref habAgressionZoneData> >.JsonSaveFile(fileName, AgressionData);
 		}
 	}
 	

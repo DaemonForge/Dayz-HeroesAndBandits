@@ -90,6 +90,14 @@ modded class PlayerBase extends ManBase
 		SetSynchDirty();
 	}
 	
+	void habSetGuardPrefix(string guardPrefix){
+		m_HeroesAndBandits_GuardPrefix = guardPrefix;
+	}
+	
+	string habGetGuardPrefix(){
+		return m_HeroesAndBandits_GuardPrefix;
+	}
+	
 	bool habTraderIsBlocked(){
 		return m_HeroesAndBandits_TraderIsBlocked;
 	}
@@ -587,7 +595,7 @@ modded class PlayerBase extends ManBase
 			}
 			if (m_HeroesAndBandits_IsGuard){
 				if (sourcePlayer.GetIdentity()){
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), m_HeroesAndBandits_GuardPrefix+"GuardKill");
+					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), habGetGuardPrefix()+"GuardKill");
 				}
 				return;
 			}
