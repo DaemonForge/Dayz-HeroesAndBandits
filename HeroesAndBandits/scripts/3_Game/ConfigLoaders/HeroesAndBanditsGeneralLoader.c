@@ -34,6 +34,10 @@ class HeroesAndBanditsSettings
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;
 	
+	
+	bool ResetAffinitiesOnDeath = false;
+	bool ResetStatsOnDeath = false;
+	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
 	int Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level

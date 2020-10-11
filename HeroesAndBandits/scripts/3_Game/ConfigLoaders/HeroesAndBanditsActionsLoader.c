@@ -73,7 +73,7 @@ class HeroesAndBanditsConfigActions
 	//Returns the action based on the name it is NOT case sensitive
 	habAction getAction(string actionName){
 		string tempActionName
-		for ( int i =0; i < Actions.Count(); i++ )
+		for ( int i = 0; i < Actions.Count(); i++ )
 		{
 			tempActionName = Actions.Get(i).Name;
 			tempActionName.ToLower();
@@ -96,6 +96,15 @@ class HeroesAndBanditsConfigActions
 	//Returns the Notification color in an int value
 	int getNotificationColor(){
 		return ARGB(NotificationColor[0], NotificationColor[1], NotificationColor[2], NotificationColor[3]);
+	}
+	
+	float getAggressionAmount(string action){
+		for (int i = 0; i < AggressorActions.Count(); i++){
+			if (AggressorActions.Get(i).Name == action){
+				return AggressorActions.Get(i).Amount;
+			}
+		}
+		return 0;
 	}
 	
 	void createDefaults(){
@@ -176,7 +185,6 @@ class HeroesAndBanditsConfigActions
 		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
 		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
 		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
-	
 	}
 	
 	void DoV5Upgrade(){

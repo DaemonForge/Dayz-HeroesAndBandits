@@ -1,13 +1,15 @@
-class HeroesAndBanditsPlayer
+class HeroesAndBanditsPlayer : RestCallback
 {
 	//Default Values
     string PlayerID = "";
+	string GUID = "";
 	ref array< ref habStat > Stats = new ref array< ref habStat >;
 	ref array< ref habPlayerAffinity > Affinities = new ref array< ref habPlayerAffinity >;
 	
-	void HeroesAndBanditsPlayer(string pID = "") 
+	void HeroesAndBanditsPlayer(string pID = "", string guid = "") 
 	{
         PlayerID = pID;
+        GUID = guid;
 		if (FileExist(habConstant.PlayerDB + "\\" + pID + ".json")) //If config file exsit load the file
         {
             JsonFileLoader<HeroesAndBanditsPlayer>.JsonLoadFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
@@ -358,8 +360,7 @@ class HeroesAndBanditsPlayer
 			}
 		}
 		float subTotal = 0;
-		for ( int j =0; j < Stats.Count(); j++ )
-		{
+		for ( int j =0; j < Stats.Count(); j++ ) {
 			habAction tempAction = GetHeroesAndBanditsActions().getAction(Stats.Get(j).Name);
 			
 			if (tempAction.Name != "Null"){
@@ -374,6 +375,21 @@ class HeroesAndBanditsPlayer
 				habPrint( "Player: " + PlayerID + " has stat that does not exsit " + tempAction.Name, "Verbose");
 			}
 		}
+	}
+	
+	
+	void OnDeath(){
+		if (GetHeroesAndBanditsSettings().ResetAffinitiesOnDeath){
+			for (int i = 0; i < Affinities.Count(); i++){
+				Affinities.Get(i).setPoints(0);
+			}
+		}
+		if (GetHeroesAndBanditsSettings().ResetStatsOnDeath){
+			for ( int j =0; j < Stats.Count(); j++ ){
+				Stats.Get(j).Stat = 0;
+			}
+		}
+		
 	}
 	
 };

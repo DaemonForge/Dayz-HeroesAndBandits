@@ -7,6 +7,7 @@ class HeroesAndBanditsZone
 	float X;
 	float Z;
 	float Radius;
+	string UID;
 	bool ShowWarningMsg;
 	string WarningMessage;
 	bool ShowWelcomeMsg;
@@ -32,13 +33,14 @@ class HeroesAndBanditsZone
 	protected bool GuardsActive = false;
 	protected ref TStringArray TrackedPlayersInZone = {};
 	
-	protected ref map<ref PlayerBase, float> Aggressors = new ref map<ref PlayerBase, float>;
-	
+	protected ref map<string, float> Aggressors = new ref map<string, float>;
+		
 	void Init(habZone zoneToLoad, int zoneID, int index = 0){
 		
 		Index = index;
 		ZoneID = zoneID;
 		Name = zoneToLoad.Name;
+		UID = zoneToLoad.UID;
 		X = zoneToLoad.X;
 		Z = zoneToLoad.Z;
 		MinHumanity = zoneToLoad.MinHumanity;
@@ -61,6 +63,7 @@ class HeroesAndBanditsZone
 		AggressorThreshold = zoneToLoad.AggressorThreshold;
 		AggressorReduction = zoneToLoad.AggressorReduction;
 		AggressorGlobal = zoneToLoad.AggressorGlobal;
+		LoadAgressionData();
 		habPrint("[Zone] " + Name + " at X: "+ X + " Z:" + Z + " Index: " + Index + " ZoneID: "+ ZoneID + " PreventActions: " + PreventActions,"Debug");
 		if (zoneToLoad.Guards){
 			for ( int j = 0; j < zoneToLoad.Guards.Count(); j++ )
@@ -103,6 +106,47 @@ class HeroesAndBanditsZone
 		
 	}
 	
+	void LoadAgressionData(){
+		ref array<ref habAgressionZoneData> AgressionData;
+		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
+		if (KillAggressors && FileExist(fileName)){
+			JsonFileLoader< array<ref habAgressionZoneData> >.JsonLoadFile(fileName, AgressionData);
+			if (AgressionData){
+				if (AgressionData.Count() > 0){
+					for (int i = 0; i < AgressionData.Count(); i++){
+						Aggressors.Insert(AgressionData.Get(i).id, AgressionData.Get(i).ag);
+					}
+				}
+			}
+		}
+	}
+	
+	void SaveAgressionData( bool lazy = true ){
+		for (int i = 0; i < SubZones.Count(); i++){
+			if (lazy){
+			 	GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SubZones.Get(i).SaveAgressionData, i, false);
+			}else {
+				SubZones.Get(i).SaveAgressionData();
+			}
+		}
+		ref array<ref habAgressionZoneData> AgressionData =  new ref array<ref habAgressionZoneData>;
+		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
+		if (KillAggressors){
+			if (Aggressors){
+				if (Aggressors.Count() > 0){
+					habPrint("Aggressors Count: " + Aggressors.Count(), "Debug");
+					for (int j = 0; j < Aggressors.Count(); j++){
+						if (Aggressors.GetElement(j) > AggressorThreshold){
+							habPrint("Saving Aggressor Count: " + Aggressors.GetKey(j) + " with "  + Aggressors.GetElement(j) + " Aggression", "Debug");
+							AgressionData.Insert(new ref habAgressionZoneData(Aggressors.GetKey(j),Aggressors.GetElement(j)));
+						}
+					}
+				}
+			}
+			JsonFileLoader< array<ref habAgressionZoneData> >.JsonSaveFile(fileName, AgressionData);
+		}
+	}
+	
 	bool AttemptAddPlayerToZone(PlayerBase inPlayer){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!player || player.GetIdentity()){
@@ -137,20 +181,29 @@ class HeroesAndBanditsZone
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
 		ref HeroesAndBanditsGuard guard;
-		if ( !player ){
+		if ( !player  && !pdata && !player.GetIdentity() && !player.IsAlive() && player.IsPlayerDisconnected()){
 			return PlayerLeftZone;
 		}
-		
+		bool isAggressor = false;
+		bool isValidPlayer = validPlayer(pdata);
+		float aggression;
+		if (KillAggressors && Aggressors.Find(player.GetIdentity().GetId(), aggression)){
+			if (aggression >= AggressorThreshold){
+				habPrint("Player " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId() + ") is an aggressor in the Zone: " + Name, "Debug");
+				isAggressor = true;
+			}
+		}
+		float PlayerDistance = vector.Distance(player.GetPosition(), getVector());
 		if (player.IsAlive()){
 			
-			if (!validPlayer(pdata) && vector.Distance(player.GetPosition(), getVector()) <= Radius){
+			if ((!isValidPlayer || isAggressor) && PlayerDistance <= Radius){
 				guard = GetClosestGuard(player);
 			}
 			/*habPrint("Checking if Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") is in Zone " + Name, "Debug");	
 			if ( GetHeroesAndBanditsSettings().DebugLogs ){
 				player.m_HeroesAndBandits_InZones.Debug();
 			}*/
-			if (validPlayer(pdata) && vector.Distance(player.GetPosition(), getVector()) <= Radius && !player.habIsInZone(ZoneID, Index)){
+			if (isValidPlayer && !isAggressor && PlayerDistance <= Radius && !player.habIsInZone(ZoneID, Index)){
 				AttemptAddPlayerToZone(player);
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name, "Verbose");
 				player.habEnteredZone(ZoneID, Index);
@@ -161,15 +214,15 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WelcomePlayer(Name, WelcomeMessage, WelcomeIcon, player.GetIdentity().GetPlainId(), WelcomeMessageColor);
 				}
-				if ( GodModPlayers && validPlayer(pdata) && !player.habCheckGodMod() )
+				if ( GodModPlayers && isValidPlayer && !player.habCheckGodMod() )
 				{
 					player.SetAllowDamage(false);
 				}
-				if (PreventWeaponRaise && !player.habCanRaiseWeapon() &&  validPlayer(pdata)){
+				if (PreventWeaponRaise && !player.habCanRaiseWeapon() && isValidPlayer){
 					player.habSetCanRaiseWeapon(false, Index);
 				}
 			}
-			else if (!validPlayer(pdata) && player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= KillRadius && KillRadius != 0)
+			else if ((!isValidPlayer || isAggressor) && player.habIsInZone(ZoneID, Index) && PlayerDistance <= KillRadius && KillRadius != 0)
 			{
 				AttemptAddPlayerToZone(player);
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name + " Kill Radius trying to kill them", "Debug");
@@ -180,9 +233,9 @@ class HeroesAndBanditsZone
 				if (!player.habCheckGodMod() && guard){
 					float maxDelayGun = GetHeroesAndBanditsZones().ZoneCheckTimer * 1000;
 					float delayadd = maxDelayGun / guard.GunTickMulitplier;
-					if ( guard.GunTickMulitplier > 2 && allowSpinOff){
+					if ( guard.GunTickMulitplier >= 2 && allowSpinOff){
 						float delay = delayadd;
-						while( delay < maxDelayGun){
+						while ( delay < maxDelayGun){
 							GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(this.CheckPlayer, delay, false, player, false);
 							delay = delay + delayadd;
 						}
@@ -216,7 +269,7 @@ class HeroesAndBanditsZone
 
 				
 			}
-			else if (!validPlayer(pdata) && !player.habIsInZone(ZoneID, Index) && vector.Distance(player.GetPosition(), getVector()) <= Radius)
+			else if ((!isValidPlayer || isAggressor) && !player.habIsInZone(ZoneID, Index) && PlayerDistance <= Radius)
 			{
 				AttemptAddPlayerToZone(player);
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Entered: " + Name + " Warning Radius sending warning", "Verbose");
@@ -230,11 +283,11 @@ class HeroesAndBanditsZone
 				{
 					GetHeroesAndBandits().WarnPlayer(Name, WarningMessage, player.GetIdentity().GetPlainId());
 				}
-				if ( BlockTrader )
+				if ( BlockTrader && !isValidPlayer )
 				{
 					player.habSetTraderBlocked(true, -1);
 				}
-				if ( PreventWeaponRaise )
+				if ( PreventWeaponRaise  && !isValidPlayer )
 				{
 					player.habSetCanRaiseWeapon(true, -1);
 				}
@@ -246,7 +299,7 @@ class HeroesAndBanditsZone
 					guard.TrackPlayer(player, trackingBonus);
 				}
 			}
-			else if (vector.Distance(player.GetPosition(), getVector()) > Radius && player.habIsInZone(ZoneID, Index))
+			else if (PlayerDistance > Radius && player.habIsInZone(ZoneID, Index))
 			{
 				RemovePlayerToZone(player);
 				if ( GodModPlayers  && !player.habCheckGodMod() )
@@ -255,7 +308,7 @@ class HeroesAndBanditsZone
 				}
 				//Player Left Warning Radius
 				habPrint("Player: " + player.GetIdentity().GetName() + " ("+player.GetIdentity().GetPlainId()+") Left: " + Name, "Verbose");
-				if (!validPlayer(pdata) && guard ){
+				if ((!isValidPlayer || isAggressor) && guard ){
 					guard.UnTrackPlayer( player);
 				}
 				player.habLeftZone(Index);		
@@ -263,7 +316,7 @@ class HeroesAndBanditsZone
 					player.m_HeroesAndBandits_InZones.Debug();
 				}
 				PlayerLeftZone = true;
-				if (!validPlayer(pdata) && BlockTrader )
+				if (!isValidPlayer && BlockTrader )
 				{
 					player.habSetTraderBlocked(false, Index);
 				}
@@ -280,14 +333,14 @@ class HeroesAndBanditsZone
 		}
 		if (PlayerLeftSubZone){ //Left Subzone make sure all the required restrictions are renabled
 		
-			if ( validPlayer(pdata) && GodModPlayers  && !player.habCheckGodMod() )
+			if ( isValidPlayer && GodModPlayers  && !player.habCheckGodMod() )
 			{
 				player.SetAllowDamage(true);
 			}
 			if (PreventWeaponRaise && !player.habCanRaiseWeapon()){
 				player.habSetCanRaiseWeapon(false, Index);
 			}
-			if (!validPlayer(pdata) && BlockTrader )
+			if (!isValidPlayer && BlockTrader )
 			{
 				player.habSetTraderBlocked(true, Index);
 			}		
@@ -402,17 +455,44 @@ class HeroesAndBanditsZone
 		}
 	}
 	
-	void ReduceAggressors(){
-		int maxI = Aggressors.Count() - 1;
-		for (int i = 0; maxI > 0; maxI--){
-			Aggressors.GetElement(i) = Aggressors.GetElement(maxI) - AggressorsReduction;
-			if (Aggressors.GetElement(maxI) < 0){
-				Aggressors.Remove(Aggressors.GetKey(maxI));
+	void ReduceAggressor(string guid){
+		for (int i = 0; i < SubZones.Count(); i++){
+			 SubZones.Get(i).ReduceAggressor(guid);
+		}
+		if (Aggressors.Count() > 0){
+			float oldAmount;
+			float newAmount;
+			if (Aggressors.Find(guid, oldAmount)){
+				newAmount = oldAmount - AggressorReduction;
+				if (newAmount > 0){
+					Aggressors.Set(guid, newAmount);
+				} else {
+					habPrint("Aggressor " + guid + " Removed", "Debug");
+					Aggressors.Remove(guid);
+				}
 			}
 		}
 	}
 	
-	void RegisterAggressorsAction(PlayerBase source, string action){
-		
+	void NewAggressorAction(string guid, string action, array< int > inZones){
+		int maxIndex = inZones.Count() - 1;
+		if (maxIndex > Index){ //While there is more subzones register Action
+			SubZones.Get(inZones.Get(Index + 1)).NewAggressorAction(guid, action, inZones);
+		}
+		float oldAmount;
+		float newAmount;
+		habPrint("New Aggressor " + guid + " Action: " + action, "Debug");
+		if (Aggressors.Find(guid, oldAmount)){
+			newAmount = oldAmount + GetHeroesAndBanditsActions().getAggressionAmount(action);
+			if (newAmount != oldAmount){
+				Aggressors.Set(guid, newAmount);
+			}
+		} else {
+			float amount = GetHeroesAndBanditsActions().getAggressionAmount(action);
+			if (amount > 0){
+				Aggressors.Insert(guid, amount);
+			}
+		}
 	}
+	
 };

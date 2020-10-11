@@ -5,6 +5,7 @@ class HeroesAndBanditsConfigZones
 	string ConfigVersion = "6";
 	
 	int ZoneCheckTimer = 3;
+	int AggressionReductionTickRate = 180;
 	
 	
 	ref array<int> WarningMessageColor = {200, 255, 0, 0};
@@ -22,8 +23,8 @@ class HeroesAndBanditsConfigZones
 			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
-				if (FileExist(habConstant.ZonesPATH)) //If config exist load File
-				{
+				if (FileExist(habConstant.ZonesPATH)){ //If config exist load File
+				
 			        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
 					if (ConfigVersion == "4"){
 						doV5Upgrade();
@@ -121,12 +122,18 @@ class HeroesAndBanditsConfigZones
 		Save();
 	}
 	
-	void DoV6Upgrade(){
+	void doV6Upgrade(){
 		ConfigVersion = "6";
+		AggressionReductionTickRate = 180;
+		if (Zones.Count() > 0){
+			for (int i = 0; i < Zones.Count(); i++){
+				if (!Zones.Get(i).UID || Zones.Get(i).UID == ""){
+					Zones.Get(i).UID = habGetRandomId(16);
+				}
+			}
+		}
 		Save();
 	}
-	
-	
 };
 
 
@@ -135,6 +142,7 @@ class HeroesAndBanditsConfigZones
 class habZone
 {
 	string Name;
+	string UID;
 	float X;
 	float Z;
 	float WarningRadius;
@@ -175,6 +183,7 @@ class habZone
 		}else{
 			WarningMessage = warningMessage;
 		}
+		UID = habGetRandomId(16);
 	}
 	
 	//Converts the x and y to vector

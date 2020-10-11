@@ -410,14 +410,32 @@ class HeroesAndBandits
 		GetGame().GetPlayers(players);			
 		for (int k = 0; k < Zones.Count(); k++)
 		{	
-			Zones.Get(k).ReduceAggressors();
 			for (int j = 0; j < players.Count(); j++)
 			{
 				PlayerBase player = PlayerBase.Cast(players.Get(j));
 				if ( player ){	
-					if (player.IsAlive()&& !player.IsPlayerDisconnected())
+					if ( player.GetIdentity() && player.IsAlive() && !player.IsPlayerDisconnected())
 					{	
-						Zones.Get(k).CheckPlayer(player);
+						GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zones.Get(k).CheckPlayer, k + j, false, player, true);
+					}
+				}
+			}
+		}
+	}
+	
+	void ReduceAggressors(){
+		if (!Zones) { //if no zones Defined exit
+			return;
+		}
+		//habPrint("Checking if Players are in Zones", "Debug");			
+		ref array<Man> players = new array<Man>;
+		GetGame().GetPlayers(players);			
+		for (int j = 0; j < players.Count(); j++){
+			PlayerBase player = PlayerBase.Cast(players.Get(j));
+			if ( player ){	
+				if ( player.GetIdentity() && player.IsAlive()&& !player.IsPlayerDisconnected()){	
+					for (int k = 0; k < Zones.Count(); k++)	{	
+						GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zones.Get(k).ReduceAggressor, j, false, player.GetIdentity().GetId());
 					}
 				}
 			}
@@ -458,6 +476,27 @@ class HeroesAndBandits
 		SaveAllPlayers();
 	}
 	
+	void NewAggressorAction(PlayerBase player, string action) {
+		PlayerBase sourcePlayer = PlayerBase.Cast(player);
+		if (sourcePlayer && sourcePlayer.GetIdentity() && sourcePlayer.habIsInZone()){
+			array< int > inZones = sourcePlayer.habGetInZones();
+			ref HeroesAndBanditsZone zone = Zones.Get(inZones.Get(0));
+			zone.NewAggressorAction(sourcePlayer.GetIdentity().GetId(), action, inZones);	
+		}
+	}
+	
+	void SaveAggressorData(bool lazy = true){
+		for (int k = 0; k < Zones.Count(); k++)
+		{	
+			if (lazy){
+				int delay = k * 15;
+			 	GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zones.Get(k).SaveAgressionData, delay, false, lazy);
+			} else {
+				Zones.Get(k).SaveAgressionData(lazy);
+			}
+		}
+	}
+	
 };
 
 
@@ -473,6 +512,16 @@ static ref HeroesAndBandits GetHeroesAndBandits()
 			if (m_HeroesAndBandits.Zones.Count() >= 1){
 				habPrint("Creating Zone Check Timer", "Debug");
 				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "CheckPlayersEnterZones", GetHeroesAndBanditsZones().ZoneCheckTimer * 1000, true);
+				if (GetHeroesAndBanditsZones().AggressionReductionTickRate >= 1){
+					if (!FileExist( habConstant.ZoneDB)){
+						MakeDirectory(habConstant.ZoneDB);
+					}
+					habPrint("Creating Aggression Reduction Timer Timer", "Debug");
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(m_HeroesAndBandits, "ReduceAggressors", GetHeroesAndBanditsZones().AggressionReductionTickRate * 1000, true);
+					float rdelay = 300 * 1000;
+					rdelay = rdelay + 100;
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(m_HeroesAndBandits.SaveAggressorData, rdelay, true, true);
+				}
 			} else {
 				habPrint("No zones defined", "Debug");
 			}

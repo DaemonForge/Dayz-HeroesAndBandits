@@ -4,6 +4,7 @@ modded class MissionServer extends MissionBase
 	{
 		habPrint("Saving All Player Data From ~MissionServer", "Debug");
 		GetHeroesAndBandits().SaveAllPlayers();
+		GetHeroesAndBandits().SaveAggressorData(false);
 	}
 	
 	override void OnInit()

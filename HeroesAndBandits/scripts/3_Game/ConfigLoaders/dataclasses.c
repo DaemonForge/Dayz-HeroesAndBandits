@@ -164,13 +164,14 @@ class habAction
 	}
 };
 
+
 //Class for holding Actions
 class habAggressorAction
 {
 	string Name;
-	string Ammount;
+	float Amount;
 
-	void habAction(string actionName, string amount) 
+	void habAggressorAction(string actionName, float amount) 
 	{
 		Name= actionName;
 		Amount = amount;
