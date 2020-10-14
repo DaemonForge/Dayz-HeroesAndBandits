@@ -6,7 +6,7 @@ modded class WeaponManager
 		int mi = wpn.GetCurrentMuzzle();
 		if ( GetGame().IsServer() ) {
 			if(!wpn.IsChamberFiredOut(mi) && !wpn.IsJammed() && !wpn.IsChamberEmpty(mi) && sourcePlayer && sourcePlayer.GetIdentity()){
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "ShotFired");
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "ShotFired", wpn);
 			}
 		}
 		super.Fire(wpn);

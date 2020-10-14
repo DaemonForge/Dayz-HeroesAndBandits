@@ -5,7 +5,7 @@ class HeroesAndBanditsConfigZones
 	string ConfigVersion = "6";
 	
 	int ZoneCheckTimer = 3;
-	int AggressionReductionTickRate = 180;
+	int AggressionReductionTickRate = 60;
 	
 	
 	ref array<int> WarningMessageColor = {200, 255, 0, 0};
@@ -162,7 +162,7 @@ class habZone
 	bool BlockTrader = false;
 	float KillAggressors = 0;
 	float AggressorThreshold = 100;
-	float AggressorReduction = 5;
+	float AggressorReduction = 100;
 	bool AggressorGlobal = false;
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;

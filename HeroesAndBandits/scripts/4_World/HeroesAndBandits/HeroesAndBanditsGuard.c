@@ -205,7 +205,8 @@ class HeroesAndBanditsGuard
 				float hitchance = HitChance + 0.001;//Pervent any 0% hit chance
 				float hitrand = Math.RandomFloat(0,1);
 				if ( CalculateAccuracy(player) > hitrand ){
-					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(player.habHitByAI, 75 ,false, dmg, this, hitZone, AmmoType);//so the gun sound plays slightly(less than 1/10 of a second) before the hit 
+					float disDelay = Math.Floor(vector.Distance(Guard.GetPosition(), player.GetPosition()) / 2);
+					GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(player.habHitByAI, 50 + disDelay ,false, dmg, this, hitZone, AmmoType);//so the gun sound plays slightly(less than 1/10 of a second) before the hit 
 				}
 			}
 		}

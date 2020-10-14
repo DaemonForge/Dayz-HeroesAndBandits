@@ -108,7 +108,10 @@ class HeroesAndBanditsSettings
 						doV5Upgrade();
 						Save();
 					}
-					
+					if (ConfigVersion == "5"){
+						doV6Upgrade();
+						Save();
+					}
 				}else{ //File does not exist create file
 					MakeDirectory(habConstant.Directory);
 					MakeDirectory(habConstant.PlayerDB);
@@ -140,6 +143,13 @@ class HeroesAndBanditsSettings
 		HeroCanRemoveArmBand = true;
 		HeroMasks = {};
 		HeroArmBands = {};
+	}
+	
+	void doV6Upgrade(){
+		ConfigVersion = "6";
+		ResetAffinitiesOnDeath = false;
+		ResetStatsOnDeath = false;
+		Save();
 	}
 	
 	void Save(){

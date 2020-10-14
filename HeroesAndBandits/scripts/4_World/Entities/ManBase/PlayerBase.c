@@ -513,9 +513,9 @@ modded class PlayerBase extends ManBase
 		PlayerBase sourcePlayer;
 		if (Class.CastTo(sourcePlayer, killer) || Class.CastTo(sourcePlayer, EntityAI.Cast(killer).GetHierarchyParent())){
 			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillGuard");
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillGuard", this);
 			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillPlayer");
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillPlayer", this);
 			}
 		}
 		string targetPlayerID = "";
@@ -667,9 +667,9 @@ modded class PlayerBase extends ManBase
 		
 		if (Class.CastTo(sourcePlayer, source) || Class.CastTo(sourcePlayer, EntityAI.Cast(source).GetHierarchyParent())){
 			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitGuard");
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitGuard", this);
 			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
-				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitPlayer");
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitPlayer", this);
 			}
 		}
 		

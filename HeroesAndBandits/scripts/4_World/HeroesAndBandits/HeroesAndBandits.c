@@ -476,12 +476,12 @@ class HeroesAndBandits
 		SaveAllPlayers();
 	}
 	
-	void NewAggressorAction(PlayerBase player, string action) {
+	void NewAggressorAction(PlayerBase player, string action, EntityAI entity = NULL) {
 		PlayerBase sourcePlayer = PlayerBase.Cast(player);
 		if (sourcePlayer && sourcePlayer.GetIdentity() && sourcePlayer.habIsInZone()){
 			array< int > inZones = sourcePlayer.habGetInZones();
 			ref HeroesAndBanditsZone zone = Zones.Get(inZones.Get(0));
-			zone.NewAggressorAction(sourcePlayer.GetIdentity().GetId(), action, inZones);	
+			zone.NewAggressorAction(sourcePlayer.GetIdentity().GetId(), action, inZones, entity);	
 		}
 	}
 	
