@@ -158,13 +158,12 @@ class HeroesAndBanditsGuard
 	{
 		habPrint("Attempt Fire Weapon Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player)
-		{
+		if (!player){
 			return;
 		}
 		RaiseWeapon();
 		bool lineOfSight = !RequireLineOfSight;
-		bool possibleHits = HasLineOfSight(player) ;
+		int possibleHits = HasLineOfSight(player) ;
 		vector optDirection = vector.Direction(Guard.GetPosition(), player.GetPosition());
 		float dirDiff = GetRotateDiff(Guard.GetDirection(), optDirection);
 		float orDiff = GetRotateDiff(Guard.GetOrientation(), optDirection);
