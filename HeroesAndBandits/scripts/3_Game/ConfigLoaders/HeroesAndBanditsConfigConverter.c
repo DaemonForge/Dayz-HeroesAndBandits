@@ -218,11 +218,14 @@ class habConverter
 		}
 		for (int i = 0; i < simpZone.Guards.Count(); i++){
 			ref habGuard tmpGuard = new ref habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
+			tmpGuard.GuardGear = simpZone.Guards.Get(i).GuardGear;
+			
 			string WeaponInHands = simpZone.Guards.Get(i).WeaponInHands;
 			habConverter().init();
 			string GunSound =  habConverter().GunToSound.Get(WeaponInHands);
 			string Mag =  habConverter().GunToMag.Get(WeaponInHands);
 			float Dmg =  habConverter().GunToDmg.Get(WeaponInHands);
+			
 			TStringArray WeaponInHandsAttachments =  simpZone.Guards.Get(i).WeaponInHandsAttachments;
 			Print("WeaponInHands: " + WeaponInHands + " GunSound: " + GunSound + " Mag: " + Mag + " Dmg: " + Dmg);
 			if ( GunSound && Mag && Dmg ) {
