@@ -331,9 +331,9 @@ class HeroesAndBanditsZone
 					//Skipping for Hero and Bandit as it was checked above if in mixed mode
 				} else {
 					for (int k = 0; k < Affinities.Count(); k++){
-						if ( Affinities.Get(i).Check(pdata.Affinities.Get(j).Points,  pdata.Affinities.Get(j).Name)){
+						if ( Affinities.Get(k).Check(pdata.Affinities.Get(j).Points,  pdata.Affinities.Get(j).Name)){
 							return true;
-						} else if (Affinities.Get(i).Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name){
+						} else if (Affinities.Get(k).Affinity == GetHeroesAndBanditsLevels().DefaultAffinity.Name){
 							DefaultAffinty = true;
 						}
 					}
