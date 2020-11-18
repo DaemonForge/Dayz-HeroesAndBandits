@@ -160,10 +160,10 @@ class habZone
 	bool PreventWeaponRaise = false;
 	bool PreventActions = false;
 	bool BlockTrader = false;
-	float KillAggressors = 0;
-	float AggressorThreshold = 100;
+	bool KillAggressors = false;
+	float AggressorThreshold = 155;
 	float AggressorReduction = 100;
-	bool AggressorGlobal = false;
+	bool AggressorGlobal = false; //Does nothing Yet
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	

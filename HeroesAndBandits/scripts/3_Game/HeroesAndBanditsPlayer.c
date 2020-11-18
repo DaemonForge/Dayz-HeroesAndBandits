@@ -248,9 +248,7 @@ class HeroesAndBanditsPlayer : RestCallback
 		} else if ( statName == "Hunt" ) {
 			for ( int j =0; j < Stats.Count(); j++ )
 			{
-				prefix = Stats.Get(j).Name.Substring(0,4);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if (prefix == "Hunt"){
+				if ( Stats.Get(j).Name.Contains("Hunt") ){
 					statTotal = statTotal + Stats.Get(j).Stat;
 				}
 			}
@@ -258,9 +256,7 @@ class HeroesAndBanditsPlayer : RestCallback
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
-				prefix = Stats.Get(k).Name.Substring(0,5);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if ( prefix == "Medic" ){
+				if ( Stats.Get(k).Name.Contains("Medic") ){
 					statTotal = statTotal + Stats.Get(k).Stat;
 				}
 			}
@@ -268,12 +264,7 @@ class HeroesAndBanditsPlayer : RestCallback
 		} else if ( statName == "Raid" ) {
 			for ( int l =0; l < Stats.Count(); l++ )
 			{
-				string tempStatName = Stats.Get(l).Name;
-				nameLength = tempStatName.Length();
-				nameLength = nameLength - 4;
-				prefix = Stats.Get(l).Name.Substring(nameLength, 4);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if ( prefix == "Raid" ){
+				if ( Stats.Get(l).Name.Contains("Raid") || Stats.Get(l).Name.Contains("Hack") ){
 					statTotal = statTotal + Stats.Get(l).Stat;
 				}
 			}
@@ -292,8 +283,16 @@ class HeroesAndBanditsPlayer : RestCallback
 		}  else if ( statName == "Sucide" ) {
 			for ( int n =0; n < Stats.Count(); n++ )
 			{
-				if ( Stats.Get(n).Name == "heroSucide" || Stats.Get(n).Name == "banditSucide" || Stats.Get(n).Name == "bambiSucide" ){
+				if ( Stats.Get(n).Name.Contains("Sucide") ){
 					statTotal = statTotal + Stats.Get(n).Stat;
+				}
+			}
+			return statTotal;
+		}   else if ( statName == "ZombieKill" ) {
+			for ( int o =0; o < Stats.Count(); o++ )
+			{
+				if ( Stats.Get(o).Name.Contains("ZombieKill") ){
+					statTotal = statTotal + Stats.Get(o).Stat;
 				}
 			}
 			return statTotal;

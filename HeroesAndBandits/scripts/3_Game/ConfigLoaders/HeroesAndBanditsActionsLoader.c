@@ -152,6 +152,7 @@ class HeroesAndBanditsConfigActions
 		addAction( "MedicFeedPainkiller", "hero", "medic", 15);
 		addAction( "MedicFeedCharcoal", "hero", "medic", 15);
 		addAction( "MedicFeedVitamin", "hero", "medic", 10);
+		addAction( "MedicSplintPlayer", "hero", "medic", 100);
 		addAction( "HuntAnimal_BosTaurus_Brown", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_White", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_Spotted", "hunter", "none", 25, false);
@@ -200,6 +201,8 @@ class HeroesAndBanditsConfigActions
 		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
 		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
 		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		addAction( "MedicSplintPlayer", "hero", "medic", 100);
+		
 		Save();
 	}
 	

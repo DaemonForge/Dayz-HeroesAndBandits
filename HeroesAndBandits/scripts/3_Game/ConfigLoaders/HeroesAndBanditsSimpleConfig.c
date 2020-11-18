@@ -1,7 +1,7 @@
 class HeroesAndBanditsSimpleConfig
 { 
 	
-	string ConfigVersion = "5";
+	string ConfigVersion = "6";
 	int UseSimple = 1; //1 use simple 2 convert and save simple to advanced 0 use advanced (2 will set this to 0)
 	
 	//Default Values
@@ -37,6 +37,9 @@ class HeroesAndBanditsSimpleConfig
 			if (FileExist(habConstant.ConfigPATH)) //If config exist load File
 			{
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.ConfigPATH, this);
+				if(ConfigVersion == "5"){
+					DoV6Upgrade();
+				}
 			}else{ //File does not exist create file
 				SetDefaults();
 				if (FileExist(habConstant.SettingsPATH) || FileExist(habConstant.ActionsPATH) || FileExist(habConstant.LevelsPATH) || FileExist(habConstant.ZonesPATH)){
@@ -119,8 +122,16 @@ class HeroesAndBanditsSimpleConfig
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedPainkiller", 15));
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedCharcoal", 15));
 		Actions.Insert(new ref HABSimpleAction( "MedicFeedVitamin", 10));
+		Actions.Insert(new ref HABSimpleAction( "MedicSplintPlayer", 100));
 		Zones.Insert(new ref HABSimpleZone( "Default Zone", 11250, 4300, 60));
 		Zones.Get(0).Guards.Insert(new ref HABSimpleGuard( 11250, 290.2, 4300));
+	}
+	
+	void DoV6Upgrade(){
+		ConfigVersion = "6";
+		Actions.Insert(new ref HABSimpleAction( "MedicSplintPlayer", 100));
+		
+		Save();
 	}
 	
 };

@@ -22,7 +22,7 @@ class HeroesAndBanditsZone
 	bool PreventWeaponRaise;
 	bool PreventActions;
 	bool BlockTrader;
-	float KillAggressors;
+	bool KillAggressors;
 	float AggressorThreshold = 100;
 	float AggressorReduction;
 	float AggressorGlobal;

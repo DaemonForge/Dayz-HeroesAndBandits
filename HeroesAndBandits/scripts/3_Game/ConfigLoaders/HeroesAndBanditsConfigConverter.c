@@ -391,6 +391,12 @@ class habConverter
 			} 
 			tempSettings.addAction(Name, Affinity, SecondaryAffinity, Points, NotifiyPlayer);
 		}
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 		
 		return tempSettings;
 	}
