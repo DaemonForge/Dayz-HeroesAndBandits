@@ -112,3 +112,27 @@ static void habPrint(string message, string msgType){
 		Print("[HeroesAndBandits] [Debug]  " + message);
 	}
 };
+
+
+ref DayZPlayer habFindPlayer(string GUID){
+	if (GetGame().IsServer()){
+		ref array<Man> players = new array<Man>;
+		GetGame().GetPlayers( players );
+		for (int i = 0; i < players.Count(); i++){
+			ref DayZPlayer player = DayZPlayer.Cast(players.Get(i));
+			if (player.GetIdentity() && player.GetIdentity().GetId() == GUID ){
+				return player;
+			}
+		}
+	}
+	return NULL;
+}
+
+string habGetRandomId(int number){
+	TStringArray Chars = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"};
+	string id = "";
+	for (int i = 0; i <= number; i++){
+		id = id + Chars.GetRandomElement();
+	}
+	return id;
+}

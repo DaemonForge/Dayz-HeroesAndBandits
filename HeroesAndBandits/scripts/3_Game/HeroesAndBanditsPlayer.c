@@ -1,13 +1,15 @@
-class HeroesAndBanditsPlayer
+class HeroesAndBanditsPlayer : RestCallback
 {
 	//Default Values
     string PlayerID = "";
+	string GUID = "";
 	ref array< ref habStat > Stats = new ref array< ref habStat >;
 	ref array< ref habPlayerAffinity > Affinities = new ref array< ref habPlayerAffinity >;
 	
-	void HeroesAndBanditsPlayer(string pID = "") 
+	void HeroesAndBanditsPlayer(string pID = "", string guid = "") 
 	{
         PlayerID = pID;
+        GUID = guid;
 		if (FileExist(habConstant.PlayerDB + "\\" + pID + ".json")) //If config file exsit load the file
         {
             JsonFileLoader<HeroesAndBanditsPlayer>.JsonLoadFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
@@ -71,7 +73,7 @@ class HeroesAndBanditsPlayer
 	int getLevelIndex(){
 		int index = -1;
 		float points = 0;
-		if (GetHeroesAndBanditsSettings().Mode == 0){
+		if (GetHeroesAndBanditsSettings().Mode != 1){
 			float humanity = getHumanity();
 			if ( humanity > 0 ){
 				index = GetHeroesAndBanditsLevels().getLevelIndex("hero", humanity);	
@@ -145,8 +147,6 @@ class HeroesAndBanditsPlayer
 				} else {
 					return banditPoints - heroPoints;
 				}
-			} else if (GetHeroesAndBanditsSettings().Mode == 0) {
-				return 0;
 			}
 		}
 		for (int j = 0; j < Affinities.Count(); j++)
@@ -248,9 +248,7 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Hunt" ) {
 			for ( int j =0; j < Stats.Count(); j++ )
 			{
-				prefix = Stats.Get(j).Name.Substring(0,4);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if (prefix == "Hunt"){
+				if ( Stats.Get(j).Name.Contains("Hunt") ){
 					statTotal = statTotal + Stats.Get(j).Stat;
 				}
 			}
@@ -258,9 +256,7 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Medic" ){
 			for ( int k =0; k < Stats.Count(); k++ )
 			{
-				prefix = Stats.Get(k).Name.Substring(0,5);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if ( prefix == "Medic" ){
+				if ( Stats.Get(k).Name.Contains("Medic") ){
 					statTotal = statTotal + Stats.Get(k).Stat;
 				}
 			}
@@ -268,12 +264,7 @@ class HeroesAndBanditsPlayer
 		} else if ( statName == "Raid" ) {
 			for ( int l =0; l < Stats.Count(); l++ )
 			{
-				string tempStatName = Stats.Get(l).Name;
-				nameLength = tempStatName.Length();
-				nameLength = nameLength - 4;
-				prefix = Stats.Get(l).Name.Substring(nameLength, 4);
-				//Print("[HeroesAndBandits][DebugClient] Looking for Stat: " + statName + " comparing to " + Stats.Get(j).Name + " Prefix is " + prefix );
-				if ( prefix == "Raid" ){
+				if ( Stats.Get(l).Name.Contains("Raid") || Stats.Get(l).Name.Contains("Hack") ){
 					statTotal = statTotal + Stats.Get(l).Stat;
 				}
 			}
@@ -292,8 +283,16 @@ class HeroesAndBanditsPlayer
 		}  else if ( statName == "Sucide" ) {
 			for ( int n =0; n < Stats.Count(); n++ )
 			{
-				if ( Stats.Get(n).Name == "heroSucide" || Stats.Get(n).Name == "banditSucide" || Stats.Get(n).Name == "bambiSucide" ){
+				if ( Stats.Get(n).Name.Contains("Sucide") ){
 					statTotal = statTotal + Stats.Get(n).Stat;
+				}
+			}
+			return statTotal;
+		}   else if ( statName == "ZombieKill" ) {
+			for ( int o =0; o < Stats.Count(); o++ )
+			{
+				if ( Stats.Get(o).Name.Contains("ZombieKill") ){
+					statTotal = statTotal + Stats.Get(o).Stat;
 				}
 			}
 			return statTotal;
@@ -360,8 +359,7 @@ class HeroesAndBanditsPlayer
 			}
 		}
 		float subTotal = 0;
-		for ( int j =0; j < Stats.Count(); j++ )
-		{
+		for ( int j =0; j < Stats.Count(); j++ ) {
 			habAction tempAction = GetHeroesAndBanditsActions().getAction(Stats.Get(j).Name);
 			
 			if (tempAction.Name != "Null"){
@@ -376,6 +374,21 @@ class HeroesAndBanditsPlayer
 				habPrint( "Player: " + PlayerID + " has stat that does not exsit " + tempAction.Name, "Verbose");
 			}
 		}
+	}
+	
+	
+	void OnDeath(){
+		if (GetHeroesAndBanditsSettings().ResetAffinitiesOnDeath){
+			for (int i = 0; i < Affinities.Count(); i++){
+				Affinities.Get(i).setPoints(0);
+			}
+		}
+		if (GetHeroesAndBanditsSettings().ResetStatsOnDeath){
+			for ( int j =0; j < Stats.Count(); j++ ){
+				Stats.Get(j).Stat = 0;
+			}
+		}
+		
 	}
 	
 };

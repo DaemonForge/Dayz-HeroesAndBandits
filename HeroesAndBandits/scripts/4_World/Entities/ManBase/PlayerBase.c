@@ -90,6 +90,14 @@ modded class PlayerBase extends ManBase
 		SetSynchDirty();
 	}
 	
+	void habSetGuardPrefix(string guardPrefix){
+		m_HeroesAndBandits_GuardPrefix = guardPrefix;
+	}
+	
+	string habGetGuardPrefix(){
+		return m_HeroesAndBandits_GuardPrefix;
+	}
+	
 	bool habTraderIsBlocked(){
 		return m_HeroesAndBandits_TraderIsBlocked;
 	}
@@ -156,133 +164,139 @@ modded class PlayerBase extends ManBase
 	}
 	
 	void habAffinityChange( int oldAffinity, int newAffinity ){
-		habPrint("Affinity has Changed for player " + GetIdentity().GetPlainId() + " oldAffinity: " + oldAffinity + " newAffinity" + newAffinity, "Debug");
-		if (oldAffinity == newAffinity || !GetGame().IsServer()){ 
-			habPrint("habResetOverrideItemBlocks now false Affinity is the same", "Debug");
-			m_HeroesAndBandits_OverrideItemBlocks = false;
-			SetSynchDirty();
-			return; 
-		}
-		bool createItem = false;
-		habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
-		if (GetHeroesAndBanditsSettings().Mode != 1 && newAffinity != -1){
-			tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(newAffinity);
-			createItem = true;
-		} else if (GetHeroesAndBanditsSettings().Mode != 1){
-			createItem = true;
-		}
-		bool CheckMaskBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit" );
-		bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
-		bool CheckArmbandBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit" );
-		bool CheckArmbandHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "hero" );
-		
-		bool CheckMaskBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && !GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "bambi" );
-		bool CheckArmbandBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && !GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "bambi" );
-		int index = -1;
-		bool FixMask = false;
-		bool FixArmband = false;
-		if ( createItem ){
-			EntityAI mask = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
-			EntityAI armband = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.ARMBAND));
-			if (CheckMaskBandit && GetHeroesAndBanditsSettings().BanditMasks.Count() > 0){ 
-				if ( mask ){ 
-					habPrint("Player is Bandit and is wearing a mask", "Debug");
-					index = -1;
-					index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
-					if (index == -1){
-						habPrint("Dropping mask", "Debug");
-						this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+		if (!GetIdentity()){
+			habPrint("Affinity has Changed for non player oldAffinity: " + oldAffinity + " newAffinity" + newAffinity, "Debug");
+		}else {
+			
+			habPrint("Affinity has Changed for player " + GetIdentity().GetPlainId() + " oldAffinity: " + oldAffinity + " newAffinity" + newAffinity, "Debug");
+			
+			if (oldAffinity == newAffinity || !GetGame().IsServer()){ 
+				habPrint("habResetOverrideItemBlocks now false Affinity is the same", "Debug");
+				m_HeroesAndBandits_OverrideItemBlocks = false;
+				SetSynchDirty();
+				return; 
+			}
+			bool createItem = false;
+			habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
+			if (GetHeroesAndBanditsSettings().Mode != 1 && newAffinity != -1){
+				tempAffinity = GetHeroesAndBanditsLevels().Affinities.Get(newAffinity);
+				createItem = true;
+			} else if (GetHeroesAndBanditsSettings().Mode != 1){
+				createItem = true;
+			}
+			bool CheckMaskBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit" );
+			bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
+			bool CheckArmbandBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit" );
+			bool CheckArmbandHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "hero" );
+			
+			bool CheckMaskBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && !GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "bambi" );
+			bool CheckArmbandBambi = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && !GetHeroesAndBanditsSettings().HeroCanRemoveArmBand && tempAffinity.Name == "bambi" );
+			int index = -1;
+			bool FixMask = false;
+			bool FixArmband = false;
+			if ( createItem ){
+				EntityAI mask = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.MASK));
+				EntityAI armband = EntityAI.Cast(GetInventory().FindAttachment(InventorySlots.ARMBAND));
+				if (CheckMaskBandit && GetHeroesAndBanditsSettings().BanditMasks.Count() > 0){ 
+					if ( mask ){ 
+						habPrint("Player is Bandit and is wearing a mask", "Debug");
+						index = -1;
+						index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
+						if (index == -1){
+							habPrint("Dropping mask", "Debug");
+							this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+							FixMask = true;
+						}
+					} else { //Not Already wearing a mask
+						habPrint("Player is Bandit and is not wearing a mask", "Debug");
 						FixMask = true;
 					}
-				} else { //Not Already wearing a mask
-					habPrint("Player is Bandit and is not wearing a mask", "Debug");
-					FixMask = true;
 				}
-			}
-			if (CheckMaskHero && GetHeroesAndBanditsSettings().HeroMasks.Count() > 0){
-				if ( mask ){
-					habPrint("Player is Hero and is wearing a mask", "Debug");
+				if (CheckMaskHero && GetHeroesAndBanditsSettings().HeroMasks.Count() > 0){
+					if ( mask ){
+						habPrint("Player is Hero and is wearing a mask", "Debug");
+						index = -1;
+						index = GetHeroesAndBanditsSettings().HeroMasks.Find(mask.GetType());
+						if (index == -1){
+							habPrint("Dropping mask", "Debug");
+							this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+							FixMask = true;
+						}
+					} else { //Not Already wearing a mask
+						habPrint("Player is Hero and is not wearing a mask", "Debug");
+						FixMask = true;		
+					}
+				}
+				if (CheckArmbandBandit && GetHeroesAndBanditsSettings().BanditArmBands.Count() > 0){
+					if ( armband ){
+						index = -1;
+						index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
+						if (index == -1){
+							this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+							FixArmband = true;
+						}
+					} else { //Not Already wearing an Armband
+						FixArmband = true;
+					}
+				}
+				if (CheckArmbandHero && GetHeroesAndBanditsSettings().HeroArmBands.Count() > 0){
+					if ( armband ){
+						index = -1;
+						index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
+						if (index == -1){
+							this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
+							FixArmband = true;
+						}
+					} else { //Not Already wearing an Armband
+						FixArmband = true;
+					}
+				}
+				if (CheckMaskBambi && mask){
+					habPrint("Player is Bambi and is wearing a mask", "Debug");
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroMasks.Find(mask.GetType());
 					if (index == -1){
-						habPrint("Dropping mask", "Debug");
+						index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
+					}
+					if (index != -1){
+					habPrint("Dropping mask", "Debug");
 						this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
-						FixMask = true;
 					}
-				} else { //Not Already wearing a mask
-					habPrint("Player is Hero and is not wearing a mask", "Debug");
-					FixMask = true;		
 				}
-			}
-			if (CheckArmbandBandit && GetHeroesAndBanditsSettings().BanditArmBands.Count() > 0){
-				if ( armband ){
+				if (CheckArmbandBambi && armband){
 					index = -1;
 					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
 					if (index == -1){
-						this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
-						FixArmband = true;
+						index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
 					}
-				} else { //Not Already wearing an Armband
-					FixArmband = true;
-				}
-			}
-			if (CheckArmbandHero && GetHeroesAndBanditsSettings().HeroArmBands.Count() > 0){
-				if ( armband ){
-					index = -1;
-					index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
-					if (index == -1){
+					if (index != -1){
 						this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
-						FixArmband = true;
 					}
-				} else { //Not Already wearing an Armband
-					FixArmband = true;
 				}
-			}
-			if (CheckMaskBambi && mask){
-				habPrint("Player is Bambi and is wearing a mask", "Debug");
-				index = -1;
-				index = GetHeroesAndBanditsSettings().HeroMasks.Find(mask.GetType());
-				if (index == -1){
-					index = GetHeroesAndBanditsSettings().BanditMasks.Find(mask.GetType());
+				//Call Laters cause for some reason just does work at the same time as removing the items
+				if (FixMask && tempAffinity.Name == "bandit"){
+					habPrint("Player is Banidit fixing mask", "Debug");
+					m_HeroesAndBandits_OverrideItemBlocks = true;
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().BanditMasks, InventorySlots.MASK);
+				} else if (FixMask && tempAffinity.Name == "hero"){
+					habPrint("Player is hero fixing mask", "Debug");
+					m_HeroesAndBandits_OverrideItemBlocks = true;
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().HeroMasks, InventorySlots.MASK);
 				}
-				if (index != -1){
-				habPrint("Dropping mask", "Debug");
-					this.GetInventory().DropEntity(InventoryMode.SERVER, this, mask);
+				if (FixArmband && tempAffinity.Name == "bandit"){
+					m_HeroesAndBandits_OverrideItemBlocks = true;
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().BanditArmBands, InventorySlots.ARMBAND);
+				} else if (FixArmband && tempAffinity.Name == "hero"){
+					m_HeroesAndBandits_OverrideItemBlocks = true;
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().HeroArmBands, InventorySlots.ARMBAND);
 				}
-			}
-			if (CheckArmbandBambi && armband){
-				index = -1;
-				index = GetHeroesAndBanditsSettings().HeroArmBands.Find(armband.GetType());
-				if (index == -1){
-					index = GetHeroesAndBanditsSettings().BanditArmBands.Find(armband.GetType());
+				if ( (!FixMask && !FixArmband) || tempAffinity.Name == "bambi"){
+					habPrint("habResetOverrideItemBlocks now false No fix was required", "Debug");
+					m_HeroesAndBandits_OverrideItemBlocks = false;
+					
 				}
-				if (index != -1){
-					this.GetInventory().DropEntity(InventoryMode.SERVER, this, armband);
-				}
+				SetSynchDirty();
 			}
-			//Call Laters cause for some reason just does work at the same time as removing the items
-			if (FixMask && tempAffinity.Name == "bandit"){
-				habPrint("Player is Banidit fixing mask", "Debug");
-				m_HeroesAndBandits_OverrideItemBlocks = true;
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().BanditMasks, InventorySlots.MASK);
-			} else if (FixMask && tempAffinity.Name == "hero"){
-				habPrint("Player is hero fixing mask", "Debug");
-				m_HeroesAndBandits_OverrideItemBlocks = true;
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 150, false, GetHeroesAndBanditsSettings().HeroMasks, InventorySlots.MASK);
-			}
-			if (FixArmband && tempAffinity.Name == "bandit"){
-				m_HeroesAndBandits_OverrideItemBlocks = true;
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().BanditArmBands, InventorySlots.ARMBAND);
-			} else if (FixArmband && tempAffinity.Name == "hero"){
-				m_HeroesAndBandits_OverrideItemBlocks = true;
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.habFixClothing, 180, false, GetHeroesAndBanditsSettings().HeroArmBands, InventorySlots.ARMBAND);
-			}
-			if ( (!FixMask && !FixArmband) || tempAffinity.Name == "bambi"){
-				habPrint("habResetOverrideItemBlocks now false No fix was required", "Debug");
-				m_HeroesAndBandits_OverrideItemBlocks = false;
-				
-			}
-			SetSynchDirty();
 		}
 	}
 	
@@ -490,16 +504,20 @@ modded class PlayerBase extends ManBase
 	
 	override void EEKilled(Object killer)
 	{
+		
 		super.EEKilled(killer);
-		if (!GetIdentity()){ 
-			if (m_HeroesAndBandits_IsGuard){
-				
-			} else { 
-				return;
-			}
+		if (!GetIdentity() && !m_HeroesAndBandits_IsGuard){ 
+			return;
 		} 
 		PlayerBase targetPlayer = PlayerBase.Cast(this);
 		PlayerBase sourcePlayer;
+		if (Class.CastTo(sourcePlayer, killer) || Class.CastTo(sourcePlayer, EntityAI.Cast(killer).GetHierarchyParent())){
+			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillGuard", this);
+			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillPlayer", this);
+			}
+		}
 		string targetPlayerID = "";
 		string sourcePlayerID = "";
 		string weaponName = "";
@@ -577,7 +595,7 @@ modded class PlayerBase extends ManBase
 			}
 			if (m_HeroesAndBandits_IsGuard){
 				if (sourcePlayer.GetIdentity()){
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), m_HeroesAndBandits_GuardPrefix+"GuardKill");
+					GetHeroesAndBandits().NewPlayerAction(sourcePlayer.GetIdentity().GetPlainId(), habGetGuardPrefix()+"GuardKill");
 				}
 				return;
 			}
@@ -623,6 +641,9 @@ modded class PlayerBase extends ManBase
 			habLeftZone(0); 
 			habSetCanRaiseWeapon(true, -1);
 		}
+		if (GetIdentity()){
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetHaBPlayer().OnDeath, 100, false);
+		}
 	}
 	
 	void habGuardKillZombie(EntityAI zombie){
@@ -634,7 +655,6 @@ modded class PlayerBase extends ManBase
 	
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
-
 		
 		int beforeHitBleedingSources = 0;
 		
@@ -644,6 +664,14 @@ modded class PlayerBase extends ManBase
 		bool hitByZombie = false;
 		PlayerBase targetPlayer = PlayerBase.Cast(this);
 		PlayerBase sourcePlayer;
+		
+		if (Class.CastTo(sourcePlayer, source) || Class.CastTo(sourcePlayer, EntityAI.Cast(source).GetHierarchyParent())){
+			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitGuard", this);
+			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitPlayer", this);
+			}
+		}
 		
 		if (source.IsInherited(ZombieBase) && habIsGuard()){
 			hitByZombie = true;

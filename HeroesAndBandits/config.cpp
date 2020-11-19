@@ -4,6 +4,7 @@ class CfgPatches
 	{
 		requiredVersion=0.1;
 		requiredAddons[]={
+			"HABDefines",
 			"JM_CF_Scripts"
 		};
 	};
@@ -37,7 +38,6 @@ class CfgMods
             {
 				value = "";
                 files[]={
-					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/3_Game"
 					};
             };
@@ -46,7 +46,6 @@ class CfgMods
             {
 				value = "";
                 files[]={ 
-					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/4_World" 
 					};
             };
@@ -55,11 +54,33 @@ class CfgMods
             {
 				value = "";
                 files[]={ 
-					"HeroesAndBandits/scripts/Common",
 					"HeroesAndBandits/scripts/5_Mission" 
 					};
             };
 			
         };
     };
+};
+
+class CfgVehicles
+{
+	class Flag_Base;
+	class Hero_Flag: Flag_Base
+	{
+		scope=2;
+		displayName  = "Hero Flag";
+		hiddenSelectionsTextures[]=
+		{
+			"HeroesAndBandits\data\texture\flag_hero_co.paa"
+		};
+	};
+	class Bandit_Flag: Flag_Base
+	{
+		scope=2;
+		displayName  = "Bandit Flag";
+		hiddenSelectionsTextures[]=
+		{
+			"HeroesAndBandits\data\texture\flag_bandit_co.paa"
+		};
+	};
 };

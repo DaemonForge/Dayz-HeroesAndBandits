@@ -34,6 +34,10 @@ class HeroesAndBanditsSettings
 	//This doesn't affect Humanity as its the calcuation of two Affinities
 	bool AffintyCantGoBelowZero = true;
 	
+	
+	bool ResetAffinitiesOnDeath = false;
+	bool ResetStatsOnDeath = false;
+	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
 	int Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
@@ -104,7 +108,10 @@ class HeroesAndBanditsSettings
 						doV5Upgrade();
 						Save();
 					}
-					
+					if (ConfigVersion == "5"){
+						doV6Upgrade();
+						Save();
+					}
 				}else{ //File does not exist create file
 					MakeDirectory(habConstant.Directory);
 					MakeDirectory(habConstant.PlayerDB);
@@ -136,6 +143,13 @@ class HeroesAndBanditsSettings
 		HeroCanRemoveArmBand = true;
 		HeroMasks = {};
 		HeroArmBands = {};
+	}
+	
+	void doV6Upgrade(){
+		ConfigVersion = "6";
+		ResetAffinitiesOnDeath = false;
+		ResetStatsOnDeath = false;
+		Save();
 	}
 	
 	void Save(){

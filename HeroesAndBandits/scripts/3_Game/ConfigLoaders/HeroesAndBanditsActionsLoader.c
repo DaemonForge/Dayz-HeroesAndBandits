@@ -1,13 +1,14 @@
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
-	string ConfigVersion = "5";
+	string ConfigVersion = "6";
 	
 	int NotificationMessageTime = 10;
 	
 	ref array<int> NotificationColor = {200, 0, 200, 200};
 	
 	ref array< ref habAction > Actions = new ref array< ref habAction >;
+	ref array< ref habAggressorAction > AggressorActions = new ref array< ref habAggressorAction >;
 	
 	void Load(){
 		if (GetGame().IsServer()){
@@ -19,6 +20,9 @@ class HeroesAndBanditsConfigActions
 			        	JsonFileLoader<HeroesAndBanditsConfigActions>.JsonLoadFile(habConstant.ActionsPATH, this);
 						if(ConfigVersion == "4"){
 							DoV5Upgrade();
+						}
+						if(ConfigVersion == "5"){
+							DoV6Upgrade();
 						}
 				}else{ //File does not exist create file
 					createDefaults();
@@ -69,7 +73,7 @@ class HeroesAndBanditsConfigActions
 	//Returns the action based on the name it is NOT case sensitive
 	habAction getAction(string actionName){
 		string tempActionName
-		for ( int i =0; i < Actions.Count(); i++ )
+		for ( int i = 0; i < Actions.Count(); i++ )
 		{
 			tempActionName = Actions.Get(i).Name;
 			tempActionName.ToLower();
@@ -92,6 +96,15 @@ class HeroesAndBanditsConfigActions
 	//Returns the Notification color in an int value
 	int getNotificationColor(){
 		return ARGB(NotificationColor[0], NotificationColor[1], NotificationColor[2], NotificationColor[3]);
+	}
+	
+	float getAggressionAmount(string action){
+		for (int i = 0; i < AggressorActions.Count(); i++){
+			if (AggressorActions.Get(i).Name == action){
+				return AggressorActions.Get(i).Amount;
+			}
+		}
+		return 0;
 	}
 	
 	void createDefaults(){
@@ -139,6 +152,7 @@ class HeroesAndBanditsConfigActions
 		addAction( "MedicFeedPainkiller", "hero", "medic", 15);
 		addAction( "MedicFeedCharcoal", "hero", "medic", 15);
 		addAction( "MedicFeedVitamin", "hero", "medic", 10);
+		addAction( "MedicSplintPlayer", "hero", "medic", 100);
 		addAction( "HuntAnimal_BosTaurus_Brown", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_White", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_BosTaurus_Spotted", "hunter", "none", 25, false);
@@ -165,11 +179,31 @@ class HeroesAndBanditsConfigActions
 		addAction( "HuntAnimal_SusScrofa", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_LepusEuropaeus", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_UrsusArctos", "hunter", "none", 200, false);
-	
+		
+		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 	}
 	
 	void DoV5Upgrade(){
 		ConfigVersion = "5";
 		Save();
 	}
+	
+	void DoV6Upgrade(){
+		ConfigVersion = "6";
+		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		addAction( "MedicSplintPlayer", "hero", "medic", 100);
+		
+		Save();
+	}
+	
 };

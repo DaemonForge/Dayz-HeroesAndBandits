@@ -1,4 +1,4 @@
-#ifdef HABTRADERADDON
+#ifdef TRADER
 modded class ActionTrade: ActionInteractBase
 {
 	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item )

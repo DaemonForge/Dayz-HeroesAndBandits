@@ -38,4 +38,14 @@ modded class ZombieBase
 			}
 		}
     }
+	
+	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef){	
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+		PlayerBase player;
+		if (Class.CastTo(player, EntityAI.Cast(source).GetHierarchyParent())){
+			if (player.GetIdentity() && source.IsWeapon()){
+				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 200, false, player, "HitZombie", this); //Delay to make sure shot is registered prior to registering zombie hit to ensure that it is canceled out
+			}
+		}
+	}
 };

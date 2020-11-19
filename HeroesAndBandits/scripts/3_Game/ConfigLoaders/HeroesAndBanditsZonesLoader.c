@@ -2,9 +2,10 @@ class HeroesAndBanditsConfigZones
 { 
 	//Has to be in world as it uses other configs for refernce
 	//Default Values
-	string ConfigVersion = "5";
+	string ConfigVersion = "6";
 	
 	int ZoneCheckTimer = 3;
+	int AggressionReductionTickRate = 60;
 	
 	
 	ref array<int> WarningMessageColor = {200, 255, 0, 0};
@@ -22,11 +23,14 @@ class HeroesAndBanditsConfigZones
 			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
-				if (FileExist(habConstant.ZonesPATH)) //If config exist load File
-				{
+				if (FileExist(habConstant.ZonesPATH)){ //If config exist load File
+				
 			        JsonFileLoader<HeroesAndBanditsConfigZones>.JsonLoadFile(habConstant.ZonesPATH, this);
 					if (ConfigVersion == "4"){
 						doV5Upgrade();
+					}
+					if (ConfigVersion == "5"){
+						doV6Upgrade();
 					}
 					ConvertHumanityToAffinity();
 				}else{ //File does not exist create file
@@ -60,6 +64,23 @@ class HeroesAndBanditsConfigZones
 	
 	void createDefaults(){
 		addZone("Default Zone", 11250, 4300, 75, 50);
+	}
+	
+	void ConvertHumanityToAffinity(){
+		bool SaveNeeded = false;
+		if (Zones.Count() > 0){
+			for (int i = 0; i < Zones.Count(); i++){
+				if (Zones.Get(i).MinHumanity != 0 && Zones.Get(i).MaxHumanity != 0 && Zones.Get(i).Affinities.Count() == 0){
+					Zones.Get(i).convertHumanityToAffinty();
+					Zones.Get(i).MinHumanity = 0;
+					Zones.Get(i).MaxHumanity = 0;
+					SaveNeeded = true;
+				}
+			}
+		}
+		if (SaveNeeded){
+			Save();
+		}
 	}
 	
 	void doV5Upgrade(){
@@ -101,23 +122,18 @@ class HeroesAndBanditsConfigZones
 		Save();
 	}
 	
-	void ConvertHumanityToAffinity(){
-		bool SaveNeeded = false;
+	void doV6Upgrade(){
+		ConfigVersion = "6";
+		AggressionReductionTickRate = 180;
 		if (Zones.Count() > 0){
 			for (int i = 0; i < Zones.Count(); i++){
-				if (Zones.Get(i).MinHumanity != 0 && Zones.Get(i).MaxHumanity != 0 && Zones.Get(i).Affinities.Count() == 0){
-					Zones.Get(i).convertHumanityToAffinty();
-					Zones.Get(i).MinHumanity = 0;
-					Zones.Get(i).MaxHumanity = 0;
-					SaveNeeded = true;
+				if (!Zones.Get(i).UID || Zones.Get(i).UID == ""){
+					Zones.Get(i).UID = habGetRandomId(16);
 				}
 			}
 		}
-		if(SaveNeeded){
-			Save();
-		}
+		Save();
 	}
-	
 };
 
 
@@ -126,6 +142,7 @@ class HeroesAndBanditsConfigZones
 class habZone
 {
 	string Name;
+	string UID;
 	float X;
 	float Z;
 	float WarningRadius;
@@ -144,6 +161,9 @@ class habZone
 	bool PreventActions = false;
 	bool BlockTrader = false;
 	bool KillAggressors = false;
+	float AggressorThreshold = 155;
+	float AggressorReduction = 100;
+	bool AggressorGlobal = false; //Does nothing Yet
 	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
 	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
 	
@@ -163,6 +183,7 @@ class habZone
 		}else{
 			WarningMessage = warningMessage;
 		}
+		UID = habGetRandomId(16);
 	}
 	
 	//Converts the x and y to vector
