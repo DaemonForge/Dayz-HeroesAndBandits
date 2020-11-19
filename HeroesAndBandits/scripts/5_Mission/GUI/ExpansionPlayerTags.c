@@ -4,6 +4,9 @@ modded class IngameHud extends Hud
 	string 						m_CurrentTaggedPlayer_HABicon = "";
 	string 						m_CurrentTaggedPlayer_LastRequested = "";
 	
+	protected ImageWidget		m_PlayerTagIcon;
+	
+	
 	void IngameHud()
 	{
 		GetRPCManager().AddRPC( "HaB", "RPCReceiveHABIcon", this, SingeplayerExecutionType.Both );
