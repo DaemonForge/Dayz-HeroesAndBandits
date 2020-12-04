@@ -176,6 +176,8 @@ modded class PlayerBase extends ManBase
 				SetSynchDirty();
 				return; 
 			}
+			
+			
 			bool createItem = false;
 			habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
 			if (GetHeroesAndBanditsSettings().Mode != 1 && newAffinity != -1){
@@ -184,6 +186,23 @@ modded class PlayerBase extends ManBase
 			} else if (GetHeroesAndBanditsSettings().Mode != 1){
 				createItem = true;
 			}
+			
+			
+			#ifdef WRDG_DOGTAGS
+				Dogtag_Base dgtg = Dogtag_Base.Cast(GetDogtag());
+				if (dgtg){
+					dgtg.SetHaBAffinity(tempAffinity.DisplayName);
+				}
+				if (tempAffinity.Name == "bandit"){
+					ReplaceDogtag("Dogtag_Bandit");
+				} else if (tempAffinity.Name == "hero"){
+					ReplaceDogtag("Dogtag_Hero");
+				} else {
+					ReplaceDogtag("Dogtag_Survivor");
+				}
+			#endif
+			
+			
 			bool CheckMaskBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit" );
 			bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
 			bool CheckArmbandBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit" );
@@ -324,6 +343,15 @@ modded class PlayerBase extends ManBase
 		
 	void habCurrentAffinityPointUpdate(float affinityPoints){
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
+		
+		#ifdef WRDG_DOGTAGS
+		Dogtag_Base dgtg = Dogtag_Base.Cast(GetDogtag());
+		if (dgtg){
+			if (GetHaBPlayer()){
+				dgtg.SetHaBHumanity(GetHaBPlayer().getHumanity());
+			}
+		}
+		#endif
 		SetSynchDirty();
 	}
 	
