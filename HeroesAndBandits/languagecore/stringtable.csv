@@ -32,3 +32,8 @@
 "HAB_HUNTER","Hunter","Hunter","Chasseur","Oхотник","Jäger","Myśliwy","Caçador","Jæger","Lovec","猎人","Cazador","Hunter","dieren gedood","dödade djur",
 "HAB_HUNTS","Animal Kills","Animal Kills","Animaux tués","Убийство Животных","Getötete Tiere","Zabite Zwierzęta","Animais mortos","Dræbte Dyre","Zabito Zvířat","杀死动物","Muertes de Animales","Napatay Na Hayop","Nieuwe speler","ny karaktär", 
 "HAB_BLANK","","","","","","","","","","","","","","", 
+"STR_HAB_AFFINITY","Affinity","Affinity","Affinité","Ранг","Affinität","Ranga","Afinidade","Helte og Banditer","Afinita","亲和力","Afinidad","Pagkakaugnay","verwantschap","samhörighet", 
+"STR_HAB_HUMANITY","Humanity","Humanity","Humanité","Репутация","Menschlichkeit","Humanitarność","Humanidade","Menneskelighed","Lidstvo","人性","Humanidad","Sangkatauhan","De Mensheid","Mänskligheten", 
+"STR_HAB_HERO","Hero","Hero","Héros","Герой","Hero","Bohater","Herói","Helte","Hrdina","英雄","Héroe","Bayani","Held","Hjälte", 
+"STR_HAB_BANDIT","Bandit","Bandit","Bandit","Бандит","Bandit","Bandyta","Bandido","Bandit","Bandita","土匪","Bandidos","Bandido","Bandiet","Bandit", 
+"STR_HAB_BAMBI","Bambi","Bambi","Bambi","бамби","Bambi","Bambi","Bambi","Bambi","Bambi","小鹿斑比","Bambi","Bagong Salta","veldarts","fältmedicin", 

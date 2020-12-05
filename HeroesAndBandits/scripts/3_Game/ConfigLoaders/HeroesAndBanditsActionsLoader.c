@@ -1,7 +1,7 @@
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
-	string ConfigVersion = "6";
+	string ConfigVersion = "7";
 	
 	int NotificationMessageTime = 10;
 	
@@ -23,6 +23,9 @@ class HeroesAndBanditsConfigActions
 						}
 						if(ConfigVersion == "5"){
 							DoV6Upgrade();
+						}
+						if(ConfigVersion == "6"){
+							DoV7Upgrade();
 						}
 				}else{ //File does not exist create file
 					createDefaults();
@@ -203,6 +206,12 @@ class HeroesAndBanditsConfigActions
 		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 		addAction( "MedicSplintPlayer", "hero", "medic", 100);
 		
+		Save();
+	}
+	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
 		Save();
 	}
 	

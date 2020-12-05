@@ -32,6 +32,9 @@ class HeroesAndBanditsConfigZones
 					if (ConfigVersion == "5"){
 						doV6Upgrade();
 					}
+					if(ConfigVersion == "6"){
+						DoV7Upgrade();
+					}
 					ConvertHumanityToAffinity();
 				}else{ //File does not exist create file
 					createDefaults();
@@ -132,6 +135,13 @@ class HeroesAndBanditsConfigZones
 				}
 			}
 		}
+		Save();
+	}
+	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		
+		
 		Save();
 	}
 };

@@ -38,10 +38,14 @@ class HeroesAndBanditsSettings
 	bool ResetAffinitiesOnDeath = false;
 	bool ResetStatsOnDeath = false;
 	
+	bool DodTags_EnableHumanityOnDogTags = true;
+	bool DodTags_EnableAffinityOnDogTags = true;
+	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
 	int Expansion_ImageTypePlayerTag = 0; //0 Affinty / 1 Level
 	bool Expansion_HideNameOnPlayerTag = false;
+	
 	
 	
 	
@@ -112,6 +116,9 @@ class HeroesAndBanditsSettings
 						doV6Upgrade();
 						Save();
 					}
+					if(ConfigVersion == "6"){
+						DoV7Upgrade();
+					}
 				}else{ //File does not exist create file
 					MakeDirectory(habConstant.Directory);
 					MakeDirectory(habConstant.PlayerDB);
@@ -151,6 +158,16 @@ class HeroesAndBanditsSettings
 		ResetStatsOnDeath = false;
 		Save();
 	}
+	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		
+		DodTags_EnableHumanityOnDogTags = true;
+		DodTags_EnableAffinityOnDogTags = true;
+		
+		Save();
+	}
+	
 	
 	void Save(){
 			JsonFileLoader<HeroesAndBanditsSettings>.JsonSaveFile(habConstant.SettingsPATH, this);

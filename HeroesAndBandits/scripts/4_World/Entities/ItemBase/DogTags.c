@@ -2,9 +2,9 @@
 modded class Dogtag_Base : ItemBase
 {
 	
-	protected float m_HeroesAndBandits_Humanity;
+	protected float m_HeroesAndBandits_Humanity = 0;
 	
-	protected string m_HeroesAndBandits_Affinity = "Bambi";
+	protected string m_HeroesAndBandits_Affinity = "#STR_HAB_BAMBI";
 	
 
 	void Dogtag_Base()
@@ -18,18 +18,17 @@ modded class Dogtag_Base : ItemBase
 		bool modified = super.DescriptionOverride(output);
 		
 		
-		if (m_HeroesAndBandits_Humanity != NULL)
+		if ( GetHeroesAndBanditsSettings().DodTags_EnableAffinityOnDogTags && m_HeroesAndBandits_Affinity )
 		{
-			output += "#HAB_AFFINITY: " + m_HeroesAndBandits_Level + " \n", );
+			output += "#STR_HAB_AFFINITY: " + m_HeroesAndBandits_Affinity + " \n";
 			modified = true;
 		}
 		
-		if (m_HeroesAndBandits_Humanity != NULL)
+		if ( GetHeroesAndBanditsSettings().DodTags_EnableHumanityOnDogTags )
 		{
-			output += string.Format("#HAB_HUMANITY: %1 \n", m_HeroesAndBandits_Humanity);
+			output += string.Format("#STR_HAB_HUMANITY: %1 \n", m_HeroesAndBandits_Humanity);
 			modified = true;
 		}
-
 
 		return modified;
 	}
@@ -50,7 +49,7 @@ modded class Dogtag_Base : ItemBase
 
 		if (!ctx.Read(m_HeroesAndBandits_Humanity))
 			return false;
-
+			
 		if (!ctx.Read(m_HeroesAndBandits_Affinity))
 			return false;
 
@@ -62,14 +61,12 @@ modded class Dogtag_Base : ItemBase
 	override void OnRPCRead(PlayerIdentity sender, ref ParamsReadContext ctx)
 	{
 		super.OnRPCRead(sender, ctx);
-		ctx.Read(m_HeroesAndBandits_Humanity);
 		ctx.Read(m_HeroesAndBandits_Affinity);
 	}
 
 	override void OnRPCWrite(ScriptRPC rpc)
 	{
 		super.OnRPCWrite( rpc );
-		rpc.Write(m_HeroesAndBandits_Humanity);
 		rpc.Write(m_HeroesAndBandits_Affinity);
 	}
 
