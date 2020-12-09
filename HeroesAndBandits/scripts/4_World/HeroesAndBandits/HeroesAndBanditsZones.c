@@ -168,10 +168,13 @@ class HeroesAndBanditsZone
 		bool PlayerLeftZone = false;
 		bool PlayerLeftSubZone = false;
 		PlayerBase player = PlayerBase.Cast(inPlayer);
+		if (!player  || !player.GetIdentity()){
+			return PlayerLeftZone;
+		}
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
 		ref HeroesAndBanditsGuard guard;
-		if ( !player  && !pdata && !player.GetIdentity() && !player.IsAlive() && player.IsPlayerDisconnected()){
+		if ( !player  || !pdata || !player.GetIdentity() || !player.IsAlive() || player.IsPlayerDisconnected()){
 			return PlayerLeftZone;
 		}
 		bool isAggressor = false;
