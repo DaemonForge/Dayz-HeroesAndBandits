@@ -193,12 +193,12 @@ modded class PlayerBase extends ManBase
 				if (dgtg){
 					dgtg.SetHaBAffinity(tempAffinity.DisplayName);
 				}
-				if (tempAffinity.Name == "bandit"){
-					ReplaceDogtag("Dogtag_Bandit");
-				} else if (tempAffinity.Name == "hero"){
-					ReplaceDogtag("Dogtag_Hero");
-				} else {
-					ReplaceDogtag("Dogtag_Survivor");
+				if (tempAffinity.Name == "bandit" && dgtg.GetType() != "Dogtag_Bandit"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Bandit");
+				} else if (tempAffinity.Name == "hero" && dgtg.GetType() != "Dogtag_Hero"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Hero");
+				} else if (dgtg.GetType() != "Dogtag_Survivor"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Survivor");
 				}
 			#endif
 			
@@ -1289,5 +1289,40 @@ modded class PlayerBase extends ManBase
 		} 
 		//this.GetInputController().OverrideMovementAngle(doOverride, m_HeroesAndBandits_ChangeAimX);
 		//this.GetInputController().OverrideMovementSpeed(doOverride, 1);
+	}
+	
+	void HaBReplaceDogtag(string tagType){
+		
+		#ifdef WRDG_DOGTAGS
+			Dogtag_Base theCurrentTag = Dogtag_Base.Cast(GetDogtag());
+			if (!theCurrentTag || theCurrentTag.GetType() == tagType){
+				return;
+			}
+			bool DogtagKilled = theCurrentTag.IsKilled();
+			string DogtagNickName = theCurrentTag.GetNickName();
+			int DogtagBirthday = theCurrentTag.GetBirthday();
+			int DogtagBloodType = theCurrentTag.GetBloodType();
+			string DogtagAffinity = theCurrentTag.GetHaBAffinity();
+			float DogtagHumanity = theCurrentTag.GetHaBHumanity();
+			theCurrentTag.Delete();
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBSpawnNewDogTags, 600, false, tagType, DogtagKilled, DogtagNickName, DogtagBirthday, DogtagBloodType, DogtagAffinity, DogtagHumanity);
+		#endif
+	}
+	
+	void HaBSpawnNewDogTags(string tagType, bool DogtagKilled, string DogtagNickName, int DogtagBirthday, int DogtagBloodType, string DogtagAffinity, float DogtagHumanity){
+		
+		#ifdef WRDG_DOGTAGS
+			int slotId = InventorySlots.GetSlotIdFromString("Dogtag");
+			Dogtag_Base theNewTag = Dogtag_Base.Cast(this.GetInventory().CreateAttachmentEx(tagType, slotId));
+			
+			if (theNewTag){
+				theNewTag.SetKilled(DogtagKilled);
+				theNewTag.SetNickName(DogtagNickName);
+				theNewTag.SetBloodType(DogtagBloodType);
+				theNewTag.SetBirthday(DogtagBirthday);
+				theNewTag.SetHaBHumanity(DogtagHumanity);
+				theNewTag.SetHaBAffinity(DogtagAffinity);
+			}
+		#endif
 	}
 };
