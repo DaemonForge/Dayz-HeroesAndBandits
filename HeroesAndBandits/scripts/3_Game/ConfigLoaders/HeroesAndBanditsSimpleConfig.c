@@ -34,6 +34,7 @@ class HeroesAndBanditsSimpleConfig
 		if (GetGame().IsServer()){
 			MakeDirectory(habConstant.Directory);
 			MakeDirectory(habConstant.PlayerDB);
+			MakeDirectory(habConstant.ZoneDB);
 			if (FileExist(habConstant.ConfigPATH)) //If config exist load File
 			{
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.ConfigPATH, this);

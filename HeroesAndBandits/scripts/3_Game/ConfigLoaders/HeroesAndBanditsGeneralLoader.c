@@ -122,6 +122,7 @@ class HeroesAndBanditsSettings
 				}else{ //File does not exist create file
 					MakeDirectory(habConstant.Directory);
 					MakeDirectory(habConstant.PlayerDB);
+					MakeDirectory(habConstant.ZoneDB);
 					Print("Creating Default Settings Config");	
 					Save();
 				}
