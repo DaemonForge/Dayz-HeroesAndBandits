@@ -72,10 +72,10 @@ modded class MissionGameplay extends MissionBase
 	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
-		Param2< HeroesAndBanditsPlayer, habLevel > data;
+		Param1< HeroesAndBanditsPlayer > data;
 		if ( !ctx.Read( data ) ) return;
             g_HeroesAndBanditsPlayer = data.param1;
-			g_HeroesAndBanditsLevel = data.param2;		
+			g_HeroesAndBanditsLevel = g_HeroesAndBanditsPlayer.getLevel();		
 			string newIcon = g_HeroesAndBanditsLevel.LevelImage;
 			string playerID = g_HeroesAndBanditsPlayer.PlayerID;
 			Print("[HeroesAndBandits] [DebugClient] Player Data Proccessed Icon: " + m_HeroesAndBanditsCurrentIcon);

@@ -101,14 +101,14 @@ class HeroesAndBanditsGuard
 	{
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		Weapon weapon = Weapon.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		DayZPlayer GuardZ = Guard;
+		DayZPlayer GuardZ = DayZPlayer.Cast(Guard);
 			if (weapon && GuardZ && WeaponInHandsMag != "") {	
-				Guard.GetInventory().CreateAttachment(WeaponInHandsMag);
+				GuardZ.GetInventory().CreateAttachment(WeaponInHandsMag);
 				ref array<Magazine> mag_Array = new array<Magazine>;
 				DayZPlayerUtils.FindMagazinesForAmmo(Guard, WeaponInHandsMag, mag_Array);
 				{	
 					Magazine mag_obj = Magazine.Cast(mag_Array.Get(0));	
-					Guard.GetDayZPlayerInventory().PostWeaponEvent( new WeaponEventAttachMagazine(GuardZ, mag_obj) );
+					GuardZ.GetDayZPlayerInventory().PostWeaponEvent( new WeaponEventAttachMagazine(GuardZ, mag_obj) );
 				}
 			}
 	}
@@ -158,7 +158,7 @@ class HeroesAndBanditsGuard
 	{
 		habPrint("Attempt Fire Weapon Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player){
+		if (!player || !Guard || !IsAlive()){
 			return;
 		}
 		RaiseWeapon();
@@ -215,12 +215,11 @@ class HeroesAndBanditsGuard
 	//Returns a binary hit table ( 1 Left Arm | 1 Right Arm | 1 Head)
 	int HasLineOfSight(PlayerBase inPlayer){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player)
+		if (!player || !Guard)
 		{
-			return false;
+			return 0;
 		}
 		int found = 0;
-		
 		int head_index_guard = Guard.GetBoneIndexByName("head");
 		vector guard_head_pos = Guard.GetPosition();
 		guard_head_pos[1] = guard_head_pos[1] + 1.6;
@@ -344,8 +343,9 @@ class HeroesAndBanditsGuard
 	}
 	
 	string GetWeaponName(){
-		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		string weaponName = "";
+		if (!Guard){return weaponName;}
+		EntityAI weaponInHands = EntityAI.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		if (weaponInHands){
 			weaponName = weaponInHands.GetDisplayName();
 		}
@@ -353,7 +353,8 @@ class HeroesAndBanditsGuard
 	}
 	
 	bool IsAlive(){
-		if (!Guard.IsAlive() && !RespawnTriggered){
+		if (!Guard){ return false; }
+		if (Guard.IsAlive() && !RespawnTriggered){
 			RespawnTriggered = true;
 			StopTracking = true;
 			InteruptRotate = false;
@@ -364,7 +365,7 @@ class HeroesAndBanditsGuard
 
 	float CalculateAccuracy(PlayerBase inPlayer){
 		PlayerBase player = PlayerBase.Cast(inPlayer);
-		if (!player){
+		if (!player || !Guard){
 			return HitChance;
 		}
 		float distance = vector.Distance(Guard.GetPosition(), player.GetPosition());
@@ -395,6 +396,7 @@ class HeroesAndBanditsGuard
 	}
 	
 	void RotateToFace(vector direction, float maxTimeSeconds = 2, int tickInterval = 100){
+		if (!Guard){return;}
 		float toDif = GetRotateDiff( Guard.GetDirection(), direction);
 		if ( toDif < 0 ){ toDif = -toDif;}
 		if ( toDif  < 10){
@@ -462,6 +464,7 @@ class HeroesAndBanditsGuard
 	}
 	
 	protected void RotateToFaceTick(vector direction, int maxCount = 32, int tickInterval = 60){
+		if (!Guard){return;}
 		vector curDir = Guard.GetDirection();
 		float dirX = GetRotateDiffX(curDir, direction);
 		float dirY = GetRotateDiffY(curDir, direction);
