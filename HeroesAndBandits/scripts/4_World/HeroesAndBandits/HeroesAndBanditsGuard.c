@@ -99,6 +99,7 @@ class HeroesAndBanditsGuard
 	
 	void ReloadWeapon()
 	{
+		if (!Guard){return;}
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		Weapon weapon = Weapon.Cast(Guard.GetHumanInventory().GetEntityInHands());
 		DayZPlayer GuardZ = DayZPlayer.Cast(Guard);
@@ -108,11 +109,10 @@ class HeroesAndBanditsGuard
 				DayZPlayerUtils.FindMagazinesForAmmo(Guard, WeaponInHandsMag, mag_Array);
 				{	
 					Magazine mag_obj = Magazine.Cast(mag_Array.Get(0));	
-					GuardZ.GetDayZPlayerInventory().PostWeaponEvent( new WeaponEventAttachMagazine(GuardZ, mag_obj) );
+					Guard.GetDayZPlayerInventory().PostWeaponEvent( new WeaponEventAttachMagazine(GuardZ, mag_obj) );
 				}
 			}
 	}
-	
 	
 	void RaiseWeapon()
 	{
