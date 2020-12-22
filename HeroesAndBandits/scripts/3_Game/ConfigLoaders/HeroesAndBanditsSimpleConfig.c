@@ -49,7 +49,7 @@ class HeroesAndBanditsSimpleConfig
 				Save();
 			}
 			if (UseSimple != 0){
-				Print("Loading Simple Config");
+				habPrint("Loading Simple Config", "Always");
 				ConvertToFull();
 			}
 			return UseSimple;
