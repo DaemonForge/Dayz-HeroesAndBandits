@@ -542,7 +542,7 @@ modded class PlayerBase extends ManBase
 		if (Class.CastTo(sourcePlayer, killer) || Class.CastTo(sourcePlayer, EntityAI.Cast(killer).GetHierarchyParent())){
 			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillGuard", this);
-			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
+			} else if (sourcePlayer.GetIdentity() && GetIdentity() && sourcePlayer != targetPlayer){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillPlayer", this);
 			}
 		}
