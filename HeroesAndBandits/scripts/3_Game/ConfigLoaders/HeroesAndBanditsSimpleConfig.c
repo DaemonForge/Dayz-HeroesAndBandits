@@ -1,7 +1,7 @@
 class HeroesAndBanditsSimpleConfig
 { 
 	
-	string ConfigVersion = "6";
+	string ConfigVersion = "7";
 	int UseSimple = 1; //1 use simple 2 convert and save simple to advanced 0 use advanced (2 will set this to 0)
 	
 	//Default Values
@@ -40,6 +40,9 @@ class HeroesAndBanditsSimpleConfig
 				JsonFileLoader<HeroesAndBanditsSimpleConfig>.JsonLoadFile(habConstant.ConfigPATH, this);
 				if(ConfigVersion == "5"){
 					DoV6Upgrade();
+				}
+				if(ConfigVersion == "6"){
+					DoV7Upgrade();
 				}
 			}else{ //File does not exist create file
 				SetDefaults();
@@ -115,6 +118,26 @@ class HeroesAndBanditsSimpleConfig
 			Actions.Insert(new ref HABSimpleAction( "HackExpansionCodeLockDoorRaid", -200));
 		#endif
 		
+		#ifdef EXPANSIONCODELOCKEXPANDED
+			Actions.Insert(new ref HABSimpleAction( "ExpansionCodeLockTentRaid", -150));
+			Actions.Insert(new ref HABSimpleAction( "HacktentRaid", -100));
+			Actions.Insert(new ref HABSimpleAction( "HackexpansionsafeRaid", -200));
+			Actions.Insert(new ref HABSimpleAction( "HackfenceRaid", "bandit", -200));
+			Actions.Insert(new ref HABSimpleAction( "HackexpansionwallRaid", -200));
+			Actions.Insert(new ref HABSimpleAction( "HackexpansionfloorRaid", -200));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t1Raid", -200));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t2Raid", -250));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t3Raid", -300));
+		#endif
+		
+		#ifdef HACKINGMOD
+			Actions.Insert(new ref HABSimpleAction( "HacktentRaid", -100));
+			Actions.Insert(new ref HABSimpleAction( "HackfenceRaid", -200));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t1Raid", -200));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t2Raid", -250));
+			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t3Raid", -300));
+		#endif
+		
 		Actions.Insert(new ref HABSimpleAction( "MedicBandagePlayer", 50));
 		Actions.Insert(new ref HABSimpleAction( "MedicGiveBlood", 25));
 		Actions.Insert(new ref HABSimpleAction( "MedicGiveSaline", 25));
@@ -134,5 +157,8 @@ class HeroesAndBanditsSimpleConfig
 		
 		Save();
 	}
-	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		Save();
+	}
 };
