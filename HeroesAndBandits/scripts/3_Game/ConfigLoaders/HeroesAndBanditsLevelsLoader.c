@@ -29,9 +29,10 @@ class HeroesAndBanditsConfigLevels
 					}
 				}else{ //File does not exist create file
 					createDefaults();
-					Print("Creating Default Actions Config");	
+					habPrint("Creating Default Levels Config", "Always");	
 					Save();
 				}
+				habPrint("Loading Levels Config Version: " + ConfigVersion + "- " + Levels.Count() + " Levels Loaded and " + Affinities.Count() + " Affinities Loaded", "Verbose");	
 			}
 		}
 	}
