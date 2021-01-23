@@ -18,9 +18,9 @@ modded class BaseBuildingBase
 			}
 			#ifdef BASICBOMBS
 			else if (hitBy.IsInherited(BB_PipeBomb) ){
-				BB_PipeBomb grenade = BB_PipeBomb.Cast(hitBy);
-				if (grenade && grenade.GetIgnitedBySteamId() != "null"){
-					habLastHitBy = grenade.GetIgnitedBySteamId();
+				BB_PipeBomb bomb = BB_PipeBomb.Cast(hitBy);
+				if (bomb && bomb.GetIgnitedBySteamId() != "null"){
+					habLastHitBy = bomb.GetIgnitedBySteamId();
 					return;
 				}
 			}
