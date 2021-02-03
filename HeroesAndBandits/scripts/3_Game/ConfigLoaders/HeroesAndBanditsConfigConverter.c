@@ -393,6 +393,7 @@ class habConverter
 		}
 		tempSettings.AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
 		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
 		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
 		tempSettings.AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
 		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));

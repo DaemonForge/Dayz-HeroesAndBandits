@@ -53,12 +53,11 @@ class HeroesAndBandits
 			habPrint("Player " + playerIdent.GetPlainId()+ " connected and already loaded", "Verbose");	
 			return;
 		}else{
-			loadPlayer(playerIdent.GetPlainId());
-			
+			loadPlayer(playerIdent.GetPlainId(), playerIdent.GetId());
 		}
 	}
 	
-	void loadPlayer(string playerID){
+	void loadPlayer(string playerID, string guid = ""){
 		HeroesAndBanditsPlayers.Insert(new ref HeroesAndBanditsPlayer(playerID));
 	}
 	
@@ -126,7 +125,7 @@ class HeroesAndBandits
 					{
 						player.habLevelChange(p.getAffinityIndex(), affinityPoints, p.getLevelIndex());
 						if (player){
-							GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( p, p.getLevel() ), true, player.GetIdentity());
+							GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param1< HeroesAndBanditsPlayer >( p ), true, player.GetIdentity());
 						}
 					} else {
 						player.habCurrentAffinityPointUpdate(affinityPoints);

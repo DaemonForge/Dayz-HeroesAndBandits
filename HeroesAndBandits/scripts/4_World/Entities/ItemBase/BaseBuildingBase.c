@@ -16,6 +16,15 @@ modded class BaseBuildingBase
 					habLastHitBy = grenade.habGetActivatedBy();
 				}
 			}
+			#ifdef BASICBOMBS
+			else if (hitBy.IsInherited(BB_PipeBomb) ){
+				BB_PipeBomb bomb = BB_PipeBomb.Cast(hitBy);
+				if (bomb && bomb.GetIgnitedBySteamId() != "null"){
+					habLastHitBy = bomb.GetIgnitedBySteamId();
+					return;
+				}
+			}
+			#endif
 			#ifdef EXPANSIONMOD
 			 else if ( hitBy.IsInherited(Expansion_C4_Explosion) ){
 				Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(hitBy);

@@ -176,6 +176,8 @@ modded class PlayerBase extends ManBase
 				SetSynchDirty();
 				return; 
 			}
+			
+			
 			bool createItem = false;
 			habAffinity tempAffinity = GetHeroesAndBanditsLevels().DefaultAffinity;
 			if (GetHeroesAndBanditsSettings().Mode != 1 && newAffinity != -1){
@@ -184,6 +186,23 @@ modded class PlayerBase extends ManBase
 			} else if (GetHeroesAndBanditsSettings().Mode != 1){
 				createItem = true;
 			}
+			
+			
+			#ifdef WRDG_DOGTAGS
+				Dogtag_Base dgtg = Dogtag_Base.Cast(GetDogtag());
+				if (dgtg){
+					dgtg.SetHaBAffinity(tempAffinity.DisplayName);
+				}
+				if (tempAffinity.Name == "bandit" && dgtg.GetType() != "Dogtag_Bandit"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Bandit");
+				} else if (tempAffinity.Name == "hero" && dgtg.GetType() != "Dogtag_Hero"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Hero");
+				} else if (dgtg.GetType() != "Dogtag_Survivor"){
+					GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBReplaceDogtag, 400, false, "Dogtag_Survivor");
+				}
+			#endif
+			
+			
 			bool CheckMaskBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveMask && tempAffinity.Name == "bandit" );
 			bool CheckMaskHero = (!GetHeroesAndBanditsSettings().HeroCanRemoveMask && tempAffinity.Name == "hero" );
 			bool CheckArmbandBandit = (!GetHeroesAndBanditsSettings().BanditCanRemoveArmBand && tempAffinity.Name == "bandit" );
@@ -324,6 +343,15 @@ modded class PlayerBase extends ManBase
 		
 	void habCurrentAffinityPointUpdate(float affinityPoints){
 		m_HeroesAndBandits_AffinityPoints = affinityPoints;
+		
+		#ifdef WRDG_DOGTAGS
+		Dogtag_Base dgtg = Dogtag_Base.Cast(GetDogtag());
+		if (dgtg){
+			if (GetHaBPlayer()){
+				dgtg.SetHaBHumanity(GetHaBPlayer().getHumanity());
+			}
+		}
+		#endif
 		SetSynchDirty();
 	}
 	
@@ -514,7 +542,7 @@ modded class PlayerBase extends ManBase
 		if (Class.CastTo(sourcePlayer, killer) || Class.CastTo(sourcePlayer, EntityAI.Cast(killer).GetHierarchyParent())){
 			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillGuard", this);
-			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
+			} else if (sourcePlayer.GetIdentity() && GetIdentity() && sourcePlayer != targetPlayer){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "KillPlayer", this);
 			}
 		}
@@ -668,7 +696,7 @@ modded class PlayerBase extends ManBase
 		if (Class.CastTo(sourcePlayer, source) || Class.CastTo(sourcePlayer, EntityAI.Cast(source).GetHierarchyParent())){
 			if (sourcePlayer.GetIdentity() && m_HeroesAndBandits_IsGuard){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitGuard", this);
-			} else if (sourcePlayer.GetIdentity() && GetIdentity()){
+			} else if (sourcePlayer.GetIdentity() && GetIdentity() && (sourcePlayer.GetIdentity() != targetPlayer.GetIdentity())){
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater(GetHeroesAndBandits().NewAggressorAction, 1, false, sourcePlayer, "HitPlayer", this);
 			}
 		}
@@ -1224,8 +1252,10 @@ modded class PlayerBase extends ManBase
 		habPrint("habAIRaiseWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = true;
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
-		//GetInputController().OverrideRaise( true, true );
+		if (GetCommand_Move()){
+			GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
+			//GetInputController().OverrideRaise( true, true );
+		}
 		SetSynchDirty();
 	}
 	
@@ -1233,8 +1263,10 @@ modded class PlayerBase extends ManBase
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
-		//GetInputController().OverrideRaise( true, true );
+		if (GetCommand_Move()){
+			GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
+			//GetInputController().OverrideRaise( true, true );
+		}
 	}
 	
 	void habAIAimWeaponServer(float x, float y = 0){
@@ -1261,5 +1293,40 @@ modded class PlayerBase extends ManBase
 		} 
 		//this.GetInputController().OverrideMovementAngle(doOverride, m_HeroesAndBandits_ChangeAimX);
 		//this.GetInputController().OverrideMovementSpeed(doOverride, 1);
+	}
+	
+	void HaBReplaceDogtag(string tagType){
+		
+		#ifdef WRDG_DOGTAGS
+			Dogtag_Base theCurrentTag = Dogtag_Base.Cast(GetDogtag());
+			if (!theCurrentTag || theCurrentTag.GetType() == tagType){
+				return;
+			}
+			bool DogtagKilled = theCurrentTag.IsKilled();
+			string DogtagNickName = theCurrentTag.GetNickName();
+			int DogtagBirthday = theCurrentTag.GetBirthday();
+			int DogtagBloodType = theCurrentTag.GetBloodType();
+			string DogtagAffinity = theCurrentTag.GetHaBAffinity();
+			float DogtagHumanity = theCurrentTag.GetHaBHumanity();
+			theCurrentTag.Delete();
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBSpawnNewDogTags, 600, false, tagType, DogtagKilled, DogtagNickName, DogtagBirthday, DogtagBloodType, DogtagAffinity, DogtagHumanity);
+		#endif
+	}
+	
+	void HaBSpawnNewDogTags(string tagType, bool DogtagKilled, string DogtagNickName, int DogtagBirthday, int DogtagBloodType, string DogtagAffinity, float DogtagHumanity){
+		
+		#ifdef WRDG_DOGTAGS
+			int slotId = InventorySlots.GetSlotIdFromString("Dogtag");
+			Dogtag_Base theNewTag = Dogtag_Base.Cast(this.GetInventory().CreateAttachmentEx(tagType, slotId));
+			
+			if (theNewTag){
+				theNewTag.SetKilled(DogtagKilled);
+				theNewTag.SetNickName(DogtagNickName);
+				theNewTag.SetBloodType(DogtagBloodType);
+				theNewTag.SetBirthday(DogtagBirthday);
+				theNewTag.SetHaBHumanity(DogtagHumanity);
+				theNewTag.SetHaBAffinity(DogtagAffinity);
+			}
+		#endif
 	}
 };

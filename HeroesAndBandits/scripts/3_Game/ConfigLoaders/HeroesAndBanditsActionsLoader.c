@@ -1,7 +1,7 @@
 class HeroesAndBanditsConfigActions
 { 
 	//Default Values
-	string ConfigVersion = "6";
+	string ConfigVersion = "7";
 	
 	int NotificationMessageTime = 10;
 	
@@ -24,11 +24,15 @@ class HeroesAndBanditsConfigActions
 						if(ConfigVersion == "5"){
 							DoV6Upgrade();
 						}
+						if(ConfigVersion == "6"){
+							DoV7Upgrade();
+						}
 				}else{ //File does not exist create file
 					createDefaults();
-					Print("Creating Default Actions Config");	
+					habPrint("Creating Default Actions Config", "Always");	
 					Save();
 				}
+				habPrint("Loading Actions Config Version: " + ConfigVersion + "- " + Actions.Count() + " Actions Loaded and " + AggressorActions.Count() + " AggressorActions Loaded", "Verbose");	
 			}
 		}
 	}
@@ -82,7 +86,7 @@ class HeroesAndBanditsConfigActions
 					return Actions.Get(i);
 			}
 		}
-		Print("Action: " + actionName + " not found");	
+		habPrint("Action: " + actionName + " not found", "Exception");	
 		return new habAction("Null", "Null", "Null", 0, false);
 	}
 	
@@ -90,7 +94,7 @@ class HeroesAndBanditsConfigActions
 	void addAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifyPlayer = true){
 		habAction tempAction = new ref habAction(actionName, affinity, secondaryAffinity, points, notifyPlayer);
 		Actions.Insert(tempAction);
-		Print("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions");	
+		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Debug");	
 	}
 	
 	//Returns the Notification color in an int value
@@ -140,9 +144,24 @@ class HeroesAndBanditsConfigActions
 		
 		#ifdef EXPANSIONCODELOCKEXPANDED
 			addAction( "ExpansionCodeLockTentRaid", "bandit", "none", 150);
-			addAction( "HackExpansionCodeLockTentRaid", "bandit", "none", 100);
-			addAction( "HackExpansionCodeLockDoorRaid", "bandit", "none", 200);
+			addAction( "HacktentRaid", "bandit", "none", 100);
+			addAction( "HackexpansionsafeRaid", "bandit", "none", 200);
+			addAction( "HackfenceRaid", "bandit", "none", 200);
+			addAction( "HackexpansionwallRaid", "bandit", "none", 200);
+			addAction( "HackexpansionfloorRaid", "bandit", "none", 200);
+			addAction( "Hackbbp_t1Raid", "bandit", "none", 200);
+			addAction( "Hackbbp_t2Raid", "bandit", "none", 250);
+			addAction( "Hackbbp_t3Raid", "bandit", "none", 300);
 		#endif
+		
+		#ifdef HACKINGMOD
+			addAction( "HacktentRaid", "bandit", "none", 100);
+			addAction( "HackfenceRaid", "bandit", "none", 200);
+			addAction( "Hackbbp_t1Raid", "bandit", "none", 200);
+			addAction( "Hackbbp_t2Raid", "bandit", "none", 250);
+			addAction( "Hackbbp_t3Raid", "bandit", "none", 300);
+		#endif
+		
 		
 		addAction( "MedicBandagePlayer", "hero", "medic", 50);
 		addAction( "MedicGiveBlood", "hero", "medic",25);
@@ -182,6 +201,7 @@ class HeroesAndBanditsConfigActions
 		
 		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
 		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
 		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
 		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
 		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
@@ -203,6 +223,12 @@ class HeroesAndBanditsConfigActions
 		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
 		addAction( "MedicSplintPlayer", "hero", "medic", 100);
 		
+		Save();
+	}
+	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
 		Save();
 	}
 	

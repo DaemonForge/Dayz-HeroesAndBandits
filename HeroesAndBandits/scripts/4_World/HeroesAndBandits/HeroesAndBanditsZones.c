@@ -242,7 +242,7 @@ class HeroesAndBanditsZone
 						guard.TrackPlayer(player, delayadd);
 					}
 					//guard.SetDirection(vector.Direction(guard.GetPosition(),player.GetPosition()).Normalized());
-					guard.FireWeapon(player);
+					guard.FireWeaponThread(player);
 					
 				} else if (!Guards || Guards.Count() == 0){
 					player.habSetKilledByZone(Name);

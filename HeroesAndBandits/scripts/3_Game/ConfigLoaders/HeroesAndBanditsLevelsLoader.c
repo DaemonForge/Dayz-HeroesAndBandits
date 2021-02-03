@@ -1,7 +1,7 @@
 class HeroesAndBanditsConfigLevels
 { 
 	//Default Values
-	string ConfigVersion = "5";
+	string ConfigVersion = "7";
 	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
 	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
 	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
@@ -24,11 +24,15 @@ class HeroesAndBanditsConfigLevels
 						if (ConfigVersion == "4"){
 							doV5Upgrade();
 						}
+					if(ConfigVersion == "5" || ConfigVersion == "6"){ //Forgot to update this with the last version
+						DoV7Upgrade();
+					}
 				}else{ //File does not exist create file
 					createDefaults();
-					Print("Creating Default Actions Config");	
+					habPrint("Creating Default Levels Config", "Always");	
 					Save();
 				}
+				habPrint("Loading Levels Config Version: " + ConfigVersion + "- " + Levels.Count() + " Levels Loaded and " + Affinities.Count() + " Affinities Loaded", "Verbose");	
 			}
 		}
 	}
@@ -171,6 +175,13 @@ class HeroesAndBanditsConfigLevels
 		getAffinity("hero").Image = "HeroesAndBandits/gui/images/Hero.paa";
 		getAffinity("bandit").Image = "HeroesAndBandits/gui/images/Bandit.paa";
 		DefaultAffinity.Image = "HeroesAndBandits/gui/images/Bambi.paa";
+		Save();
+	}
+	
+	void DoV7Upgrade(){
+		ConfigVersion = "7";
+		
+		
 		Save();
 	}
 };

@@ -12,13 +12,13 @@ class HeroesAndBanditsPlayer : RestCallback
         GUID = guid;
 		if (FileExist(habConstant.PlayerDB + "\\" + pID + ".json")) //If config file exsit load the file
         {
-            JsonFileLoader<HeroesAndBanditsPlayer>.JsonLoadFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
+            HaBJSONHandler<HeroesAndBanditsPlayer>.FromFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
         }
         else //If config file doesn't exsit create the file
         {
             if (GetGame().IsServer() || !GetGame().IsMultiplayer())
             {
-                JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
+                HaBJSONHandler<HeroesAndBanditsPlayer>.FromFile(habConstant.PlayerDB+"\\" + pID + ".json", this);
             }
         }
     }
@@ -224,7 +224,7 @@ class HeroesAndBanditsPlayer : RestCallback
 	void saveData(){
 		if (GetGame().IsServer())
 		{
-			JsonFileLoader<HeroesAndBanditsPlayer>.JsonSaveFile(habConstant.PlayerDB + "\\" + PlayerID + ".json", this);
+			HaBJSONHandler<HeroesAndBanditsPlayer>.ToFile(habConstant.PlayerDB + "\\" + PlayerID + ".json", this);
 	    }
 	}
 	

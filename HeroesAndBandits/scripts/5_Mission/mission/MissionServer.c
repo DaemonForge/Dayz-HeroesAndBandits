@@ -40,12 +40,11 @@ modded class MissionServer extends MissionBase
 		habPrint("InvokeOnConnect Player Connected", "Debug");
 		GetHeroesAndBandits().OnPlayerConnect(identity);
 		super.InvokeOnConnect(player, identity);
-		if ( identity )
+		PlayerBase thePlayer = PlayerBase.Cast(player);
+		if ( thePlayer )
 		{
-			string playerID = identity.GetPlainId();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 2000, false, new Param1<ref PlayerBase >( player ));
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5500, false, new Param1<ref PlayerBase >( player ));
-		
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 2000, false, new Param1<ref PlayerBase >( thePlayer ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5500, false, new Param1<ref PlayerBase >( thePlayer ));
 		}
 	}
 	
@@ -85,16 +84,15 @@ modded class MissionServer extends MissionBase
 	}
 	
 	void SendHeroesAndBanditsSettings( PlayerBase player ){
-		if (player.IsPlayerDisconnected()) { return; }
-		PlayerIdentity identity = PlayerIdentity.Cast(player.GetIdentity());
+		PlayerBase thePlayer = PlayerBase.Cast(player);
+		if (!thePlayer || thePlayer.IsPlayerDisconnected()) { return; }
+		PlayerIdentity identity = PlayerIdentity.Cast(thePlayer.GetIdentity());
 		if (identity){
 			string playerID = identity.GetPlainId();
 			habPrint("Sending Settings to Player: " + playerID, "Debug");
-			GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), GetHeroesAndBandits().GetPlayer(playerID)), true, identity);
 			HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 			habLevel playerLevel = playerData.getLevel();
-			
-			GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, identity);
+			GetRPCManager().SendRPC("HaB", "RPCUpdateHABSettings", new Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> (GetHeroesAndBanditsSettings(), GetHeroesAndBanditsActions(), GetHeroesAndBanditsLevels(), playerData), true, identity);
 		}
 	}
 	
@@ -129,7 +127,7 @@ modded class MissionServer extends MissionBase
 		HeroesAndBanditsPlayer playerData = GetHeroesAndBandits().GetPlayer(playerID);
 		habLevel playerLevel = playerData.getLevel();
 		habPrint("Player: " + playerID + " Requested Player Data", "Debug");
-		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param2< HeroesAndBanditsPlayer, habLevel >( playerData, playerLevel ), true, sender);
+		GetRPCManager().SendRPC("HaB", "RPCUpdateHABPlayerData", new Param1< HeroesAndBanditsPlayer>( playerData ), true, sender);
 	}
 	
 	
