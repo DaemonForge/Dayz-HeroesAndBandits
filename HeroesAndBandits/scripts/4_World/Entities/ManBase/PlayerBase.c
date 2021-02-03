@@ -1252,8 +1252,10 @@ modded class PlayerBase extends ManBase
 		habPrint("habAIRaiseWeaponServer called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeaponSync = true;
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
-		//GetInputController().OverrideRaise( true, true );
+		if (GetCommand_Move()){
+			GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
+			//GetInputController().OverrideRaise( true, true );
+		}
 		SetSynchDirty();
 	}
 	
@@ -1261,8 +1263,10 @@ modded class PlayerBase extends ManBase
 	void habAIRaiseWeapon(){
 		habPrint("habAIRaiseWeapon called", "Debug");
 		m_HeroesAndBandits_AIRaiseWeapon = true;
-		GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
-		//GetInputController().OverrideRaise( true, true );
+		if (GetCommand_Move()){
+			GetCommand_Move().ForceStance(DayZPlayerConstants.STANCEIDX_RAISEDERECT);
+			//GetInputController().OverrideRaise( true, true );
+		}
 	}
 	
 	void habAIAimWeaponServer(float x, float y = 0){
