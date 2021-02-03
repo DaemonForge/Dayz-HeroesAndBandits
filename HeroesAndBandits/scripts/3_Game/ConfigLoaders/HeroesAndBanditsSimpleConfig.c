@@ -122,7 +122,7 @@ class HeroesAndBanditsSimpleConfig
 			Actions.Insert(new ref HABSimpleAction( "ExpansionCodeLockTentRaid", -150));
 			Actions.Insert(new ref HABSimpleAction( "HacktentRaid", -100));
 			Actions.Insert(new ref HABSimpleAction( "HackexpansionsafeRaid", -200));
-			Actions.Insert(new ref HABSimpleAction( "HackfenceRaid", "bandit", -200));
+			Actions.Insert(new ref HABSimpleAction( "HackfenceRaid", -200));
 			Actions.Insert(new ref HABSimpleAction( "HackexpansionwallRaid", -200));
 			Actions.Insert(new ref HABSimpleAction( "HackexpansionfloorRaid", -200));
 			Actions.Insert(new ref HABSimpleAction( "Hackbbp_t1Raid", -200));
