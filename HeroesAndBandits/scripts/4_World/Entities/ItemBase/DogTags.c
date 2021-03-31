@@ -18,13 +18,13 @@ modded class Dogtag_Base : ItemBase
 		bool modified = super.DescriptionOverride(output);
 		
 		
-		if ( GetHeroesAndBanditsSettings().DodTags_EnableAffinityOnDogTags && m_HeroesAndBandits_Affinity )
+		if ( GetHeroesAndBanditsSettings().DogTags_EnableAffinityOnDogTags && m_HeroesAndBandits_Affinity )
 		{
 			output += "#STR_HAB_AFFINITY: " + m_HeroesAndBandits_Affinity + " \n";
 			modified = true;
 		}
 		
-		if ( GetHeroesAndBanditsSettings().DodTags_EnableHumanityOnDogTags )
+		if ( GetHeroesAndBanditsSettings().DogTags_EnableHumanityOnDogTags )
 		{
 			output += string.Format("#STR_HAB_HUMANITY: %1 \n", m_HeroesAndBandits_Humanity);
 			modified = true;

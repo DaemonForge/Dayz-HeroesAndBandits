@@ -102,7 +102,7 @@ class HeroesAndBanditsGuard
 		if (!Guard){return;}
 		habPrint("Reloading Gun Guard: " + Skin + " at " + " X:" + X + " Y:" + Y +" Z:" + Z, "Debug");	
 		Weapon weapon = Weapon.Cast(Guard.GetHumanInventory().GetEntityInHands());
-		DayZPlayer GuardZ = DayZPlayer.Cast(Guard);
+		DayZPlayer GuardZ = Guard;
 			if (weapon && GuardZ && WeaponInHandsMag != "") {	
 				GuardZ.GetInventory().CreateAttachment(WeaponInHandsMag);
 				ref array<Magazine> mag_Array = new array<Magazine>;

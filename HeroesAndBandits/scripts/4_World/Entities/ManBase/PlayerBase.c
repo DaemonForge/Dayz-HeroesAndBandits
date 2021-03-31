@@ -1,7 +1,7 @@
 modded class PlayerBase extends ManBase
 {
 	
-	ref array< int > m_HeroesAndBandits_InZones = new ref array< int >; //For new Zones
+	ref array< int > m_HeroesAndBandits_InZones = new array< int >; //For new Zones
 	private bool  m_HeroesAndBandits_Killed = false;
 
 	private bool  m_HeroesAndBandits_IsGuard = false;
@@ -72,6 +72,7 @@ modded class PlayerBase extends ManBase
 		
 		RegisterNetSyncVariableFloat("m_HeroesAndBandits_Aggressor");
 	}
+	
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();

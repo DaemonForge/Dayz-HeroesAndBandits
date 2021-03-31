@@ -1,7 +1,7 @@
 class HeroesAndBanditsSettings
 { 
 	//Default Values
-	string ConfigVersion = "5";
+	string ConfigVersion = "7";
 	
 	int Mode = 0; // 0 is differantial / 1 is highest level / 2 is Mixed 
 	
@@ -38,8 +38,8 @@ class HeroesAndBanditsSettings
 	bool ResetAffinitiesOnDeath = false;
 	bool ResetStatsOnDeath = false;
 	
-	bool DodTags_EnableHumanityOnDogTags = true;
-	bool DodTags_EnableAffinityOnDogTags = true;
+	bool DogTags_EnableHumanityOnDogTags = true;
+	bool DogTags_EnableAffinityOnDogTags = true;
 	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
@@ -102,7 +102,7 @@ class HeroesAndBanditsSettings
 		// Load config file or create default file if config doesn't exsit
 	void Load(){
 		if (GetGame().IsServer()){
-			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.SettingsPATH)) //If config exist load File
@@ -163,8 +163,8 @@ class HeroesAndBanditsSettings
 	void DoV7Upgrade(){
 		ConfigVersion = "7";
 		
-		DodTags_EnableHumanityOnDogTags = true;
-		DodTags_EnableAffinityOnDogTags = true;
+		DogTags_EnableAffinityOnDogTags = true;
+		DogTags_EnableHumanityOnDogTags = true;
 		
 		Save();
 	}

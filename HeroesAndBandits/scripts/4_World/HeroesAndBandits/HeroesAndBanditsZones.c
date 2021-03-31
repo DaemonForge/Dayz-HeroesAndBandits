@@ -27,13 +27,13 @@ class HeroesAndBanditsZone
 	float AggressorReduction;
 	float AggressorGlobal;
 	float MaxDistance = 999;
-	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
-	ref array< ref HeroesAndBanditsGuard > Guards = new ref array< ref HeroesAndBanditsGuard >;
-	ref array< ref HeroesAndBanditsZone > SubZones = new ref array< ref HeroesAndBanditsZone >;
+	ref array< ref habZoneAffinity > Affinities = new array< ref habZoneAffinity >;
+	ref array< ref HeroesAndBanditsGuard > Guards = new array< ref HeroesAndBanditsGuard >;
+	ref array< ref HeroesAndBanditsZone > SubZones = new array< ref HeroesAndBanditsZone >;
 	protected bool GuardsActive = false;
 	protected ref TStringArray TrackedPlayersInZone = {};
 	
-	protected ref map<string, float> Aggressors = new ref map<string, float>;
+	protected ref map<string, float> Aggressors = new map<string, float>;
 		
 	void Init(habZone zoneToLoad, int zoneID, int index = 0){
 		
@@ -77,7 +77,7 @@ class HeroesAndBanditsZone
 				string weaponInHandsMag = zoneToLoad.Guards.Get(j).WeaponInHandsMag;
 				TStringArray weaponInHandsAttachments = zoneToLoad.Guards.Get(j).WeaponInHandsAttachments; 
 				TStringArray guardGear = zoneToLoad.Guards.Get(j).GuardGear;
-				Guards.Insert(new ref HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
+				Guards.Insert(new HeroesAndBanditsGuard(guardX, guardY, guardZ, orientation, skin, weaponInHands, weaponInHandsMag, weaponInHandsAttachments, guardGear));
 				Guards.Get(j).GunSound = zoneToLoad.Guards.Get(j).GunSound;
 				Guards.Get(j).DamagePerTickMin = zoneToLoad.Guards.Get(j).DamagePerTickMin;
 				Guards.Get(j).DamagePerTickRand = zoneToLoad.Guards.Get(j).DamagePerTickRand;
@@ -100,7 +100,7 @@ class HeroesAndBanditsZone
 				string name = zoneToLoad.SubZones.Get(i).Name;
 				int x = zoneToLoad.SubZones.Get(i).X;
 				int z = zoneToLoad.SubZones.Get(i).Z;
-				SubZones.Insert(new ref HeroesAndBanditsZone(name, x, z));
+				SubZones.Insert(new HeroesAndBanditsZone(name, x, z));
 				SubZones.Get(i).Init(zoneToLoad.SubZones.Get(i), i, Index + 1);
 			}
 		}
@@ -122,7 +122,7 @@ class HeroesAndBanditsZone
 				SubZones.Get(i).SaveAgressionData();
 			}
 		}
-		ref array<ref habAgressionZoneData> AgressionData =  new ref array<ref habAgressionZoneData>;
+		ref array<ref habAgressionZoneData> AgressionData =  new array<ref habAgressionZoneData>;
 		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 		if (KillAggressors){
 			if (Aggressors){
@@ -501,5 +501,7 @@ class HeroesAndBanditsZone
 			}
 		}
 	}
+	
+	
 	
 };

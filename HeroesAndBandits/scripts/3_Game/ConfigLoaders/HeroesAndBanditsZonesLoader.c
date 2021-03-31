@@ -15,12 +15,12 @@ class HeroesAndBanditsConfigZones
 	string WarningMessageImagePath = "HeroesAndBandits/gui/images/DeathWarning.paa";
 	// Load config file or create default file if config doesn't exsit
 	
-	ref array< ref habZone > Zones = new ref array< ref habZone >;
+	ref array< ref habZone > Zones = new array< ref habZone >;
 	
 	
 	void Load(){
 		if (GetGame().IsServer()){
-			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.ZonesPATH)){ //If config exist load File
@@ -56,10 +56,10 @@ class HeroesAndBanditsConfigZones
 	
 	//Helper function for defaults to add Zones
 	void addZone(string name, int x, int z, int warningRadius, int killRadius, string warningMessage = ""){
-		habZone tempZone = new ref habZone(name, x, z, warningRadius, killRadius, warningMessage);
+		habZone tempZone = new habZone(name, x, z, warningRadius, killRadius, warningMessage);
 		if (tempZone.Name == "Default Zone"){
-			tempZone.Guards.Insert(new ref habGuard(x, GetGame().SurfaceY(x, z), z));
-			tempZone.Affinities.Insert(new ref habZoneAffinity("bambi"));
+			tempZone.Guards.Insert(new habGuard(x, GetGame().SurfaceY(x, z), z));
+			tempZone.Affinities.Insert(new habZoneAffinity("bambi"));
 		}
 		Zones.Insert(tempZone);
 		Print("Zone Added: " + name + " There are now " +  Zones.Count() + " Zones");	
@@ -174,10 +174,10 @@ class habZone
 	float AggressorThreshold = 155;
 	float AggressorReduction = 100;
 	bool AggressorGlobal = false; //Does nothing Yet
-	ref array< ref habZoneAffinity > Affinities = new ref array< ref habZoneAffinity >;
-	ref array< ref habGuard > Guards = new ref array< ref habGuard >;
+	ref array< ref habZoneAffinity > Affinities = new array< ref habZoneAffinity >;
+	ref array< ref habGuard > Guards = new array< ref habGuard >;
 	
-	ref array< ref habZone > SubZones = new ref array< ref habZone >;
+	ref array< ref habZone > SubZones = new array< ref habZone >;
 	
 	void habZone(string name, float x, float z, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
 	{
@@ -230,13 +230,13 @@ class habZone
 		}
 		
 		if (MaxHumanity == -1 && MinHumanity == -1){ //Allow all players
-			Affinities.Insert(new ref habZoneAffinity("bambi"));
-			Affinities.Insert(new ref habZoneAffinity("hero"));
-			Affinities.Insert(new ref habZoneAffinity("bandit"));
+			Affinities.Insert(new habZoneAffinity("bambi"));
+			Affinities.Insert(new habZoneAffinity("hero"));
+			Affinities.Insert(new habZoneAffinity("bandit"));
 			return;
 		}
 		if ((MinHumanity < GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MaxHumanity > GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints) || (MaxHumanity <= GetHeroesAndBanditsLevels().DefaultLevel.MaxPoints && MaxHumanity != -1 && MaxHumanity >= 0) || ( MinHumanity >= -GetHeroesAndBanditsLevels().DefaultLevel.MinPoints && MinHumanity <= 0 && MinHumanity != -1)){ //Default zone
-			Affinities.Insert(new ref habZoneAffinity("bambi"));
+			Affinities.Insert(new habZoneAffinity("bambi"));
 			BambiAdded = true;
 		}
 		
@@ -252,7 +252,7 @@ class habZone
 			if (MinHumanity != -1){
 				newBanditsMax = 0 - MinHumanity;
 			}
-			Affinities.Insert(new ref habZoneAffinity("bandit", newBanditsMin, newBanditsMax));
+			Affinities.Insert(new habZoneAffinity("bandit", newBanditsMin, newBanditsMax));
 			BanditsAdded = true;
 		}
 		
@@ -268,12 +268,12 @@ class habZone
 			if (MaxHumanity != -1){
 				newHeroesMax = MaxHumanity;
 			}
-			Affinities.Insert(new ref habZoneAffinity("hero", newHeroesMin, newHeroesMax));
+			Affinities.Insert(new habZoneAffinity("hero", newHeroesMin, newHeroesMax));
 			HeroesAdded = true;
 		}
 		
 		if (HeroesAdded && BanditsAdded && !BambiAdded){
-			Affinities.Insert(new ref habZoneAffinity("bambi"));
+			Affinities.Insert(new habZoneAffinity("bambi"));
 		}
 	}
 };

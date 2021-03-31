@@ -8,7 +8,7 @@ class habAgressionZoneData{
 }
 
 void habSaveAgressionData(	ref map<string, float> AggressorsData, float AggressorThreshold, string UID){
-	ref array<ref habAgressionZoneData> AgressionData =  new ref array<ref habAgressionZoneData>;
+	ref array<ref habAgressionZoneData> AgressionData =  new array<ref habAgressionZoneData>;
 	string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 	if (AggressorsData){
 		if (AggressorsData.Count() > 0){
@@ -16,7 +16,7 @@ void habSaveAgressionData(	ref map<string, float> AggressorsData, float Aggresso
 			for (int j = 0; j < AggressorsData.Count(); j++){
 				if (AggressorsData.GetElement(j) > AggressorThreshold){
 					habPrint("Saving Aggressor Count: " + AggressorsData.GetKey(j) + " with "  + AggressorsData.GetElement(j) + " Aggression", "Debug");
-					AgressionData.Insert(new ref habAgressionZoneData(AggressorsData.GetKey(j),AggressorsData.GetElement(j)));
+					AgressionData.Insert(new habAgressionZoneData(AggressorsData.GetKey(j),AggressorsData.GetElement(j)));
 				}
 			}
 		}
@@ -25,7 +25,7 @@ void habSaveAgressionData(	ref map<string, float> AggressorsData, float Aggresso
 }
 
 ref map<string, float> habLoadAgressionData(string UID){
-	ref map<string, float> AggressorsData = new ref map<string, float>;
+	ref map<string, float> AggressorsData = new map<string, float>;
 	ref array<ref habAgressionZoneData> AgressionData;
 	string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 	if (FileExist(fileName)){

@@ -2,10 +2,10 @@ class HeroesAndBanditsConfigLevels
 { 
 	//Default Values
 	string ConfigVersion = "7";
-	ref array< ref habLevel > Levels = new ref array< ref habLevel >;
-	ref habLevel DefaultLevel = new ref habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
-	ref array< ref habAffinity > Affinities = new ref array< ref habAffinity >;
-	ref habAffinity DefaultAffinity = new ref habAffinity("bambi", "#HAB_BAMBI", "HeroesAndBandits/gui/images/Bambi.paa");
+	ref array< ref habLevel > Levels = new array< ref habLevel >;
+	ref habLevel DefaultLevel = new habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
+	ref array< ref habAffinity > Affinities = new array< ref habAffinity >;
+	ref habAffinity DefaultAffinity = new habAffinity("bambi", "#HAB_BAMBI", "HeroesAndBandits/gui/images/Bambi.paa");
 	
 	bool ShowLevelIcon = true;
 	int  LevelIconLocation = 2;
@@ -15,7 +15,7 @@ class HeroesAndBanditsConfigLevels
 		
 	void Load(){
 		if (GetGame().IsServer()){
-			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.LevelsPATH)) //If config exist load File
@@ -123,14 +123,14 @@ class HeroesAndBanditsConfigLevels
 		
 	//Helper function for adding levels
 	void addLevel(string name, string affinity, string levelImage, float minHumanity, float maxHumanity){
-		habLevel tempLevel = new ref habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
+		habLevel tempLevel = new habLevel(name, affinity, levelImage, minHumanity, maxHumanity);
 		Levels.Insert(tempLevel);
 		Print("Level Added: " + name + " There are now " + Levels.Count() + " Levels");	
 	}	
 	
 	//Helper function for adding levels
 	void addAffinity(string name, string displayName, string image = ""){
-		habAffinity tempAffinity = new ref habAffinity(name, displayName, image);
+		habAffinity tempAffinity = new habAffinity(name, displayName, image);
 		Affinities.Insert(tempAffinity);
 		Print("Affinity Added: " + name + " There are now " + Affinities.Count() + " Affinities");	
 	}

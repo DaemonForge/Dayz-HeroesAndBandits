@@ -9,10 +9,10 @@ ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSy
 
 class HeroesAndBandits
 {
-	ref array<ref HeroesAndBanditsPlayer> HeroesAndBanditsPlayers = new ref array< ref HeroesAndBanditsPlayer >;
+	ref array<ref HeroesAndBanditsPlayer> HeroesAndBanditsPlayers = new array< ref HeroesAndBanditsPlayer >;
 	
 	
-	ref array< ref HeroesAndBanditsZone > Zones = new ref array< ref HeroesAndBanditsZone >;
+	ref array< ref HeroesAndBanditsZone > Zones = new array< ref HeroesAndBanditsZone >;
 	
 	void HeroesAndBandits()
 	{
@@ -27,7 +27,7 @@ class HeroesAndBandits
 				string name = GetHeroesAndBanditsZones().Zones.Get(i).Name;
 				int x = GetHeroesAndBanditsZones().Zones.Get(i).X;
 				int z = GetHeroesAndBanditsZones().Zones.Get(i).Z;
-				Zones.Insert(new ref HeroesAndBanditsZone(name, x, z));
+				Zones.Insert(new HeroesAndBanditsZone(name, x, z));
 				Zones.Get(i).Init(GetHeroesAndBanditsZones().Zones.Get(i), i);
 			}
 		}
@@ -58,7 +58,7 @@ class HeroesAndBandits
 	}
 	
 	void loadPlayer(string playerID, string guid = ""){
-		HeroesAndBanditsPlayers.Insert(new ref HeroesAndBanditsPlayer(playerID));
+		HeroesAndBanditsPlayers.Insert(new HeroesAndBanditsPlayer(playerID));
 	}
 	
 	void OnPlayerDisconnect(PlayerBase player)
@@ -144,14 +144,14 @@ class HeroesAndBandits
 	{
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, player.GetIdentity());
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, player.GetIdentity());
 			habPrint("Notify Player: " + playerID +" Message: "+ message + " Image: " + image, "Verbose");	
 		}
 	}
 	
 	void NotifyKillFeed(string image ,string message, string heading = "#HAB_KILLFEED_HEADING")
 	{
-		m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(heading), new ref StringLocaliser(message), image, GetHeroesAndBanditsSettings().getKillFeedMessageColor(), GetHeroesAndBanditsSettings().NotificationMessageTime);
+		m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsSettings().getKillFeedMessageColor(), GetHeroesAndBanditsSettings().NotificationMessageTime);
 		habPrint("Kill Feed Message: "+ message + " Image: " + image, "Verbose");	
 	}
 	
@@ -160,7 +160,7 @@ class HeroesAndBandits
 		
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(header), new ref StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(header), new StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
 			habPrint("Issued Warning '"+ message + "' To Player: " + playerID, "Verbose");
 		}
 	}
@@ -169,7 +169,7 @@ class HeroesAndBandits
 	{
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
 		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new ref StringLocaliser(zoneName), new ref StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(zoneName), new StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
 			habPrint("Welcome Message: '"+ message + "' To Player: " + playerID, "Verbose");
 		}
 	}

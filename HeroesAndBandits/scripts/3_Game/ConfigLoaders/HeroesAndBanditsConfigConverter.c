@@ -1,8 +1,8 @@
 class habConverter
 {
-	static ref map<string, string> GunToSound = new ref map<string, string>;
-	static ref map<string, string> GunToMag= new ref map<string, string>;
-	static ref map<string, float> GunToDmg = new ref map<string, float>;
+	static ref map<string, string> GunToSound = new map<string, string>;
+	static ref map<string, string> GunToMag= new map<string, string>;
+	static ref map<string, float> GunToDmg = new map<string, float>;
 
 	void habConverter(){
 	}
@@ -79,7 +79,7 @@ class habConverter
 	}
 	
 	static ref HeroesAndBanditsSettings ConvertSettings(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsSettings tempSettings = new ref HeroesAndBanditsSettings();
+		ref HeroesAndBanditsSettings tempSettings = new HeroesAndBanditsSettings();
 		tempSettings.KillFeed = simpConfig.KillFeed;
 		tempSettings.SucideFeed = simpConfig.SucideFeed;
 		tempSettings.BanditCanRemoveMask = simpConfig.BanditCanRemoveMask;
@@ -108,7 +108,7 @@ class habConverter
 	}
 	
 	static ref HeroesAndBanditsConfigZones ConvertZones(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigZones tempSettings = new ref HeroesAndBanditsConfigZones();
+		ref HeroesAndBanditsConfigZones tempSettings = new HeroesAndBanditsConfigZones();
 		if (simpConfig.Zones.Count() > 0){
 			tempSettings.ZoneCheckTimer = 3;
 			for (int i = 0; i < simpConfig.Zones.Count(); i++){
@@ -154,7 +154,7 @@ class habConverter
 			Radius = 0;
 		}
 		
-		ref habZone tempZone =  new ref  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
+		ref habZone tempZone =  new  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
 		tempZone.MinHumanity = MinHumanity;
 		tempZone.MaxHumanity = MaxHumanity;
 		tempZone.convertHumanityToAffinty();
@@ -217,7 +217,7 @@ class habConverter
 			RequireLineOfSight = true;
 		}
 		for (int i = 0; i < simpZone.Guards.Count(); i++){
-			ref habGuard tmpGuard = new ref habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
+			ref habGuard tmpGuard = new habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
 			tmpGuard.GuardGear = simpZone.Guards.Get(i).GuardGear;
 			
 			string WeaponInHands = simpZone.Guards.Get(i).WeaponInHands;
@@ -256,7 +256,7 @@ class habConverter
 		
 	
 	static ref HeroesAndBanditsConfigLevels ConvertLevels(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigLevels tempSettings = new ref HeroesAndBanditsConfigLevels();
+		ref HeroesAndBanditsConfigLevels tempSettings = new HeroesAndBanditsConfigLevels();
 		tempSettings.addAffinity("hero", "#HAB_HERO", "HeroesAndBandits/gui/images/Hero.paa");
 		tempSettings.addAffinity("bandit", "#HAB_BANDIT", "HeroesAndBandits/gui/images/Bandit.paa");
 		tempSettings.LevelIconLocation = 2;
@@ -371,7 +371,7 @@ class habConverter
 	}
 	
 	static ref HeroesAndBanditsConfigActions ConvertActions(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigActions tempSettings = new ref HeroesAndBanditsConfigActions();
+		ref HeroesAndBanditsConfigActions tempSettings = new HeroesAndBanditsConfigActions();
 		for (int i = 0; i < simpConfig.Actions.Count(); i++){
 			string Name = simpConfig.Actions.Get(i).Name;
 			string Affinity = "none"; //bandit / hero / none
@@ -391,13 +391,13 @@ class habConverter
 			} 
 			tempSettings.addAction(Name, Affinity, SecondaryAffinity, Points, NotifiyPlayer);
 		}
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
-		tempSettings.AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("ShotFired", 75));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("HitZombie", -75));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("HitAnimal", -75));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("HitPlayer", 350));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("KillPlayer", 1500));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("HitGuard", 150));
+		tempSettings.AggressorActions.Insert( new habAggressorAction("KillGuard", 750));
 		
 		return tempSettings;
 	}

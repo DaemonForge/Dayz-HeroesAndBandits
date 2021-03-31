@@ -22,12 +22,12 @@ modded class MissionGameplay extends MissionBase
 		if ( GetHeroesAndBanditsLevels().LevelIconLocation == 1 ||  GetHeroesAndBanditsLevels().LevelIconLocation == 3  )
 		{
 			m_HeroesAndBanditsIconsInitialized = true;
-			m_HeroesAndBanditsIconUI = new ref HeroesAndBanditsIconUI;
+			m_HeroesAndBanditsIconUI = new HeroesAndBanditsIconUI;
 			m_HeroesAndBanditsIconUI.Init();
 		} 
 		if ( GetHeroesAndBanditsLevels().LevelIconLocation == 2 ||  GetHeroesAndBanditsLevels().LevelIconLocation == 3  ) {
 			m_HeroesAndBanditsIconsInitialized = true;
-			m_HeroesAndBanditsStatusBarIconUI = new ref HeroesAndBanditsStatusBarIconUI;
+			m_HeroesAndBanditsStatusBarIconUI = new HeroesAndBanditsStatusBarIconUI;
 			m_HeroesAndBanditsStatusBarIconUI.Init();
 		}
 		UpdateHABIcon();

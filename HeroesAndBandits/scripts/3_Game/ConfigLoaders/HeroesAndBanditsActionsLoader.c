@@ -7,12 +7,12 @@ class HeroesAndBanditsConfigActions
 	
 	ref array<int> NotificationColor = {200, 0, 200, 200};
 	
-	ref array< ref habAction > Actions = new ref array< ref habAction >;
-	ref array< ref habAggressorAction > AggressorActions = new ref array< ref habAggressorAction >;
+	ref array< ref habAction > Actions = new array< ref habAction >;
+	ref array< ref habAggressorAction > AggressorActions = new array< ref habAggressorAction >;
 	
 	void Load(){
 		if (GetGame().IsServer()){
-			ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+			ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.ActionsPATH)) //If config exist load File
@@ -92,7 +92,7 @@ class HeroesAndBanditsConfigActions
 	
 	//Helper function for adding Actions
 	void addAction(string actionName, string affinity, string secondaryAffinity, float points, bool notifyPlayer = true){
-		habAction tempAction = new ref habAction(actionName, affinity, secondaryAffinity, points, notifyPlayer);
+		habAction tempAction = new habAction(actionName, affinity, secondaryAffinity, points, notifyPlayer);
 		Actions.Insert(tempAction);
 		habPrint("Action Added: " + actionName + " There are now " + Actions.Count() + " Actions", "Debug");	
 	}
@@ -199,13 +199,13 @@ class HeroesAndBanditsConfigActions
 		addAction( "HuntAnimal_LepusEuropaeus", "hunter", "none", 25, false);
 		addAction( "HuntAnimal_UrsusArctos", "hunter", "none", 200, false);
 		
-		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
-		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
-		AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
-		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
-		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
-		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
-		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		AggressorActions.Insert( new habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new habAggressorAction("HitAnimal", -75));
+		AggressorActions.Insert( new habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new habAggressorAction("KillGuard", 750));
 	}
 	
 	void DoV5Upgrade(){
@@ -215,12 +215,12 @@ class HeroesAndBanditsConfigActions
 	
 	void DoV6Upgrade(){
 		ConfigVersion = "6";
-		AggressorActions.Insert( new ref habAggressorAction("ShotFired", 75));
-		AggressorActions.Insert( new ref habAggressorAction("HitZombie", -75));
-		AggressorActions.Insert( new ref habAggressorAction("HitPlayer", 350));
-		AggressorActions.Insert( new ref habAggressorAction("KillPlayer", 1500));
-		AggressorActions.Insert( new ref habAggressorAction("HitGuard", 150));
-		AggressorActions.Insert( new ref habAggressorAction("KillGuard", 750));
+		AggressorActions.Insert( new habAggressorAction("ShotFired", 75));
+		AggressorActions.Insert( new habAggressorAction("HitZombie", -75));
+		AggressorActions.Insert( new habAggressorAction("HitPlayer", 350));
+		AggressorActions.Insert( new habAggressorAction("KillPlayer", 1500));
+		AggressorActions.Insert( new habAggressorAction("HitGuard", 150));
+		AggressorActions.Insert( new habAggressorAction("KillGuard", 750));
 		addAction( "MedicSplintPlayer", "hero", "medic", 100);
 		
 		Save();
@@ -228,7 +228,7 @@ class HeroesAndBanditsConfigActions
 	
 	void DoV7Upgrade(){
 		ConfigVersion = "7";
-		AggressorActions.Insert( new ref habAggressorAction("HitAnimal", -75));
+		AggressorActions.Insert( new habAggressorAction("HitAnimal", -75));
 		Save();
 	}
 	

@@ -3,8 +3,8 @@ class HeroesAndBanditsPlayer : RestCallback
 	//Default Values
     string PlayerID = "";
 	string GUID = "";
-	ref array< ref habStat > Stats = new ref array< ref habStat >;
-	ref array< ref habPlayerAffinity > Affinities = new ref array< ref habPlayerAffinity >;
+	ref array< ref habStat > Stats = new array< ref habStat >;
+	ref array< ref habPlayerAffinity > Affinities = new array< ref habPlayerAffinity >;
 	
 	void HeroesAndBanditsPlayer(string pID = "", string guid = "") 
 	{
@@ -188,7 +188,7 @@ class HeroesAndBanditsPlayer : RestCallback
 			
 		if (!found && GetHeroesAndBanditsLevels().doesAffinityExsit(name)){
 			habPrint("Creating affinity " + name + " for player " + PlayerID + " with " + points, "Verbose");
-			Affinities.Insert(new ref habPlayerAffinity(name, points));
+			Affinities.Insert(new habPlayerAffinity(name, points));
 		} else if (!found) {
 			habPrint("Tried to add "+ points + " for player " + PlayerID + " to " + name + " but affinity does not exist", "Exception");
 		}
@@ -319,7 +319,7 @@ class HeroesAndBanditsPlayer : RestCallback
 			}
 		}
 		if (statID == -1){//Stat Not found so adding it
-			Stats.Insert(new ref habStat(actionName, 1));
+			Stats.Insert(new habStat(actionName, 1));
 			habPrint("Stat: " + actionName + " for player " + PlayerID + " Created", "Debug");
 		}else
 		{

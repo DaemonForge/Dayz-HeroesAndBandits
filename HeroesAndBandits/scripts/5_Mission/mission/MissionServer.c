@@ -10,7 +10,7 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
-		ref HeroesAndBanditsSimpleConfig simpleConfig = new ref HeroesAndBanditsSimpleConfig();
+		ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 		int useSimple = simpleConfig.Load();
 		if (simpleConfig.UseSimple == 2){
 			habPrint("Converting Simple Config", "Always");

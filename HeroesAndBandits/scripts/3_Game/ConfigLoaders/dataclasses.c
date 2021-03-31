@@ -65,7 +65,7 @@ class habAffinity
 	string Name;
 	string DisplayName;
 	string Image;
-	ref array< ref habItemList > ItemBlackList = new ref array< ref habItemList >;
+	ref array< ref habItemList > ItemBlackList = new array< ref habItemList >;
 
 	void habAffinity(string name, string displayName, string image) 
 	{
@@ -104,7 +104,7 @@ class habAffinity
 	
 	void addItemBlackList( float minPoints, float maxPoints, string type, ref TStringArray items)
 	{
-		ItemBlackList.Insert(new ref habItemList( minPoints, maxPoints, type));
+		ItemBlackList.Insert(new habItemList( minPoints, maxPoints, type));
 		int index = ItemBlackList.Count() - 1;
 		ItemBlackList.Get(index).Items = items;
 	}
@@ -115,7 +115,7 @@ class habItemList
 	float MinPoints;
 	float MaxPoints;
 	string Location; // attach / inventory / inhands / all 
-	ref TStringArray Items = new ref TStringArray;
+	ref TStringArray Items = new TStringArray;
 	
 	void habItemList( float minPoints, float maxPoints, string location )
 	{

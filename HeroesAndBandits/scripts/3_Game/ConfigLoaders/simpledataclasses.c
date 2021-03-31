@@ -33,7 +33,7 @@ class HABSimpleZone{
 	bool KillAggressors = false;
 	float RespawnTimer = 600;
 	int GuardDifficulty = 5; 
-	ref array<ref HABSimpleGuard> Guards = new ref array<ref HABSimpleGuard>;
+	ref array<ref HABSimpleGuard> Guards = new array<ref HABSimpleGuard>;
 	//5 OP can't be killed Can Shot Throw Objects, and 100% HitChance, 
 	//4 Require Line Of Sight 92% HitChance can't be killed, medium high fire rate 
 	//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
