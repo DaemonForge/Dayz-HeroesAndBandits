@@ -10,7 +10,7 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
-		ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
+		HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 		int useSimple = simpleConfig.Load();
 		if (simpleConfig.UseSimple == 2){
 			habPrint("Converting Simple Config", "Always");
@@ -43,8 +43,8 @@ modded class MissionServer extends MissionBase
 		PlayerBase thePlayer = PlayerBase.Cast(player);
 		if ( thePlayer )
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 2000, false, new Param1<ref PlayerBase >( thePlayer ));
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5500, false, new Param1<ref PlayerBase >( thePlayer ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 2000, false, new Param1<PlayerBase >( thePlayer ));
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(this, "SendHeroesAndBanditsSettings", 5500, false, new Param1<PlayerBase >( thePlayer ));
 		}
 	}
 	
@@ -62,7 +62,7 @@ modded class MissionServer extends MissionBase
 	
 	
 		
-	void RPCRequestHABIcon( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCRequestHABIcon( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		Param1< string > data;
 		if ( !ctx.Read( data ) ) return;
@@ -97,7 +97,7 @@ modded class MissionServer extends MissionBase
 	}
 	
 	
-	void RPCSendHumanityNotification( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCSendHumanityNotification( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		if ( GetHeroesAndBanditsSettings().AllowHumanityCommand )
 		{
@@ -116,7 +116,7 @@ modded class MissionServer extends MissionBase
 	}
 	
 	
-	void RPCRequestHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCRequestHABPlayerData( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		if (!sender)
 		{
@@ -131,7 +131,7 @@ modded class MissionServer extends MissionBase
 	}
 	
 	
-	void RPCSendStatNotification( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCSendStatNotification( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		if ( GetHeroesAndBanditsSettings().AllowStatCommand )
 		{
@@ -194,7 +194,7 @@ modded class MissionServer extends MissionBase
 	}
 	
 	//Adding so debuggin is easier :)
-	void RPCSendAffinityUpdate( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCSendAffinityUpdate( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		if ( GetHeroesAndBanditsSettings().DebugCommand )
 		{
@@ -219,7 +219,7 @@ modded class MissionServer extends MissionBase
 	void UpdateAllPlayersSettings(){
 		PlayerBase p;
 		string playerID;
-		ref array<Man> players = new array<Man>;
+		array<Man> players = new array<Man>;
 		GetGame().GetPlayers(players);
 		for ( int i = 0; i < players.Count(); i++ )
 		{

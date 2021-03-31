@@ -25,8 +25,8 @@
 			super.TriggerExplosion();
 			if (hab_ActivatedByID)
 			{
-				ref array<Object> objects = new array<Object>;
-				ref array<CargoBase> proxy = new array<CargoBase>;
+				array<Object> objects = new array<Object>;
+				array<CargoBase> proxy = new array<CargoBase>;
 				GetGame().GetObjectsAtPosition(this.GetPosition(), 1, objects, proxy);
 				for ( int i = 0; i < objects.Count(); i++ ) 
 				{

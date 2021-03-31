@@ -122,7 +122,7 @@ class HeroesAndBanditsZone
 				SubZones.Get(i).SaveAgressionData();
 			}
 		}
-		ref array<ref habAgressionZoneData> AgressionData =  new array<ref habAgressionZoneData>;
+		array<ref habAgressionZoneData> AgressionData =  new array<ref habAgressionZoneData>;
 		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 		if (KillAggressors){
 			if (Aggressors){
@@ -173,7 +173,7 @@ class HeroesAndBanditsZone
 		}
 		HeroesAndBanditsPlayer pdata = GetHeroesAndBandits().GetPlayer(player.GetIdentity().GetPlainId());
 		float trackingBonus = GetHeroesAndBanditsZones().ZoneCheckTimer / 2;
-		ref HeroesAndBanditsGuard guard;
+		HeroesAndBanditsGuard guard;
 		if ( !player  || !pdata || !player.GetIdentity() || !player.IsAlive() || player.IsPlayerDisconnected()){
 			return PlayerLeftZone;
 		}
@@ -407,7 +407,7 @@ class HeroesAndBanditsZone
 		return false;
 	} 
 		
-	ref HeroesAndBanditsGuard GetClosestGuard(PlayerBase inPlayer)
+	HeroesAndBanditsGuard GetClosestGuard(PlayerBase inPlayer)
 	{ 
 		PlayerBase player = PlayerBase.Cast(inPlayer);
 		if (!Guards || !player)//If no guards defined exit

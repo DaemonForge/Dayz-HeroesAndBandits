@@ -1,7 +1,7 @@
 PlayerBase habGetPlayerBaseByID( string pID )
 {
 	PlayerBase p;
-	ref array<Man> players = new array<Man>;
+	array<Man> players = new array<Man>;
 	GetGame().GetPlayers(players);
 	for ( int i = 0; i < players.Count(); i++ )
 	{
@@ -19,7 +19,7 @@ PlayerBase habGetPlayerBaseByID( string pID )
 PlayerBase habGetPlayerBaseByName( string pName )
 {
 	PlayerBase p;
-	ref array<Man> players = new array<Man>;
+	array<Man> players = new array<Man>;
 	GetGame().GetPlayers(players);
 	for ( int i = 0; i < players.Count(); i++ )
 	{

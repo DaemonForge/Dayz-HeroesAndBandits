@@ -12,7 +12,7 @@ modded class IngameHud extends Hud
 		GetRPCManager().AddRPC( "HaB", "RPCReceiveHABIcon", this, SingeplayerExecutionType.Both );
 	}
 
-	void RPCReceiveHABIcon( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCReceiveHABIcon( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		if (GetHeroesAndBanditsSettings())
 		{ 

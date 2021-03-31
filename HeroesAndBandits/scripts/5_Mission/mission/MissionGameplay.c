@@ -33,7 +33,7 @@ modded class MissionGameplay extends MissionBase
 		UpdateHABIcon();
 	}
 	
-	void RPCUpdateHABSettings( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCUpdateHABSettings( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Settings");
 		Param4< HeroesAndBanditsSettings, HeroesAndBanditsConfigActions, HeroesAndBanditsConfigLevels, HeroesAndBanditsPlayer> data;
@@ -60,7 +60,7 @@ modded class MissionGameplay extends MissionBase
 
 	}
 	
-	void RPCPlayGunShotSound( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCPlayGunShotSound( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		Param2< string, vector > data;
 		if ( !ctx.Read( data ) ) return;
@@ -69,7 +69,7 @@ modded class MissionGameplay extends MissionBase
 		SEffectManager.PlaySound( GunShot_Sound, GunShot_Position);
 	}
 	
-	void RPCUpdateHABPlayerData( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCUpdateHABPlayerData( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		Print("[HeroesAndBandits] [DebugClient] Received Player Data");
 		Param1< HeroesAndBanditsPlayer > data;
@@ -91,7 +91,7 @@ modded class MissionGameplay extends MissionBase
 	}
 	
 	
-	void RPCUpdateHABIcon( CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target )
+	void RPCUpdateHABIcon( CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target )
 	{
 		Param2< string, string > data  //Player ID, Icon
 		if ( !ctx.Read( data ) ) return;

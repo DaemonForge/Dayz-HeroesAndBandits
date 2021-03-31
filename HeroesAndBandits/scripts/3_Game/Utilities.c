@@ -9,7 +9,7 @@ ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
 ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
 
 //Helper function to return Config
-static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
+static HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 {
 	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsSettings)
@@ -26,7 +26,7 @@ static ref HeroesAndBanditsSettings GetHeroesAndBanditsSettings()
 
 
 //Helper function to return Config
-static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
+static HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 {
 	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigLevels)
@@ -43,7 +43,7 @@ static ref HeroesAndBanditsConfigLevels GetHeroesAndBanditsLevels()
 
 
 //Helper function to return Config
-static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
+static HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 {
 	if ( GetGame().IsServer()){
 		if (!m_HeroesAndBanditsConfigActions)
@@ -59,7 +59,7 @@ static ref HeroesAndBanditsConfigActions GetHeroesAndBanditsActions()
 
 
 //Helper function to return Config
-static ref HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
+static HeroesAndBanditsConfigZones GetHeroesAndBanditsZones()
 {
 	if (!m_HeroesAndBanditsConfigZones && GetGame().IsServer())
 	{
@@ -114,12 +114,12 @@ static void habPrint(string message, string msgType){
 };
 
 
-ref DayZPlayer habFindPlayer(string GUID){
+DayZPlayer habFindPlayer(string GUID){
 	if (GetGame().IsServer()){
-		ref array<Man> players = new array<Man>;
+		array<Man> players = new array<Man>;
 		GetGame().GetPlayers( players );
 		for (int i = 0; i < players.Count(); i++){
-			ref DayZPlayer player = DayZPlayer.Cast(players.Get(i));
+			DayZPlayer player = DayZPlayer.Cast(players.Get(i));
 			if (player.GetIdentity() && player.GetIdentity().GetId() == GUID ){
 				return player;
 			}

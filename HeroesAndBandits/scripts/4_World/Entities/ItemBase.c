@@ -6,8 +6,8 @@ modded class ItemBase extends InventoryItem
 		
 		float blastRange = 5;
 		
-		ref array<Object> nearest_objects = new array<Object>;
-		ref array<CargoBase> proxy_cargos = new array<CargoBase>;
+		array<Object> nearest_objects = new array<Object>;
+		array<CargoBase> proxy_cargos = new array<CargoBase>;
 		GetGame().GetObjectsAtPosition3D( this.GetPosition(), blastRange, nearest_objects, proxy_cargos );
 		for ( int i = 0; i < nearest_objects.Count(); i++ )
 		{

@@ -78,8 +78,8 @@ class habConverter
 		}
 	}
 	
-	static ref HeroesAndBanditsSettings ConvertSettings(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsSettings tempSettings = new HeroesAndBanditsSettings();
+	static HeroesAndBanditsSettings ConvertSettings(HeroesAndBanditsSimpleConfig simpConfig){
+		HeroesAndBanditsSettings tempSettings = new HeroesAndBanditsSettings();
 		tempSettings.KillFeed = simpConfig.KillFeed;
 		tempSettings.SucideFeed = simpConfig.SucideFeed;
 		tempSettings.BanditCanRemoveMask = simpConfig.BanditCanRemoveMask;
@@ -107,8 +107,8 @@ class habConverter
 		return tempSettings;
 	}
 	
-	static ref HeroesAndBanditsConfigZones ConvertZones(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigZones tempSettings = new HeroesAndBanditsConfigZones();
+	static HeroesAndBanditsConfigZones ConvertZones(HeroesAndBanditsSimpleConfig simpConfig){
+		HeroesAndBanditsConfigZones tempSettings = new HeroesAndBanditsConfigZones();
 		if (simpConfig.Zones.Count() > 0){
 			tempSettings.ZoneCheckTimer = 3;
 			for (int i = 0; i < simpConfig.Zones.Count(); i++){
@@ -121,7 +121,7 @@ class habConverter
 	}
 	
 	
-	static ref habZone ConvertZone(ref HABSimpleZone simpZone){
+	static habZone ConvertZone(HABSimpleZone simpZone){
 		string Name = simpZone.Name;
 		float X = simpZone.X;
 		float Z = simpZone.Z;

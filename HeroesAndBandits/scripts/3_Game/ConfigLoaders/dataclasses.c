@@ -102,7 +102,7 @@ class habAffinity
 		return true;
 	}
 	
-	void addItemBlackList( float minPoints, float maxPoints, string type, ref TStringArray items)
+	void addItemBlackList( float minPoints, float maxPoints, string type, TStringArray items)
 	{
 		ItemBlackList.Insert(new habItemList( minPoints, maxPoints, type));
 		int index = ItemBlackList.Count() - 1;

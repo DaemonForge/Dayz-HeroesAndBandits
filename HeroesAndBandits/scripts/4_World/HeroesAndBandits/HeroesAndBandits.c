@@ -405,7 +405,7 @@ class HeroesAndBandits
 			return;
 		}
 		//habPrint("Checking if Players are in Zones", "Debug");			
-		ref array<Man> players = new array<Man>;
+		array<Man> players = new array<Man>;
 		GetGame().GetPlayers(players);			
 		for (int k = 0; k < Zones.Count(); k++)
 		{	
@@ -427,7 +427,7 @@ class HeroesAndBandits
 			return;
 		}
 		//habPrint("Checking if Players are in Zones", "Debug");			
-		ref array<Man> players = new array<Man>;
+		array<Man> players = new array<Man>;
 		GetGame().GetPlayers(players);			
 		for (int j = 0; j < players.Count(); j++){
 			PlayerBase player = PlayerBase.Cast(players.Get(j));
@@ -444,8 +444,8 @@ class HeroesAndBandits
 	void updatePlayerTotals()
 	{
 		habPrint("Updating Player Totals", "Verbose");
-		ref array<string> playerDataBaseFiles = new array<string>;
-		ref array<string> playerList = new array<string>;
+		array<string> playerDataBaseFiles = new array<string>;
+		array<string> playerList = new array<string>;
 		playerDataBaseFiles = habFindFilesInDirectory(habConstant.PlayerDB);
 		habPrint("Found " + playerDataBaseFiles.Count() + " Players in database Located: " + habConstant.PlayerDB, "Verbose");
 		string tempFileName = "";
@@ -479,7 +479,7 @@ class HeroesAndBandits
 		PlayerBase sourcePlayer = PlayerBase.Cast(player);
 		if (sourcePlayer && sourcePlayer.GetIdentity() && sourcePlayer.habIsInZone()){
 			array< int > inZones = sourcePlayer.habGetInZones();
-			ref HeroesAndBanditsZone zone = Zones.Get(inZones.Get(0));
+			HeroesAndBanditsZone zone = Zones.Get(inZones.Get(0));
 			zone.NewAggressorAction(sourcePlayer.GetIdentity().GetId(), action, inZones, entity);	
 		}
 	}
@@ -499,7 +499,7 @@ class HeroesAndBandits
 };
 
 
-static ref HeroesAndBandits GetHeroesAndBandits()
+static HeroesAndBandits GetHeroesAndBandits()
 {
 	if (!m_HeroesAndBandits)
 	{

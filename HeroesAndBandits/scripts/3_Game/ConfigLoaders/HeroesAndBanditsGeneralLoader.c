@@ -102,7 +102,7 @@ class HeroesAndBanditsSettings
 		// Load config file or create default file if config doesn't exsit
 	void Load(){
 		if (GetGame().IsServer()){
-			ref HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
+			HeroesAndBanditsSimpleConfig simpleConfig = new HeroesAndBanditsSimpleConfig();
 			simpleConfig.Load();
 			if (simpleConfig.UseSimple == 0){
 				if (FileExist(habConstant.SettingsPATH)) //If config exist load File

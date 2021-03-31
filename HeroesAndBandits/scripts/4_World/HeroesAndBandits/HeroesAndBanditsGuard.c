@@ -105,7 +105,7 @@ class HeroesAndBanditsGuard
 		DayZPlayer GuardZ = Guard;
 			if (weapon && GuardZ && WeaponInHandsMag != "") {	
 				GuardZ.GetInventory().CreateAttachment(WeaponInHandsMag);
-				ref array<Magazine> mag_Array = new array<Magazine>;
+				array<Magazine> mag_Array = new array<Magazine>;
 				DayZPlayerUtils.FindMagazinesForAmmo(Guard, WeaponInHandsMag, mag_Array);
 				{	
 					Magazine mag_obj = Magazine.Cast(mag_Array.Get(0));	
