@@ -58,7 +58,7 @@ modded class Dogtag_Base : ItemBase
 
 
 
-	override void OnRPCRead(PlayerIdentity sender, ParamsReadContext ctx)
+	override void OnRPCRead(PlayerIdentity sender, ref ParamsReadContext ctx)
 	{
 		super.OnRPCRead(sender, ctx);
 		ctx.Read(m_HeroesAndBandits_Affinity);

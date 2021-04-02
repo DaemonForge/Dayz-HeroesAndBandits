@@ -255,24 +255,24 @@ class habConverter
 	}
 		
 	
-	static ref HeroesAndBanditsConfigLevels ConvertLevels(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigLevels tempSettings = new HeroesAndBanditsConfigLevels();
+	static HeroesAndBanditsConfigLevels ConvertLevels(HeroesAndBanditsSimpleConfig simpConfig){
+		HeroesAndBanditsConfigLevels tempSettings = new HeroesAndBanditsConfigLevels();
 		tempSettings.addAffinity("hero", "#HAB_HERO", "HeroesAndBandits/gui/images/Hero.paa");
 		tempSettings.addAffinity("bandit", "#HAB_BANDIT", "HeroesAndBandits/gui/images/Bandit.paa");
 		tempSettings.LevelIconLocation = 2;
 		tempSettings.ShowLevelIcon = true;
 		tempSettings.NotifyLevelChange = true;
-		ref TStringArray banditOnlyItems = {};
-		ref TStringArray heroOnlyItems = {};
-		ref TStringArray combinedItems = {};
+		TStringArray banditOnlyItems = {};
+		TStringArray heroOnlyItems = {};
+		TStringArray combinedItems = {};
 		bool BanditCanRemoveMask = simpConfig.BanditCanRemoveMask;
 		bool BanditCanRemoveArmBand = simpConfig.BanditCanRemoveArmBand;
-		ref TStringArray BanditMasks = simpConfig.BanditMasks;
-		ref TStringArray BanditArmBands = simpConfig.BanditArmBands;
+		TStringArray BanditMasks = simpConfig.BanditMasks;
+		TStringArray BanditArmBands = simpConfig.BanditArmBands;
 		bool HeroCanRemoveMask = simpConfig.HeroCanRemoveMask;
 		bool HeroCanRemoveArmBand = simpConfig.HeroCanRemoveArmBand;
-		ref TStringArray HeroMasks = simpConfig.HeroMasks;
-		ref TStringArray HeroArmBands = simpConfig.HeroArmBands;
+		TStringArray HeroMasks = simpConfig.HeroMasks;
+		TStringArray HeroArmBands = simpConfig.HeroArmBands;
 		if (!BanditCanRemoveMask){
 			banditOnlyItems.InsertAll(BanditMasks);
 			combinedItems.InsertAll(BanditMasks);
@@ -370,8 +370,8 @@ class habConverter
 		return tempSettings;
 	}
 	
-	static ref HeroesAndBanditsConfigActions ConvertActions(ref HeroesAndBanditsSimpleConfig simpConfig){
-		ref HeroesAndBanditsConfigActions tempSettings = new HeroesAndBanditsConfigActions();
+	static HeroesAndBanditsConfigActions ConvertActions(HeroesAndBanditsSimpleConfig simpConfig){
+		HeroesAndBanditsConfigActions tempSettings = new HeroesAndBanditsConfigActions();
 		for (int i = 0; i < simpConfig.Actions.Count(); i++){
 			string Name = simpConfig.Actions.Get(i).Name;
 			string Affinity = "none"; //bandit / hero / none
