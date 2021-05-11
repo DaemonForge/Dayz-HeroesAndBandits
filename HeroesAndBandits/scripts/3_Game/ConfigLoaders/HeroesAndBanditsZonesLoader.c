@@ -1,4 +1,4 @@
-class HeroesAndBanditsConfigZones
+class HeroesAndBanditsConfigZones extends Managed
 { 
 	//Has to be in world as it uses other configs for refernce
 	//Default Values

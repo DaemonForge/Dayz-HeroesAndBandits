@@ -6,17 +6,13 @@ modded class AnimalBase
         super.EEKilled(killer);
 		if (GetGame().IsServer()){
 			PlayerBase sourcePlayer;
-			if (killer.IsMan())
-			{
-				if (killer.IsInherited(SurvivorBase))
-				{
+			if (killer.IsMan()) {
+				if (killer.IsInherited(SurvivorBase)) {
 					sourcePlayer = PlayerBase.Cast(killer);
-				}
-			}else if (killer.IsWeapon())
-			{
+				} 
+			} else if (killer.IsWeapon()) {
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
-			}else if (killer.IsMeleeWeapon())
-			{
+			} else if (killer.IsMeleeWeapon()) {
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
 			} else if (killer.IsTransport()){
 				CarScript vehicle;
@@ -31,8 +27,7 @@ modded class AnimalBase
 				return;
 			}
 			
-			if (!sourcePlayer){
-			}else{
+			if (sourcePlayer && sourcePlayer.GetIdentity()){
 				string actionName = "Hunt" + GetType();
 				habPrint("Player Killed Animal of type" + GetType(), "Debug");
 				string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();

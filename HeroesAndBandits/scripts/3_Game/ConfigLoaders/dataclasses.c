@@ -1,4 +1,4 @@
-class habStat
+class habStat extends Managed
 {
     string Name;
 	int Stat;
@@ -15,7 +15,7 @@ class habStat
 };
 
 
-class habPlayerAffinity
+class habPlayerAffinity extends Managed
 {
     string Name;
 	float Points;
@@ -41,7 +41,7 @@ class habPlayerAffinity
 
 
 //Class for holding levels
-class habLevel
+class habLevel extends Managed
 {
 	string Name;
 	string Affinity; //bandit / hero / bambi
@@ -60,7 +60,7 @@ class habLevel
 };
 
 //Class for holding Actions
-class habAffinity
+class habAffinity extends Managed
 {
 	string Name;
 	string DisplayName;
@@ -110,7 +110,7 @@ class habAffinity
 	}
 };
 
-class habItemList
+class habItemList extends Managed
 {
 	float MinPoints;
 	float MaxPoints;
@@ -146,7 +146,7 @@ class habItemList
 };
 
 //Class for holding Actions
-class habAction
+class habAction extends Managed
 {
 	string Name;
 	string Affinity; //bandit / hero / none
@@ -166,7 +166,7 @@ class habAction
 
 
 //Class for holding Actions
-class habAggressorAction
+class habAggressorAction extends Managed
 {
 	string Name;
 	float Amount;

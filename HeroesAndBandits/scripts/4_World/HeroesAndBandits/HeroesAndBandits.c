@@ -7,7 +7,7 @@ ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
 
 ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
-class HeroesAndBandits
+class HeroesAndBandits extends Managed
 {
 	ref array<ref HeroesAndBanditsPlayer> HeroesAndBanditsPlayers = new array< ref HeroesAndBanditsPlayer >;
 	
@@ -48,8 +48,7 @@ class HeroesAndBandits
 	
 	void OnPlayerConnect(PlayerIdentity playerIdent)
 	{
-		if (IsPlayerLoaded(playerIdent.GetPlainId()))
-		{
+		if (IsPlayerLoaded(playerIdent.GetPlainId())) {
 			habPrint("Player " + playerIdent.GetPlainId()+ " connected and already loaded", "Verbose");	
 			return;
 		}else{
@@ -71,6 +70,10 @@ class HeroesAndBandits
 	
 	void NewPlayerAction(string playerID, string action)
 	{
+		if (playerID == "" || playerID == "null"){
+			habPrint("New Player Action for NULL Player", "Verbose");	
+			return;
+		}
 		for ( int i = 0; i < HeroesAndBanditsPlayers.Count(); i++ )
 		{
 			HeroesAndBanditsPlayer p = HeroesAndBanditsPlayers.Get(i);

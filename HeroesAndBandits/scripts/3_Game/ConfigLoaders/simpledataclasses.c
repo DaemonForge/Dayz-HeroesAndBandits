@@ -1,4 +1,4 @@
-class HABSimpleLevel {
+class HABSimpleLevel  extends Managed{
 	string Name;
 	float Humanity;
 	void HABSimpleLevel(string name, float humanity){
@@ -7,7 +7,7 @@ class HABSimpleLevel {
 	}
 };
 
-class HABSimpleAction{
+class HABSimpleAction extends Managed{
 	string Name;
 	float Humanity;
 	void HABSimpleAction(string name, float humanity){
@@ -16,7 +16,7 @@ class HABSimpleAction{
 	}
 };
 
-class HABSimpleZone{
+class HABSimpleZone extends Managed{
     string Name;
 	float X;
 	float Z;
@@ -49,7 +49,7 @@ class HABSimpleZone{
 };
 
 //Class for holding guard values
-class HABSimpleGuard
+class HABSimpleGuard extends Managed
 {
 	float X;
 	float Y;

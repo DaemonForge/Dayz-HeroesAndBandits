@@ -1,4 +1,4 @@
-class HeroesAndBanditsSimpleConfig
+class HeroesAndBanditsSimpleConfig extends Managed
 { 
 	
 	string ConfigVersion = "7";

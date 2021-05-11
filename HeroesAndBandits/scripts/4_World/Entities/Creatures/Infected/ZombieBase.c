@@ -31,8 +31,7 @@ modded class ZombieBase
 				return;
 			}
 			
-			if (!sourcePlayer){
-			}else{
+			if (sourcePlayer && sourcePlayer.GetIdentity()){
 				string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 				GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLaterByName(GetHeroesAndBandits(), "NewPlayerAction", 1, false, new Param2<string, string>(sourcePlayerID, "ZombieKill"));
 			}

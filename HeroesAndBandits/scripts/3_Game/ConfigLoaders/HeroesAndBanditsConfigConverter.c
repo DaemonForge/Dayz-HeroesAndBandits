@@ -1,4 +1,4 @@
-class habConverter
+class habConverter extends Managed
 {
 	static ref map<string, string> GunToSound = new map<string, string>;
 	static ref map<string, string> GunToMag= new map<string, string>;

@@ -1,4 +1,4 @@
-class HeroesAndBanditsSettings
+class HeroesAndBanditsSettings extends Managed
 { 
 	//Default Values
 	string ConfigVersion = "7";
