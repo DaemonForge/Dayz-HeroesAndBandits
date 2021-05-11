@@ -146,15 +146,15 @@ class HeroesAndBandits extends Managed
 	void NotifyPlayer(string playerID, string image ,string message, string heading = "#HAB_HUMANITY_CHANGEHEADING")
 	{
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
-		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, player.GetIdentity());
+		if (player && player.GetIdentity()){
+			NotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsActions().getNotificationColor(), GetHeroesAndBanditsActions().NotificationMessageTime, player.GetIdentity());
 			habPrint("Notify Player: " + playerID +" Message: "+ message + " Image: " + image, "Verbose");	
 		}
 	}
 	
 	void NotifyKillFeed(string image ,string message, string heading = "#HAB_KILLFEED_HEADING")
 	{
-		m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsSettings().getKillFeedMessageColor(), GetHeroesAndBanditsSettings().NotificationMessageTime);
+		NotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, GetHeroesAndBanditsSettings().getKillFeedMessageColor(), GetHeroesAndBanditsSettings().NotificationMessageTime);
 		habPrint("Kill Feed Message: "+ message + " Image: " + image, "Verbose");	
 	}
 	
@@ -162,8 +162,8 @@ class HeroesAndBandits extends Managed
 	{
 		
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
-		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(header), new StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+		if (player && player.GetIdentity()){
+			NotificationSystem.CreateNotification(new StringLocaliser(header), new StringLocaliser(message), GetHeroesAndBanditsZones().WarningMessageImagePath, GetHeroesAndBanditsZones().getWarningMessageColor(), GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
 			habPrint("Issued Warning '"+ message + "' To Player: " + playerID, "Verbose");
 		}
 	}
@@ -171,8 +171,8 @@ class HeroesAndBandits extends Managed
 	void WelcomePlayer( string zoneName, string message, string welcomeImage, string playerID, int welcomeColor)
 	{
 		PlayerBase player = PlayerBase.Cast(habGetPlayerBaseByID(playerID));
-		if (player){
-			m_HeroesAndBanditsNotificationSystem.CreateNotification(new StringLocaliser(zoneName), new StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
+		if (player && player.GetIdentity()){
+			NotificationSystem.CreateNotification(new StringLocaliser(zoneName), new StringLocaliser(message), welcomeImage, welcomeColor, GetHeroesAndBanditsZones().NotificationMessageTime, player.GetIdentity());
 			habPrint("Welcome Message: '"+ message + "' To Player: " + playerID, "Verbose");
 		}
 	}
