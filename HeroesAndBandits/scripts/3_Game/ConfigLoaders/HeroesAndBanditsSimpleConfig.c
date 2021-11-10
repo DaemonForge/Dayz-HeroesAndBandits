@@ -10,24 +10,24 @@ class HeroesAndBanditsSimpleConfig extends Managed
 		
 	bool BanditCanRemoveMask = false;
 	bool BanditCanRemoveArmBand = true;
-	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
-	ref TStringArray BanditArmBands = {};
+	autoptr TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	autoptr TStringArray BanditArmBands = {};
 	bool HeroCanRemoveMask = true;
 	bool HeroCanRemoveArmBand = true;
-	ref TStringArray HeroMasks = {};
-	ref TStringArray HeroArmBands = {};
+	autoptr TStringArray HeroMasks = {};
+	autoptr TStringArray HeroArmBands = {};
 	
 	
-	ref TStringArray HeroOnlyItems = {};
-	ref TStringArray BanditOnlyItems = {};
+	autoptr TStringArray HeroOnlyItems = {};
+	autoptr TStringArray BanditOnlyItems = {};
 	
 	
 	//Expansion Settings 
 	bool Expansion_EnableIconOnPlayerTag = true;
 	
-	ref array< ref HABSimpleLevel > Levels = new array< ref HABSimpleLevel >;
-	ref array< ref HABSimpleAction > Actions = new array< ref HABSimpleAction >;
-	ref array< ref HABSimpleZone > Zones = new array< ref HABSimpleZone >;
+	autoptr array< autoptr HABSimpleLevel > Levels = new array< autoptr HABSimpleLevel >;
+	autoptr array< autoptr HABSimpleAction > Actions = new array< autoptr HABSimpleAction >;
+	autoptr array< autoptr HABSimpleZone > Zones = new array< autoptr HABSimpleZone >;
 	
 	// Load config file or create default file if config doesn't exsit
 	int Load(){

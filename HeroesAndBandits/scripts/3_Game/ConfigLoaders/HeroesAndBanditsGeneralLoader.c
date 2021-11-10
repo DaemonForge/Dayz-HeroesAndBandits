@@ -10,7 +10,7 @@ class HeroesAndBanditsSettings extends Managed
 	bool KillFeed = true;
 	bool SucideFeed = false;
 	
-	ref array<int> KillFeedMessageColor = {200, 250, 0, 100};
+	autoptr array<int> KillFeedMessageColor = {200, 250, 0, 100};
 	
 	string CommandPrefix = "/";
 	
@@ -23,12 +23,12 @@ class HeroesAndBanditsSettings extends Managed
 	
 	bool BanditCanRemoveMask = false;
 	bool BanditCanRemoveArmBand = true;
-	ref TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
-	ref TStringArray BanditArmBands = {};
+	autoptr TStringArray BanditMasks = {"BandanaMask_RedPattern", "BandanaMask_BlackPattern","BandanaMask_CamoPattern","BandanaMask_GreenPattern", "BandanaMask_PolkaPattern", "Bandana_Blue", "Bandana_Pink", "Bandana_Yellow"};
+	autoptr TStringArray BanditArmBands = {};
 	bool HeroCanRemoveMask = true;
 	bool HeroCanRemoveArmBand = true;
-	ref TStringArray HeroMasks = {};
-	ref TStringArray HeroArmBands = {};
+	autoptr TStringArray HeroMasks = {};
+	autoptr TStringArray HeroArmBands = {};
 	
 	
 	//This doesn't affect Humanity as its the calcuation of two Affinities
@@ -92,11 +92,11 @@ class HeroesAndBanditsSettings extends Managed
 	SurvivorF_Helga    Female White
 	
 	*/
-	ref TStringArray BambiSkins = {"SurvivorM_Boris", "SurvivorM_Hassan", "SurvivorF_Frida", "SurvivorM_Jose", "SurvivorM_Cyril", "SurvivorF_Gabi"};
+	autoptr TStringArray BambiSkins = {"SurvivorM_Boris", "SurvivorM_Hassan", "SurvivorF_Frida", "SurvivorM_Jose", "SurvivorM_Cyril", "SurvivorF_Gabi"};
 	
-	ref TStringArray HeroSkins = {"SurvivorM_Indar","SurvivorM_Lewis","SurvivorF_Linda","SurvivorM_Taiki","SurvivorM_Mirek","SurvivorM_Oliver","SurvivorF_Irena","SurvivorF_Judy","SurvivorF_Keiko","SurvivorM_Niki","SurvivorM_Rolf"};
+	autoptr TStringArray HeroSkins = {"SurvivorM_Indar","SurvivorM_Lewis","SurvivorF_Linda","SurvivorM_Taiki","SurvivorM_Mirek","SurvivorM_Oliver","SurvivorF_Irena","SurvivorF_Judy","SurvivorF_Keiko","SurvivorM_Niki","SurvivorM_Rolf"};
 	
-	ref TStringArray BanditSkins = {"SurvivorM_Peter","SurvivorM_Kaito","SurvivorF_Naomi","SurvivorM_Francis","SurvivorM_Elias","SurvivorM_Manua","SurvivorM_Denis","SurvivorM_Quinn","SurvivorM_Guo","SurvivorM_Seth","SurvivorF_Maria","SurvivorF_Eva", "SurvivorF_Helga"};
+	autoptr TStringArray BanditSkins = {"SurvivorM_Peter","SurvivorM_Kaito","SurvivorF_Naomi","SurvivorM_Francis","SurvivorM_Elias","SurvivorM_Manua","SurvivorM_Denis","SurvivorM_Quinn","SurvivorM_Guo","SurvivorM_Seth","SurvivorF_Maria","SurvivorF_Eva", "SurvivorF_Helga"};
 			
 	
 		// Load config file or create default file if config doesn't exsit

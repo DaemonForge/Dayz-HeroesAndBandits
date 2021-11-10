@@ -6,8 +6,8 @@ modded class BuildingBase: Building
 		
 		float blastRange = 5;
 		
-		ref array<Object> nearest_objects = new array<Object>;
-		ref array<CargoBase> proxy_cargos = new array<CargoBase>;
+		autoptr array<Object> nearest_objects = new array<Object>;
+		autoptr array<CargoBase> proxy_cargos = new array<CargoBase>;
 		GetGame().GetObjectsAtPosition3D( this.GetPosition(), blastRange, nearest_objects, proxy_cargos );
 		for ( int i = 0; i < nearest_objects.Count(); i++ )
 		{

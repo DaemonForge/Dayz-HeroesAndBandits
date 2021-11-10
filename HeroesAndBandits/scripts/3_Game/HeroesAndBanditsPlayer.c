@@ -3,8 +3,8 @@ class HeroesAndBanditsPlayer : RestCallback
 	//Default Values
     string PlayerID = "";
 	string GUID = "";
-	ref array< ref habStat > Stats = new array< ref habStat >;
-	ref array< ref habPlayerAffinity > Affinities = new array< ref habPlayerAffinity >;
+	autoptr array< autoptr habStat > Stats = new array< autoptr habStat >;
+	autoptr array< autoptr habPlayerAffinity > Affinities = new array< autoptr habPlayerAffinity >;
 	
 	void HeroesAndBanditsPlayer(string pID = "", string guid = "") 
 	{

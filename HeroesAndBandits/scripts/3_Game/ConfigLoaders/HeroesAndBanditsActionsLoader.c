@@ -5,10 +5,10 @@ class HeroesAndBanditsConfigActions extends Managed
 	
 	int NotificationMessageTime = 10;
 	
-	ref array<int> NotificationColor = {200, 0, 200, 200};
+	autoptr array<int> NotificationColor = {200, 0, 200, 200};
 	
-	ref array< ref habAction > Actions = new array< ref habAction >;
-	ref array< ref habAggressorAction > AggressorActions = new array< ref habAggressorAction >;
+	autoptr array< autoptr habAction > Actions = new array< autoptr habAction >;
+	autoptr array< autoptr habAggressorAction > AggressorActions = new array< autoptr habAggressorAction >;
 	
 	void Load(){
 		if (GetGame().IsServer()){

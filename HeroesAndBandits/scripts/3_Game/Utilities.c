@@ -1,12 +1,12 @@
-ref HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
+autoptr HeroesAndBanditsSettings m_HeroesAndBanditsSettings;
 
-ref HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
-ref HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
-ref HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
+autoptr HeroesAndBanditsConfigZones m_HeroesAndBanditsConfigZones;
+autoptr HeroesAndBanditsConfigActions m_HeroesAndBanditsConfigActions;
+autoptr HeroesAndBanditsConfigLevels m_HeroesAndBanditsConfigLevels;
 
-ref HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
-ref HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
-ref HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
+autoptr HeroesAndBanditsSettings 		g_HeroesAndBanditsSettings;
+autoptr HeroesAndBanditsConfigLevels 	g_HeroesAndBanditsConfigLevels;
+autoptr HeroesAndBanditsConfigActions 	g_HeroesAndBanditsConfigActions;
 
 //Helper function to return Config
 static HeroesAndBanditsSettings GetHeroesAndBanditsSettings()

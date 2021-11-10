@@ -1,18 +1,18 @@
 //Server Variables
-ref HeroesAndBandits m_HeroesAndBandits;
+autoptr HeroesAndBandits m_HeroesAndBandits;
 
 //Client Variables
-ref HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
+autoptr HeroesAndBanditsPlayer 			g_HeroesAndBanditsPlayer;
 
 
-ref NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
+autoptr NotificationSystem m_HeroesAndBanditsNotificationSystem = new NotificationSystem();
 
 class HeroesAndBandits extends Managed
 {
-	ref array<ref HeroesAndBanditsPlayer> HeroesAndBanditsPlayers = new array< ref HeroesAndBanditsPlayer >;
+	autoptr array<autoptr HeroesAndBanditsPlayer> HeroesAndBanditsPlayers = new array< autoptr HeroesAndBanditsPlayer >;
 	
 	
-	ref array< ref HeroesAndBanditsZone > Zones = new array< ref HeroesAndBanditsZone >;
+	autoptr array< autoptr HeroesAndBanditsZone > Zones = new array< autoptr HeroesAndBanditsZone >;
 	
 	void HeroesAndBandits()
 	{

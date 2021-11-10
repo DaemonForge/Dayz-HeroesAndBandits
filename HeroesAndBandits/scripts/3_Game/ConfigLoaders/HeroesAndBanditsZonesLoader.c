@@ -8,14 +8,14 @@ class HeroesAndBanditsConfigZones extends Managed
 	int AggressionReductionTickRate = 60;
 	
 	
-	ref array<int> WarningMessageColor = {200, 255, 0, 0};
+	autoptr array<int> WarningMessageColor = {200, 255, 0, 0};
 	
 	int NotificationMessageTime = 15;
 	
 	string WarningMessageImagePath = "HeroesAndBandits/gui/images/DeathWarning.paa";
 	// Load config file or create default file if config doesn't exsit
 	
-	ref array< ref habZone > Zones = new array< ref habZone >;
+	autoptr array< autoptr habZone > Zones = new array< autoptr habZone >;
 	
 	
 	void Load(){
@@ -164,7 +164,7 @@ class habZone
 	bool ShowWelcomeMsg = false;
 	string WelcomeMessage = "Welcome to the Default Zone";
 	string WelcomeIcon = "HeroesAndBandits/gui/images/Bambi.paa";
-	ref array<int> WelcomeMessageColor = {200, 0, 200, 200};
+	autoptr array<int> WelcomeMessageColor = {200, 0, 200, 200};
 	bool OverrideSafeZone = false;
 	bool GodModPlayers = false;
 	bool PreventWeaponRaise = false;
@@ -174,10 +174,10 @@ class habZone
 	float AggressorThreshold = 155;
 	float AggressorReduction = 100;
 	bool AggressorGlobal = false; //Does nothing Yet
-	ref array< ref habZoneAffinity > Affinities = new array< ref habZoneAffinity >;
-	ref array< ref habGuard > Guards = new array< ref habGuard >;
+	autoptr array< autoptr habZoneAffinity > Affinities = new array< autoptr habZoneAffinity >;
+	autoptr array< autoptr habGuard > Guards = new array< autoptr habGuard >;
 	
-	ref array< ref habZone > SubZones = new array< ref habZone >;
+	autoptr array< autoptr habZone > SubZones = new array< autoptr habZone >;
 	
 	void habZone(string name, float x, float z, int warningRadius, int killRadius, string warningMessage = "", bool overrideSafeZone = false, bool godModPlayers = false) 
 	{
@@ -325,8 +325,8 @@ class habGuard
 	string Skin = "";
 	string WeaponInHands = "M4A1";
 	string WeaponInHandsMag = "Mag_STANAGCoupled_30Rnd";
-	ref TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
-	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
+	autoptr TStringArray WeaponInHandsAttachments =  {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
+	autoptr TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
 	string GunSound = "M4_Shot_SoundSet";
 	float DamagePerTickMin = 28;
 	float DamagePerTickRand = 35;

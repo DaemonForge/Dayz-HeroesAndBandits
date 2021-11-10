@@ -2,10 +2,10 @@ class HeroesAndBanditsConfigLevels extends Managed
 { 
 	//Default Values
 	string ConfigVersion = "7";
-	ref array< ref habLevel > Levels = new array< ref habLevel >;
-	ref habLevel DefaultLevel = new habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
-	ref array< ref habAffinity > Affinities = new array< ref habAffinity >;
-	ref habAffinity DefaultAffinity = new habAffinity("bambi", "#HAB_BAMBI", "HeroesAndBandits/gui/images/Bambi.paa");
+	autoptr array< autoptr habLevel > Levels = new array< autoptr habLevel >;
+	autoptr habLevel DefaultLevel = new habLevel("Bambi", "bambi", "HeroesAndBandits/gui/images/Bambi.paa", -1, -1);
+	autoptr array< autoptr habAffinity > Affinities = new array< autoptr habAffinity >;
+	autoptr habAffinity DefaultAffinity = new habAffinity("bambi", "#HAB_BAMBI", "HeroesAndBandits/gui/images/Bambi.paa");
 	
 	bool ShowLevelIcon = true;
 	int  LevelIconLocation = 2;

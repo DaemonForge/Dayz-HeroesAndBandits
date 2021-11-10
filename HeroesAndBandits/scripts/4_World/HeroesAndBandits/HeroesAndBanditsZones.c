@@ -27,13 +27,13 @@ class HeroesAndBanditsZone
 	float AggressorReduction;
 	float AggressorGlobal;
 	float MaxDistance = 999;
-	ref array< ref habZoneAffinity > Affinities = new array< ref habZoneAffinity >;
-	ref array< ref HeroesAndBanditsGuard > Guards = new array< ref HeroesAndBanditsGuard >;
-	ref array< ref HeroesAndBanditsZone > SubZones = new array< ref HeroesAndBanditsZone >;
+	autoptr array< autoptr habZoneAffinity > Affinities = new array< autoptr habZoneAffinity >;
+	autoptr array< autoptr HeroesAndBanditsGuard > Guards = new array< autoptr HeroesAndBanditsGuard >;
+	autoptr array< autoptr HeroesAndBanditsZone > SubZones = new array< autoptr HeroesAndBanditsZone >;
 	protected bool GuardsActive = false;
-	protected ref TStringArray TrackedPlayersInZone = {};
+	protected autoptr TStringArray TrackedPlayersInZone = {};
 	
-	protected ref map<string, float> Aggressors = new map<string, float>;
+	protected autoptr map<string, float> Aggressors = new map<string, float>;
 		
 	void Init(habZone zoneToLoad, int zoneID, int index = 0){
 		
@@ -122,7 +122,7 @@ class HeroesAndBanditsZone
 				SubZones.Get(i).SaveAgressionData();
 			}
 		}
-		array<ref habAgressionZoneData> AgressionData =  new array<ref habAgressionZoneData>;
+		array<autoptr habAgressionZoneData> AgressionData =  new array<autoptr habAgressionZoneData>;
 		string fileName = habConstant.ZoneDB + "\\" + UID + ".json";
 		if (KillAggressors){
 			if (Aggressors){

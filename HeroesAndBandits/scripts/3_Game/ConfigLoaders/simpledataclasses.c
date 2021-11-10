@@ -33,7 +33,7 @@ class HABSimpleZone extends Managed{
 	bool KillAggressors = false;
 	float RespawnTimer = 600;
 	int GuardDifficulty = 5; 
-	ref array<ref HABSimpleGuard> Guards = new array<ref HABSimpleGuard>;
+	autoptr array<autoptr HABSimpleGuard> Guards = new array<autoptr HABSimpleGuard>;
 	//5 OP can't be killed Can Shot Throw Objects, and 100% HitChance, 
 	//4 Require Line Of Sight 92% HitChance can't be killed, medium high fire rate 
 	//3 Require Line Of Sight 90% HitChance can be killed, high fire rate,
@@ -57,8 +57,8 @@ class HABSimpleGuard extends Managed
 	float Orientation;
 	string Skin;
 	string WeaponInHands = "M4A1";
-	ref TStringArray WeaponInHandsAttachments = {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
-	ref TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
+	autoptr TStringArray WeaponInHandsAttachments = {"M4_RISHndgrd", "M4_OEBttstck", "M68Optic"};
+	autoptr TStringArray GuardGear =  { "PlateCarrierVest", "JungleBoots_Black", "CargoPants_Black", "M65Jacket_Black"};
 
 	void HABSimpleGuard(float x, float y, float z, float orientation = 0.0, string skin = "SurvivorM_Hassan", string weaponInHands = "M4A1") 
 	{

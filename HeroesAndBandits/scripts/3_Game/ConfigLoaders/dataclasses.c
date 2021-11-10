@@ -65,7 +65,7 @@ class habAffinity extends Managed
 	string Name;
 	string DisplayName;
 	string Image;
-	ref array< ref habItemList > ItemBlackList = new array< ref habItemList >;
+	autoptr array< autoptr habItemList > ItemBlackList = new array< autoptr habItemList >;
 
 	void habAffinity(string name, string displayName, string image) 
 	{
@@ -115,7 +115,7 @@ class habItemList extends Managed
 	float MinPoints;
 	float MaxPoints;
 	string Location; // attach / inventory / inhands / all 
-	ref TStringArray Items = new TStringArray;
+	autoptr TStringArray Items = new TStringArray;
 	
 	void habItemList( float minPoints, float maxPoints, string location )
 	{

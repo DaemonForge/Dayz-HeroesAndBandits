@@ -10,8 +10,8 @@ class HeroesAndBanditsGuard
 	string ActionPrefix;
 	string WeaponInHands;
 	string WeaponInHandsMag;
-	ref TStringArray WeaponInHandsAttachments;
-	ref TStringArray GuardGear;
+	autoptr TStringArray WeaponInHandsAttachments;
+	autoptr TStringArray GuardGear;
 	string GunSound;
 	float GunTickMulitplier;
 	float DamagePerTickMin;
@@ -263,19 +263,19 @@ class HeroesAndBanditsGuard
 		RaycastRVParams params_head = new RaycastRVParams( guard_head_pos, end_head_pos, Guard, 0 );
 		params_head.sorted = true;
 		params_head.flags = CollisionFlags.ALLOBJECTS;
-		array<ref RaycastRVResult> results_head = new array<ref RaycastRVResult>;
+		array<autoptr RaycastRVResult> results_head = new array<autoptr RaycastRVResult>;
 		DayZPhysics.RaycastRVProxy( params_head, results_head );
 		
 		RaycastRVParams params_RightArm = new RaycastRVParams( guard_head_pos, end_RightArm_pos, Guard, 0 );
 		params_RightArm.sorted = true;
 		params_RightArm.flags = CollisionFlags.ALLOBJECTS;
-		array<ref RaycastRVResult> results_RightArm = new array<ref RaycastRVResult>;
+		array<autoptr RaycastRVResult> results_RightArm = new array<autoptr RaycastRVResult>;
 		DayZPhysics.RaycastRVProxy( params_RightArm, results_RightArm );
 		
 		RaycastRVParams params_LeftArm = new RaycastRVParams( guard_head_pos, end_LeftArm_pos, Guard, 0 );
 		params_LeftArm.sorted = true;
 		params_LeftArm.flags = CollisionFlags.ALLOBJECTS;
-		array<ref RaycastRVResult> results_LeftArm = new array<ref RaycastRVResult>;
+		array<autoptr RaycastRVResult> results_LeftArm = new array<autoptr RaycastRVResult>;
 		DayZPhysics.RaycastRVProxy( params_LeftArm, results_LeftArm );
 		
 		int headStartIndex = results_head.Count() - 1;

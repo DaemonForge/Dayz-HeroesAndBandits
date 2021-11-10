@@ -1,10 +1,10 @@
-ref habLevel 						g_HeroesAndBanditsLevel;
+autoptr habLevel 						g_HeroesAndBanditsLevel;
 
 modded class MissionGameplay extends MissionBase
 {
-	ref HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
-	ref HeroesAndBanditsStatusBarIconUI		m_HeroesAndBanditsStatusBarIconUI;
-	ref HeroesAndBanditsPanelUI				m_HeroesAndBanditsPanelUI;
+	autoptr HeroesAndBanditsIconUI				m_HeroesAndBanditsIconUI;
+	autoptr HeroesAndBanditsStatusBarIconUI		m_HeroesAndBanditsStatusBarIconUI;
+	autoptr HeroesAndBanditsPanelUI				m_HeroesAndBanditsPanelUI;
 	bool									m_HeroesAndBanditsIconsInitialized;
 	bool									m_HeroesAndBanditsPanelOpening = false;
 	string									m_HeroesAndBanditsCurrentIcon;

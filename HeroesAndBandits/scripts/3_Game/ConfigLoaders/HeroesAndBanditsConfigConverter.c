@@ -1,8 +1,8 @@
 class habConverter extends Managed
 {
-	static ref map<string, string> GunToSound = new map<string, string>;
-	static ref map<string, string> GunToMag= new map<string, string>;
-	static ref map<string, float> GunToDmg = new map<string, float>;
+	static autoptr map<string, string> GunToSound = new map<string, string>;
+	static autoptr map<string, string> GunToMag= new map<string, string>;
+	static autoptr map<string, float> GunToDmg = new map<string, float>;
 
 	void habConverter(){
 	}
@@ -154,7 +154,7 @@ class habConverter extends Managed
 			Radius = 0;
 		}
 		
-		ref habZone tempZone =  new  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
+		autoptr habZone tempZone =  new  habZone(Name, X, Z, WarnRadius, Radius, WarningMessage, OverrideSafeZone, GodModPlayers);
 		tempZone.MinHumanity = MinHumanity;
 		tempZone.MaxHumanity = MaxHumanity;
 		tempZone.convertHumanityToAffinty();
@@ -217,7 +217,7 @@ class habConverter extends Managed
 			RequireLineOfSight = true;
 		}
 		for (int i = 0; i < simpZone.Guards.Count(); i++){
-			ref habGuard tmpGuard = new habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
+			autoptr habGuard tmpGuard = new habGuard(simpZone.Guards.Get(i).X, simpZone.Guards.Get(i).Y, simpZone.Guards.Get(i).Z,simpZone.Guards.Get(i).Orientation,simpZone.Guards.Get(i).Skin);
 			tmpGuard.GuardGear = simpZone.Guards.Get(i).GuardGear;
 			
 			string WeaponInHands = simpZone.Guards.Get(i).WeaponInHands;
