@@ -2,11 +2,11 @@ modded class TrapBase
 {
 	protected string hab_ActivatedByID;		// ID for player who placed Trap
 
-	void habSetActivatedBy(string playerID)
+	void habSetActivatedBy(string guid)
 	{
-		if (playerID)
+		if (guid)
 		{
-			hab_ActivatedByID = playerID;
+			hab_ActivatedByID = guid;
 		}
 	}
 	

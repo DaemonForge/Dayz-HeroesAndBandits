@@ -9,8 +9,7 @@ modded class ActionCPR: ActionContinuousBase
 		if ( shock < PlayerConstants.UNCONSCIOUS_THRESHOLD )
 		{
 			PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-			string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-			GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicGiveCPR");
+			sourcePlayer.NewHABAction("MedicGiveCPR",action_data.m_Target.GetObject());
 		}
 	}
 };

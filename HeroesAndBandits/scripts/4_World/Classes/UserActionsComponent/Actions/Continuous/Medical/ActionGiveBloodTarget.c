@@ -11,14 +11,13 @@ modded class ActionGiveBloodTarget: ActionContinuousBase
 		int bloodtypetarget = player_target.GetStatBloodType().Get();
 		bool bloodmatch = BloodTypes.MatchBloodCompatibility(action_data_b.m_ItemBloodType, bloodtypetarget);
 		
+		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 		if ( bloodmatch )
 		{
-			PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-			string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-			GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicGiveBlood");
+			sourcePlayer.NewHABAction("MedicGiveBlood",action_data.m_Target.GetObject());
 		} else
 		{ //TODO
-			
+			sourcePlayer.NewHABAction("MedicGiveBadBlood",action_data.m_Target.GetObject());
 		}
 	}
 }

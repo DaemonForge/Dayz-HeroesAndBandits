@@ -1,3 +1,3 @@
 // For other mods to use
 
-#define HEROESANDBANDITSMOD
+#define HEROESANDBANDITSMOD_V2

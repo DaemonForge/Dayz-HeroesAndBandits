@@ -1,12 +1,12 @@
 modded class MissionBase extends MissionBaseWorld
 {
-	
+	/*
     override UIScriptedMenu CreateScriptedMenu (int id) {
         UIScriptedMenu menu = NULL;
         menu = super.CreateScriptedMenu (id);
         if (!menu) {
             switch (id) {
-                case HEROESANDBANDITS_PANEL_MENU:
+                case HAB_PANEL_MENU:
                     menu = new HeroesAndBanditsPanelUI;
                     break;
             }
@@ -15,5 +15,5 @@ modded class MissionBase extends MissionBaseWorld
             }
         }
         return menu;
-    }
+    }*/
 }

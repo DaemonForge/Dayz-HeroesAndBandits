@@ -4,7 +4,6 @@ modded class ActionSplintTarget: ActionContinuousBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicSplintPlayer");
+		sourcePlayer.NewHABAction("MedicSplintPlayer",action_data.m_Target.GetObject());
 	}
 };

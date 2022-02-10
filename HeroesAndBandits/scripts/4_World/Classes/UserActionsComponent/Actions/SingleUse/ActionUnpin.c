@@ -6,8 +6,7 @@ modded class ActionUnpin: ActionSingleUseBase
         Grenade_Base grenade = Grenade_Base.Cast(action_data.m_MainItem);
         if (sourcePlayer && grenade)
         {
-			habPrint("Player with ID " + sourcePlayer.GetIdentity().GetPlainId() + " Activated " + grenade.GetType() ,"Debug");
-            grenade.habSetActivatedBy(sourcePlayer.GetIdentity().GetPlainId());
+            grenade.habSetActivatedBy(sourcePlayer.GetIdentity().GetId());
         }
         super.OnStartServer(action_data);
     }

@@ -4,8 +4,7 @@ modded class ActionFeedTetracyclineAntibiotics: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedTetracycline");
+		sourcePlayer.NewHABAction("MedicFeedTetracycline",action_data.m_Target.GetObject());
 	}
 };
 
@@ -15,8 +14,7 @@ modded class ActionFeedPainkillerTablets: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedPainkiller");
+		sourcePlayer.NewHABAction("MedicFeedPainkiller",action_data.m_Target.GetObject());
 	}
 };
 
@@ -27,8 +25,7 @@ modded class ActionFeedCharcoalTablets: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedCharcoal");
+		sourcePlayer.NewHABAction("MedicFeedCharcoal",action_data.m_Target.GetObject());
 	}
 };
 
@@ -38,8 +35,7 @@ modded class ActionFeedVitaminBottle: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
-		GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "MedicFeedVitamin");
+		sourcePlayer.NewHABAction("MedicFeedVitamin",action_data.m_Target.GetObject());
 	}
 	
 };

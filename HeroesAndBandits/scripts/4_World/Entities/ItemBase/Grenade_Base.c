@@ -2,11 +2,11 @@ modded class Grenade_Base
 {
     protected string hab_ActivatedByID;
 
-	void habSetActivatedBy(string playerID)
+	void habSetActivatedBy(string guid)
 	{
-		if (playerID)
+		if (guid)
 		{
-			hab_ActivatedByID = playerID;
+			hab_ActivatedByID = guid;
 		}
 	}
 	

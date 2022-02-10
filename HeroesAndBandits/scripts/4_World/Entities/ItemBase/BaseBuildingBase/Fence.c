@@ -7,7 +7,6 @@ modded class Fence
 				// If source is Grenade 
 				
 				Grenade_Base grenade = Grenade_Base.Cast(source);
-				habPrint( " FENCE hit by " + grenade.GetType() + " set by " + grenade.habGetActivatedBy(), "Debug");
 				this.habLastHitBy = grenade.habGetActivatedBy();
 			}
 		}

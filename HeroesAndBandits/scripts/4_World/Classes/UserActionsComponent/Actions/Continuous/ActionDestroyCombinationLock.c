@@ -4,16 +4,12 @@ modded class ActionDestroyCombinationLock: ActionContinuousBase
 	{
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		string sourcePlayerID = sourcePlayer.GetIdentity().GetPlainId();
 		Fence fence = Fence.Cast( action_data.m_Target.GetObject() );
-		if ( fence )
-		{
+		if ( fence ) {
 			CombinationLock combination_lock = fence.GetCombinationLock();
-			if ( combination_lock )
-			{
-				if ( combination_lock.IsDamageDestroyed() )
-				{
-					GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, "CombinationLockRaid");
+			if ( combination_lock ) {
+				if ( combination_lock.IsDamageDestroyed() ) {
+					sourcePlayer.NewHABAction("CombinationLockRaid",action_data.m_Target.GetObject());
 				}
 			}
 		}

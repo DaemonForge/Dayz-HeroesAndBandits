@@ -1,27 +1,30 @@
 class habDeathType 
 {
-	static int ByUnknown = -1;
+	static int Unknown = -1;
 	
-	static int BySucide = 0;
+	static int Sucide = 0;
 	
-	static int ByBambi = 1;
-	static int ByHero = 2;
-	static int ByBandit = 3;
-	static int ByOtherAffinity = 4;
+	static int Bambi = 1;
+	static int Hero = 2;
+	static int Bandit = 3;
 	
-	static int ByZombie = 5;
+	static int AI = 4;
 	
-	static int ByOther = 6;
+	static int Zombie = 5;
 	
-	static int ByBleeding = 7;
+	static int Animal = 6;
 	
-	static int ByGuardAI = 8;
+	static int Other = 7;
 	
-	static int ByCarCrash = 9;
+	static int Bleeding = 8;
 	
-	static int ByFalling = 10;
+	static int LegacyAI = 9;
 	
-	static int ByZombieBleeding = 11;
+	static int CarCrash = 10;
+	
+	static int Falling = 11;
+	
+	static int ZombieBleeding = 12;
 	
 };
 
