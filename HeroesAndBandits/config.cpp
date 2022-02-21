@@ -5,7 +5,7 @@ class CfgPatches
 		requiredVersion=0.1;
 		requiredAddons[]={
 			"HABDefines",
-			"JM_CF_Scripts"
+			"UniversalApi"
 		};
 	};
 };
@@ -31,7 +31,7 @@ class CfgMods
 			{
 				files[]=
 				{
-					"HeroesAndBandits/gui/images/HeroesAndBandits.imageset"
+					"HeroesAndBandits/gui/images/hab_icons.imageset"
 				};
 			};
 			class gameScriptModule

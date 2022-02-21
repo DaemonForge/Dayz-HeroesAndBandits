@@ -4,6 +4,6 @@ modded class ActionGiveSalineTarget: ActionContinuousBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicGiveSaline",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicGiveSaline",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };

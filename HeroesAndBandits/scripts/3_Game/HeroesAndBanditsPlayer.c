@@ -6,6 +6,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	protected int MaxLevel = 0;
 	
 	protected autoptr array<autoptr HeroesAndBanditsStats> m_Stats;
+	//Daily Gain saved in its own objects
 	[NonSerialized()]
 	protected autoptr array<autoptr HeroesAndBanditsDaily> m_DailyGain;
 	
@@ -22,7 +23,6 @@ class HeroesAndBanditsPlayerBase extends Managed
 	void UpdateDaily(float humanity){
 		
 	}
-	
 	
 	float GetHumanity(){
 		return Humanity;
@@ -60,11 +60,11 @@ class HeroesAndBanditsStats extends Managed {
 class HeroesAndBanditsDaily extends Managed {
 	protected string ObjectId = "NewObject";
 	protected string m_guid;
-	protected string m_DateStamp;
+	protected int m_DateStamp;
 	protected int m_Value;
 	protected autoptr array<autoptr HeroesAndBanditsStats> m_Stats;
 	
-	void HeroesAndBanditsDaily(string guid, string date, int value){
+	void HeroesAndBanditsDaily(string guid, int date, int value){
 		m_guid = guid;
 		m_DateStamp = date;
 		m_Value = value;

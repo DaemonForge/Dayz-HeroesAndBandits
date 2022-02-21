@@ -8,10 +8,15 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
+	}
+	
+	override void UniversalApiReady(){
+		super.UniversalApiReady();
 		OnHaBInit();
 	}
 	
 	override void OnHaBInit(){
+		HABActionConfigs.Init();
 		m_HeroesAndBandits = new HeroesAndBandits;
 		m_HeroesAndBandits.Init();
 	}

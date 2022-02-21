@@ -4,6 +4,12 @@ modded class ActionBandageTarget: ActionBandageBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicBandagePlayer",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicBandagePlayer", EntityAI.Cast(action_data.m_Target.GetObject()));
+		PlayerBase targetPlayer = PlayerBase.Cast(action_data.m_Target.GetObject());
+		if (targetPlayer){
+			if (targetPlayer.GetBleedingManagerServer().GetBleedingSourcesCount() == 0){
+				targetPlayer.habResetBleedingSource();
+			}
+		}
 	}
 };

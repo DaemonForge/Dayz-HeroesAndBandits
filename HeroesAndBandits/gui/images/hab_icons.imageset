@@ -1,0 +1,98 @@
+ImageSetClass {
+ Name "hab_icons"
+ RefSize 2048 2048
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{AFC6A46BC1D361FF}HeroesAndBandits/gui/images/ImageSet.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass hero {
+   Name "hero"
+   Pos 2 2
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass herolv1 {
+   Name "herolv1"
+   Pos 514 1026
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass herolv2 {
+   Name "herolv2"
+   Pos 1025 1025
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass herolv3 {
+   Name "herolv3"
+   Pos 1538 1026
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass herolv4 {
+   Name "herolv4"
+   Pos 1 1538
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass herolv5 {
+   Name "herolv5"
+   Pos 514 1538
+   Size 508 510
+   Flags 0
+  }
+  ImageSetDefClass bandit {
+   Name "bandit"
+   Pos 514 2
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass banditlv1 {
+   Name "banditlv1"
+   Pos 2 514
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass banditlv2 {
+   Name "banditlv2"
+   Pos 514 514
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass banditlv3 {
+   Name "banditlv3"
+   Pos 1026 514
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass banditlv4 {
+   Name "banditlv4"
+   Pos 1538 514
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass banditlv5 {
+   Name "banditlv5"
+   Pos 2 1026
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass bambi {
+   Name "bambi"
+   Pos 1026 2
+   Size 508 508
+   Flags 0
+  }
+  ImageSetDefClass death {
+   Name "death"
+   Pos 1538 2
+   Size 508 508
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

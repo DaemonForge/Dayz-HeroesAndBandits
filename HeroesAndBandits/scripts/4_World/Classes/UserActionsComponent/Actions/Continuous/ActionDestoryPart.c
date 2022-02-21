@@ -4,6 +4,6 @@ modded class ActionDestroyPart: ActionContinuousBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("PartRaid", action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("PartRaid", EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };

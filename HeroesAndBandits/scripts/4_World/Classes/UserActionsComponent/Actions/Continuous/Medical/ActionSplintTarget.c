@@ -4,6 +4,6 @@ modded class ActionSplintTarget: ActionContinuousBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicSplintPlayer",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicSplintPlayer",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };

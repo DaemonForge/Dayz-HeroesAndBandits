@@ -1,4 +1,4 @@
-static ref UApiDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UApiDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
+static autoptr UApiDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UApiDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
 modded class PlayerBase extends ManBase
 {
 	
@@ -19,23 +19,26 @@ modded class PlayerBase extends ManBase
 	
 	protected int m_HeroesAndBandits_LastBleedingSourceType = -1;
 	protected string m_HeroesAndBandits_LastBleedingSourceID;
+	protected string m_HeroesAndBandits_Icon;
 	
 	override void Init()
 	{
 		super.Init();
 		RegisterNetSyncVariableFloat("m_Humanity");
-		RegisterNetSyncVariableInt("m_HaBLevel",-99);
+		RegisterNetSyncVariableInt("m_HaBLevel",HAB_BANDIT_MAXLEVEL,HAB_HERO_MAXLEVEL);
 	}
 	
 	void ~PlayerBase(){
-		HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
+		if (HABPlayerDataHandler){
+			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
+		}
 	}
 	override void OnStoreSave(ParamsWriteContext ctx)
     {
         super.OnStoreSave(ctx);
 		StatUpdateByTime( AnalyticsManagerServer.STAT_PLAYTIME );
-		if (!GetGame().IsClient()){
-			HABPlayerDataHandler.Save(GetHABGUIDCache(),HABData());
+		if (!GetGame().IsClient() && HABData()){
+			HABPlayerDataHandler.Save(GetHABGUIDCache(), HABData());
 		}
     }
 	
@@ -51,10 +54,10 @@ modded class PlayerBase extends ManBase
 		m_Humanity = humanity;
 		HABData().UpdateHumanity(humanity);
 		if (oldLevel != newLevel){
-			m_HABControllerBase.OnLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
+			HABControler().OnLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
 		}
 		if (oldAffinity != newAffinity){
-			m_HABControllerBase.OnAffinityChange(oldAffinity,newAffinity,((newAffinity == HAB_HERO && HABData().Max() < 1) || (newAffinity == HAB_BANDIT && HABData().Min() > -1)));
+			HABControler().OnAffinityChange(oldAffinity,newAffinity,((newAffinity == HAB_HERO && HABData().Max() < 1) || (newAffinity == HAB_BANDIT && HABData().Min() > -1)));
 		}
 		SetSynchDirty();
 	}
@@ -67,28 +70,49 @@ modded class PlayerBase extends ManBase
 		return m_HABData;
 	}
 	
+	string GetClientIcon(){
+		return m_HeroesAndBandits_Icon;
+	}
+	
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();
-		
+		Print("OnPlayerLoaded");
 		if ( GetIdentity() ){ 
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();
 			m_hab_LastDataCall = HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
 		}
 		SetSynchDirty();
+		if (GetGame().IsClient()){
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.habSyncIcon); 
+		}
 	}
 	
 	void CBHABData(int cid, int status, string oid, HeroesAndBanditsPlayerBase data){
 		if (status == UAPI_SUCCESS){
 			Class.CastTo(m_HABData,data);
 			if (GetGame().IsDedicatedServer()){
-				UpdateHumanity(m_HABData.GetHumanity());
+				m_Humanity = m_HABData.GetHumanity();
+				SetSynchDirty();
+				InitHABController();
+			}
+		} else if (status == UAPI_EMPTY && GetIdentity()){
+			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
+			if (GetGame().IsDedicatedServer()){
+				InitHABController();
 			}
 		}
-		if (status == UAPI_EMPTY &&  GetIdentity()){
-			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
-		}
+	}
+	
+	HeroesAndBanditsControllerBase HABControler(){
+		return m_HABControllerBase;
+	}
+	
+	void InitHABController(){
+		if (!GetGame().IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
+		
+		m_HABControllerBase = HeroesAndBandits.Controller(Humanity(),this);
 	}
 	
 	void OnHABLevelChange(int oldLevel, int newLevel, bool isFirst){
@@ -103,18 +127,20 @@ modded class PlayerBase extends ManBase
 	float Humanity(){
 		return m_Humanity;
 	}
-
+	
+	
 	void NewHABAction(string Action, EntityAI other = NULL){
-		if (!m_HABControllerBase){
+		if (!HABControler()){
 			return;
 		}
-		m_HABControllerBase.NewAction(Action,other);
+		Action.ToLower();
+		HABControler().NewAction(Action,other);
 	}
 	void NewHABKillAction(EntityAI other = NULL){
-		if (!m_HABControllerBase){
+		if (!HABControler()){
 			return;
 		}
-		m_HABControllerBase.NewKillAction(other);
+		HABControler().NewKillAction(other);
 	}
 
 	bool habCheckGodMod(){
@@ -268,7 +294,7 @@ modded class PlayerBase extends ManBase
 				//TODO get sourcePlayer if Killed by object
 			}
 			
-			if ( sourcePlayer && targetPlayer ) {//Make sure Players are valid
+			if ( sourcePlayer ) {//Make sure Players are valid
 				sourcePlayer.NewHABKillAction(this);
 			}
 		}
@@ -408,6 +434,35 @@ modded class PlayerBase extends ManBase
 	void habResetBleedingSource(){
 	
 	}
+	
+	void habSyncIcon(){
+		if (GetGame().IsClient()){
+			Print("[HAB] Requesting Icon Sync");
+			RPCSingleParam(HAB_SYNCICON, new Param1<bool>(true),true, NULL);
+		} else {
+			Print("[HAB] Syncing Icon");
+			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABControler().Icon()),true, NULL);
+		}
+	}
+	
+	
+	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{
+		super.OnRPC(sender, rpc_type, ctx);
+		
+		if (rpc_type == HAB_SYNCICON && GetGame().IsClient()) {
+			Param1<string> iconData;
+			if (ctx.Read(iconData)){
+				m_HeroesAndBandits_Icon = iconData.param1;
+				Print("[HAB] Reciving Icon " + m_HeroesAndBandits_Icon);
+			}
+		}
+		if (rpc_type == HAB_SYNCICON && GetGame().IsDedicatedServer() && sender && HABControler()) {
+			Print("[HAB] Syncing Icon with " + sender.GetId());
+			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABControler().Icon()),true, sender);
+		}
+	}
+	
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{

@@ -4,7 +4,7 @@ modded class ActionFeedTetracyclineAntibiotics: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicFeedTetracycline",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicFeedTetracycline",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };
 
@@ -14,7 +14,7 @@ modded class ActionFeedPainkillerTablets: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicFeedPainkiller",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicFeedPainkiller",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };
 
@@ -25,7 +25,7 @@ modded class ActionFeedCharcoalTablets: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicFeedCharcoal",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicFeedCharcoal",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 };
 
@@ -35,7 +35,7 @@ modded class ActionFeedVitaminBottle: ActionForceConsume
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicFeedVitamin",action_data.m_Target.GetObject());
+		sourcePlayer.NewHABAction("MedicFeedVitamin",EntityAI.Cast(action_data.m_Target.GetObject()));
 	}
 	
 };

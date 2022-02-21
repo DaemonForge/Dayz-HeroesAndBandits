@@ -14,10 +14,10 @@ modded class ActionGiveBloodTarget: ActionContinuousBase
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
 		if ( bloodmatch )
 		{
-			sourcePlayer.NewHABAction("MedicGiveBlood",action_data.m_Target.GetObject());
+			sourcePlayer.NewHABAction("MedicGiveBlood",EntityAI.Cast(action_data.m_Target.GetObject()));
 		} else
 		{ //TODO
-			sourcePlayer.NewHABAction("MedicGiveBadBlood",action_data.m_Target.GetObject());
+			sourcePlayer.NewHABAction("MedicGiveBadBlood",EntityAI.Cast(action_data.m_Target.GetObject()));
 		}
 	}
 }

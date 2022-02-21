@@ -9,7 +9,7 @@ modded class ActionDestroyCombinationLock: ActionContinuousBase
 			CombinationLock combination_lock = fence.GetCombinationLock();
 			if ( combination_lock ) {
 				if ( combination_lock.IsDamageDestroyed() ) {
-					sourcePlayer.NewHABAction("CombinationLockRaid",action_data.m_Target.GetObject());
+					sourcePlayer.NewHABAction("CombinationLockRaid",EntityAI.Cast(action_data.m_Target.GetObject()));
 				}
 			}
 		}

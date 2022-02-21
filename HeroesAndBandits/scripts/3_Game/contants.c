@@ -4,8 +4,11 @@ static const int HAB_BAMBI = 0;
 static const int HAB_HERO = 1;
 static const int HAB_BANDIT = -1;
 
+static const int HAB_HERO_MAXLEVEL = 10;
+static const int HAB_BANDIT_MAXLEVEL = -10;
+
 //For Future
-static const int HAB_1 = 2111160691;
+static const int HAB_SYNCICON = 2111160691;
 static const int HAB_2 = 2111160692;
 static const int HAB_3 = 2111160693;
 static const int HAB_4 = 2111160694;
