@@ -5,7 +5,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	
 	protected autoptr map<int,string> m_Icons;
 	
-		
+	static int MAXKILLSPERPLAYER = 5;
 	
 	void HeroesAndBanditsControllerBase(PlayerBase player){
 		Class.CastTo(m_player,player);
@@ -17,28 +17,33 @@ class HeroesAndBanditsControllerBase extends Managed {
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS",Actions);
 		m_Icons = new map<int,string>;
 		m_Icons.Set(0,"set:hab_icons image:bambi");
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetPlayer().habSyncIcon);
 	}
 	
 	PlayerBase GetPlayer(){
 		return m_player;
 	}
 	
-	bool GetBaseActionGain(string Action, out string ActionName, inout float humanity, inout bool notify){
+	bool GetBaseActionGain(string Action, out string ActionName, inout float gain, inout bool notify){
 		HaBActionBase action;
 		if (Actions.Find(Action, action)){
 			ActionName = action.DisplayName();
-			humanity = action.GetGain(GetPlayer().Humanity());
+			gain = action.GetGain(GetPlayer().Humanity());
 			notify = action.Notify();
+			int dailyLimit = action.DailyLimit();
+			if (!GetPlayer().HABData().IncermentAction(Action, dailyLimit)){
+				Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
+				gain = 0;
+			}
 			return true;
 		}
 		return false;
 	}
 	
-	bool AdjustActionGain(string Action, EntityAI other, inout float humanity, out bool notify){
-		
+	bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
 		return false;
 	}
-	bool AdjustKillGain(EntityAI other, inout float humanity, out bool notify){
+	bool AdjustKillGain(EntityAI other, inout float gain, out bool notify){
 		
 		return false;
 	}
@@ -49,15 +54,18 @@ class HeroesAndBanditsControllerBase extends Managed {
 		bool notify = true;
 		if (!GetBaseActionGain(Action,ActionName,gain,notify)){
 			Print("[HAB] Action: " + Action + " has no base humanity defined");
+			return;
 		}
+		
+		Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
 		AdjustActionGain(Action,other,gain,notify);
 		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player,Action,other,gain,notify);
 		
 		m_player.IncermentHumanity(gain);
 		if (notify && Math.AbsFloat(gain) > 0){
-			string message = "";
+			string message = " ";
 			if (gain > 0){
-				message = "+";
+				message = " +";
 			} 
 			message = message + gain + " Humanity";
 			UUtil.SendNotification(ActionName, message, GetPlayer().GetIdentity(), Icon());
@@ -69,8 +77,12 @@ class HeroesAndBanditsControllerBase extends Managed {
 		string ActionName;
 		bool notify = true;
 		PlayerBase otherPlayer = PlayerBase.Cast(other);
+		string guid;
 		string Action;
 		if (!otherPlayer){
+			if (otherPlayer.GetIdentity()){
+				guid = otherPlayer.GetIdentity().GetId();
+			}
 			int affinity = HeroesAndBandits.GetAffinity(otherPlayer.Humanity());
 			if (affinity == HAB_HERO){
 				Action = "herokill";
@@ -82,6 +94,11 @@ class HeroesAndBanditsControllerBase extends Managed {
 		}
 		if (!GetBaseActionGain(Action,ActionName,gain,notify)){
 			Print("[HAB] Action: " + Action + " has no base humanity defined");
+		}
+		
+		if (guid != "" && !GetPlayer().HABData().IncermentAction("kill." + guid, MAXKILLSPERPLAYER)){
+			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + MAXKILLSPERPLAYER );
+			gain = 0;
 		}
 		AdjustKillGain(other,gain,notify);
 		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify);
@@ -101,6 +118,8 @@ class HeroesAndBanditsControllerBase extends Managed {
 		bool notify = true;
 		
 		MissionBaseWorld.Cast(GetGame().GetMission()).OnHABAffinityChange(m_player,oldAffinity,newAffinity,isFirst,notify);
+		
+		GetPlayer().OnHABAffinityChange(oldAffinity,newAffinity,isFirst);
 		if (notify){
 			
 		}
@@ -111,6 +130,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		
 		MissionBaseWorld.Cast(GetGame().GetMission()).OnLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
 		
+		GetPlayer().OnHABLevelChange(oldLevel,newLevel,isFirst);
 		if (notify){
 			
 		}
@@ -120,6 +140,18 @@ class HeroesAndBanditsControllerBase extends Managed {
 		return "set:hab_icons image:bambi";
 	}
 	
+	
+	int Affinity(){
+		return HAB_BAMBI;
+	}
+	
+	string Name(){
+		return "#HAB_BAMBI";
+	}
+	
+	void OverrideIcons(autoptr map<int, string> icons){
+		m_Icons = icons;
+	}
 
 }
 class BambiController extends HeroesAndBanditsControllerBase {
@@ -131,8 +163,8 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	}
 	
 
-	override bool AdjustActionGain(string Action, EntityAI other, inout float humanity, out bool notify){
-		if (super.AdjustActionGain(Action, other, humanity, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
+		if (super.AdjustActionGain(Action, other, gain, notify)){
 			return true;
 		}
 		return false;
@@ -141,6 +173,15 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	
 	override string Icon(){
 		return "set:hab_icons image:bambi";
+	}
+	
+	override int Affinity(){
+		return HAB_BAMBI;
+	}
+	
+	
+	override string Name(){
+		return "#HAB_BAMBI";
 	}
 }
 
@@ -157,15 +198,25 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(5,"set:hab_icons image:herolv5");
 	}
 	
-	override bool AdjustActionGain(string Action, EntityAI other, inout float humanity, out bool notify){
-		if (super.AdjustActionGain(Action, other, humanity, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
+		if (super.AdjustActionGain(Action, other, gain, notify)){
 			return true;
 		}
 		return false;
 	}
 	
 	override string Icon(){
+		string icon;
+		if (m_Icons.Find(HeroesAndBandits.GetLevel(GetPlayer().Humanity()),icon)){
+			return icon;
+		}
 		return "set:hab_icons image:hero";
+	}
+	override int Affinity(){
+		return HAB_HERO;
+	}
+	override string Name(){
+		return "#HAB_HERO";
 	}
 
 }
@@ -183,14 +234,24 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(5,"set:hab_icons image:banditlv5");
 	}
 
-	override bool AdjustActionGain(string Action, EntityAI other, inout float humanity, out bool notify){
-		if (super.AdjustActionGain(Action, other, humanity, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
+		if (super.AdjustActionGain(Action, other, gain, notify)){
 			return true;
 		}
 		return false;
 	}
 	
 	override string Icon(){
+		string icon;
+		if (m_Icons.Find(HeroesAndBandits.GetLevel(GetPlayer().Humanity()),icon)){
+			return icon;
+		}
 		return "set:hab_icons image:bandit";
+	}
+	override int Affinity(){
+		return HAB_BANDIT;
+	}
+	override string Name(){
+		return "#HAB_BANDIT";
 	}
 }

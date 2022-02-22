@@ -13,13 +13,15 @@ class HaBActionBase extends Managed {
 	protected float value;
 	protected bool notify
 	protected int adjustmentType = HaBActionType.EXACT;
+	protected int dailyLimit = -1;
 	
-	void HaBActionBase(string Name, string displayname, float Value, bool Notify = true, int type = HaBActionType.EXACT){
+	void HaBActionBase(string Name, string displayname, float Value, bool Notify = true, int type = HaBActionType.EXACT, int limit = -1){
 		name = Name;
 		displayName = displayname;
 		value = Value;
 		notify = Notify;
 		adjustmentType = type;
+		dailyLimit = limit;
 	}
 	
 	string Name(){
@@ -41,6 +43,9 @@ class HaBActionBase extends Managed {
 	int AdjustmentType(){
 		return adjustmentType;
 	}
+	int DailyLimit(){
+		return dailyLimit;
+	}
 	
 	float GetGain(float curHumanity){
 		switch (AdjustmentType()){
@@ -61,9 +66,9 @@ class HaBActionBase extends Managed {
 			break;
 			case HaBActionType.SUB:
 				if (curHumanity > 0){
-					return Value() * -1;
+					return Math.Max(Value() * -1, curHumanity * -1);
 				}else if (curHumanity < 0){
-					return Value();
+					return Math.Min(Value(), curHumanity * -1);
 				} else {
 					return 0;
 				}
@@ -79,16 +84,15 @@ class HaBActionBase extends Managed {
 			break;
 			case HaBActionType.MULTIPLESUB:
 				if (curHumanity > 0){
-					return curHumanity * Value() * -1;
+					return Math.Max(curHumanity * Value() * -1, curHumanity * -1);
 				}else if (curHumanity < 0){
-					return curHumanity * Value();
+					return Math.Min(curHumanity * Value(), curHumanity * -1);
 				} else {
 					return 0;
 				}
 			break;
-			
 		}
-		return Value();
+		return 0;
 	}
 	
 }

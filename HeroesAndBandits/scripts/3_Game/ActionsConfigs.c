@@ -84,23 +84,23 @@ class HABActionConfigs extends Managed {
 			Configs = new map<string, autoptr array<autoptr HaBActionBase>>;
 		}
 		if (action == "HAB_ACTIONS"){
-			defaultActions.Insert(new HaBActionBase("herokill", "Killed Hero", -350, false, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("banditkill", "Killed Bandit", 350, false, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("bambikill", "Killed Bambi", -300, false, HaBActionType.EXACT));
+			defaultActions.Insert(new HaBActionBase("herokill", "Killed Hero", -350, false, HaBActionType.EXACT,5));
+			defaultActions.Insert(new HaBActionBase("banditkill", "Killed Bandit", 350, false, HaBActionType.EXACT,5));
+			defaultActions.Insert(new HaBActionBase("bambikill", "Killed Bambi", -300, false, HaBActionType.EXACT,5));
 			
 			defaultActions.Insert(new HaBActionBase("zombiekill", "Killed A Zombie", 5, true, HaBActionType.EXACT));
 			defaultActions.Insert(new HaBActionBase("fencepartraid", "Raided A Fence", -50, true, HaBActionType.EXACT));
 			defaultActions.Insert(new HaBActionBase("watchtowerpartraid", "Raided A Watchtower", -30, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicbandageplayer", "Bandage Player", 25, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicgiveblood", "Give Blood", 25, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicgivesaline", "Give Saline", 25, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicgivecpr", "Give CPR", 75, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicfeedtetracycline", "Give Tetracycline", 15, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicfeedpainkiller", "Give Painkiller", 15, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicfeedcharcoal", "Give Charcoal", 15, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicfeedvitamin", "Give Vitamin", 15, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("medicsplintplayer", "Applied Splint", 15, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("huntanimal", "Hunted Animal", 10, true, HaBActionType.ADD));
+			defaultActions.Insert(new HaBActionBase("medicbandageplayer", "Bandage Player", 25, true, HaBActionType.EXACT,50));
+			defaultActions.Insert(new HaBActionBase("medicgiveblood", "Give Blood", 25, true, HaBActionType.EXACT,15));
+			defaultActions.Insert(new HaBActionBase("medicgivesaline", "Give Saline", 25, true, HaBActionType.EXACT,15));
+			defaultActions.Insert(new HaBActionBase("medicgivecpr", "Give CPR", 75, true, HaBActionType.EXACT,15));
+			defaultActions.Insert(new HaBActionBase("medicfeedtetracycline", "Give Tetracycline", 15, true, HaBActionType.EXACT,25));
+			defaultActions.Insert(new HaBActionBase("medicfeedpainkiller", "Give Painkiller", 15, true, HaBActionType.EXACT,25));
+			defaultActions.Insert(new HaBActionBase("medicfeedcharcoal", "Give Charcoal", 15, true, HaBActionType.EXACT,25));
+			defaultActions.Insert(new HaBActionBase("medicfeedvitamin", "Give Vitamin", 15, true, HaBActionType.EXACT,25));
+			defaultActions.Insert(new HaBActionBase("medicsplintplayer", "Applied Splint", 15, true, HaBActionType.EXACT,25));
+			defaultActions.Insert(new HaBActionBase("huntanimal", "Hunted Animal", 10, true, HaBActionType.ADD,25));
 			
 			defaultActions.Insert(new HaBActionBase("death", "Died", 0.1, true, HaBActionType.MULTIPLESUB));
 			defaultActions.Insert(new HaBActionBase("playerdeath", "Died To Player", 0.03, true, HaBActionType.MULTIPLESUB));
@@ -110,9 +110,9 @@ class HABActionConfigs extends Managed {
 			defaultActions.Insert(new HaBActionBase("zombiedeath", "Died To Zombies", 0.07, true, HaBActionType.MULTIPLESUB));
 		}
 		if (action == "HAB_ACTIONS_HERO"){
-			defaultActions.Insert(new HaBActionBase("killhero", "Killed Hero", -1000, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("killbandit", "Killed Bandit", 400, true, HaBActionType.EXACT));
-			defaultActions.Insert(new HaBActionBase("killbambi", "Killed Bambi", -200, true, HaBActionType.EXACT));
+			defaultActions.Insert(new HaBActionBase("killhero", "Killed Hero", -1000, true, HaBActionType.EXACT,10));
+			defaultActions.Insert(new HaBActionBase("killbandit", "Killed Bandit", 400, true, HaBActionType.EXACT,10));
+			defaultActions.Insert(new HaBActionBase("killbambi", "Killed Bambi", -200, true, HaBActionType.EXACT,10));
 		}
 		if (action == "HAB_ACTIONS_BANDIT"){
 			defaultActions.Insert(new HaBActionBase("killhero", "Killed Hero", -350, true, HaBActionType.EXACT));

@@ -32,7 +32,7 @@ modded class ZombieBase
 			}
 			
 			if (sourcePlayer && sourcePlayer.GetIdentity()){
-				sourcePlayer.NewHABAction("ZombieKill",this);
+				sourcePlayer.NewHABAction("zombiekill",this);
 			}
 		}
     }

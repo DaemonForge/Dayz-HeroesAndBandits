@@ -1,16 +1,5 @@
-static autoptr UApiDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UApiDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
 modded class PlayerBase extends ManBase
-{
-	
-	protected autoptr HeroesAndBanditsPlayerBase m_HABData;
-	protected autoptr HeroesAndBanditsControllerBase m_HABControllerBase;
-	
-	protected string m_HABGUIDCache;
-	protected string m_HABNameCache;
-	
-	protected float m_Humanity = 0;
-	protected int m_HaBLevel = 0;
-	
+{	
 	protected bool m_HeroesAndBandits_CanRaiseWeapon = true;
 	
 	protected int m_hab_LastDataCall = -1;
@@ -21,12 +10,6 @@ modded class PlayerBase extends ManBase
 	protected string m_HeroesAndBandits_LastBleedingSourceID;
 	protected string m_HeroesAndBandits_Icon;
 	
-	override void Init()
-	{
-		super.Init();
-		RegisterNetSyncVariableFloat("m_Humanity");
-		RegisterNetSyncVariableInt("m_HaBLevel",HAB_BANDIT_MAXLEVEL,HAB_HERO_MAXLEVEL);
-	}
 	
 	void ~PlayerBase(){
 		if (HABPlayerDataHandler){
@@ -36,17 +19,10 @@ modded class PlayerBase extends ManBase
 	override void OnStoreSave(ParamsWriteContext ctx)
     {
         super.OnStoreSave(ctx);
-		StatUpdateByTime( AnalyticsManagerServer.STAT_PLAYTIME );
-		if (!GetGame().IsClient() && HABData()){
-			HABPlayerDataHandler.Save(GetHABGUIDCache(), HABData());
-		}
+		//SaveHABData();
     }
 	
-	string GetHABGUIDCache(){
-		return m_HABGUIDCache;
-	}
-	
-	protected void UpdateHumanity(float humanity){
+	override protected void UpdateHumanity(float humanity){
 		int oldLevel = HeroesAndBandits.GetLevel(m_Humanity);
 		int newLevel = HeroesAndBandits.GetLevel(humanity);
 		int oldAffinity = HeroesAndBandits.GetAffinity(m_Humanity);
@@ -54,10 +30,21 @@ modded class PlayerBase extends ManBase
 		m_Humanity = humanity;
 		HABData().UpdateHumanity(humanity);
 		if (oldLevel != newLevel){
-			HABControler().OnLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
+			HABContoller().OnLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
 		}
 		if (oldAffinity != newAffinity){
-			HABControler().OnAffinityChange(oldAffinity,newAffinity,((newAffinity == HAB_HERO && HABData().Max() < 1) || (newAffinity == HAB_BANDIT && HABData().Min() > -1)));
+			if (!HABContoller()){
+				Error2("HABContoller","HAB Contoller is NULL");
+			}
+			if (!HABData()){
+				Error2("HABData","HAB Data is NULL");
+			}
+			bool HasBeenHero = (HABData().Max() < 1);
+			bool HasBeenBandit = (HABData().Min() > -1);
+			bool FirstTimeHero = (newAffinity == HAB_HERO && !HasBeenHero);
+			bool FirstTimeBandit = (newAffinity == HAB_BANDIT && !HasBeenHero);
+			bool isFirst = (FirstTimeBandit || FirstTimeHero);
+			HABContoller().OnAffinityChange(oldAffinity,newAffinity,isFirst);
 		}
 		SetSynchDirty();
 	}
@@ -66,13 +53,10 @@ modded class PlayerBase extends ManBase
 		UpdateHumanity(Humanity() + humanity);
 	}
 	
-	HeroesAndBanditsPlayerBase HABData(){
-		return m_HABData;
-	}
-	
 	string GetClientIcon(){
 		return m_HeroesAndBandits_Icon;
 	}
+	
 	
 	override void OnPlayerLoaded()
 	{
@@ -92,6 +76,7 @@ modded class PlayerBase extends ManBase
 	void CBHABData(int cid, int status, string oid, HeroesAndBanditsPlayerBase data){
 		if (status == UAPI_SUCCESS){
 			Class.CastTo(m_HABData,data);
+			m_HABData.InitDailyGains();
 			if (GetGame().IsDedicatedServer()){
 				m_Humanity = m_HABData.GetHumanity();
 				SetSynchDirty();
@@ -105,42 +90,19 @@ modded class PlayerBase extends ManBase
 		}
 	}
 	
-	HeroesAndBanditsControllerBase HABControler(){
-		return m_HABControllerBase;
-	}
-	
-	void InitHABController(){
-		if (!GetGame().IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
-		
-		m_HABControllerBase = HeroesAndBandits.Controller(Humanity(),this);
-	}
-	
-	void OnHABLevelChange(int oldLevel, int newLevel, bool isFirst){
-		
-	}
-	
-	
-	void OnHABAffinityChange( int oldAffinity, int newAffinity, bool isFirst ){
-		
-	}
-	
-	float Humanity(){
-		return m_Humanity;
-	}
-	
-	
 	void NewHABAction(string Action, EntityAI other = NULL){
-		if (!HABControler()){
+		if (!HABContoller()){
 			return;
 		}
 		Action.ToLower();
-		HABControler().NewAction(Action,other);
+		HABContoller().NewAction(Action,other);
 	}
+	
 	void NewHABKillAction(EntityAI other = NULL){
-		if (!HABControler()){
+		if (!HABContoller()){
 			return;
 		}
-		HABControler().NewKillAction(other);
+		HABContoller().NewKillAction(other);
 	}
 
 	bool habCheckGodMod(){
@@ -190,8 +152,66 @@ modded class PlayerBase extends ManBase
 		
 	}
 	
-	void OnHABDeath(){
-		
+	void OnHABDeath(int DeathType = habDeathType.Unknown, EntityAI other = NULL){
+		if (DeathType == habDeathType.Unknown){
+			if (GetStatEnergy().Get() < 1 || GetStatWater().Get() < 1){
+				DeathType = habDeathType.Hunger;
+			}
+			if ((GetAgents() & eAgents.CHEMICAL_POISON) == eAgents.CHEMICAL_POISON){
+				DeathType = habDeathType.ToxicZone;
+			}
+		}
+		switch (DeathType){
+			case habDeathType.Sucide:
+				NewHABAction("sucide",other);
+			break;
+			case habDeathType.Bambi:
+				NewHABAction("playerdeath",other);
+			break;
+			case habDeathType.Hero:
+				NewHABAction("playerdeath",other);
+			break;
+			case habDeathType.Bandit:
+				NewHABAction("playerdeath",other);
+			break;
+			case habDeathType.AI:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.Zombie:
+				NewHABAction("zombiedeath",other);
+			break;
+			case habDeathType.Animal:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.Other:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.Bleeding:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.LegacyAI:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.CarCrash:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.Falling:
+				NewHABAction("death",other);
+			break;
+			case habDeathType.ZombieBleeding:
+				NewHABAction("zombiedeath",other);
+			break;
+			case habDeathType.Hunger:
+				NewHABAction("hungerdeath",other);
+			break;
+			case habDeathType.ToxicZone:
+				NewHABAction("toxicdeath",other);
+			break;
+			default:
+				NewHABAction("death",other);
+			break;
+		}
+		SaveHABData();
 	}
 	
 	bool IsInHABZone(){
@@ -200,31 +220,13 @@ modded class PlayerBase extends ManBase
 	
 	override void EEKilled(Object killer)
 	{
-		if (GetIdentity()){
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.OnHABDeath);
-			/*if (habIsInZone()){
-				habLeftZone(-1,0); 
-			}*/
-		}
 		super.EEKilled(killer);
-		if (!GetIdentity()){ 
+		if (!HABContoller() || m_HeroesAndBandits_Killed){ 
 			return;
 		} 
 		PlayerBase targetPlayer = PlayerBase.Cast(this);
 		PlayerBase sourcePlayer;
-		if (Class.CastTo(sourcePlayer, killer) || Class.CastTo(sourcePlayer, EntityAI.Cast(killer).GetHierarchyRootPlayer())){
-			if ( sourcePlayer == this){
-				NewHABAction("Sucide");
-			}
-			if (!sourcePlayer.GetIdentity() || !GetIdentity()){
-				return;
-			}
-		} else {
-			return;
-		}
 		string weaponName = "";
-		bool killedByObject = false;
-		bool killedByZombie = false;
 		int deathType = habDeathType.Unknown;
 		string sourcePlayerID = "";
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
@@ -253,31 +255,23 @@ modded class PlayerBase extends ManBase
 				}
 			} else if (killer.IsInherited(TrapBase)){
 				TrapBase trap = TrapBase.Cast(killer);
-				killedByObject = true;
 				sourcePlayerID = trap.habGetActivatedBy();
 				weaponName =  "#HAB_KILLFEED_PRE " + trap.GetDisplayName();
 			} 
-			#ifdef EXPANSIONMOD
-				else if ( killer.IsInherited(Expansion_C4_Explosion)){
-					Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(killer);
-					if ( expansionExplosive ){
-						killedByObject = true;
-						sourcePlayerID = expansionExplosive.habGetActivatedBy();
-						weaponName = "#HAB_KILLFEED_PRE " + "Home Made Explosive"; //TODO
-
-					}
-				}
-			#endif
 			else if (killer.IsInherited(ZombieBase)){
-				killedByZombie = true;
 				deathType = habDeathType.Zombie;
+			}
+			else if (killer.IsInherited(AnimalBase)){
+				deathType = habDeathType.Animal;
 			}
 			else if (GetBleedingManagerServer()){
 				if (GetBleedingManagerServer().GetBleedingSourcesCount() > 0){
 					deathType = habDeathType.Bleeding;
 					if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Zombie){
-						killedByZombie = true;
 						deathType = habDeathType.ZombieBleeding;
+					}
+					if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Animal){
+						deathType = habDeathType.Animal;
 					}
 					sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
 				}
@@ -290,15 +284,31 @@ modded class PlayerBase extends ManBase
 				return;
 			}
 			
-			if (!sourcePlayer && killedByObject){
+			if (!sourcePlayer && sourcePlayerID != ""){
 				//TODO get sourcePlayer if Killed by object
+				sourcePlayer = PlayerBase.Cast(UUtil.FindPlayer(sourcePlayerID));
 			}
 			
 			if ( sourcePlayer ) {//Make sure Players are valid
-				sourcePlayer.NewHABKillAction(this);
+				if (!sourcePlayer.GetIdentity() ){
+					deathType = habDeathType.AI;
+				} else{
+					deathType = habDeathType.Bambi;
+					sourcePlayer.NewHABKillAction(this);
+					if (sourcePlayer.HABAffinity() == HAB_HERO){
+						deathType = habDeathType.Hero;
+					} else if (sourcePlayer.HABAffinity() == HAB_BANDIT){
+						deathType = habDeathType.Bandit;
+					}
+				}
 			}
+			if (m_Suicide){
+				deathType = habDeathType.Sucide;
+			}
+			OnHABDeath(deathType,sourcePlayer);
 		}
 	}
+	
 	
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
@@ -320,47 +330,36 @@ modded class PlayerBase extends ManBase
 			string weaponName;
 			if (source.IsInherited(Grenade_Base)){
 				Grenade_Base grenade = Grenade_Base.Cast(source);
-				string objectActivatedByID = grenade.habGetActivatedBy();
 				weaponName =  "#HAB_KILLFEED_PRE " + grenade.GetType();
-				sourcePlayerID = objectActivatedByID;
-				targetPlayerID = GetIdentity().GetPlainId();
+				sourcePlayerID = grenade.habGetActivatedBy();
+				targetPlayerID = GetIdentity().GetId();
 				int deathType = habDeathType.Unknown;
-				string killerAffinity = GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID);
-				if ( sourcePlayerID != "null" )
-				{
-					if (sourcePlayerID == targetPlayerID){
-						deathType = habDeathType.Sucide;
-					} else if ( killerAffinity == "hero") {
-						deathType = habDeathType.Hero;
-					} else if (killerAffinity == "bandit") {
-						deathType = habDeathType.Bandit;
-					} else if (killerAffinity == "bambi") {
+				if ( sourcePlayerID != "null" && sourcePlayerID != "") {
+					if (sourcePlayerID == targetPlayerID) {
+						OnHABDeath(habDeathType.Sucide);
+					} else if (sourcePlayerID != targetPlayerID) {
 						deathType = habDeathType.Bambi;
+						sourcePlayer = PlayerBase.Cast( UUtil.FindPlayer( sourcePlayerID ));
+						if ( sourcePlayer ){
+							sourcePlayer.NewHABKillAction(this);
+							if (sourcePlayer.HABAffinity() == HAB_HERO){
+								deathType = habDeathType.Hero;
+							} else if (sourcePlayer.HABAffinity() == HAB_BANDIT){
+								deathType = habDeathType.Bandit;
+							}
+						}
+						OnHABDeath(deathType, sourcePlayer);
 					}
-					if (sourcePlayerID == targetPlayerID){ //Sucide
-						//GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Sucide");
-					}else {
-						//GetHeroesAndBandits().NewPlayerAction(sourcePlayerID, GetHeroesAndBandits().GetPlayerHeroOrBandit(sourcePlayerID)+"Vs"+GetHeroesAndBandits().GetPlayerHeroOrBandit(targetPlayerID));
-					}
+					
 				}
-			} else {
 			}
-		} else  if ( damageType == DT_EXPLOSION && !source && !this.IsAlive() && GetGame().IsServer() && GetIdentity() ) {
-		}
-		
+		}		
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
 		int afterHitBleedingSources = 0;
 		if (GetGame().IsServer() && GetIdentity() && GetBleedingManagerServer()){
 			afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
 		}
-				
-		if (GetGame().IsServer() && hitByZombie && IsAlive() ){//Heal back after Zombie Hits if guard unless it was a killing blow
-			this.AddHealth("","Health", damageResult.GetDamage( "", "Health" ));
-			if (beforeHitBleedingSources < afterHitBleedingSources && GetBleedingManagerServer()){
-				this.GetBleedingManagerServer().RemoveMostSignificantBleedingSource();
-			} 
-		} 
 		
 		if (GetGame().IsServer() && beforeHitBleedingSources < afterHitBleedingSources){
 			if (source.IsMan())	{
@@ -385,19 +384,14 @@ modded class PlayerBase extends ManBase
 				TrapBase trap = TrapBase.Cast(source);
 				hitByObject = true;
 				sourcePlayerID = trap.habGetActivatedBy();
-			} 
-			#ifdef EXPANSIONMOD
-				else if ( source.IsInherited(Expansion_C4_Explosion)){
-					Expansion_C4_Explosion expansionExplosive = Expansion_C4_Explosion.Cast(source);
-					if ( expansionExplosive ){
-						hitByObject = true;
-						sourcePlayerID = expansionExplosive.habGetActivatedBy();
-					}
-				}
-			#endif
+			}
 			else if (source.IsInherited(ZombieBase)){
 				hitByZombie = true;
 				m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Zombie;
+			}
+			else if (source.IsInherited(AnimalBase)){
+				hitByZombie = true;
+				m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Animal;
 			}
 			else {
 				if ( source )
@@ -417,13 +411,7 @@ modded class PlayerBase extends ManBase
 				if (sourcePlayerID == targetPlayerID){
 					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Sucide;
 					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
-				} else if ( hitByAffinity == "hero") {
-					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Hero;
-					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
-				} else if (hitByAffinity == "bandit") {
-					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Bandit;
-					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
-				} else if (hitByAffinity == "bambi") {
+				} else {
 					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Bambi;
 					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
 				} 
@@ -441,7 +429,7 @@ modded class PlayerBase extends ManBase
 			RPCSingleParam(HAB_SYNCICON, new Param1<bool>(true),true, NULL);
 		} else {
 			Print("[HAB] Syncing Icon");
-			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABControler().Icon()),true, NULL);
+			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABContoller().Icon()),true, NULL);
 		}
 	}
 	
@@ -457,9 +445,9 @@ modded class PlayerBase extends ManBase
 				Print("[HAB] Reciving Icon " + m_HeroesAndBandits_Icon);
 			}
 		}
-		if (rpc_type == HAB_SYNCICON && GetGame().IsDedicatedServer() && sender && HABControler()) {
+		if (rpc_type == HAB_SYNCICON && GetGame().IsDedicatedServer() && sender && HABContoller()) {
 			Print("[HAB] Syncing Icon with " + sender.GetId());
-			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABControler().Icon()),true, sender);
+			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABContoller().Icon()),true, sender);
 		}
 	}
 	

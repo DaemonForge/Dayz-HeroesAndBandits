@@ -28,7 +28,7 @@ modded class AnimalBase
 			}
 			
 			if (sourcePlayer && sourcePlayer.GetIdentity()){
-				sourcePlayer.NewHABAction("AnimalKill",this);
+				sourcePlayer.NewHABAction("huntanimal",this);
 			}
 		}
     }

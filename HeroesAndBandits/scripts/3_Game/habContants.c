@@ -26,6 +26,9 @@ class habDeathType
 	
 	static int ZombieBleeding = 12;
 	
+	static int Hunger = 13;
+	
+	static int ToxicZone = 14;
 };
 
 class habConstant

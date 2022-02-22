@@ -2,16 +2,31 @@
 static autoptr HeroesAndBandits m_HeroesAndBandits;
 class HeroesAndBandits extends Managed
 {	
+	static autoptr TIntArray Levels = {1000,4000,10000,30000,100000};
 	void HeroesAndBandits()
 	{
+		
 	}
 	
+	
 	static int GetLevel(float humanity){
-		return 0;
+		int i = 0;
+		for (i = 0; i < Levels.Count(); i++){
+			if (Math.AbsFloat(humanity) < Levels.Get(i)){
+				return i;
+			}
+		}
+		return i;
 	}
 	
 	static int GetAffinity(float humanity){
-		return 0;
+		if (humanity >= 1000){
+			return HAB_HERO;
+		}
+		if (humanity <= -1000){
+			return HAB_BANDIT;
+		}
+		return HAB_BAMBI;
 	}
 	
 	static HeroesAndBanditsControllerBase Controller(float humanity, PlayerBase player){
@@ -19,18 +34,27 @@ class HeroesAndBandits extends Managed
 	}
 	
 	HeroesAndBanditsControllerBase GetController(float humanity, PlayerBase player){
-		if (humanity >= 1000){
-			return new HeroController(player);
-		}
-		if (humanity <= -1000){
-			return new BanditController(player);
+		switch (GetAffinity(humanity)){
+			case HAB_HERO:
+				return new HeroController(player);
+			break;
+			case HAB_BANDIT:
+				return new BanditController(player);
+			break;
+			default:
+				return new BambiController(player);
+			break;
 		}
 		return new BambiController(player);
 	}
 	
 	
 	void Init(){
-		
+		Levels = {1000,4000,10000,30000,100000};
+	}
+	
+	static void UpdateLevels(TIntArray levels){
+		Levels = levels;
 	}
 		
 	void OnPlayerInit(PlayerBase player)
