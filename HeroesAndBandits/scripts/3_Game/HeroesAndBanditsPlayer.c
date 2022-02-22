@@ -23,7 +23,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	void InitDailyGains(){
 		int Date = UUtil.GetDateInt();
-		m_LastDailyCall = HABDailyDataHandler.Query(new UApiQueryObject("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": \""+ Date +"\" }"), this,"CBLoadDailyArray");
+		m_LastDailyCall = HABDailyDataHandler.Query(new UApiDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": \""+ Date +"\" }"), this,"CBLoadDailyArray");
 	}
 	
 	void CBLoadDailyArray(int cid, int status, string oid, autoptr UApiQueryResult<HeroesAndBanditsDaily> data){
