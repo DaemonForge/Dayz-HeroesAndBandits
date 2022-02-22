@@ -31,7 +31,10 @@ class HeroesAndBanditsPlayerBase extends Managed
 			if (!m_DailyGain){
 				m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 			}
-			foreach (HeroesAndBanditsDaily daily : data.GetResults()){
+			array<autoptr HeroesAndBanditsDaily> dataarray;
+			Class.CastTo(dataarray,data.GetResults());
+			for (int i = 0; i< dataarray.Count(); i++){
+				HeroesAndBanditsDaily daily = HeroesAndBanditsDaily.Cast(dataarray.Get(i));
 				m_DailyGain.Set(daily.GetAction(),daily);
 			}
 		} else if (status == UAPI_EMPTY){
