@@ -87,10 +87,12 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if (!m_DailyGain.Find(action,daily) || daily.GetDate() != date){
 			daily = new HeroesAndBanditsDaily(GUID, action, date, value);
 			HABDailyDataHandler.Save(daily.OID(), daily, this, "CBLoadDaily");
+			m_DailyGain.Set(action,daily);
 			return (value <= max || max == -1);
 		}
 		value = daily.Increment();
-		HABDailyDataHandler.Transaction(daily.OID(), "Value", 1);
+		if (daily.OID() != "NewObject")
+			HABDailyDataHandler.Transaction(daily.OID(), "Value", 1);
 		Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value);
 		return (value <= max || max == -1);
 	}
