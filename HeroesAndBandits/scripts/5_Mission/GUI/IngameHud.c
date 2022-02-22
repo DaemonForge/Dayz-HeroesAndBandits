@@ -27,8 +27,10 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 		if (!GetGame().IsClient() || !IsInit()){
 			return;
 		}
-		if (!GetGame().GetPlayer())
+		if (!GetGame().GetPlayer()){
 			m_LayoutRoot.Show(false);
+			return;
+		}
 		
 		HideImage(hide);
 		UpdateImage(PlayerBase.Cast(GetGame().GetPlayer()).GetClientIcon());
