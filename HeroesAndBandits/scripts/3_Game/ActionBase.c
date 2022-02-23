@@ -53,7 +53,7 @@ class HaBActionBase extends Managed {
 				return Value();
 			break;
 			case HaBActionType.MULTIPLE:
-				return Value() * curHumanity;
+				return Math.Round(Value() * curHumanity);
 			break;
 			case HaBActionType.ADD:
 				if (curHumanity < 0){
@@ -66,27 +66,27 @@ class HaBActionBase extends Managed {
 			break;
 			case HaBActionType.SUB:
 				if (curHumanity > 0){
-					return Math.Max(Value() * -1, curHumanity * -1);
+					return Math.Round(Math.Max(Value() * -1, curHumanity * -1));
 				}else if (curHumanity < 0){
-					return Math.Min(Value(), curHumanity * -1);
+					return Math.Round(Math.Min(Value(), curHumanity * -1));
 				} else {
 					return 0;
 				}
 			break;
 			case HaBActionType.MULTIPLEADD:
 				if (curHumanity < 0){
-					return curHumanity * Value() * -1;
+					return Math.Round(curHumanity * Value() * -1);
 				}else if (curHumanity > 0){
-					return curHumanity * Value();
+					return Math.Round(curHumanity * Value());
 				} else {
 					return 0;
 				}
 			break;
 			case HaBActionType.MULTIPLESUB:
 				if (curHumanity > 0){
-					return Math.Max(curHumanity * Value() * -1, curHumanity * -1);
+					return Math.Round(Math.Max(curHumanity * Value() * -1, curHumanity * -1));
 				}else if (curHumanity < 0){
-					return Math.Min(curHumanity * Value(), curHumanity * -1);
+					return Math.Round(Math.Min(curHumanity * Value(), curHumanity * -1));
 				} else {
 					return 0;
 				}

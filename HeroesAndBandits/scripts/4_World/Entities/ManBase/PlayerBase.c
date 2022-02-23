@@ -292,7 +292,10 @@ modded class PlayerBase extends ManBase
 			if ( sourcePlayer ) {//Make sure Players are valid
 				if (!sourcePlayer.GetIdentity() ){
 					deathType = habDeathType.AI;
-				} else{
+				} else if (sourcePlayer == this){
+					deathType = habDeathType.Unknown;
+				
+				}else {
 					deathType = habDeathType.Bambi;
 					sourcePlayer.NewHABKillAction(this);
 					if (sourcePlayer.HABAffinity() == HAB_HERO){
