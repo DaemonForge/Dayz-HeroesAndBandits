@@ -1,3 +1,4 @@
+static int HAB_MAXKILLSPERPLAYER = 5;
 class HeroesAndBanditsControllerBase extends Managed {
 	protected PlayerBase m_player;
 	
@@ -5,7 +6,6 @@ class HeroesAndBanditsControllerBase extends Managed {
 	
 	protected autoptr map<int,string> m_Icons;
 	
-	static int MAXKILLSPERPLAYER = 5;
 	
 	void HeroesAndBanditsControllerBase(PlayerBase player){
 		Class.CastTo(m_player,player);
@@ -24,26 +24,22 @@ class HeroesAndBanditsControllerBase extends Managed {
 		return m_player;
 	}
 	
-	bool GetBaseActionGain(string Action, out string ActionName, inout float gain, inout bool notify){
+	protected bool GetBaseActionGain(string Action, out string ActionName, out float gain, out bool notify, out int dailyLimit){
 		HaBActionBase action;
 		if (Actions.Find(Action, action)){
 			ActionName = action.DisplayName();
 			gain = action.GetGain(GetPlayer().Humanity());
 			notify = action.Notify();
-			int dailyLimit = action.DailyLimit();
-			if (!GetPlayer().HABData().IncermentAction(Action, dailyLimit)){
-				Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
-				gain = 0;
-			}
+			dailyLimit = action.DailyLimit();
 			return true;
 		}
 		return false;
 	}
 	
-	bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
+	protected bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
 		return false;
 	}
-	bool AdjustKillGain(EntityAI other, inout float gain, out bool notify){
+	protected bool AdjustKillGain(EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
 		
 		return false;
 	}
@@ -52,16 +48,23 @@ class HeroesAndBanditsControllerBase extends Managed {
 		float gain = 0;
 		string ActionName;
 		bool notify = true;
-		if (!GetBaseActionGain(Action,ActionName,gain,notify)){
+		int dailyLimit = -1;
+		if (!GetBaseActionGain(Action,ActionName,gain,notify,dailyLimit)){
 			Print("[HAB] Action: " + Action + " has no base humanity defined");
 			return;
 		}
-		
+		bool ignoreLimit = false;
 		Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
-		AdjustActionGain(Action,other,gain,notify);
-		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player,Action,other,gain,notify);
+		AdjustActionGain(Action,other,gain,notify,ignoreLimit);
+		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player,Action,ActionName,other,gain,notify, ignoreLimit);
 		
-		m_player.IncermentHumanity(gain);
+		if (!GetPlayer().HABData().IncermentAction(Action, dailyLimit) && !ignoreLimit){
+			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
+			gain = 0;
+		}
+		if (Math.AbsFloat(gain) > 0){
+			m_player.IncermentHumanity(gain);
+		}
 		if (notify && Math.AbsFloat(gain) > 0){
 			string message = " ";
 			if (gain > 0){
@@ -79,6 +82,8 @@ class HeroesAndBanditsControllerBase extends Managed {
 		PlayerBase otherPlayer = PlayerBase.Cast(other);
 		string guid;
 		string Action;
+		int dailyLimit;
+		bool ignoreLimit = false;
 		if (!otherPlayer){
 			if (otherPlayer.GetIdentity()){
 				guid = otherPlayer.GetIdentity().GetId();
@@ -92,16 +97,17 @@ class HeroesAndBanditsControllerBase extends Managed {
 				Action = "bambikill";
 			}
 		}
-		if (!GetBaseActionGain(Action,ActionName,gain,notify)){
+		if (!GetBaseActionGain(Action,ActionName,gain,notify, dailyLimit)){
 			Print("[HAB] Action: " + Action + " has no base humanity defined");
 		}
+
+		AdjustKillGain(other,gain,notify,ignoreLimit);
+		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify,ignoreLimit);
 		
-		if (guid != "" && !GetPlayer().HABData().IncermentAction("kill." + guid, MAXKILLSPERPLAYER)){
-			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + MAXKILLSPERPLAYER );
+		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill." + guid, HAB_MAXKILLSPERPLAYER) && !ignoreLimit){
+			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + HAB_MAXKILLSPERPLAYER );
 			gain = 0;
 		}
-		AdjustKillGain(other,gain,notify);
-		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify);
 		
 		m_player.IncermentHumanity(gain);
 		if (notify && Math.AbsFloat(gain) > 0){
@@ -121,7 +127,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		
 		GetPlayer().OnHABAffinityChange(oldAffinity,newAffinity,isFirst);
 		if (notify){
-			
+			UUtil.SendNotification("#HAB_TITLE", "Change Affinty", GetPlayer().GetIdentity(), Icon());
 		}
 	}
 	
@@ -132,7 +138,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		
 		GetPlayer().OnHABLevelChange(oldLevel,newLevel,isFirst);
 		if (notify){
-			
+			UUtil.SendNotification("#HAB_TITLE", "Change Level", GetPlayer().GetIdentity(), Icon());
 		}
 	}
 
@@ -163,8 +169,8 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	}
 	
 
-	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
-		if (super.AdjustActionGain(Action, other, gain, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
+		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
 			return true;
 		}
 		return false;
@@ -198,8 +204,8 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(5,"set:hab_icons image:herolv5");
 	}
 	
-	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
-		if (super.AdjustActionGain(Action, other, gain, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
+		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
 			return true;
 		}
 		return false;
@@ -234,8 +240,8 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(5,"set:hab_icons image:banditlv5");
 	}
 
-	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, out bool notify){
-		if (super.AdjustActionGain(Action, other, gain, notify)){
+	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
+		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
 			return true;
 		}
 		return false;

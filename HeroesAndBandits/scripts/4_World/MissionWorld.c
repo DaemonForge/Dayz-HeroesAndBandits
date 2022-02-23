@@ -5,12 +5,12 @@ modded class MissionBaseWorld extends Mission
 		
 	}
 	
-	void NewHABAction(PlayerBase player, string action, EntityAI other, inout float gain, inout bool notify){
+	void NewHABAction(PlayerBase player, inout string action, inout string ActionName, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
 		
 		
 	}
 	
-	void NewHABKillAction(PlayerBase player, EntityAI other,inout float gain, inout bool notify){
+	void NewHABKillAction(PlayerBase player, EntityAI other,inout float gain, inout bool notify, inout bool ignoreLimit){
 	
 	}
 	
