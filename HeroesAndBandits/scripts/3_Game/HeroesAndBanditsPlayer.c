@@ -7,7 +7,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	protected int MinLevel = 0;
 	protected int MaxLevel = 0;
 	
-	protected autoptr array<autoptr HeroesAndBanditsStats> m_Stats;
+	protected autoptr map<string, int> m_Stats;
 	//Daily Gain saved in its own objects
 	[NonSerialized()]
 	protected autoptr map<string, autoptr HeroesAndBanditsDaily> m_DailyGain;
@@ -16,7 +16,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	void HeroesAndBanditsPlayerBase(string guid = "") {
         GUID = guid;
-		m_Stats = new array<autoptr HeroesAndBanditsStats>;
+		m_Stats = new map<string, int>;
 		m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		InitDailyGains();
     }
@@ -84,6 +84,9 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if (!m_DailyGain){
 			m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		}
+		if (!m_Stats){
+			m_Stats = new map<string, int>;
+		}
 		int date = UUtil.GetDateInt();
 		HeroesAndBanditsDaily daily;
 		int value = 1;
@@ -93,11 +96,20 @@ class HeroesAndBanditsPlayerBase extends Managed
 			m_DailyGain.Set(action,daily);
 			return (value <= max || max == -1);
 		}
+		int stat = 0;
+		m_Stats.Find(action,stat);
+		stat++;
+		HABPlayerDataHandler.Update(GUID, "m_Stats." + action, stat.ToString());
+		m_Stats.Set(action,stat);
 		value = daily.Increment();
 		if (daily.OID() != "NewObject")
 			HABDailyDataHandler.Transaction(daily.OID(), "Value", 1);
-		Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value);
+		//Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value);
 		return (value <= max || max == -1);
+	}
+	
+	bool GetStat(string action, out int stat){
+		return m_Stats.Find(action,stat);
 	}
 }
 

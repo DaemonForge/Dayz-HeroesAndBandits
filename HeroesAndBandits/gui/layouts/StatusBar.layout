@@ -12,6 +12,19 @@ FrameWidgetClass rootFrame {
  vexactsize 0
  scaled 1
  {
+  FrameWidgetClass Notifications {
+   clipchildren 0
+   ignorepointer 1
+   position -110 55
+   size 150 300
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   fixaspect fixwidth
+  }
   FrameWidgetClass IconFrame {
    clipchildren 1
    ignorepointer 1

@@ -1,5 +1,6 @@
 FrameWidgetClass rootFrame {
- position 0.00089 0
+ ignorepointer 1
+ position 0 0
  size 0.9 0.9
  halign center_ref
  valign center_ref
@@ -9,10 +10,10 @@ FrameWidgetClass rootFrame {
  vexactsize 0
  {
   PanelWidgetClass PanelWidget {
-   ignorepointer 1
-   color 0.8941 0.8 0.6627 0.7725
+   ignorepointer 0
+   color 0.6863 0.5843 0.4627 0.6941
    position 0 -0.05
-   size 524 348
+   size 700 348
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -23,102 +24,113 @@ FrameWidgetClass rootFrame {
    draggable 1
    style UIDefaultPanel
    {
-    ImageWidgetClass HABLevelImage {
+    ImageWidgetClass LevelImage {
      ignorepointer 1
-     position 36 72
-     size 156 156
+     position 50 62
+     size 164 164
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     image0 "set:hab_icons image:bambi"
      mode blend
      "src alpha" 1
      "no wrap" 1
      stretch 1
     }
-    RichTextWidgetClass HABHeading {
+    RichTextWidgetClass Heading {
      ignorepointer 1
      color 0 0 0 1
-     position 16 8
-     size 498 58
+     position 0 5
+     size 600 58
+     halign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
      style DayZBold
-     text "Heroes and Bandits"
+     text "#HAB_TITLE"
      "text color" 0 0 0 1
      "exact text" 1
      "text halign" center
      "text valign" center
     }
-    FrameWidgetClass HABAffinityFrame {
+    FrameWidgetClass AffinityFrame {
      ignorepointer 1
-     position 216 80
-     size 298 46
+     position 220 -65
+     size 220 56
+     halign right_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      {
-      RichTextWidgetClass HABAffinity {
+      RichTextWidgetClass Affinity {
        ignorepointer 1
        color 0 0 0 1
-       position 0 0
        size 1 1
+       halign center_ref
+       valign center_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       text "Affinity"
+       text "#HAB_BAMBI"
        font "gui/fonts/Metron-Bold28"
        "text color" 0 0 0 1
        "exact text" 1
       }
      }
     }
-    RichTextWidgetClass HABLevelName {
+    RichTextWidgetClass LevelName {
      ignorepointer 1
      color 0 0 0 1
-     position 216 124
-     size 298 48
+     position 20 -65
+     size 200 56
+     halign right_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
-     text "LevelName "
+     text "#HAB_LEVEL"
      font "gui/fonts/Metron-Bold28"
      "text color" 0 0 0 1
      "exact text" 1
     }
-    RichTextWidgetClass HABHumanity {
+    RichTextWidgetClass Humanity {
      ignorepointer 1
      color 0 0 0 1
-     position 216 168
-     size 298 46
+     position 25 -5
+     size 415 46
+     halign right_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     text "Humanity"
+     text "#HAB_HUMANITY: 0"
      font "gui/fonts/Metron-Bold28"
      "text color" 0 0 0 1
      "exact text" 1
     }
-    FrameWidgetClass HABStats {
+    FrameWidgetClass Stats {
      inheritalpha 0
      ignorepointer 1
      color 0.2863 0.2549 0.2118 0.3412
-     position 16 236
-     size 500 98
+     position 0 12
+     size 650 98
+     halign center_ref
+     valign bottom_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      {
-      FrameWidgetClass HABPlayerKillsFrame {
+      FrameWidgetClass PlayerKillsFrame {
        ignorepointer 1
        color 0 0 0 0.0392
        position 0.525 0
@@ -128,7 +140,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABPlayerKills {
+        RichTextWidgetClass PlayerKills {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -137,7 +149,7 @@ FrameWidgetClass rootFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "PlayerKills"
+         text "#HAB_PLAYERKILLS"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1
@@ -148,7 +160,7 @@ FrameWidgetClass rootFrame {
         }
        }
       }
-      FrameWidgetClass HABSucidesFrame {
+      FrameWidgetClass DeathsFrame {
        ignorepointer 1
        color 0 0 0 0.0353
        position 0.525 0.66
@@ -158,7 +170,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABSucides {
+        RichTextWidgetClass Deaths {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -167,7 +179,7 @@ FrameWidgetClass rootFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "Sucides"
+         text "#HAB_DEATHS"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1
@@ -178,7 +190,7 @@ FrameWidgetClass rootFrame {
         }
        }
       }
-      FrameWidgetClass HABHuntFrame {
+      FrameWidgetClass HuntFrame {
        ignorepointer 1
        color 0 0 0 0.0353
        position 0 0.66
@@ -188,7 +200,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABHunt {
+        RichTextWidgetClass Hunt {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -197,7 +209,7 @@ FrameWidgetClass rootFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         text "AnimalKIlls"
+         text "#HAB_HUNTS"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1
@@ -208,7 +220,7 @@ FrameWidgetClass rootFrame {
         }
        }
       }
-      FrameWidgetClass HABRaidFrame {
+      FrameWidgetClass RaidFrame {
        ignorepointer 1
        color 0 0 0 0.0353
        position 0.525 0.33
@@ -218,7 +230,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABRaid {
+        RichTextWidgetClass Raid {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -227,7 +239,7 @@ FrameWidgetClass rootFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "RaidActions"
+         text "#HAB_RAID"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1
@@ -238,7 +250,7 @@ FrameWidgetClass rootFrame {
         }
        }
       }
-      FrameWidgetClass HABMedicFrame {
+      FrameWidgetClass MedicFrame {
        ignorepointer 1
        color 0 0 0 0.0353
        position 0 0.33
@@ -248,7 +260,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABMedic {
+        RichTextWidgetClass Medic {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -257,7 +269,7 @@ FrameWidgetClass rootFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "MedicActions"
+         text "#HAB_MEDIC_ACTIONS"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1
@@ -268,7 +280,7 @@ FrameWidgetClass rootFrame {
         }
        }
       }
-      FrameWidgetClass HABZombieKillsFrame {
+      FrameWidgetClass ZombieKillsFrame {
        ignorepointer 1
        color 0 0 0 0.0588
        position 0 0
@@ -278,7 +290,7 @@ FrameWidgetClass rootFrame {
        hexactsize 0
        vexactsize 0
        {
-        RichTextWidgetClass HABZombieKills {
+        RichTextWidgetClass ZombieKills {
          ignorepointer 1
          color 0 0 0 1
          position 0 0
@@ -287,7 +299,7 @@ FrameWidgetClass rootFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "ZombieKills"
+         text "#HAB_ZOMBIEKILLS"
          font "gui/fonts/Metron-Bold22"
          "text color" 0 0 0 1
          "exact text" 1

@@ -8,8 +8,14 @@ class HeroesAndBandits extends Managed
 		
 	}
 	
-	
 	static int GetLevel(float humanity){
+		int level = GetABSLevel(humanity);
+		if (humanity < 0)
+			return level * -1;
+		return level;
+	}
+	
+	static int GetABSLevel(float humanity){
 		int i = 0;
 		for (i = 0; i < Levels.Count(); i++){
 			if (Math.AbsFloat(humanity) < Levels.Get(i)){
@@ -50,7 +56,7 @@ class HeroesAndBandits extends Managed
 	
 	
 	void Init(){
-		Levels = {1000,4000,10000,30000,100000};
+		UpdateLevels({1000,4000,10000,30000,100000});
 	}
 	
 	static void UpdateLevels(TIntArray levels){

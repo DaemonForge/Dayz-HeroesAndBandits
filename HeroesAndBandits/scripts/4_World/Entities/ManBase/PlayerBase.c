@@ -9,6 +9,7 @@ modded class PlayerBase extends ManBase
 	protected int m_HeroesAndBandits_LastBleedingSourceType = -1;
 	protected string m_HeroesAndBandits_LastBleedingSourceID;
 	protected string m_HeroesAndBandits_Icon;
+	protected string m_HeroesAndBandits_Name;
 	
 	
 	void ~PlayerBase(){
@@ -29,22 +30,16 @@ modded class PlayerBase extends ManBase
 		int newAffinity = HeroesAndBandits.GetAffinity(humanity);
 		m_Humanity = humanity;
 		HABData().UpdateHumanity(humanity);
-		if (oldLevel != newLevel){
-			HABContoller().OnLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
-		}
 		if (oldAffinity != newAffinity){
-			if (!HABContoller()){
-				Error2("HABContoller","HAB Contoller is NULL");
-			}
-			if (!HABData()){
-				Error2("HABData","HAB Data is NULL");
-			}
 			bool HasBeenHero = (HABData().Max() < 1);
 			bool HasBeenBandit = (HABData().Min() > -1);
 			bool FirstTimeHero = (newAffinity == HAB_HERO && !HasBeenHero);
 			bool FirstTimeBandit = (newAffinity == HAB_BANDIT && !HasBeenHero);
 			bool isFirst = (FirstTimeBandit || FirstTimeHero);
-			HABContoller().OnAffinityChange(oldAffinity,newAffinity,isFirst);
+			OnHABAffinityChange(oldLevel, newLevel,isFirst);
+		}
+		if (oldLevel != newLevel){
+			OnHABLevelChange(oldLevel, newLevel, (HABData().UpdateLevel(newLevel) != 0));
 		}
 		SetSynchDirty();
 	}
@@ -56,12 +51,14 @@ modded class PlayerBase extends ManBase
 	string GetClientIcon(){
 		return m_HeroesAndBandits_Icon;
 	}
+	string GetClientAffinityName(){
+		return m_HeroesAndBandits_Name;
+	}
 	
 	
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();
-		Print("OnPlayerLoaded");
 		if ( GetIdentity() ){ 
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();
@@ -70,6 +67,12 @@ modded class PlayerBase extends ManBase
 		SetSynchDirty();
 		if (GetGame().IsClient()){
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.habSyncIcon); 
+		}
+	}
+	
+	void RefreshHABData(){
+		if ( GetIdentity() ){ 
+			HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
 		}
 	}
 	
@@ -163,51 +166,67 @@ modded class PlayerBase extends ManBase
 		}
 		switch (DeathType){
 			case habDeathType.Sucide:
+				Print("[HAB] On Death: Sucide");
 				NewHABAction("sucide",other);
 			break;
 			case habDeathType.Bambi:
+				Print("[HAB] On Death: Bambi");
 				NewHABAction("playerdeath",other);
 			break;
 			case habDeathType.Hero:
+				Print("[HAB] On Death: Hero");
 				NewHABAction("playerdeath",other);
 			break;
 			case habDeathType.Bandit:
+				Print("[HAB] On Death: Bandit");
 				NewHABAction("playerdeath",other);
 			break;
 			case habDeathType.AI:
+				Print("[HAB] On Death: AI");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.Zombie:
+				Print("[HAB] On Death: Zombie");
 				NewHABAction("zombiedeath",other);
 			break;
 			case habDeathType.Animal:
+				Print("[HAB] On Death: Animal");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.Other:
+				Print("[HAB] On Death: Other");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.Bleeding:
+				Print("[HAB] On Death: Bleeding");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.LegacyAI:
+				Print("[HAB] On Death: LegacyAI");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.CarCrash:
+				Print("[HAB] On Death: CarCrash");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.Falling:
+				Print("[HAB] On Death: Falling");
 				NewHABAction("death",other);
 			break;
 			case habDeathType.ZombieBleeding:
+				Print("[HAB] On Death: ZombieBleeding");
 				NewHABAction("zombiedeath",other);
 			break;
 			case habDeathType.Hunger:
+				Print("[HAB] On Death: Hunger");
 				NewHABAction("hungerdeath",other);
 			break;
 			case habDeathType.ToxicZone:
+				Print("[HAB] On Death: ToxicZone");
 				NewHABAction("toxicdeath",other);
 			break;
 			default:
+				Print("[HAB] On Death: Default");
 				NewHABAction("death",other);
 			break;
 		}
@@ -264,18 +283,6 @@ modded class PlayerBase extends ManBase
 			else if (killer.IsInherited(AnimalBase)){
 				deathType = habDeathType.Animal;
 			}
-			else if (GetBleedingManagerServer()){
-				if (GetBleedingManagerServer().GetBleedingSourcesCount() > 0){
-					deathType = habDeathType.Bleeding;
-					if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Zombie){
-						deathType = habDeathType.ZombieBleeding;
-					}
-					if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Animal){
-						deathType = habDeathType.Animal;
-					}
-					sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
-				}
-			}
 			else {
 				if ( killer )
 				{
@@ -284,6 +291,17 @@ modded class PlayerBase extends ManBase
 				return;
 			}
 			
+			float blood = GetHealth("","Blood");
+			if (blood < 2){
+				deathType = habDeathType.Bleeding;
+				if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Zombie){
+					deathType = habDeathType.ZombieBleeding;
+				}
+				if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Animal){
+					deathType = habDeathType.Animal;
+				}
+				sourcePlayerID = m_HeroesAndBandits_LastBleedingSourceID;
+			}
 			if (!sourcePlayer && sourcePlayerID != ""){
 				//TODO get sourcePlayer if Killed by object
 				sourcePlayer = PlayerBase.Cast(UUtil.FindPlayer(sourcePlayerID));
@@ -294,8 +312,7 @@ modded class PlayerBase extends ManBase
 					deathType = habDeathType.AI;
 				} else if (sourcePlayer == this){
 					deathType = habDeathType.Unknown;
-				
-				}else {
+				} else if ( deathType == habDeathType.Unknown ) {
 					deathType = habDeathType.Bambi;
 					sourcePlayer.NewHABKillAction(this);
 					if (sourcePlayer.HABAffinity() == HAB_HERO){
@@ -428,11 +445,9 @@ modded class PlayerBase extends ManBase
 	
 	void habSyncIcon(){
 		if (GetGame().IsClient()){
-			Print("[HAB] Requesting Icon Sync");
 			RPCSingleParam(HAB_SYNCICON, new Param1<bool>(true),true, NULL);
 		} else {
-			Print("[HAB] Syncing Icon");
-			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABContoller().Icon()),true, NULL);
+			RPCSingleParam(HAB_SYNCICON, new Param2<string,string>(HABContoller().Icon(),HABContoller().Name()),true, NULL);
 		}
 	}
 	
@@ -442,15 +457,20 @@ modded class PlayerBase extends ManBase
 		super.OnRPC(sender, rpc_type, ctx);
 		
 		if (rpc_type == HAB_SYNCICON && GetGame().IsClient()) {
-			Param1<string> iconData;
+			Param2<string,string> iconData;
 			if (ctx.Read(iconData)){
 				m_HeroesAndBandits_Icon = iconData.param1;
-				Print("[HAB] Reciving Icon " + m_HeroesAndBandits_Icon);
+				m_HeroesAndBandits_Name = iconData.param2;
 			}
 		}
 		if (rpc_type == HAB_SYNCICON && GetGame().IsDedicatedServer() && sender && HABContoller()) {
-			Print("[HAB] Syncing Icon with " + sender.GetId());
-			RPCSingleParam(HAB_SYNCICON, new Param1<string>(HABContoller().Icon()),true, sender);
+			RPCSingleParam(HAB_SYNCICON, new Param2<string,string>(HABContoller().Icon(),HABContoller().Name()),true, sender);
+		}
+		if (rpc_type == HAB_NOTIFICATION && GetGame().IsClient()) {
+			Param1<string> notificationText;
+			if (ctx.Read(notificationText)){
+				CreateHABNotification(notificationText.param1);
+			}
 		}
 	}
 	
@@ -475,6 +495,17 @@ modded class PlayerBase extends ManBase
 		return super.CanReceiveAttachment(attachment, slotId);
 	}
 
+	
+	void SendHABNotification(string text){
+		if (!GetIdentity()) return;
+		
+		RPCSingleParam(HAB_NOTIFICATION, new Param1<string>(text),true, GetIdentity());
+	}
+	
+	protected void CreateHABNotification(string text){
+		m_HABStatusBarIconWidget.CreateNotification(text);
+	}
+	
 	void HaBReplaceDogtag(string tagType){
 		
 		#ifdef WRDG_DOGTAGS

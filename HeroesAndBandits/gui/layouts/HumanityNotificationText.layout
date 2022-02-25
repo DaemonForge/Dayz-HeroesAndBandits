@@ -1,0 +1,26 @@
+FrameWidgetClass rootFrame {
+ position 0 0
+ size 150 40
+ halign center_ref
+ valign bottom_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  TextWidgetClass Text {
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   text "+100"
+   font "gui/fonts/metron-bold22"
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

@@ -53,18 +53,23 @@ modded class DayZPlayerImplement extends DayZPlayer
 	}
 	
 	void OnHABLevelChange(int oldLevel, int newLevel, bool isFirst){
-		
+		HABContoller().OnLevelChange(oldLevel, newLevel,isFirst);
+		m_HaBLevel = newLevel;
 	}
 	
 	
 	void OnHABAffinityChange( int oldAffinity, int newAffinity, bool isFirst ){
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.UpdateHABController);
+		UpdateHABController();
+		HABContoller().OnAffinityChange(oldAffinity,newAffinity,isFirst);
 	}
 	
 	float Humanity(){
 		return m_Humanity;
 	}
 	
+	int HABLevel(){
+		return m_HaBLevel;
+	}
 	
 	protected void UpdateHumanity(float humanity){
 		

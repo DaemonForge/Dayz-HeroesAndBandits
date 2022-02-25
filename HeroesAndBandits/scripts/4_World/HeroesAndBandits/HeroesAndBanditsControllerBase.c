@@ -54,12 +54,12 @@ class HeroesAndBanditsControllerBase extends Managed {
 			return;
 		}
 		bool ignoreLimit = false;
-		Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
+		//Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
 		AdjustActionGain(Action,other,gain,notify,ignoreLimit);
-		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player,Action,ActionName,other,gain,notify, ignoreLimit);
+		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player, Action, ActionName, other, gain, notify, ignoreLimit);
 		
 		if (!GetPlayer().HABData().IncermentAction(Action, dailyLimit) && !ignoreLimit){
-			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
+			//Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
 			gain = 0;
 		}
 		if (Math.AbsFloat(gain) > 0){
@@ -70,8 +70,11 @@ class HeroesAndBanditsControllerBase extends Managed {
 			if (gain > 0){
 				message = " +";
 			} 
-			message = message + gain + " Humanity";
-			UUtil.SendNotification(ActionName, message, GetPlayer().GetIdentity(), Icon());
+			message = message + gain;
+			GetPlayer().SendHABNotification(message);
+			if (!GetPlayer().IsAlive()){
+				UUtil.SendNotification(ActionName, message, GetPlayer().GetIdentity(), Icon());
+			}
 		}
 	}
 	
@@ -104,8 +107,8 @@ class HeroesAndBanditsControllerBase extends Managed {
 		AdjustKillGain(other,gain,notify,ignoreLimit);
 		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify,ignoreLimit);
 		
-		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill." + guid, HAB_MAXKILLSPERPLAYER) && !ignoreLimit){
-			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + HAB_MAXKILLSPERPLAYER );
+		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill|" + guid, HAB_MAXKILLSPERPLAYER) && !ignoreLimit){
+			//Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + HAB_MAXKILLSPERPLAYER );
 			gain = 0;
 		}
 		
@@ -121,11 +124,10 @@ class HeroesAndBanditsControllerBase extends Managed {
 	}
 	
 	void OnAffinityChange(int oldAffinity, int newAffinity, bool isFirst){
-		bool notify = true;
+		bool notify = false;
 		
 		MissionBaseWorld.Cast(GetGame().GetMission()).OnHABAffinityChange(m_player,oldAffinity,newAffinity,isFirst,notify);
 		
-		GetPlayer().OnHABAffinityChange(oldAffinity,newAffinity,isFirst);
 		if (notify){
 			UUtil.SendNotification("#HAB_TITLE", "Change Affinty", GetPlayer().GetIdentity(), Icon());
 		}
@@ -136,9 +138,12 @@ class HeroesAndBanditsControllerBase extends Managed {
 		
 		MissionBaseWorld.Cast(GetGame().GetMission()).OnLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
 		
-		GetPlayer().OnHABLevelChange(oldLevel,newLevel,isFirst);
 		if (notify){
-			UUtil.SendNotification("#HAB_TITLE", "Change Level", GetPlayer().GetIdentity(), Icon());
+			string message = "#HAB_HUMANITY_LEVELUP_PRE " + Name();
+			if (Math.AbsInt(newLevel) > 0)
+				message = message + " #HAB_LEVEL " + Math.AbsInt(newLevel);
+			
+			UUtil.SendNotification("#HAB_TITLE", message, GetPlayer().GetIdentity(), Icon());
 		}
 	}
 
@@ -170,7 +175,7 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
-		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
+		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
 		}
 		return false;
@@ -205,7 +210,7 @@ class HeroController extends HeroesAndBanditsControllerBase {
 	}
 	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
-		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
+		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
 		}
 		return false;
@@ -232,7 +237,7 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	override void OnInit(){
 		super.OnInit();
 		Print("Init BanditController");
-		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT",Actions);
+		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
 		m_Icons.Set(1,"set:hab_icons image:banditlv1");
 		m_Icons.Set(2,"set:hab_icons image:banditlv2");
 		m_Icons.Set(3,"set:hab_icons image:banditlv3");
@@ -241,7 +246,7 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	}
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
-		if (super.AdjustActionGain(Action, other, gain, notify,ignoreLimit)){
+		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
 		}
 		return false;
