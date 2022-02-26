@@ -211,6 +211,7 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(7,"set:hab_newicons image:herolv7");
 		m_Icons.Set(8,"set:hab_newicons image:herolv8");
 		m_Icons.Set(9,"set:hab_newicons image:herolv9");
+		m_Icons.Set(10,"set:hab_newicons image:herolv10");
 	}
 	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
@@ -251,6 +252,7 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(7,"set:hab_newicons image:banditlv7");
 		m_Icons.Set(8,"set:hab_newicons image:banditlv8");
 		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
+		m_Icons.Set(10,"set:hab_newicons image:banditlv10");
 	}
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
