@@ -136,7 +136,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	void OnLevelChange(int oldLevel, int newLevel, bool isFirst){
 		bool notify = true;
 		
-		MissionBaseWorld.Cast(GetGame().GetMission()).OnLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
+		MissionBaseWorld.Cast(GetGame().GetMission()).OnHABLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
 		
 		if (notify){
 			string message = "#HAB_HUMANITY_LEVELUP_PRE " + Name();
