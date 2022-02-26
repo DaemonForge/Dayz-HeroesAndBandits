@@ -62,7 +62,8 @@ class HAB_OG_Panel extends UIScriptedMenu {
 		} else {
 			m_LevelName.SetText("");
 		}
-		m_Humanity.SetText("#HAB_HUMANITY: " + m_player.Humanity().ToString());
+		int humanity = m_player.Humanity();
+		m_Humanity.SetText("#HAB_HUMANITY: " + UUtil.ConvertIntToNiceString(humanity));
 		UpdateDeaths();
 		UpdateHunt();
 		UpdateRaid();

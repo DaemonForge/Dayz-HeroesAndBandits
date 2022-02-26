@@ -82,6 +82,7 @@ modded class PlayerBase extends ManBase
 			m_HABData.InitDailyGains();
 			if (GetGame().IsDedicatedServer()){
 				m_Humanity = m_HABData.GetHumanity();
+				m_HaBLevel = HeroesAndBandits.GetLevel(m_Humanity);
 				SetSynchDirty();
 				InitHABController();
 			}

@@ -21,7 +21,7 @@ FrameWidgetClass rootFrame {
    hexactsize 1
    vexactsize 1
    scaled 1
-   draggable 1
+   draggable 0
    style UIDefaultPanel
    {
     ImageWidgetClass LevelImage {

@@ -28,8 +28,8 @@ FrameWidgetClass rootFrame {
   FrameWidgetClass IconFrame {
    clipchildren 1
    ignorepointer 1
-   position -58 18
-   size 46 46
+   position -62 18
+   size 50 48
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -41,15 +41,15 @@ FrameWidgetClass rootFrame {
     ImageWidgetClass Icon {
      clipchildren 1
      ignorepointer 1
-     position 0 0
-     size 46 46
-     halign right_ref
+     size 50 50
+     halign center_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      fixaspect fixwidth
-     image0 "set:hab_icons image:hero"
+     image0 "set:hab_newicons image:bambi"
      mode blend
      "src alpha" 1
      "no wrap" 1

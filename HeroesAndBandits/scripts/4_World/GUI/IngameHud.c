@@ -40,6 +40,8 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 	protected ImageWidget m_Icon;
 	protected Widget m_Notifications;
 	
+	protected string m_LastIcon = "";
+	
 	protected autoptr array<autoptr HABStatusNotification> m_StatusNotifications;
 	
 	void HABStatusBarIconWidget(){
@@ -87,7 +89,10 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 			}
 		}
 		HideImage((hide || GetGame().GetPlayer().IsUnconscious() || !GetGame().GetPlayer().IsAlive()));
-		UpdateImage(PlayerBase.Cast(GetGame().GetPlayer()).GetClientIcon());
+		string newIcon = PlayerBase.Cast(GetGame().GetPlayer()).GetClientIcon();
+		if (m_LastIcon  != newIcon){
+			UpdateImage(newIcon);
+		}
 	}
 	
 	void HideImage(bool hide){
@@ -99,6 +104,7 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 	}
 	
 	void UpdateImage(string icon){
+		m_LastIcon = icon;
 		if ( icon == "" ){
 			HideImage(true);
 			return;

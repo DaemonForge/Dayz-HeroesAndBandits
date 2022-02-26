@@ -2,7 +2,7 @@
 static autoptr HeroesAndBandits m_HeroesAndBandits;
 class HeroesAndBandits extends Managed
 {	
-	static autoptr TIntArray Levels = {1000,4000,10000,30000,100000};
+	static autoptr TIntArray Levels;
 	void HeroesAndBandits()
 	{
 		
@@ -56,7 +56,7 @@ class HeroesAndBandits extends Managed
 	
 	
 	void Init(){
-		UpdateLevels({1000,4000,10000,30000,100000});
+		UpdateLevels({1000,3000,6000,15000,30000,80000,200000,500000,1000000});
 	}
 	
 	static void UpdateLevels(TIntArray levels){

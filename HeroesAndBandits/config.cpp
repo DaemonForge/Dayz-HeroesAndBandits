@@ -31,7 +31,8 @@ class CfgMods
 			{
 				files[]=
 				{
-					"HeroesAndBandits/gui/images/hab_icons.imageset"
+					"HeroesAndBandits/gui/images/hab_icons.imageset",
+					"HeroesAndBandits/gui/images/hab_newicons.imageset"
 				};
 			};
 			class gameScriptModule

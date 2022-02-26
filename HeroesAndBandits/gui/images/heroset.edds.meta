@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{97E0732C61332CA1}HeroesAndBandits/gui/images/heroset.edds"
+ Author "desktop-cjp9n6b"
+ ChangeDate 1583148121
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "raw/heroset.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

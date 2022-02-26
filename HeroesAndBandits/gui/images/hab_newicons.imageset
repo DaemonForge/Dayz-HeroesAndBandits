@@ -1,0 +1,152 @@
+ImageSetClass {
+ Name "hab_newicons"
+ RefSize 2048 3072
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{97E0732C61332CA1}HeroesAndBandits/gui/images/heroset.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass hero {
+   Name "hero"
+   Pos 0 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv2 {
+   Name "herolv2"
+   Pos 512 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv1 {
+   Name "herolv1"
+   Pos 0 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv3 {
+   Name "herolv3"
+   Pos 1024 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv4 {
+   Name "herolv4"
+   Pos 1536 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv5 {
+   Name "herolv5"
+   Pos 0 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv6 {
+   Name "herolv6"
+   Pos 512 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv7 {
+   Name "herolv7"
+   Pos 1024 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv8 {
+   Name "herolv8"
+   Pos 1536 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv9 {
+   Name "herolv9"
+   Pos 1024 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass bandit {
+   Name "bandit"
+   Pos 0 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv1 {
+   Name "banditlv1"
+   Pos 0 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv2 {
+   Name "banditlv2"
+   Pos 512 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv3 {
+   Name "banditlv3"
+   Pos 1024 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv4 {
+   Name "banditlv4"
+   Pos 1536 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv5 {
+   Name "banditlv5"
+   Pos 0 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv6 {
+   Name "banditlv6"
+   Pos 512 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv7 {
+   Name "banditlv7"
+   Pos 1024 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv8 {
+   Name "banditlv8"
+   Pos 1536 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv9 {
+   Name "banditlv9"
+   Pos 0 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass banditlv10 {
+   Name "banditlv10"
+   Pos 512 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass bambi {
+   Name "bambi"
+   Pos 0 2560
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass herolv10 {
+   Name "herolv10"
+   Pos 1536 2048
+   Size 512 512
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

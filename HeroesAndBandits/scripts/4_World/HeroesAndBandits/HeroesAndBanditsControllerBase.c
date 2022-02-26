@@ -16,7 +16,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	void OnInit(){
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS",Actions);
 		m_Icons = new map<int,string>;
-		m_Icons.Set(0,"set:hab_icons image:bambi");
+		m_Icons.Set(0,"set:hab_newicons image:bambi");
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetPlayer().habSyncIcon);
 	}
 	
@@ -148,7 +148,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	}
 
 	string Icon(){
-		return "set:hab_icons image:bambi";
+		return "set:hab_newicons image:bambi";
 	}
 	
 	
@@ -183,7 +183,7 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	
 	
 	override string Icon(){
-		return "set:hab_icons image:bambi";
+		return "set:hab_newicons image:bambi";
 	}
 	
 	override int Affinity(){
@@ -202,11 +202,15 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		super.OnInit();
 		Print("Init HeroController");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_HERO",Actions);
-		m_Icons.Set(1,"set:hab_icons image:herolv1");
-		m_Icons.Set(2,"set:hab_icons image:herolv2");
-		m_Icons.Set(3,"set:hab_icons image:herolv3");
-		m_Icons.Set(4,"set:hab_icons image:herolv4");
-		m_Icons.Set(5,"set:hab_icons image:herolv5");
+		m_Icons.Set(1,"set:hab_newicons image:herolv1");
+		m_Icons.Set(2,"set:hab_newicons image:herolv2");
+		m_Icons.Set(3,"set:hab_newicons image:herolv3");
+		m_Icons.Set(4,"set:hab_newicons image:herolv4");
+		m_Icons.Set(5,"set:hab_newicons image:herolv5");
+		m_Icons.Set(6,"set:hab_newicons image:herolv6");
+		m_Icons.Set(7,"set:hab_newicons image:herolv7");
+		m_Icons.Set(8,"set:hab_newicons image:herolv8");
+		m_Icons.Set(9,"set:hab_newicons image:herolv9");
 	}
 	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
@@ -218,10 +222,10 @@ class HeroController extends HeroesAndBanditsControllerBase {
 	
 	override string Icon(){
 		string icon;
-		if (m_Icons.Find(HeroesAndBandits.GetLevel(GetPlayer().Humanity()),icon)){
+		if (m_Icons.Find(HeroesAndBandits.GetABSLevel(GetPlayer().Humanity()),icon)){
 			return icon;
 		}
-		return "set:hab_icons image:hero";
+		return "set:hab_newicons image:hero";
 	}
 	override int Affinity(){
 		return HAB_HERO;
@@ -238,11 +242,15 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		super.OnInit();
 		Print("Init BanditController");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
-		m_Icons.Set(1,"set:hab_icons image:banditlv1");
-		m_Icons.Set(2,"set:hab_icons image:banditlv2");
-		m_Icons.Set(3,"set:hab_icons image:banditlv3");
-		m_Icons.Set(4,"set:hab_icons image:banditlv4");
-		m_Icons.Set(5,"set:hab_icons image:banditlv5");
+		m_Icons.Set(1,"set:hab_newicons image:banditlv1");
+		m_Icons.Set(2,"set:hab_newicons image:banditlv2");
+		m_Icons.Set(3,"set:hab_newicons image:banditlv3");
+		m_Icons.Set(4,"set:hab_newicons image:banditlv4");
+		m_Icons.Set(5,"set:hab_newicons image:banditlv5");
+		m_Icons.Set(6,"set:hab_newicons image:banditlv6");
+		m_Icons.Set(7,"set:hab_newicons image:banditlv7");
+		m_Icons.Set(8,"set:hab_newicons image:banditlv8");
+		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
 	}
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
@@ -254,10 +262,10 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	
 	override string Icon(){
 		string icon;
-		if (m_Icons.Find(HeroesAndBandits.GetLevel(GetPlayer().Humanity()),icon)){
+		if (m_Icons.Find(HeroesAndBandits.GetABSLevel(GetPlayer().Humanity()),icon)){
 			return icon;
 		}
-		return "set:hab_icons image:bandit";
+		return "set:hab_newicons image:bandit";
 	}
 	override int Affinity(){
 		return HAB_BANDIT;

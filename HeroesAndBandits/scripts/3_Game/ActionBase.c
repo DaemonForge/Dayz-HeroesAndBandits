@@ -75,7 +75,7 @@ class HaBActionBase extends Managed {
 			break;
 			case HaBActionType.MULTIPLEADD:
 				if (curHumanity < 0){
-					return Math.Round(curHumanity * Value() * -1);
+					return Math.Round(curHumanity * Value());
 				}else if (curHumanity > 0){
 					return Math.Round(curHumanity * Value());
 				} else {
@@ -86,7 +86,7 @@ class HaBActionBase extends Managed {
 				if (curHumanity > 0){
 					return Math.Round(Math.Max(curHumanity * Value() * -1, curHumanity * -1));
 				}else if (curHumanity < 0){
-					return Math.Round(Math.Min(curHumanity * Value(), curHumanity * -1));
+					return Math.Round(Math.Min(curHumanity * Value() * -1, curHumanity * -1));
 				} else {
 					return 0;
 				}
