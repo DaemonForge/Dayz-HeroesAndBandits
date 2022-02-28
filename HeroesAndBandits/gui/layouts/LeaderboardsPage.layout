@@ -60,7 +60,7 @@ FrameWidgetClass rootFrame {
          vexactsize 1
          "Size To Content V" 1
          Columns 1
-         Rows 99
+         Rows 100
         }
        }
       }
@@ -122,7 +122,7 @@ FrameWidgetClass rootFrame {
          Margin 3
          "Size To Content V" 1
          Columns 1
-         Rows 99
+         Rows 100
         }
        }
       }
@@ -139,7 +139,7 @@ FrameWidgetClass rootFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 1
-   text "#HAB_TITLE - Made By DaemonForge Developments"
+   text "#HAB_TITLE Mod - Made By DaemonForge Developments"
    font "gui/fonts/amorserifpro"
    "text color" 0.6431 0.6431 0.6431 0.3176
    "size to text h" 0

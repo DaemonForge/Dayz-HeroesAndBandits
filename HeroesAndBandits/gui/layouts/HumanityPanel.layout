@@ -24,7 +24,7 @@ FrameWidgetClass rootFrame {
   }
   GridSpacerWidgetClass Menu {
    ignorepointer 1
-   position 0 -64
+   position 0 -63
    size 900 64
    hexactpos 1
    vexactpos 1

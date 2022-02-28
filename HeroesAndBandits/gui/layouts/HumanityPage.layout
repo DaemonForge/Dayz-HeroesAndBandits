@@ -274,7 +274,7 @@ FrameWidgetClass rootFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 1
-   text "#HAB_TITLE - Made By DaemonForge Developments"
+   text "#HAB_TITLE Mod - Made By DaemonForge Developments"
    font "gui/fonts/amorserifpro"
    "text color" 0.6431 0.6431 0.6431 0.3176
    "size to text h" 0

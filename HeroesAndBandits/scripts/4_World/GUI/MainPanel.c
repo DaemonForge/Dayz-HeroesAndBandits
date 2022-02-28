@@ -178,8 +178,8 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		
 		m_HeroGrid = Widget.Cast(layoutRoot.FindAnyWidget("HeroGrid"));
 		m_BanditGrid = Widget.Cast(layoutRoot.FindAnyWidget("BanditGrid"));
-		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true,99), this, "CBLoadData");
-		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true,99), this, "CBLoadData");
+		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true,100), this, "CBLoadData");
+		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true,100), this, "CBLoadData");
 	
 		layoutRoot.SetHandler(this);
 	}
@@ -199,7 +199,7 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 			if (!m_lbwidgets) m_lbwidgets = new array<autoptr HAB_LBWidget>;
 			for (int i = 0; i< dataarray.Count(); i++){
 				HeroesAndBanditsPlayerBase player = HeroesAndBanditsPlayerBase.Cast(dataarray.Get(i));
-				m_lbwidgets.Insert(new HAB_LBWidget(grid,player));
+				m_lbwidgets.Insert(new HAB_LBWidget(grid,player, (i + 1)));
 			}
 		}
 	}
@@ -232,17 +232,20 @@ class HAB_LBWidget extends ScriptedWidgetEventHandler {
 	
 	protected Widget layoutRoot;
 	protected Widget m_Frame;
+	protected TextWidget m_Rank;
 	protected TextWidget m_PlayerName;
 	protected TextWidget m_Humanity;
 	
-	void HAB_LBWidget(Widget parent, HeroesAndBanditsPlayerBase data){
+	void HAB_LBWidget(Widget parent, HeroesAndBanditsPlayerBase data, int rank){
 		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		
 		m_Frame = Widget.Cast(layoutRoot.FindAnyWidget("Frame"));
+		m_Rank  = TextWidget.Cast(layoutRoot.FindAnyWidget("Rank"));
 		m_PlayerName = TextWidget.Cast(layoutRoot.FindAnyWidget("PlayerName"));
 		m_Humanity = TextWidget.Cast(layoutRoot.FindAnyWidget("Humanity"));
 		m_PlayerName.SetText(data.PlayerName());
 		m_Humanity.SetText(data.GetHumanity().ToString());
+		m_Rank.SetText(rank.ToString() + ".");
 	}
 	
 }
