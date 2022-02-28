@@ -1,0 +1,264 @@
+FrameWidgetClass rootFrame {
+ clipchildren 0
+ position 0 0
+ size 1000 700
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 1
+ vexactsize 1
+ {
+  PanelWidgetClass Page {
+   ignorepointer 1
+   color 0.3529 0.3098 0.3961 0.6471
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style rover_sim_colorable
+  }
+  GridSpacerWidgetClass Menu {
+   ignorepointer 1
+   position 0 -64
+   size 900 64
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   "Size To Content H" 1
+   content_halign center
+   content_valign bottom
+   Columns 99
+   Rows 1
+   {
+    FrameWidgetClass StatsFrame {
+     clipchildren 0
+     ignorepointer 1
+     size 164 48
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     {
+      ButtonWidgetClass StatsButton {
+       clipchildren 0
+       color 0.3529 0.3098 0.3961 0.6549
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Colorable
+       {
+        TextWidgetClass StatsButton_Label {
+         ignorepointer 1
+         size 0.95 0.98
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Stats"
+         font "gui/fonts/metronblack22"
+         "text halign" center
+         "text valign" center
+        }
+        PanelWidgetClass Top0 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Bottom0 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Right0 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Left0 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass LeaderboardsFrame {
+     clipchildren 0
+     ignorepointer 1
+     size 236 48
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     {
+      ButtonWidgetClass LeaderboardsButton {
+       clipchildren 0
+       inheritalpha 0
+       ignorepointer 0
+       color 0.3529 0.3098 0.3961 0.6549
+       position 0 0
+       size 0.999 0.999
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Colorable
+       {
+        TextWidgetClass LeaderboardsButton_Label {
+         ignorepointer 1
+         size 0.98 0.98
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Leaderboards"
+         font "gui/fonts/metronblack22"
+         "text halign" center
+         "text valign" center
+        }
+        PanelWidgetClass Top {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Bottom {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Right {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Left {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass Top1 {
+   ignorepointer 1
+   color 0.9961 0.9961 0.9961 1
+   size 1 2
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+  }
+  PanelWidgetClass Bottom1 {
+   ignorepointer 1
+   color 0.9961 0.9961 0.9961 1
+   size 1 2
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+  }
+  PanelWidgetClass Right1 {
+   ignorepointer 1
+   color 0.9961 0.9961 0.9961 1
+   size 2 1
+   halign right_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   style rover_sim_colorable
+  }
+  PanelWidgetClass Left1 {
+   ignorepointer 1
+   color 0.9961 0.9961 0.9961 1
+   size 2 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   style rover_sim_colorable
+  }
+ }
+}

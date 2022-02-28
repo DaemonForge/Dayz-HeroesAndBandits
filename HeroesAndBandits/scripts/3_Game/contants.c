@@ -10,7 +10,7 @@ static const int HAB_BANDIT_MAXLEVEL = -10;
 //For Future
 static const int HAB_SYNCICON = 2111160691;
 static const int HAB_NOTIFICATION = 2111160692;
-static const int HAB_3 = 2111160693;
+static const int HAB_SYNCMETADATA = 2111160693;
 static const int HAB_4 = 2111160694;
 static const int HAB_5 = 2111160695;
 static const int HAB_6 = 2111160696;

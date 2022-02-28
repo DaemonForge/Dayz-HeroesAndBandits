@@ -16,7 +16,7 @@ FrameWidgetClass rootFrame {
    clipchildren 0
    ignorepointer 1
    position -110 55
-   size 150 300
+   size 150 375
    halign right_ref
    valign bottom_ref
    hexactpos 1

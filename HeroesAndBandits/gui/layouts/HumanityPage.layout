@@ -1,0 +1,286 @@
+FrameWidgetClass rootFrame {
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  TextWidgetClass Title {
+   ignorepointer 1
+   size 900 64
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "#HAB_TITLE"
+   "text halign" center
+   "text valign" center
+  }
+  FrameWidgetClass MainPage {
+   ignorepointer 1
+   position 0 64
+   size 980 586
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    FrameWidgetClass HumanityRoot {
+     ignorepointer 1
+     position 0 0
+     size 1 196
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      FrameWidgetClass IconFrame {
+       ignorepointer 1
+       position 15 0
+       size 186 186
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass Icon {
+         ignorepointer 1
+         size 182 182
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         image0 "set:hab_newicons image:bambi"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+        }
+        PanelWidgetClass Left1 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Top1 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Bottom1 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 1 2
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        PanelWidgetClass Right1 {
+         ignorepointer 1
+         color 0.9961 0.9961 0.9961 1
+         size 2 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      FrameWidgetClass LevelFrame {
+       ignorepointer 1
+       position 300 10
+       size 512 46
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        TextWidgetClass LevelText {
+         ignorepointer 1
+         size 1 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "#HAB_BAMBI #HAB_LEVEL 0"
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HumanityFrame {
+       ignorepointer 1
+       position 300 64
+       size 512 46
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        TextWidgetClass HumanityText {
+         ignorepointer 1
+         size 1 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "#HAB_HUMANITY:"
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass ProgressFrame {
+       ignorepointer 1
+       position 300 128
+       size 640 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        TextWidgetClass LowText {
+         ignorepointer 1
+         size 256 28
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "-1000"
+        }
+        TextWidgetClass HighText {
+         ignorepointer 1
+         size 256 28
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000"
+         "text halign" right
+        }
+        ProgressBarWidgetClass PrimaryProgress {
+         visible 0
+         ignorepointer 1
+         color 0 0.1255 0.502 0.5059
+         size 1 18
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Stamina
+         current 0
+        }
+        ProgressBarWidgetClass BanditProgress {
+         ignorepointer 1
+         color 0.3647 0 0 0.7373
+         size 0.5 18
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Stamina
+         current 0
+         flipped 1
+        }
+        ProgressBarWidgetClass HeroProgress {
+         ignorepointer 1
+         color 0 0.098 0.4 0.5804
+         size 0.5 18
+         halign right_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Stamina
+         current 0
+         flipped 0
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass StatsRoot {
+     ignorepointer 1
+     size 1 364
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      ScrollWidgetClass StatsScroll {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        GridSpacerWidgetClass StatsGrid {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         "Size To Content V" 1
+         Columns 2
+         Rows 99
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass Footer {
+   ignorepointer 1
+   size 0.8 24
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "#HAB_TITLE - Made By DaemonForge Developments"
+   font "gui/fonts/amorserifpro"
+   "text color" 0.6431 0.6431 0.6431 0.3176
+   "size to text h" 0
+   "size to text v" 0
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

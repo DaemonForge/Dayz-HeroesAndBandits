@@ -1,0 +1,51 @@
+FrameWidgetClass rootFrame {
+ size 475 42
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  PanelWidgetClass Frame {
+   ignorepointer 1
+   color 0 0.2196 0.8784 0.2157
+   size 475 42
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    TextWidgetClass PlayerName {
+     ignorepointer 1
+     position 5 0
+     size 350 38
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "PlayerName"
+     "size to text h" 1
+    }
+    TextWidgetClass Humanity {
+     ignorepointer 1
+     position 5 0
+     size 175 32
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "1000"
+     "size to text h" 1
+     "size to text v" 0
+     "text halign" right
+     "text valign" center
+    }
+   }
+  }
+ }
+}

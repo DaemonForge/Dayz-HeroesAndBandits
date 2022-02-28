@@ -33,7 +33,8 @@ class HAB_OG_Panel extends UIScriptedMenu {
 		m_Raid = TextWidget.Cast(layoutRoot.FindAnyWidget("Raid"));
 		m_Medic = TextWidget.Cast(layoutRoot.FindAnyWidget("Medic"));
 		m_ZombieKills = TextWidget.Cast(layoutRoot.FindAnyWidget("ZombieKills"));
-		Class.CastTo(m_player,GetGame().GetPlayer());
+		if (Class.CastTo(m_player,GetGame().GetPlayer()))
+			m_player.RefreshHABData();
 		
         GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
         GetGame().GetUIManager().ShowUICursor(true);
@@ -43,8 +44,9 @@ class HAB_OG_Panel extends UIScriptedMenu {
 		return layoutRoot;
 	} 
 	
-	void Update(float timeslice)
+	override void Update(float timeslice)
 	{
+		super.Update(timeslice);
 		m_time+= timeslice;
 		if (m_time > 0.7){
 			m_time = 0;

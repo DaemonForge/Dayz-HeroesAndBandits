@@ -1,4 +1,5 @@
 static int HAB_MAXKILLSPERPLAYER = 5;
+
 class HeroesAndBanditsControllerBase extends Managed {
 	protected PlayerBase m_player;
 	
@@ -22,6 +23,10 @@ class HeroesAndBanditsControllerBase extends Managed {
 	
 	PlayerBase GetPlayer(){
 		return m_player;
+	}
+	
+	HABControllerData GetMetaData(){
+		return new HABControllerData(-1000,1000,Name(),Icon(),Actions);
 	}
 	
 	protected bool GetBaseActionGain(string Action, out string ActionName, out float gain, out bool notify, out int dailyLimit){
@@ -163,6 +168,14 @@ class HeroesAndBanditsControllerBase extends Managed {
 	void OverrideIcons(autoptr map<int, string> icons){
 		m_Icons = icons;
 	}
+	
+	int ABSLevel(){
+		return HeroesAndBandits.GetABSLevel(GetPlayer().Humanity());
+	}
+	
+	int Level(){
+		return HeroesAndBandits.GetLevel(GetPlayer().Humanity());
+	}
 
 }
 class BambiController extends HeroesAndBanditsControllerBase {
@@ -174,6 +187,10 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	}
 	
 
+	override HABControllerData GetMetaData(){
+		return new HABControllerData(-1000,1000,Name(),Icon(),Actions);
+	}
+	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
 		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
@@ -221,6 +238,16 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		return false;
 	}
 	
+	override HABControllerData GetMetaData(){
+		int max = HeroesAndBandits.Levels.Count() - 1;
+		int last = ABSLevel() - 1;
+		if (ABSLevel() < max && ABSLevel() >= 1){
+			return new HABControllerData(HeroesAndBandits.Levels[last],HeroesAndBandits.Levels[ABSLevel()],Name(),Icon(),Actions);
+		} else {
+			return new HABControllerData(HeroesAndBandits.Levels[last],int.MAX,Name(),Icon(),Actions);
+		}
+	}
+	
 	override string Icon(){
 		string icon;
 		if (m_Icons.Find(HeroesAndBandits.GetABSLevel(GetPlayer().Humanity()),icon)){
@@ -260,6 +287,16 @@ class BanditController extends HeroesAndBanditsControllerBase {
 			return true;
 		}
 		return false;
+	}
+	
+	override HABControllerData GetMetaData(){
+		int max = HeroesAndBandits.Levels.Count() - 1;
+		int last = ABSLevel() - 1;
+		if (ABSLevel() < max && ABSLevel() >= 1){
+			return new HABControllerData(HeroesAndBandits.Levels[last] * -1,HeroesAndBandits.Levels[ABSLevel()] * -1,Name(),Icon(),Actions);
+		} else {
+			return new HABControllerData(HeroesAndBandits.Levels[last] * -1,int.MAX,Name(),Icon(),Actions);
+		}
 	}
 	
 	override string Icon(){

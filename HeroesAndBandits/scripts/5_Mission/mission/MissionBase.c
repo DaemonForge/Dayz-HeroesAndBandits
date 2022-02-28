@@ -6,7 +6,7 @@ modded class MissionBase extends MissionBaseWorld
         if (!menu) {
             switch (id) {
                 case HAB_PANEL_MENU:
-                    menu = new HAB_OG_Panel;
+                    menu = new HAB_MainPanel;
                     break;
             }
             if (menu) {

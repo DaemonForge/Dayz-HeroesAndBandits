@@ -10,6 +10,7 @@ modded class PlayerBase extends ManBase
 	protected string m_HeroesAndBandits_LastBleedingSourceID;
 	protected string m_HeroesAndBandits_Icon;
 	protected string m_HeroesAndBandits_Name;
+	protected autoptr HABControllerData m_HABControlerMetaData;
 	
 	
 	void ~PlayerBase(){
@@ -81,6 +82,7 @@ modded class PlayerBase extends ManBase
 			Class.CastTo(m_HABData,data);
 			m_HABData.InitDailyGains();
 			if (GetGame().IsDedicatedServer()){
+				m_HABData.UpdateName(GetIdentity().GetName());
 				m_Humanity = m_HABData.GetHumanity();
 				m_HaBLevel = HeroesAndBandits.GetLevel(m_Humanity);
 				SetSynchDirty();
@@ -89,6 +91,7 @@ modded class PlayerBase extends ManBase
 		} else if (status == UAPI_EMPTY && GetIdentity()){
 			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
 			if (GetGame().IsDedicatedServer()){
+				m_HABData.UpdateName(GetIdentity().GetName());
 				InitHABController();
 			}
 		}
@@ -473,8 +476,27 @@ modded class PlayerBase extends ManBase
 				CreateHABNotification(notificationText.param1);
 			}
 		}
+		if (rpc_type == HAB_SYNCMETADATA && GetGame().IsDedicatedServer() && sender && HABContoller()) {
+			RPCSingleParam(HAB_SYNCMETADATA, HABContoller().GetMetaData(),true, sender);
+		}
+		if (rpc_type == HAB_SYNCMETADATA && GetGame().IsClient()) {
+			HABControllerData habmetadata;
+			if (ctx.Read(habmetadata)){
+				Print("Received HABControllerData");
+				Class.CastTo(m_HABControlerMetaData,habmetadata);
+				Print(m_HABControlerMetaData);
+			}
+		}
 	}
 	
+	void RequestHABControllerData(){
+		Print("RequestHABControllerData");
+		RPCSingleParam(HAB_SYNCMETADATA, new Param1<bool>(true),true, NULL);
+	}
+	
+	HABControllerData GetHABMetaData(){
+		return m_HABControlerMetaData;
+	}
 	
 	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
 	{

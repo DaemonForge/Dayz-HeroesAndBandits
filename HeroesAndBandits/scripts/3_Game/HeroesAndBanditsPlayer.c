@@ -1,14 +1,19 @@
+
 static autoptr UApiDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UApiDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
 static autoptr UApiDBHandler<HeroesAndBanditsDaily> HABDailyDataHandler = new UApiDBHandler<HeroesAndBanditsDaily>("HABDailyCount", OBJECT_DB);
 class HeroesAndBanditsPlayerBase extends Managed
 {
 	protected string GUID = "";
+	protected string Name = "";
 	protected float Humanity = 0;
 	protected int MinLevel = 0;
 	protected int MaxLevel = 0;
 	
-	protected autoptr map<string, int> m_Stats;
+	protected autoptr array<autoptr HeroesAndBanditsStats> Stats;
 	//Daily Gain saved in its own objects
+	[NonSerialized()]
+	protected autoptr map<string, int> m_Stats;
+	
 	[NonSerialized()]
 	protected autoptr map<string, autoptr HeroesAndBanditsDaily> m_DailyGain;
 	[NonSerialized()]
@@ -24,6 +29,12 @@ class HeroesAndBanditsPlayerBase extends Managed
 	void InitDailyGains(){
 		int Date = UUtil.GetDateInt();
 		m_LastDailyCall = HABDailyDataHandler.Query(new UApiDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
+		
+		m_Stats = new map<string, int>;
+		for (int i = 0; i< Stats.Count(); i++){
+			HeroesAndBanditsStats stat = HeroesAndBanditsStats.Cast(Stats.Get(i));
+			m_Stats.Set(stat.m_Stat,stat.m_Value);
+		}
 	}
 	
 	void CBLoadDailyArray(int cid, int status, string oid, autoptr UApiQueryResult<HeroesAndBanditsDaily> data){
@@ -59,6 +70,17 @@ class HeroesAndBanditsPlayerBase extends Managed
 		return Humanity;
 	}
 	
+	string PlayerName(){
+		return Name;
+	}
+	
+	void UpdateName(string name){
+		if (Name != name){
+			HABPlayerDataHandler.Update(GUID,"Name",name);
+			Name = name;
+		}
+	}
+	
 	int UpdateLevel(int newLevel){
 		if (newLevel > MaxLevel){
 			MaxLevel = newLevel;
@@ -87,6 +109,9 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if (!m_Stats){
 			m_Stats = new map<string, int>;
 		}
+		if (!Stats){
+			Stats = new array<autoptr HeroesAndBanditsStats>;
+		}
 		int date = UUtil.GetDateInt();
 		HeroesAndBanditsDaily daily;
 		int value = 1;
@@ -96,10 +121,15 @@ class HeroesAndBanditsPlayerBase extends Managed
 			m_DailyGain.Set(action,daily);
 			return (value <= max || max == -1);
 		}
-		int stat = 0;
-		m_Stats.Find(action,stat);
-		stat++;
-		HABPlayerDataHandler.Update(GUID, "m_Stats." + action, stat.ToString());
+		int stat = 1;
+		if (!m_Stats.Find(action,stat)){
+			HeroesAndBanditsStats tstat = new HeroesAndBanditsStats(action,1);
+			Stats.Insert(tstat);
+			HABPlayerDataHandler.Update(GUID, "Stats", tstat.ToJson(),UpdateOpts.PUSH);
+		} else {
+			stat++;
+			HABPlayerDataHandler.QueryUpdate(new UApiDBQuery("{\"GUID\": \"" + GUID + "\", \"Stats.m_Stat\": \"" + action + "\"}"),"Stats.$.m_Value", stat.ToString());
+		}
 		m_Stats.Set(action,stat);
 		value = daily.Increment();
 		if (daily.OID() != "NewObject")
@@ -120,6 +150,14 @@ class HeroesAndBanditsStats extends Managed {
 		m_Stat = stat;
 		m_Value = value;
 	}
+	
+	
+	
+	string ToJson(){
+		string jsonString = UApiJSONHandler<HeroesAndBanditsStats>.ToString(this);
+		return jsonString;
+	}
+	
 }
 
 class HeroesAndBanditsDaily extends Managed {

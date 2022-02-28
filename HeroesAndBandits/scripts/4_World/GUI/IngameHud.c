@@ -1,4 +1,4 @@
-autoptr HABStatusBarIconWidget m_HABStatusBarIconWidget;
+static autoptr HABStatusBarIconWidget m_HABStatusBarIconWidget;
 class HABStatusNotification extends ScriptedWidgetEventHandler {
 	
 	static string m_LayoutPath = "HeroesAndBandits/gui/layouts/HumanityNotificationText.layout";
@@ -9,8 +9,8 @@ class HABStatusNotification extends ScriptedWidgetEventHandler {
 	protected float m_y;
 	protected float m_a;
 	protected float m_time;
-	protected static float y_translation = 69;
-	protected static float a_translation = 0.36;
+	protected static float y_translation = 85;
+	protected static float a_translation = 0.46;
 	
 	void HABStatusNotification(string text, Widget parent){
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(m_LayoutPath, parent, true);
@@ -22,7 +22,7 @@ class HABStatusNotification extends ScriptedWidgetEventHandler {
 	
 	bool HABOnUpdate(float timeslice){
 		m_time+= timeslice;
-		if (m_time > 0.035){		
+		if (m_time > 0.03){		
 			m_y = Math.Min(255, m_y + (y_translation * m_time));
 			m_a = Math.Max(0, m_a - (a_translation * m_time));
 			m_time = 0;
@@ -77,15 +77,11 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 		}
 		TIntArray toremove = new TIntArray;
 		int i = 0;
-		for (i = 0; i < m_StatusNotifications.Count();i++){
+		while (i < m_StatusNotifications.Count()){
 			if (m_StatusNotifications.Get(i).HABOnUpdate(timeslice)){
-				toremove.Insert(i);
-			}
-		}
-		if (toremove.Count() > 0){
-			int max = toremove.Count() - 1;
-			for (i = max; i >= 0; i--){
 				m_StatusNotifications.RemoveOrdered(i);
+			} else {
+				i++;
 			}
 		}
 		HideImage((hide || GetGame().GetPlayer().IsUnconscious() || !GetGame().GetPlayer().IsAlive()));
