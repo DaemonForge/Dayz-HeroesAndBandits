@@ -187,7 +187,7 @@ FrameWidgetClass rootFrame {
         ProgressBarWidgetClass PrimaryProgress {
          visible 0
          ignorepointer 1
-         color 0 0.1255 0.502 0.8784
+         color 0 0.1255 0.502 0.9255
          size 1 18
          halign center_ref
          valign bottom_ref
@@ -200,7 +200,7 @@ FrameWidgetClass rootFrame {
         }
         ProgressBarWidgetClass BanditProgress {
          ignorepointer 1
-         color 0.3647 0 0 0.8471
+         color 0.3647 0 0 0.9255
          size 0.5 18
          valign bottom_ref
          hexactpos 1
@@ -213,7 +213,7 @@ FrameWidgetClass rootFrame {
         }
         ProgressBarWidgetClass HeroProgress {
          ignorepointer 1
-         color 0 0.098 0.4 0.8392
+         color 0 0.098 0.4 0.9294
          size 0.5 18
          halign right_ref
          valign bottom_ref

@@ -11,7 +11,7 @@ FrameWidgetClass rootFrame {
  {
   PanelWidgetClass Page {
    ignorepointer 1
-   color 0.3529 0.3098 0.3961 0.6471
+   color 0.3529 0.3098 0.3961 0.7843
    position 0 0
    size 1 1
    halign center_ref
@@ -48,7 +48,7 @@ FrameWidgetClass rootFrame {
      {
       ButtonWidgetClass StatsButton {
        clipchildren 0
-       color 0.3529 0.3098 0.3961 0.6549
+       color 0.3529 0.3098 0.3961 0.7843
        position 0 0
        size 1 1
        halign center_ref
@@ -137,7 +137,7 @@ FrameWidgetClass rootFrame {
        clipchildren 0
        inheritalpha 0
        ignorepointer 0
-       color 0.3529 0.3098 0.3961 0.6549
+       color 0.3529 0.3098 0.3961 0.7843
        position 0 0
        size 0.999 0.999
        halign center_ref
