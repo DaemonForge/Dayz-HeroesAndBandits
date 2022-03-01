@@ -152,7 +152,7 @@ class HAB_StatsPage extends HAB_PageBase {
 				m_PrimaryProgress.Show(true);
 				m_BanditProgress.Show(false);
 				m_HeroProgress.Show(false);
-				float value = m_player.Humanity() - cData.param1;
+				float value = Math.AbsFloat(m_player.Humanity()) - Math.AbsFloat(cData.param1);
 				percent = value / Math.AbsFloat(cData.param2) * 100;
 				m_PrimaryProgress.SetCurrent(percent);
 			}
@@ -178,8 +178,8 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		
 		m_HeroGrid = Widget.Cast(layoutRoot.FindAnyWidget("HeroGrid"));
 		m_BanditGrid = Widget.Cast(layoutRoot.FindAnyWidget("BanditGrid"));
-		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true,100), this, "CBLoadData");
-		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true,100), this, "CBLoadData");
+		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, 100), this, "CBLoadData");
+		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, 100), this, "CBLoadData");
 	
 		layoutRoot.SetHandler(this);
 	}
@@ -187,7 +187,7 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	void CBLoadData(int cid, int status, string oid, autoptr UApiQueryResultHABPlayer data){
 		if (status == UAPI_SUCCESS){
 			array<autoptr HeroesAndBanditsPlayerBase> dataarray;
-			Class.CastTo(dataarray, data.GetResults() );
+			Class.CastTo( dataarray, data.GetResults() );
 			Widget grid;
 			if (cid == m_HEROLeaderboardID){
 				Class.CastTo(grid,m_HeroGrid);

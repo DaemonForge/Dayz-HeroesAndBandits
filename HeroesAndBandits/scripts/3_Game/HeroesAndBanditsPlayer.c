@@ -102,7 +102,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 		return MinLevel;
 	}
 	
-	bool IncermentAction(string action, int max){
+	bool IncermentAction(string action, int max, bool doStat = true){
 		if (!m_DailyGain){
 			m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		}
@@ -111,6 +111,19 @@ class HeroesAndBanditsPlayerBase extends Managed
 		}
 		if (!Stats){
 			Stats = new array<autoptr HeroesAndBanditsStats>;
+		}
+		
+		if (doStat){
+			int stat = 1;
+			if (!m_Stats.Find(action,stat)){
+				HeroesAndBanditsStats tstat = new HeroesAndBanditsStats(action,1);
+				Stats.Insert(tstat);
+				HABPlayerDataHandler.Update(GUID, "Stats", tstat.ToJson(),UpdateOpts.PUSH);
+			} else {
+				stat++;
+				HABPlayerDataHandler.QueryUpdate(new UApiDBQuery("{\"GUID\": \"" + GUID + "\", \"Stats.m_Stat\": \"" + action + "\"}"),"Stats.$.m_Value", stat.ToString());
+			}
+			m_Stats.Set(action,stat);
 		}
 		int date = UUtil.GetDateInt();
 		HeroesAndBanditsDaily daily;
@@ -121,16 +134,6 @@ class HeroesAndBanditsPlayerBase extends Managed
 			m_DailyGain.Set(action,daily);
 			return (value <= max || max == -1);
 		}
-		int stat = 1;
-		if (!m_Stats.Find(action,stat)){
-			HeroesAndBanditsStats tstat = new HeroesAndBanditsStats(action,1);
-			Stats.Insert(tstat);
-			HABPlayerDataHandler.Update(GUID, "Stats", tstat.ToJson(),UpdateOpts.PUSH);
-		} else {
-			stat++;
-			HABPlayerDataHandler.QueryUpdate(new UApiDBQuery("{\"GUID\": \"" + GUID + "\", \"Stats.m_Stat\": \"" + action + "\"}"),"Stats.$.m_Value", stat.ToString());
-		}
-		m_Stats.Set(action,stat);
 		value = daily.Increment();
 		if (daily.OID() != "NewObject")
 			HABDailyDataHandler.Transaction(daily.OID(), "Value", 1);

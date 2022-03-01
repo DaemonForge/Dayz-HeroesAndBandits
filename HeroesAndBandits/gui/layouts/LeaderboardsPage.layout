@@ -49,6 +49,8 @@ FrameWidgetClass rootFrame {
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       style Colorable
+       "Scrollbar V Left" 1
        {
         GridSpacerWidgetClass HeroGrid {
          ignorepointer 1
@@ -109,6 +111,8 @@ FrameWidgetClass rootFrame {
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       style Colorable
+       "Scrollbar V" 1
        {
         GridSpacerWidgetClass BanditGrid {
          ignorepointer 1

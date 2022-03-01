@@ -9,8 +9,8 @@ class HABStatusNotification extends ScriptedWidgetEventHandler {
 	protected float m_y;
 	protected float m_a;
 	protected float m_time;
-	protected static float y_translation = 85;
-	protected static float a_translation = 0.46;
+	protected static float y_translation = 78;
+	protected static float a_translation = 0.40;
 	
 	void HABStatusNotification(string text, Widget parent){
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(m_LayoutPath, parent, true);

@@ -93,6 +93,7 @@ modded class PlayerBase extends ManBase
 			if (GetGame().IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());
 				InitHABController();
+				HABPlayerDataHandler.Save(GetHABGUIDCache(),m_HABData);
 			}
 		}
 	}

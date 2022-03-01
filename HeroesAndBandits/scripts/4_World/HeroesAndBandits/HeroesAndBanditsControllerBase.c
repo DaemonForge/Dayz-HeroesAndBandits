@@ -87,12 +87,15 @@ class HeroesAndBanditsControllerBase extends Managed {
 		float gain = 0;
 		string ActionName;
 		bool notify = true;
-		PlayerBase otherPlayer = PlayerBase.Cast(other);
+		PlayerBase otherPlayer;
+		if (Class.CastTo(otherPlayer,other) || Class.CastTo(otherPlayer,other.GetHierarchyRootPlayer())){
+		
+		}
 		string guid;
-		string Action;
+		string Action = "bambikill";
 		int dailyLimit;
 		bool ignoreLimit = false;
-		if (!otherPlayer){
+		if (otherPlayer){
 			if (otherPlayer.GetIdentity()){
 				guid = otherPlayer.GetIdentity().GetId();
 			}
@@ -105,26 +108,37 @@ class HeroesAndBanditsControllerBase extends Managed {
 				Action = "bambikill";
 			}
 		}
-		if (!GetBaseActionGain(Action,ActionName,gain,notify, dailyLimit)){
-			Print("[HAB] Action: " + Action + " has no base humanity defined");
+		Print(Action);
+		if (!GetBaseActionGain(Action, ActionName,gain,notify, dailyLimit)){
+			Print("[HAB] Action: " + Action + " has no base humanity defined (Kill)");
 		}
+		Print(gain);
+		Print(notify);
 
 		AdjustKillGain(other,gain,notify,ignoreLimit);
 		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify,ignoreLimit);
 		
-		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill|" + guid, HAB_MAXKILLSPERPLAYER) && !ignoreLimit){
-			//Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + HAB_MAXKILLSPERPLAYER );
+		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill|" + guid, HAB_MAXKILLSPERPLAYER, false) && !ignoreLimit){
+			Print("[HAB] Reached Daily Limit for action " + "kill|" + guid + " Limit: " + HAB_MAXKILLSPERPLAYER );
+			gain = 0;
+		}
+		if ( !GetPlayer().HABData().IncermentAction(Action, dailyLimit) && !ignoreLimit){
+			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
 			gain = 0;
 		}
 		
+		Print(gain);
 		m_player.IncermentHumanity(gain);
 		if (notify && Math.AbsFloat(gain) > 0){
-			string message = "";
+			string message = " ";
 			if (gain > 0){
-				message = "+";
+				message = " +";
 			} 
-			message = message + gain + " Humanity";
-			UUtil.SendNotification(ActionName, message, GetPlayer().GetIdentity(), Icon());
+			message = message + gain;
+			GetPlayer().SendHABNotification(message);
+			if (!GetPlayer().IsAlive()){
+				UUtil.SendNotification(ActionName, message, GetPlayer().GetIdentity(), Icon());
+			}
 		}
 	}
 	
@@ -182,8 +196,8 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	
 	override void OnInit(){
 		super.OnInit();
-		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BAMBI",Actions);
 		Print("Init BambiController");
+		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BAMBI",Actions);
 	}
 	
 
@@ -269,7 +283,6 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	override void OnInit(){
 		super.OnInit();
 		Print("Init BanditController");
-		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
 		m_Icons.Set(1,"set:hab_newicons image:banditlv1");
 		m_Icons.Set(2,"set:hab_newicons image:banditlv2");
 		m_Icons.Set(3,"set:hab_newicons image:banditlv3");
@@ -280,6 +293,7 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(8,"set:hab_newicons image:banditlv8");
 		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
 		m_Icons.Set(10,"set:hab_newicons image:banditlv10");
+		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
 	}
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
