@@ -161,6 +161,9 @@ modded class PlayerBase extends ManBase
 	}
 	
 	void OnHABDeath(int DeathType = habDeathType.Unknown, EntityAI other = NULL){
+		#ifdef MAPLINK
+			if (IsBeingTransfered()) return;
+		#endif
 		if (DeathType == habDeathType.Unknown){
 			if (GetStatEnergy().Get() < 1 || GetStatWater().Get() < 1){
 				DeathType = habDeathType.Hunger;
