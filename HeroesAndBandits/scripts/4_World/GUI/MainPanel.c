@@ -153,7 +153,7 @@ class HAB_StatsPage extends HAB_PageBase {
 				m_BanditProgress.Show(false);
 				m_HeroProgress.Show(false);
 				float value = Math.AbsFloat(m_player.Humanity()) - Math.AbsFloat(cData.param1);
-				percent = value / Math.AbsFloat(cData.param2) * 100;
+				percent = value / (Math.AbsFloat(cData.param2) - Math.AbsFloat(cData.param1)) * 100;
 				m_PrimaryProgress.SetCurrent(percent);
 			}
 		}

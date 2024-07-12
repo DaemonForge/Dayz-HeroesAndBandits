@@ -16,10 +16,8 @@ modded class AnimalBase
 				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(killer).GetHierarchyParent());
 			} else if (killer.IsTransport()){
 				CarScript vehicle;
-				if (Class.CastTo(vehicle, killer))
-				{
-					if ( vehicle.CrewSize() > 0 )
-					{
+				if (Class.CastTo(vehicle, killer)) {
+					if ( vehicle.CrewSize() > 0 ) {
 						sourcePlayer = PlayerBase.Cast(vehicle.CrewMember( 0 ));
 					}
 				}
@@ -28,6 +26,18 @@ modded class AnimalBase
 			}
 			
 			if (sourcePlayer && sourcePlayer.GetIdentity()){
+				if (IsInherited(Animal_UrsusArctos)){
+					sourcePlayer.NewHABAction("huntbear",this);
+					return;
+				}
+				if (IsInherited(Animal_CanisLupus)){
+					sourcePlayer.NewHABAction("huntwolf",this);
+					return;
+				}
+				if (IsInherited(Animal_GallusGallusDomesticus)){
+					sourcePlayer.NewHABAction("huntchicken",this);
+					return;
+				}
 				sourcePlayer.NewHABAction("huntanimal",this);
 			}
 		}

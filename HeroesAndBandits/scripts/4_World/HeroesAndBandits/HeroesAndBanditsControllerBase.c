@@ -1,4 +1,6 @@
-static int HAB_MAXKILLSPERPLAYER = 5;
+static int HAB_MAXKILLSPERPLAYER = 3;
+static string HEROROLE = "928043552972353556";
+static string BANDITROLE = "928043631137415289";
 
 class HeroesAndBanditsControllerBase extends Managed {
 	protected PlayerBase m_player;
@@ -7,14 +9,34 @@ class HeroesAndBanditsControllerBase extends Managed {
 	
 	protected autoptr map<int,string> m_Icons;
 	
+	private bool m_isAwaitingDelayedInit = false;
+	
+	protected autoptr TStringArray BLOCKEDITEMS = {};
 	
 	void HeroesAndBanditsControllerBase(PlayerBase player){
 		Class.CastTo(m_player,player);
 		Actions = new map<string,autoptr HaBActionBase>;
 		OnInit();
+		m_isAwaitingDelayedInit = true;
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.DelayedInitDo,2000);
 	}
 	
-	void OnInit(){
+	void ~HeroesAndBanditsControllerBase(){
+		if (m_isAwaitingDelayedInit){
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DelayedInitDo);
+		}
+	}
+	
+	private void DelayedInitDo(){
+		m_isAwaitingDelayedInit = false;
+		DelayedInit();
+	}
+	//so you don't have to call super
+	protected void DelayedInit(){
+		
+	}
+	
+	protected void OnInit(){
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS",Actions);
 		m_Icons = new map<int,string>;
 		m_Icons.Set(0,"set:hab_newicons image:bambi");
@@ -59,7 +81,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 			return;
 		}
 		bool ignoreLimit = false;
-		//Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
+		Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
 		AdjustActionGain(Action,other,gain,notify,ignoreLimit);
 		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player, Action, ActionName, other, gain, notify, ignoreLimit);
 		
@@ -191,23 +213,63 @@ class HeroesAndBanditsControllerBase extends Managed {
 		return HeroesAndBandits.GetLevel(GetPlayer().Humanity());
 	}
 
+	
+	bool CanEquipItem(EntityAI item){
+		foreach (string listitem : BLOCKEDITEMS){
+			if (listitem && listitem.ToType() && item.IsInherited(listitem.ToType())){
+				return false;
+			}
+		}
+		return true;
+	}
 }
 class BambiController extends HeroesAndBanditsControllerBase {
+	
+	protected string HEROPATHROLE = "928043441340960849";
+	protected string BANDITPATHROLE = "928043494893822045";
+	protected const autoptr TStringArray FLEXACTIONS = {"zombiekill", "huntanimal", "huntanimal", "huntanimal", "catchfish", "mineore", "apartmentmission", "bearhuntmission", "campmission", "mallmission", "freepigsmission", "ganjamission", "graveyardmission", "hordemission", "planecrashmission", "psilosmission", "shroomsmission", "transportmission"};
 	
 	override void OnInit(){
 		super.OnInit();
 		Print("Init BambiController");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BAMBI",Actions);
+		BLOCKEDITEMS = {"Shemagh_Bandit_ColorBase", "Shemagh_Scarf_ColorBase", "Shemagh_Facemask_ColorBase"};
 	}
 	
+	override void DelayedInit(){
+		UApiDiscordUser dsuser;
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+			if (dsuser.HasRole(HEROROLE)){
+				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+			}
+			if (dsuser.HasRole(BANDITROLE)){
+				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+			}
+		}
+	}
 
 	override HABControllerData GetMetaData(){
-		return new HABControllerData(-1000,1000,Name(),Icon(),Actions);
+		return new HABControllerData(HeroesAndBandits.Levels[0] * -1,HeroesAndBandits.Levels[0],Name(),Icon(),Actions);
 	}
 	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
 		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
+		}
+		UApiDiscordUser dsuser;
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+			if (dsuser.HasRole(HEROPATHROLE)){
+				if (FLEXACTIONS.Find(Action) != -1){
+					gain = Math.AbsFloat(gain);
+					return true;
+				}
+			}
+			if (dsuser.HasRole(BANDITPATHROLE)){
+				if (FLEXACTIONS.Find(Action) != -1){
+					gain = Math.AbsFloat(gain) * -1;
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -243,6 +305,19 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(8,"set:hab_newicons image:herolv8");
 		m_Icons.Set(9,"set:hab_newicons image:herolv9");
 		m_Icons.Set(10,"set:hab_newicons image:herolv10");
+		BLOCKEDITEMS = {"Shemagh_Bandit_ColorBase", "Shemagh_Facemask_ColorBase"};
+	}
+	
+	override void DelayedInit(){
+		UApiDiscordUser dsuser;
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+			if (!dsuser.HasRole(HEROROLE)){
+				UApi().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+			}
+			if (dsuser.HasRole(BANDITROLE)){
+				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+			}
+		}
 	}
 	
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){
@@ -294,6 +369,19 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
 		m_Icons.Set(10,"set:hab_newicons image:banditlv10");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
+		BLOCKEDITEMS = {"Shemagh_Scarf_ColorBase"};
+	}
+	
+	override void DelayedInit(){
+		UApiDiscordUser dsuser;
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+			if (dsuser.HasRole(HEROROLE)){
+				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+			}
+			if (!dsuser.HasRole(BANDITROLE)){
+				UApi().ds().AddRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+			}
+		}
 	}
 
 	override bool AdjustActionGain(string Action, EntityAI other, inout float gain, inout bool notify, inout bool ignoreLimit){

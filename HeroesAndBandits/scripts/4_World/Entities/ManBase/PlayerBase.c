@@ -11,11 +11,16 @@ modded class PlayerBase extends ManBase
 	protected string m_HeroesAndBandits_Icon;
 	protected string m_HeroesAndBandits_Name;
 	protected autoptr HABControllerData m_HABControlerMetaData;
+	protected autoptr UApiDiscordUser m_DiscordUser;
+	protected int m_last_discord_cid;
 	
 	
 	void ~PlayerBase(){
 		if (HABPlayerDataHandler){
 			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
+		}
+		if (GetGame().IsDedicatedServer()){
+			UApi().RequestCallCancel(m_last_discord_cid);
 		}
 	}
 	override void OnStoreSave(ParamsWriteContext ctx)
@@ -64,6 +69,7 @@ modded class PlayerBase extends ManBase
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();
 			m_hab_LastDataCall = HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
+			RefreshDiscordData();
 		}
 		SetSynchDirty();
 		if (GetGame().IsClient()){
@@ -75,6 +81,44 @@ modded class PlayerBase extends ManBase
 		if ( GetIdentity() ){ 
 			HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
 		}
+	}
+	
+	
+	void OnHABAffinityChange( int oldAffinity, int newAffinity, bool isFirst ){
+		super.OnHABAffinityChange(oldAffinity,newAffinity,isFirst);
+		
+		array<EntityAI> items = new array<EntityAI>;
+		GetInventory().EnumerateInventory(InventoryTraversalType.LEVELORDER, items );
+		if (items && GetGame().IsDedicatedServer()){
+			foreach (EntityAI item: items){
+				if (!GetInventory().HasAttachment(item))
+					break;
+				if (!HABContoller().CanEquipItem(item)){
+					ServerDropEntity(item);
+					UUtil.SendNotification("Item Dropped", item.GetDisplayName() + " was dropped on the ground", GetIdentity());
+				}
+			}
+		}
+		
+	}
+	
+	UApiDiscordUser DiscordUser(){
+		return m_DiscordUser;
+	}
+	
+	void RefreshDiscordData(){
+		if (GetGame().IsClient() && GetGame().GetPlayer() != this) return;
+		m_last_discord_cid = UApi().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
+	}
+	
+	void CBLoadDiscordUser(int cid, int status, string guid, UApiDiscordUser data){	
+      	if (status == UAPI_SUCCESS){  //If its a success
+			m_DiscordUser = UApiDiscordUser.Cast(data);
+      	} else if ( status == UAPI_NOTSETUP ) {
+			
+		} else if ( status == UAPI_NOTFOUND ) {
+			
+	   	}
 	}
 	
 	void CBHABData(int cid, int status, string oid, HeroesAndBanditsPlayerBase data){
@@ -94,15 +138,18 @@ modded class PlayerBase extends ManBase
 				m_HABData.UpdateName(GetIdentity().GetName());
 				InitHABController();
 				HABPlayerDataHandler.Save(GetHABGUIDCache(),m_HABData);
+				SetSynchDirty();
+				Print("[HAB] Saving New Player");
 			}
 		}
 	}
 	
 	void NewHABAction(string Action, EntityAI other = NULL){
 		if (!HABContoller()){
-			return;
+			return; 
 		}
 		Action.ToLower();
+		Print("[HAB] New Action " + Action + " for " + GetHABNameCache() + "(" + GetHABGUIDCache() + ")");
 		HABContoller().NewAction(Action,other);
 	}
 	
@@ -519,7 +566,7 @@ modded class PlayerBase extends ManBase
 	
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
-		return super.CanReceiveAttachment(attachment, slotId);
+		return super.CanReceiveAttachment(attachment, slotId) && (!HABContoller() || HABContoller().CanEquipItem(attachment));
 	}
 
 	

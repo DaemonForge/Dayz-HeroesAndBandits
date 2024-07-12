@@ -2,6 +2,8 @@
 static autoptr HeroesAndBandits m_HeroesAndBandits;
 class HeroesAndBandits extends Managed
 {	
+	
+	
 	static autoptr TIntArray Levels;
 	void HeroesAndBandits()
 	{
@@ -26,10 +28,11 @@ class HeroesAndBandits extends Managed
 	}
 	
 	static int GetAffinity(float humanity){
-		if (humanity >= 1000){
+		if (humanity >= Levels[0]){
 			return HAB_HERO;
 		}
-		if (humanity <= -1000){
+		float bandit = Levels[0] * -1;
+		if (humanity <= bandit){
 			return HAB_BANDIT;
 		}
 		return HAB_BAMBI;
@@ -56,7 +59,7 @@ class HeroesAndBandits extends Managed
 	
 	
 	void Init(){
-		UpdateLevels({1000,3000,6000,15000,30000,80000,200000,500000,1000000,5000000});
+		UpdateLevels({1000,2500,5000,10000,20000,40000,80000,200000,500000,1000000});
 	}
 	
 	static void UpdateLevels(TIntArray levels){
@@ -78,9 +81,31 @@ class HeroesAndBandits extends Managed
 		
 	}
 	
-	void NewPlayerAction(string player, string action)
+	static void NewPlayerAction(string player, string action)
 	{
-		
+		Print("[HAB] New Contoller Action " + action + " for " + player);
+		PlayerBase ply;
+		if (Class.CastTo(ply, UUtil.FindPlayer(player))){
+			ply.NewHABAction(action);
+			return;
+		}
+		if (Class.CastTo(ply, FindPlayerByPlainId(player))){
+			ply.NewHABAction(action);
+			return;
+		}
+	}
+	static DayZPlayer FindPlayerByPlainId(string id){
+		if (GetGame().IsServer()){
+			autoptr array<Man> players = new array<Man>;
+			GetGame().GetPlayers( players );
+			for (int i = 0; i < players.Count(); i++){
+				DayZPlayer player = DayZPlayer.Cast(players.Get(i));
+				if (player.GetIdentity() && player.GetIdentity().GetPlainId() == id ){
+					return player;
+				}
+			}
+		}
+		return NULL;
 	}
 	
 	static void NotifyPlayer(PlayerBase player, string image ,string message, string heading = "#HAB_HUMANITY_CHANGEHEADING")
@@ -105,6 +130,7 @@ class HeroesAndBandits extends Managed
 	static void WelcomePlayer( string zoneName, string message, string welcomeImage, PlayerBase player, int welcomeColor)
 	{
 		if (player && player.GetIdentity()){
+			
 		}
 	}
 	
@@ -125,6 +151,13 @@ class HeroesAndBandits extends Managed
 	
 	float GetPlayerHumanity( string pID )
 	{
+		PlayerBase ply;
+		if (Class.CastTo(ply, UUtil.FindPlayer(pID))){
+			return ply.Humanity();
+		}
+		if (Class.CastTo(ply, FindPlayerByPlainId(pID))){
+			return ply.Humanity();
+		}
 		return 0;
 	}
 	

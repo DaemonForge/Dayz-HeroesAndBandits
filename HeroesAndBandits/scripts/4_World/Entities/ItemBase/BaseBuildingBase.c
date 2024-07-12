@@ -17,13 +17,13 @@ modded class BaseBuildingBase
 				}
 			}
 			#ifdef BASICBOMBS
-			/*else if (hitBy.IsInherited(BB_PipeBomb) ){
+			else if (hitBy.IsInherited(BB_PipeBomb) ){
 				BB_PipeBomb bomb = BB_PipeBomb.Cast(hitBy);
-				if (bomb && bomb.GetIgnitedBySteamId() != "null"){
-					habLastHitBy = bomb.GetIgnitedBySteamId();
+				if (bomb && bomb.GetIgnitedByGUID() != "null"){
+					habLastHitBy = bomb.GetIgnitedByGUID();
 					return;
 				}
-			}*/
+			}
 			#endif
 			#ifdef EXPANSIONMOD
 			 else if ( hitBy.IsInherited(Expansion_C4_Explosion) ){
@@ -41,11 +41,12 @@ modded class BaseBuildingBase
 		if ( GetGame().IsServer() ){
 			PlayerBase sourcePlayer = PlayerBase.Cast(player);
 			if ( sourcePlayer ){
-				sourcePlayer.NewHABAction("PartDestroyed",this);
+				sourcePlayer.NewHABAction(GetType() + "PartDestroyed",this);
 			} else if ( habLastHitBy ){
 				if ( habLastHitBy != "null")
 				{
 					//TODO
+					HeroesAndBandits.NewPlayerAction(habLastHitBy,GetType() + "PartDestroyed");
 				}
 			}
 		}

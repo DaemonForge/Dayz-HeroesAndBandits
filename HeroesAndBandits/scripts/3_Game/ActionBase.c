@@ -25,6 +25,7 @@ class HaBActionBase extends Managed {
 	}
 	
 	string Name(){
+		name.ToLower();
 		return name;
 	}
 	

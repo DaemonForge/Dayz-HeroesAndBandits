@@ -21,6 +21,10 @@ modded class DayZPlayerImplement extends DayZPlayer
 		return m_HABGUIDCache;
 	}
 	
+	string GetHABNameCache(){
+		return m_HABNameCache;
+	}
+	
 	HeroesAndBanditsPlayerBase HABData(){
 		return m_HABData;
 	}

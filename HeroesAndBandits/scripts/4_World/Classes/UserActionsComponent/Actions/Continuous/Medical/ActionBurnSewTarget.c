@@ -4,7 +4,7 @@ modded class ActionBurnSewTarget: ActionContinuousBase
 	{	
 		super.OnFinishProgressServer(action_data);
 		PlayerBase sourcePlayer = PlayerBase.Cast(action_data.m_Player);
-		sourcePlayer.NewHABAction("MedicBandagePlayer", EntityAI.Cast(action_data.m_Target.GetObject()));
+		sourcePlayer.NewHABAction("medicbandageplayer", EntityAI.Cast(action_data.m_Target.GetObject()));
 		PlayerBase targetPlayer = PlayerBase.Cast(action_data.m_Target.GetObject());
 		if (targetPlayer){
 			if (targetPlayer.GetBleedingManagerServer().GetBleedingSourcesCount() == 0){
