@@ -11,7 +11,7 @@ modded class PlayerBase extends ManBase
 	protected string m_HeroesAndBandits_Icon;
 	protected string m_HeroesAndBandits_Name;
 	protected autoptr HABControllerData m_HABControlerMetaData;
-	protected autoptr UApiDiscordUser m_DiscordUser;
+	protected autoptr UDiscordUser m_DiscordUser;
 	protected int m_last_discord_cid;
 	
 	
@@ -20,7 +20,7 @@ modded class PlayerBase extends ManBase
 			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
 		}
 		if (GetGame().IsDedicatedServer()){
-			UApi().RequestCallCancel(m_last_discord_cid);
+			U().RequestCallCancel(m_last_discord_cid);
 		}
 	}
 	override void OnStoreSave(ParamsWriteContext ctx)
@@ -84,7 +84,7 @@ modded class PlayerBase extends ManBase
 	}
 	
 	
-	void OnHABAffinityChange( int oldAffinity, int newAffinity, bool isFirst ){
+	override void OnHABAffinityChange( int oldAffinity, int newAffinity, bool isFirst ){
 		super.OnHABAffinityChange(oldAffinity,newAffinity,isFirst);
 		
 		array<EntityAI> items = new array<EntityAI>;
@@ -102,27 +102,27 @@ modded class PlayerBase extends ManBase
 		
 	}
 	
-	UApiDiscordUser DiscordUser(){
+	UDiscordUser DiscordUser(){
 		return m_DiscordUser;
 	}
 	
 	void RefreshDiscordData(){
 		if (GetGame().IsClient() && GetGame().GetPlayer() != this) return;
-		m_last_discord_cid = UApi().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
+		m_last_discord_cid = U().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
 	}
 	
-	void CBLoadDiscordUser(int cid, int status, string guid, UApiDiscordUser data){	
-      	if (status == UAPI_SUCCESS){  //If its a success
-			m_DiscordUser = UApiDiscordUser.Cast(data);
-      	} else if ( status == UAPI_NOTSETUP ) {
+	void CBLoadDiscordUser(int cid, int status, string guid, UDiscordUser data){	
+      	if (status == UF_SUCCESS){  //If its a success
+			m_DiscordUser = UDiscordUser.Cast(data);
+      	} else if ( status == UF_NOTSETUP ) {
 			
-		} else if ( status == UAPI_NOTFOUND ) {
+		} else if ( status == UF_NOTFOUND ) {
 			
 	   	}
 	}
 	
 	void CBHABData(int cid, int status, string oid, HeroesAndBanditsPlayerBase data){
-		if (status == UAPI_SUCCESS){
+		if (status == UF_SUCCESS){
 			Class.CastTo(m_HABData,data);
 			m_HABData.InitDailyGains();
 			if (GetGame().IsDedicatedServer()){
@@ -132,7 +132,7 @@ modded class PlayerBase extends ManBase
 				SetSynchDirty();
 				InitHABController();
 			}
-		} else if (status == UAPI_EMPTY && GetIdentity()){
+		} else if (status == UF_EMPTY && GetIdentity()){
 			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
 			if (GetGame().IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());
@@ -162,11 +162,6 @@ modded class PlayerBase extends ManBase
 
 	bool habCheckGodMod(){
 		bool PlayerHasGodMode = false;
-		#ifdef JM_COT
-			if ( GetGame().IsServer() && m_JMHasGodMode ){
-				PlayerHasGodMode = true;
-			}
-		#endif
 		#ifdef VPPADMINTOOLS
 			if ( GetGame().IsServer() && hasGodmode ){
 				PlayerHasGodMode = true;

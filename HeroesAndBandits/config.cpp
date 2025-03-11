@@ -5,7 +5,7 @@ class CfgPatches
 		requiredVersion=0.1;
 		requiredAddons[]={
 			"HABDefines",
-			"UniversalApi"
+			"UFramework"
 		};
 	};
 };

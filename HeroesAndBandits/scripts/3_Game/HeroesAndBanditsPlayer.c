@@ -1,6 +1,6 @@
 
-static autoptr UApiDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UApiDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
-static autoptr UApiDBHandler<HeroesAndBanditsDaily> HABDailyDataHandler = new UApiDBHandler<HeroesAndBanditsDaily>("HABDailyCount", OBJECT_DB);
+static autoptr UDBHandler<HeroesAndBanditsPlayerBase> HABPlayerDataHandler = new UDBHandler<HeroesAndBanditsPlayerBase>("Humanity", OBJECT_DB);
+static autoptr UDBHandler<HeroesAndBanditsDaily> HABDailyDataHandler = new UDBHandler<HeroesAndBanditsDaily>("HABDailyCount", OBJECT_DB);
 class HeroesAndBanditsPlayerBase extends Managed
 {
 	protected string GUID = "";
@@ -28,7 +28,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	void InitDailyGains(){
 		int Date = UUtil.GetDateInt();
-		m_LastDailyCall = HABDailyDataHandler.Query(new UApiDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
+		m_LastDailyCall = HABDailyDataHandler.Query(new UDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
 		
 		m_Stats = new map<string, int>;
 		for (int i = 0; i< Stats.Count(); i++){
@@ -37,8 +37,8 @@ class HeroesAndBanditsPlayerBase extends Managed
 		}
 	}
 	
-	void CBLoadDailyArray(int cid, int status, string oid, autoptr UApiQueryResult<HeroesAndBanditsDaily> data){
-		if (status == UAPI_SUCCESS){
+	void CBLoadDailyArray(int cid, int status, string oid, UDBQueryResult<HeroesAndBanditsDaily> data){
+		if (status == UF_SUCCESS){
 			if (!m_DailyGain){
 				m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 			}
@@ -48,12 +48,12 @@ class HeroesAndBanditsPlayerBase extends Managed
 				HeroesAndBanditsDaily daily = HeroesAndBanditsDaily.Cast(dataarray.Get(i));
 				m_DailyGain.Set(daily.GetAction(),daily);
 			}
-		} else if (status == UAPI_EMPTY){
+		} else if (status == UF_EMPTY){
 			m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		}
 	}
 	void CBLoadDaily(int cid, int status, string oid, HeroesAndBanditsDaily data){
-		if (status == UAPI_SUCCESS){
+		if (status == UF_SUCCESS){
 			if (!m_DailyGain){
 				m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 			}
@@ -121,7 +121,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 				HABPlayerDataHandler.Update(GUID, "Stats", tstat.ToJson(),UpdateOpts.PUSH);
 			} else {
 				stat++;
-				HABPlayerDataHandler.QueryUpdate(new UApiDBQuery("{\"GUID\": \"" + GUID + "\", \"Stats.m_Stat\": \"" + action + "\"}"),"Stats.$.m_Value", stat.ToString());
+				HABPlayerDataHandler.QueryUpdate(new UDBQuery("{\"GUID\": \"" + GUID + "\", \"Stats.m_Stat\": \"" + action + "\"}"),"Stats.$.m_Value", stat.ToString());
 			}
 			m_Stats.Set(action,stat);
 		}
@@ -157,7 +157,7 @@ class HeroesAndBanditsStats extends Managed {
 	
 	
 	string ToJson(){
-		string jsonString = UApiJSONHandler<HeroesAndBanditsStats>.ToString(this);
+		string jsonString = UJSONHandler<HeroesAndBanditsStats>.ToString(this);
 		return jsonString;
 	}
 	

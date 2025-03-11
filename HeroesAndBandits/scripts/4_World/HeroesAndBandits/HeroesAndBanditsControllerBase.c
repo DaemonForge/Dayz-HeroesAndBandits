@@ -201,7 +201,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		return "#HAB_BAMBI";
 	}
 	
-	void OverrideIcons(autoptr map<int, string> icons){
+	void OverrideIcons( map<int, string> icons){
 		m_Icons = icons;
 	}
 	
@@ -237,13 +237,13 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	}
 	
 	override void DelayedInit(){
-		UApiDiscordUser dsuser;
+		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
-				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (dsuser.HasRole(BANDITROLE)){
-				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}
@@ -256,7 +256,7 @@ class BambiController extends HeroesAndBanditsControllerBase {
 		if (super.AdjustActionGain(Action, other, gain, notify, ignoreLimit)){
 			return true;
 		}
-		UApiDiscordUser dsuser;
+		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
 			if (dsuser.HasRole(HEROPATHROLE)){
 				if (FLEXACTIONS.Find(Action) != -1){
@@ -309,13 +309,13 @@ class HeroController extends HeroesAndBanditsControllerBase {
 	}
 	
 	override void DelayedInit(){
-		UApiDiscordUser dsuser;
+		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
 			if (!dsuser.HasRole(HEROROLE)){
-				UApi().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				U().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (dsuser.HasRole(BANDITROLE)){
-				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}
@@ -373,13 +373,13 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	}
 	
 	override void DelayedInit(){
-		UApiDiscordUser dsuser;
+		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
-				UApi().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (!dsuser.HasRole(BANDITROLE)){
-				UApi().ds().AddRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				U().ds().AddRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}

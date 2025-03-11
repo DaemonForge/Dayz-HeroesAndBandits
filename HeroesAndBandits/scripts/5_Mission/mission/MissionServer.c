@@ -10,8 +10,8 @@ modded class MissionServer extends MissionBase
 		super.OnInit();
 	}
 	
-	override void UniversalApiReady(){
-		super.UniversalApiReady();
+	override void UFrameworkReady(){
+		super.UFrameworkReady();
 		OnHaBInit();
 	}
 	

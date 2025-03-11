@@ -178,14 +178,14 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		
 		m_HeroGrid = Widget.Cast(layoutRoot.FindAnyWidget("HeroGrid"));
 		m_BanditGrid = Widget.Cast(layoutRoot.FindAnyWidget("BanditGrid"));
-		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, 100), this, "CBLoadData");
-		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UApiDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, 100), this, "CBLoadData");
+		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, 100), this, "CBLoadData");
+		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, 100), this, "CBLoadData");
 	
 		layoutRoot.SetHandler(this);
 	}
 	
-	void CBLoadData(int cid, int status, string oid, autoptr UApiQueryResultHABPlayer data){
-		if (status == UAPI_SUCCESS){
+	void CBLoadData(int cid, int status, string oid, UDBQueryResultHABPlayer data){
+		if (status == UF_SUCCESS){
 			array<autoptr HeroesAndBanditsPlayerBase> dataarray;
 			Class.CastTo( dataarray, data.GetResults() );
 			Widget grid;
@@ -205,8 +205,8 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	}
 	
 	void ~HAB_LeaderboardsPage(){
-		UApi().RequestCallCancel(m_HEROLeaderboardID);
-		UApi().RequestCallCancel(m_BANDITLeaderboardID);
+		U().RequestCallCancel(m_HEROLeaderboardID);
+		U().RequestCallCancel(m_BANDITLeaderboardID);
 	}
 	
 }

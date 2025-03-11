@@ -1,5 +1,5 @@
 class HABActionConfigs extends Managed {
-	static protected autoptr map<string, autoptr UApiGlobalHandler<array<autoptr HaBActionBase>>> UAPIHABActionLoaders;
+	static protected autoptr map<string, autoptr UDBGlobalHandler<array<autoptr HaBActionBase>>> UFHABActionLoaders;
 
 	static protected ref HABActionConfigs Instance;
 	
@@ -18,7 +18,7 @@ class HABActionConfigs extends Managed {
 	}
 	
 	void OnLoad(){
-		array<UApiGlobalHandler<array<autoptr HaBActionBase>>> loaders = UAPIHABActionLoaders.GetValueArray();
+		array<UDBGlobalHandler<array<autoptr HaBActionBase>>> loaders = UFHABActionLoaders.GetValueArray();
 		foreach (auto loader : loaders){
 			if (loader){
 				loader.Load(this, "CBLoadActions");
@@ -54,10 +54,10 @@ class HABActionConfigs extends Managed {
 	}
 	
 	static void AddNewLoader(string name){
-		if (!UAPIHABActionLoaders) {
-			UAPIHABActionLoaders = new map<string, autoptr UApiGlobalHandler<array<autoptr HaBActionBase>>>;
+		if (!UFHABActionLoaders) {
+			UFHABActionLoaders = new map<string, autoptr UDBGlobalHandler<array<autoptr HaBActionBase>>>;
 		}
-		UAPIHABActionLoaders.Set(name, new UApiGlobalHandler<array<autoptr HaBActionBase>>(name));
+		UFHABActionLoaders.Set(name, new UDBGlobalHandler<array<autoptr HaBActionBase>>(name));
 	}
 	
 	void OnInit(){
@@ -65,13 +65,13 @@ class HABActionConfigs extends Managed {
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.OnLoad);
 	}
 	
-	void CBLoadActions(int cid, int status, string action, autoptr array<autoptr HaBActionBase> actions){
-		if (status == UAPI_SUCCESS){
+	void CBLoadActions(int cid, int status, string action, array<autoptr HaBActionBase> actions){
+		if (status == UF_SUCCESS){
 			if (!Configs){
 				Configs = new map<string, autoptr array<autoptr HaBActionBase>>;
 			}
 			Configs.Set(action,actions);
-		} else if (status == UAPI_EMPTY){
+		} else if (status == UF_EMPTY){
 			LoadDefaults(action);
 		} else {
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.Retry,4000,false,action);
@@ -120,15 +120,15 @@ class HABActionConfigs extends Managed {
 			defaultActions.Insert(new HaBActionBase("killbambi", "Killed Bambi", -200, true, HaBActionType.EXACT));
 		}
 		Configs.Set(action,defaultActions);
-		if (UAPIHABActionLoaders.Get(action)){
-			UAPIHABActionLoaders.Get(action).Save(defaultActions);
+		if (UFHABActionLoaders.Get(action)){
+			UFHABActionLoaders.Get(action).Save(defaultActions);
 		}
 	}
 	
 	void Retry(string loader){
 		Print("[HAB] Retrying to Load " + loader + " Actions");
-		if (loader && UAPIHABActionLoaders.Get(loader)){
-			UAPIHABActionLoaders.Get(loader).Load(this, "CBLoadActions");
+		if (loader && UFHABActionLoaders.Get(loader)){
+			UFHABActionLoaders.Get(loader).Load(this, "CBLoadActions");
 		}
 	}
 }
