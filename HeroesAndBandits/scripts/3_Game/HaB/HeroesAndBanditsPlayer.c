@@ -26,11 +26,18 @@ class HeroesAndBanditsPlayerBase extends Managed
 		InitDailyGains();
     }
 	
+	void ~HeroesAndBanditsPlayerBase(){
+		if(Stats) delete Stats;
+		if(m_Stats) delete m_Stats; 
+		if(m_DailyGain) delete m_DailyGain;
+	}
+	
 	void InitDailyGains(){
 		int Date = UUtil.GetDateInt();
 		m_LastDailyCall = HABDailyDataHandler.Query(new UDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
 		
 		m_Stats = new map<string, int>;
+		if (!Stats) return; //Stats not set yet
 		for (int i = 0; i< Stats.Count(); i++){
 			HeroesAndBanditsStats stat = HeroesAndBanditsStats.Cast(Stats.Get(i));
 			m_Stats.Set(stat.m_Stat,stat.m_Value);

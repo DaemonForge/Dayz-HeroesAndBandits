@@ -4,6 +4,7 @@ modded class MissionGameplay extends MissionBase
 	override void OnMissionStart()
     {
         super.OnMissionStart();
+		Print("OnMissionStart - Creating HABStatusBarIconWidget");
 		m_HABStatusBarIconWidget = new HABStatusBarIconWidget;
     }
 	
@@ -18,7 +19,7 @@ modded class MissionGameplay extends MissionBase
 	override void OnUpdate (float timeslice) {
         super.OnUpdate(timeslice);
 		if (m_HABStatusBarIconWidget){
-			bool shouldHide  = (IsControlDisabled() || IsPaused() || m_Hud.IsHideHudPlayer() || !m_Hud.GetHudState()) ;
+			bool shouldHide  = (IsControlDisabled() || IsPaused() || m_Hud.IsHideHudPlayer() || m_Hud.GetHudVisibility().IsContextFlagActive(IngameHudVisibility.HUD_HIDE_FLAGS)) ;
 			m_HABStatusBarIconWidget.HABOnUpdate(timeslice, shouldHide );
 		}
 		

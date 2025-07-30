@@ -21,10 +21,14 @@ class CfgMods
         credits="DaemonForge";
         author="DaemonForge";
         authorID="0";
-        version="1.2";
+        version="2.0";
         type="mod";
 		inputs = "HeroesAndBandits/data/Inputs.xml";
 	    dependencies[]={ "Game", "World", "Mission" };
+		defines[]=
+		{
+			"HEROESANDBANDITSMOD_V2"
+		};
 	    class defs
 	    {
 			class imageSets

@@ -17,6 +17,11 @@ modded class DayZPlayerImplement extends DayZPlayer
 		RegisterNetSyncVariableInt("m_HaBLevel",HAB_BANDIT_MAXLEVEL,HAB_HERO_MAXLEVEL);
 	}
 	
+	void ~DayZPlayerImplement(){
+		if (m_HABData) delete m_HABData;
+		if (m_HABControllerBase) delete m_HABControllerBase;
+	}
+	
 	string GetHABGUIDCache(){
 		return m_HABGUIDCache;
 	}

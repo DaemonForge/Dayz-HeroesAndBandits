@@ -52,8 +52,8 @@ FrameWidgetClass rootFrame {
      image0 "set:hab_newicons image:bambi"
      mode blend
      "src alpha" 1
-     "no wrap" 1
-     stretch 1
+     "clamp mode" clamp
+     "stretch mode" stretch_w_h
     }
    }
   }

@@ -19,7 +19,7 @@ modded class PlayerBase extends ManBase
 		if (HABPlayerDataHandler){
 			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
 		}
-		if (GetGame().IsDedicatedServer()){
+		if (GetGame() && GetGame().IsDedicatedServer()){
 			U().RequestCallCancel(m_last_discord_cid);
 		}
 	}
@@ -68,7 +68,7 @@ modded class PlayerBase extends ManBase
 		if ( GetIdentity() ){ 
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();
-			m_hab_LastDataCall = HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
+			m_hab_LastDataCall = HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData", new HeroesAndBanditsPlayerBase(m_HABGUIDCache));
 			RefreshDiscordData();
 		}
 		SetSynchDirty();
@@ -133,6 +133,7 @@ modded class PlayerBase extends ManBase
 				InitHABController();
 			}
 		} else if (status == UF_EMPTY && GetIdentity()){
+			Print("[HAB] Data Empty UF_EMPTY");
 			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
 			if (GetGame().IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());

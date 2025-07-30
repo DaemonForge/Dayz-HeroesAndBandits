@@ -100,6 +100,7 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 	}
 	
 	void UpdateImage(string icon){
+		Print("Updateing icon" + icon + " Hide: " + m_LayoutRoot.IsVisible());
 		m_LastIcon = icon;
 		if ( icon == "" ){
 			HideImage(true);
