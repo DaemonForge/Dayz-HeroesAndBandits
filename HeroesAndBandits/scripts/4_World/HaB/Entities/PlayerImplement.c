@@ -35,7 +35,7 @@ modded class DayZPlayerImplement extends DayZPlayer
 	}
 	
 	void SaveHABData(){
-		if (GetGame().IsDedicatedServer() && HABData()){
+		if (g_Game.IsDedicatedServer() && HABData()){
 			HABPlayerDataHandler.Save(GetHABGUIDCache(), HABData());
 		}
 	}
@@ -51,12 +51,12 @@ modded class DayZPlayerImplement extends DayZPlayer
 	
 	
 	void InitHABController(){
-		if (!GetGame().IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
-		
+		if (!g_Game.IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
+		if (g_Game.GetMission() && g_Game.GetMission().ClassName() == "MissionMainMenu") Error2("Heroes and Bandits", "Trying to Init Controller on Main Menu");
 		m_HABControllerBase = HeroesAndBandits.Controller(Humanity(),PlayerBase.Cast(this));
 	}
 	void UpdateHABController(){
-		if (!GetGame().IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
+		if (!g_Game.IsDedicatedServer()) Error2("Heroes and Bandits", "Trying to Init Controller on client");
 		
 		m_HABControllerBase = HeroesAndBandits.Controller(Humanity(),PlayerBase.Cast(this));
 	}
@@ -87,7 +87,7 @@ modded class DayZPlayerImplement extends DayZPlayer
 	override void SetSuicide(bool state)
 	{
 		super.SetSuicide(state);
-		if (state && GetGame().IsServer()){
+		if (state && g_Game.IsServer()){
 			SetAllowDamage(true);
 		}
 	}

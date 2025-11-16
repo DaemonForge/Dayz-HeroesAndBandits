@@ -38,7 +38,7 @@ modded class BaseBuildingBase
 	
 	override void OnPartDestroyedServer( Man player, string part_name, int action_id, bool destroyed_by_connected_part = false )
 	{
-		if ( GetGame().IsServer() ){
+		if ( g_Game.IsServer() ){
 			PlayerBase sourcePlayer = PlayerBase.Cast(player);
 			if ( sourcePlayer ){
 				sourcePlayer.NewHABAction(GetType() + "PartDestroyed",this);

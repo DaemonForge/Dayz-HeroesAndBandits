@@ -19,7 +19,7 @@ modded class PlayerBase extends ManBase
 		if (HABPlayerDataHandler){
 			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
 		}
-		if (GetGame() && GetGame().IsDedicatedServer()){
+		if (g_Game && g_Game.IsDedicatedServer()){
 			U().RequestCallCancel(m_last_discord_cid);
 		}
 	}
@@ -72,8 +72,8 @@ modded class PlayerBase extends ManBase
 			RefreshDiscordData();
 		}
 		SetSynchDirty();
-		if (GetGame().IsClient()){
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.habSyncIcon); 
+		if (g_Game.IsClient()){
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.habSyncIcon); 
 		}
 	}
 	
@@ -89,7 +89,7 @@ modded class PlayerBase extends ManBase
 		
 		array<EntityAI> items = new array<EntityAI>;
 		GetInventory().EnumerateInventory(InventoryTraversalType.LEVELORDER, items );
-		if (items && GetGame().IsDedicatedServer()){
+		if (items && g_Game.IsDedicatedServer()){
 			foreach (EntityAI item: items){
 				if (!GetInventory().HasAttachment(item))
 					break;
@@ -107,7 +107,7 @@ modded class PlayerBase extends ManBase
 	}
 	
 	void RefreshDiscordData(){
-		if (GetGame().IsClient() && GetGame().GetPlayer() != this) return;
+		if (g_Game.IsClient() && g_Game.GetPlayer() != this) return;
 		m_last_discord_cid = U().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
 	}
 	
@@ -125,7 +125,7 @@ modded class PlayerBase extends ManBase
 		if (status == UF_SUCCESS){
 			Class.CastTo(m_HABData,data);
 			m_HABData.InitDailyGains();
-			if (GetGame().IsDedicatedServer()){
+			if (g_Game.IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());
 				m_Humanity = m_HABData.GetHumanity();
 				m_HaBLevel = HeroesAndBandits.GetLevel(m_Humanity);
@@ -135,7 +135,7 @@ modded class PlayerBase extends ManBase
 		} else if (status == UF_EMPTY && GetIdentity()){
 			Print("[HAB] Data Empty UF_EMPTY");
 			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
-			if (GetGame().IsDedicatedServer()){
+			if (g_Game.IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());
 				InitHABController();
 				HABPlayerDataHandler.Save(GetHABGUIDCache(),m_HABData);
@@ -164,12 +164,12 @@ modded class PlayerBase extends ManBase
 	bool habCheckGodMod(){
 		bool PlayerHasGodMode = false;
 		#ifdef VPPADMINTOOLS
-			if ( GetGame().IsServer() && hasGodmode ){
+			if ( g_Game.IsServer() && hasGodmode ){
 				PlayerHasGodMode = true;
 			}
 		#endif
 		#ifdef ZOMBERRY_AT
-			if ( GetGame().IsServer() && ZBGodMode ){
+			if ( g_Game.IsServer() && ZBGodMode ){
 				PlayerHasGodMode = true;
 			}
 		#endif
@@ -300,7 +300,7 @@ modded class PlayerBase extends ManBase
 		int deathType = habDeathType.Unknown;
 		string sourcePlayerID = "";
 		m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
-		if (GetGame().IsServer() && (GetIdentity())){
+		if (g_Game.IsServer() && (GetIdentity())){
 			if (killer.IsMan())	{
 				sourcePlayer = PlayerBase.Cast(killer);
 				weaponName = "#HAB_KILLFEED_FISTS";
@@ -393,10 +393,10 @@ modded class PlayerBase extends ManBase
 		PlayerBase targetPlayer = PlayerBase.Cast(this);
 		PlayerBase sourcePlayer;
 		
-		if (GetGame().IsServer() && GetIdentity() && GetBleedingManagerServer()){
+		if (g_Game.IsServer() && GetIdentity() && GetBleedingManagerServer()){
 			beforeHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
 		}
-		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed && GetGame().IsServer() && GetIdentity()) {
+		if ( damageType == DT_EXPLOSION && source && !this.IsAlive() && !m_HeroesAndBandits_Killed && g_Game.IsServer() && GetIdentity()) {
 			m_HeroesAndBandits_Killed = true; //Pervent kills gettting counted twice with Explosions
 			string weaponName;
 			if (source.IsInherited(Grenade_Base)){
@@ -428,11 +428,11 @@ modded class PlayerBase extends ManBase
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
 		int afterHitBleedingSources = 0;
-		if (GetGame().IsServer() && GetIdentity() && GetBleedingManagerServer()){
+		if (g_Game.IsServer() && GetIdentity() && GetBleedingManagerServer()){
 			afterHitBleedingSources = GetBleedingManagerServer().GetBleedingSourcesCount();
 		}
 		
-		if (GetGame().IsServer() && beforeHitBleedingSources < afterHitBleedingSources){
+		if (g_Game.IsServer() && beforeHitBleedingSources < afterHitBleedingSources){
 			if (source.IsMan())	{
 				sourcePlayer = PlayerBase.Cast(source);
 			} else if (source.IsWeapon()) {
@@ -495,7 +495,7 @@ modded class PlayerBase extends ManBase
 	}
 	
 	void habSyncIcon(){
-		if (GetGame().IsClient()){
+		if (g_Game.IsClient()){
 			RPCSingleParam(HAB_SYNCICON, new Param1<bool>(true),true, NULL);
 		} else {
 			RPCSingleParam(HAB_SYNCICON, new Param2<string,string>(HABContoller().Icon(),HABContoller().Name()),true, NULL);
@@ -507,26 +507,26 @@ modded class PlayerBase extends ManBase
 	{
 		super.OnRPC(sender, rpc_type, ctx);
 		
-		if (rpc_type == HAB_SYNCICON && GetGame().IsClient()) {
+		if (rpc_type == HAB_SYNCICON && g_Game.IsClient()) {
 			Param2<string,string> iconData;
 			if (ctx.Read(iconData)){
 				m_HeroesAndBandits_Icon = iconData.param1;
 				m_HeroesAndBandits_Name = iconData.param2;
 			}
 		}
-		if (rpc_type == HAB_SYNCICON && GetGame().IsDedicatedServer() && sender && HABContoller()) {
+		if (rpc_type == HAB_SYNCICON && g_Game.IsDedicatedServer() && sender && HABContoller()) {
 			RPCSingleParam(HAB_SYNCICON, new Param2<string,string>(HABContoller().Icon(),HABContoller().Name()),true, sender);
 		}
-		if (rpc_type == HAB_NOTIFICATION && GetGame().IsClient()) {
+		if (rpc_type == HAB_NOTIFICATION && g_Game.IsClient()) {
 			Param1<string> notificationText;
 			if (ctx.Read(notificationText)){
 				CreateHABNotification(notificationText.param1);
 			}
 		}
-		if (rpc_type == HAB_SYNCMETADATA && GetGame().IsDedicatedServer() && sender && HABContoller()) {
+		if (rpc_type == HAB_SYNCMETADATA && g_Game.IsDedicatedServer() && sender && HABContoller()) {
 			RPCSingleParam(HAB_SYNCMETADATA, HABContoller().GetMetaData(),true, sender);
 		}
-		if (rpc_type == HAB_SYNCMETADATA && GetGame().IsClient()) {
+		if (rpc_type == HAB_SYNCMETADATA && g_Game.IsClient()) {
 			HABControllerData habmetadata;
 			if (ctx.Read(habmetadata)){
 				Print("Received HABControllerData");
@@ -590,7 +590,7 @@ modded class PlayerBase extends ManBase
 			string DogtagAffinity = theCurrentTag.GetHaBAffinity();
 			float DogtagHumanity = theCurrentTag.GetHaBHumanity();
 			theCurrentTag.Delete();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBSpawnNewDogTags, 600, false, tagType, DogtagKilled, DogtagNickName, DogtagBirthday, DogtagBloodType, DogtagAffinity, DogtagHumanity);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.HaBSpawnNewDogTags, 600, false, tagType, DogtagKilled, DogtagNickName, DogtagBirthday, DogtagBloodType, DogtagAffinity, DogtagHumanity);
 		#endif
 	}
 	

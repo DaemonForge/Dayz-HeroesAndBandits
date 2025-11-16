@@ -57,7 +57,7 @@
 					habLastHitBy = grenade.habGetActivatedBy();
 				}
 			}
-			if ( GetGame().IsServer() ){
+			if ( g_Game.IsServer() ){
 				if ( habLastHitBy && !habKilled){
 					if ( habLastHitBy != "null" )
 					{

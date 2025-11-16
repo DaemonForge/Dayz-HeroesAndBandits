@@ -3,7 +3,7 @@
 	{
 		override void EEKilled( Object killer )
 		{
-			if ( GetGame().IsServer() ){
+			if ( g_Game.IsServer() ){
 				if ( habLastHitBy ){
 					if ( habLastHitBy != "null")
 					{

@@ -74,7 +74,7 @@ modded class Dogtag_Base : ItemBase
 
 	void SetHaBHumanity(float humanity)
 	{
-		if (GetGame().IsServer() || !GetGame().IsMultiplayer())
+		if (g_Game.IsServer() || !g_Game.IsMultiplayer())
 		{
 			m_HeroesAndBandits_Humanity = humanity;
 			SetSynchDirty();
@@ -83,7 +83,7 @@ modded class Dogtag_Base : ItemBase
 
 	void SetHaBAffinity(string affinity)
 	{
-		if (GetGame().IsServer() || !GetGame().IsMultiplayer())
+		if (g_Game.IsServer() || !g_Game.IsMultiplayer())
 			m_HeroesAndBandits_Affinity = affinity;
 	}
 

@@ -22,7 +22,7 @@ class HAB_OG_Panel extends UIScriptedMenu {
 	
 	override Widget Init()
     {
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath));
 		m_LevelImage = ImageWidget.Cast(layoutRoot.FindAnyWidget("LevelImage"));
 		m_Affinity = TextWidget.Cast(layoutRoot.FindAnyWidget("Affinity"));
 		m_LevelName = TextWidget.Cast(layoutRoot.FindAnyWidget("LevelName"));
@@ -33,12 +33,12 @@ class HAB_OG_Panel extends UIScriptedMenu {
 		m_Raid = TextWidget.Cast(layoutRoot.FindAnyWidget("Raid"));
 		m_Medic = TextWidget.Cast(layoutRoot.FindAnyWidget("Medic"));
 		m_ZombieKills = TextWidget.Cast(layoutRoot.FindAnyWidget("ZombieKills"));
-		if (Class.CastTo(m_player,GetGame().GetPlayer()))
+		if (Class.CastTo(m_player,g_Game.GetPlayer()))
 			m_player.RefreshHABData();
 		
-        GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
-        GetGame().GetUIManager().ShowUICursor(true);
-		GetGame().GetMission().GetHud().Show(false);
+        g_Game.GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
+        g_Game.GetUIManager().ShowUICursor(true);
+		g_Game.GetMission().GetHud().Show(false);
     	PPEffects.SetBlurInventory(0.5);
 		UpdateData();
 		return layoutRoot;
@@ -126,10 +126,10 @@ class HAB_OG_Panel extends UIScriptedMenu {
 	}
 	
 	void ~HAB_OG_Panel(){
-        GetGame().GetMission().PlayerControlEnable(false);
-        GetGame().GetInput().ResetGameFocus();
-        GetGame().GetUIManager().ShowUICursor(false);
-		GetGame().GetMission().GetHud().Show(true);
+        g_Game.GetMission().PlayerControlEnable(false);
+        g_Game.GetInput().ResetGameFocus();
+        g_Game.GetUIManager().ShowUICursor(false);
+		g_Game.GetMission().GetHud().Show(true);
     	PPEffects.SetBlurInventory(0);
 	}
 	

@@ -4,7 +4,7 @@ modded class ZombieBase
     {
 
         super.EEKilled(killer);
-		if (GetGame().IsServer()){
+		if (g_Game.IsServer()){
 			PlayerBase sourcePlayer;
 			if (killer.IsMan())
 			{

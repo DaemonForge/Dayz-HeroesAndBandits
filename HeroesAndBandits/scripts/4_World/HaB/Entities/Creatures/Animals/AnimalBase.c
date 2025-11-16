@@ -4,7 +4,7 @@ modded class AnimalBase
     {
 
         super.EEKilled(killer);
-		if (GetGame().IsServer()){
+		if (g_Game.IsServer()){
 			PlayerBase sourcePlayer;
 			if (killer.IsMan()) {
 				if (killer.IsInherited(SurvivorBase)) {
@@ -42,4 +42,26 @@ modded class AnimalBase
 			}
 		}
     }
+	{
+		PlayerBase sourcePlayer;
+		string sourcePlayerID;
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+		if (g_Game.IsServer()){
+			if (source.IsMan())	{
+				sourcePlayer = PlayerBase.Cast(source);
+			} else if (source.IsWeapon()) {
+				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
+			} else if (source.IsMeleeWeapon()) {
+				sourcePlayer = PlayerBase.Cast(EntityAI.Cast(source).GetHierarchyParent());
+			} 						
+			if (sourcePlayer){
+				if (sourcePlayer.GetIdentity()){
+					sourcePlayerID = sourcePlayer.GetIdentity().GetId();
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Bambi; //Just using bambi
+					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
+				}
+			}
+		}
+	}
+
 };

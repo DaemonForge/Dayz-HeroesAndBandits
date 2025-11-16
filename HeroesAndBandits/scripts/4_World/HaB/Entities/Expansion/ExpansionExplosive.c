@@ -27,7 +27,7 @@
 			{
 				array<Object> objects = new array<Object>;
 				array<CargoBase> proxy = new array<CargoBase>;
-				GetGame().GetObjectsAtPosition(this.GetPosition(), 1, objects, proxy);
+				g_Game.GetObjectsAtPosition(this.GetPosition(), 1, objects, proxy);
 				for ( int i = 0; i < objects.Count(); i++ ) 
 				{
 					Object obj = objects.Get(i);

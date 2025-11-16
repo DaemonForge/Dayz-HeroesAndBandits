@@ -95,9 +95,9 @@ class HeroesAndBandits extends Managed
 		}
 	}
 	static DayZPlayer FindPlayerByPlainId(string id){
-		if (GetGame().IsServer()){
+		if (g_Game.IsServer()){
 			autoptr array<Man> players = new array<Man>;
-			GetGame().GetPlayers( players );
+			g_Game.GetPlayers( players );
 			for (int i = 0; i < players.Count(); i++){
 				DayZPlayer player = DayZPlayer.Cast(players.Get(i));
 				if (player.GetIdentity() && player.GetIdentity().GetPlainId() == id ){

@@ -4,7 +4,7 @@ modded class WeaponManager
 	{
 		PlayerBase sourcePlayer = PlayerBase.Cast( m_player );
 		int mi = wpn.GetCurrentMuzzle();
-		if ( GetGame().IsServer() ) {
+		if ( g_Game.IsServer() ) {
 			if(!wpn.IsChamberFiredOut(mi) && !wpn.IsJammed() && !wpn.IsChamberEmpty(mi) && sourcePlayer && sourcePlayer.GetIdentity()){
 				//GunFired TODO
 			}

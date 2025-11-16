@@ -1,6 +1,8 @@
 static int HAB_MAXKILLSPERPLAYER = 3;
-static string HEROROLE = "928043552972353556";
-static string BANDITROLE = "928043631137415289";
+static string HEROROLE = "1398513026088439888";
+static string BANDITROLE = "1398513095617548328";
+static string HEROPATHROLE = "1398446621309538427";
+static string BANDITPATHROLE = "1398446456381374545";
 
 class HeroesAndBanditsControllerBase extends Managed {
 	protected PlayerBase m_player;
@@ -18,12 +20,12 @@ class HeroesAndBanditsControllerBase extends Managed {
 		Actions = new map<string,autoptr HaBActionBase>;
 		OnInit();
 		m_isAwaitingDelayedInit = true;
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.DelayedInitDo,2000);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.DelayedInitDo,2000);
 	}
 	
 	void ~HeroesAndBanditsControllerBase(){
 		if (m_isAwaitingDelayedInit){
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DelayedInitDo);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(this.DelayedInitDo);
 		}
 	}
 	
@@ -40,7 +42,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS",Actions);
 		m_Icons = new map<int,string>;
 		m_Icons.Set(0,"set:hab_newicons image:bambi");
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetPlayer().habSyncIcon);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetPlayer().habSyncIcon);
 	}
 	
 	PlayerBase GetPlayer(){
@@ -83,10 +85,10 @@ class HeroesAndBanditsControllerBase extends Managed {
 		bool ignoreLimit = false;
 		Print("[HAB] New Action " + ActionName + " gain: " + gain + " notify" +  notify);
 		AdjustActionGain(Action,other,gain,notify,ignoreLimit);
-		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABAction(m_player, Action, ActionName, other, gain, notify, ignoreLimit);
+		MissionBaseWorld.Cast(g_Game.GetMission()).NewHABAction(m_player, Action, ActionName, other, gain, notify, ignoreLimit);
 		
 		if (!GetPlayer().HABData().IncermentAction(Action, dailyLimit) && !ignoreLimit){
-			//Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
+			Print("[HAB] Reached Daily Limit for action " + Action + " Limit: " + dailyLimit );
 			gain = 0;
 		}
 		if (Math.AbsFloat(gain) > 0){
@@ -138,7 +140,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 		Print(notify);
 
 		AdjustKillGain(other,gain,notify,ignoreLimit);
-		MissionBaseWorld.Cast(GetGame().GetMission()).NewHABKillAction(m_player,other,gain,notify,ignoreLimit);
+		MissionBaseWorld.Cast(g_Game.GetMission()).NewHABKillAction(m_player,other,gain,notify,ignoreLimit);
 		
 		if ( guid != "" && !GetPlayer().HABData().IncermentAction("kill|" + guid, HAB_MAXKILLSPERPLAYER, false) && !ignoreLimit){
 			Print("[HAB] Reached Daily Limit for action " + "kill|" + guid + " Limit: " + HAB_MAXKILLSPERPLAYER );
@@ -167,7 +169,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	void OnAffinityChange(int oldAffinity, int newAffinity, bool isFirst){
 		bool notify = false;
 		
-		MissionBaseWorld.Cast(GetGame().GetMission()).OnHABAffinityChange(m_player,oldAffinity,newAffinity,isFirst,notify);
+		MissionBaseWorld.Cast(g_Game.GetMission()).OnHABAffinityChange(m_player,oldAffinity,newAffinity,isFirst,notify);
 		
 		if (notify){
 			UUtil.SendNotification("#HAB_TITLE", "Change Affinty", GetPlayer().GetIdentity(), Icon());
@@ -177,7 +179,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	void OnLevelChange(int oldLevel, int newLevel, bool isFirst){
 		bool notify = true;
 		
-		MissionBaseWorld.Cast(GetGame().GetMission()).OnHABLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
+		MissionBaseWorld.Cast(g_Game.GetMission()).OnHABLevelChange(m_player,oldLevel,newLevel,isFirst,notify);
 		
 		if (notify){
 			string message = "#HAB_HUMANITY_LEVELUP_PRE " + Name();
@@ -225,9 +227,8 @@ class HeroesAndBanditsControllerBase extends Managed {
 }
 class BambiController extends HeroesAndBanditsControllerBase {
 	
-	protected string HEROPATHROLE = "928043441340960849";
-	protected string BANDITPATHROLE = "928043494893822045";
-	protected const autoptr TStringArray FLEXACTIONS = {"zombiekill", "huntanimal", "huntanimal", "huntanimal", "catchfish", "mineore", "apartmentmission", "bearhuntmission", "campmission", "mallmission", "freepigsmission", "ganjamission", "graveyardmission", "hordemission", "planecrashmission", "psilosmission", "shroomsmission", "transportmission"};
+	
+	protected autoptr TStringArray FLEXACTIONS = {"zombiekill", "huntanimal", "catchfish", "mineore"};
 	
 	override void OnInit(){
 		super.OnInit();
@@ -237,8 +238,9 @@ class BambiController extends HeroesAndBanditsControllerBase {
 	}
 	
 	override void DelayedInit(){
+		FLEXACTIONS = m_HaBGeneralConfig.FlexActions;
 		UDiscordUser dsuser;
-		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
 				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
@@ -257,7 +259,7 @@ class BambiController extends HeroesAndBanditsControllerBase {
 			return true;
 		}
 		UDiscordUser dsuser;
-		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (dsuser.HasRole(HEROPATHROLE)){
 				if (FLEXACTIONS.Find(Action) != -1){
 					gain = Math.AbsFloat(gain);
@@ -310,7 +312,7 @@ class HeroController extends HeroesAndBanditsControllerBase {
 	
 	override void DelayedInit(){
 		UDiscordUser dsuser;
-		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (!dsuser.HasRole(HEROROLE)){
 				U().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
@@ -374,7 +376,7 @@ class BanditController extends HeroesAndBanditsControllerBase {
 	
 	override void DelayedInit(){
 		UDiscordUser dsuser;
-		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && GetGame().IsDedicatedServer()){
+		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
 				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}

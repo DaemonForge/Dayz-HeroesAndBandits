@@ -62,7 +62,7 @@ class HABActionConfigs extends Managed {
 	
 	void OnInit(){
 		InitLoaders();
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.OnLoad);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.OnLoad);
 	}
 	
 	void CBLoadActions(int cid, int status, string action, array<autoptr HaBActionBase> actions){
@@ -74,7 +74,7 @@ class HABActionConfigs extends Managed {
 		} else if (status == UF_EMPTY){
 			LoadDefaults(action);
 		} else {
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.Retry,4000,false,action);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.Retry,4000,false,action);
 		}
 	}
 	

@@ -13,7 +13,7 @@ class HABStatusNotification extends ScriptedWidgetEventHandler {
 	protected static float a_translation = 0.40;
 	
 	void HABStatusNotification(string text, Widget parent){
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(m_LayoutPath, parent, true);
+		m_LayoutRoot = g_Game.GetWorkspace().CreateWidgets(m_LayoutPath, parent, true);
 		m_Text = TextWidget.Cast(m_LayoutRoot.FindAnyWidget("Text"));
 		m_a = 1;
 		m_y = 0;
@@ -48,7 +48,7 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 		Init();
 	}
 	void Init(){
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(m_LayoutPath, NULL, true);
+		m_LayoutRoot = g_Game.GetWorkspace().CreateWidgets(m_LayoutPath, NULL, true);
 		m_Icon = ImageWidget.Cast(m_LayoutRoot.FindAnyWidget("Icon"));
 		m_Notifications = Widget.Cast(m_LayoutRoot.FindAnyWidget("Notifications"));
 		m_StatusNotifications = new array<autoptr HABStatusNotification>;
@@ -68,10 +68,10 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 	}
 	
 	void HABOnUpdate(float timeslice, bool hide){
-		if (!GetGame().IsClient() || !IsInit()){
+		if (!g_Game.IsClient() || !IsInit()){
 			return;
 		}
-		if (!GetGame().GetPlayer()){
+		if (!g_Game.GetPlayer()){
 			m_LayoutRoot.Show(false);
 			return;
 		}
@@ -84,8 +84,8 @@ class HABStatusBarIconWidget extends ScriptedWidgetEventHandler {
 				i++;
 			}
 		}
-		HideImage((hide || GetGame().GetPlayer().IsUnconscious() || !GetGame().GetPlayer().IsAlive()));
-		string newIcon = PlayerBase.Cast(GetGame().GetPlayer()).GetClientIcon();
+		HideImage((hide || g_Game.GetPlayer().IsUnconscious() || !g_Game.GetPlayer().IsAlive()));
+		string newIcon = PlayerBase.Cast(g_Game.GetPlayer()).GetClientIcon();
 		if (m_LastIcon  != newIcon){
 			UpdateImage(newIcon);
 		}

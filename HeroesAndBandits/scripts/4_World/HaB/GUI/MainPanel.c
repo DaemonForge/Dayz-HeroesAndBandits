@@ -9,15 +9,15 @@ class HAB_MainPanel extends UIScriptedMenu {
 	protected PlayerBase m_player;
 	
 	override Widget Init() {
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath));
 		m_LeaderboardsButton = ButtonWidget.Cast(layoutRoot.FindAnyWidget("LeaderboardsButton"));
 		m_StatsButton = ButtonWidget.Cast(layoutRoot.FindAnyWidget("StatsButton"));
 		m_Page = Widget.Cast(layoutRoot.FindAnyWidget("Page"));
-        GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
-        GetGame().GetUIManager().ShowUICursor(true);
-		GetGame().GetMission().GetHud().Show(false);
+        g_Game.GetMission().PlayerControlDisable(INPUT_EXCLUDE_MOUSE_ALL);
+        g_Game.GetUIManager().ShowUICursor(true);
+		g_Game.GetMission().GetHud().Show(false);
     	PPEffects.SetBlurInventory(0.5);
-		if (Class.CastTo(m_player,GetGame().GetPlayer())){
+		if (Class.CastTo(m_player,g_Game.GetPlayer())){
 			m_player.RefreshHABData();		
 			m_player.RequestHABControllerData();
 		}
@@ -49,10 +49,10 @@ class HAB_MainPanel extends UIScriptedMenu {
 	
 	
 	void ~HAB_MainPanel() {
-        GetGame().GetMission().PlayerControlEnable(false);
-        GetGame().GetInput().ResetGameFocus();
-        GetGame().GetUIManager().ShowUICursor(false);
-		GetGame().GetMission().GetHud().Show(true);
+        g_Game.GetMission().PlayerControlEnable(false);
+        g_Game.GetInput().ResetGameFocus();
+        g_Game.GetUIManager().ShowUICursor(false);
+		g_Game.GetMission().GetHud().Show(true);
     	PPEffects.SetBlurInventory(0);
 	}
 	
@@ -94,7 +94,7 @@ class HAB_StatsPage extends HAB_PageBase {
 	
 	void HAB_StatsPage(Widget parent, HAB_MainPanel panel, PlayerBase player){
 		m_panel = panel;
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath,parent));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		Class.CastTo(m_player,player);
 		
 		m_Icon = ImageWidget.Cast(layoutRoot.FindAnyWidget("Icon"));
@@ -173,7 +173,7 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	
 	void HAB_LeaderboardsPage(Widget parent, HAB_MainPanel panel, PlayerBase player){
 		m_panel = panel;
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath,parent));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		Class.CastTo(m_player,player);
 		
 		m_HeroGrid = Widget.Cast(layoutRoot.FindAnyWidget("HeroGrid"));
@@ -219,7 +219,7 @@ class HAB_StatWidget extends ScriptedWidgetEventHandler {
 	protected TextWidget m_ActionsName;
 	protected TextWidget m_StatCount;
 	void HAB_LBWidget(Widget parent, string action, int count){
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath,parent));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		m_ActionsName = TextWidget.Cast(layoutRoot.FindAnyWidget("ActionsName"));
 		m_StatCount = TextWidget.Cast(layoutRoot.FindAnyWidget("StatCount"));
 		m_ActionsName.SetText(action);
@@ -237,7 +237,7 @@ class HAB_LBWidget extends ScriptedWidgetEventHandler {
 	protected TextWidget m_Humanity;
 	
 	void HAB_LBWidget(Widget parent, HeroesAndBanditsPlayerBase data, int rank){
-		layoutRoot = Widget.Cast(GetGame().GetWorkspace().CreateWidgets(m_LayoutPath,parent));
+		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		
 		m_Frame = Widget.Cast(layoutRoot.FindAnyWidget("Frame"));
 		m_Rank  = TextWidget.Cast(layoutRoot.FindAnyWidget("Rank"));
