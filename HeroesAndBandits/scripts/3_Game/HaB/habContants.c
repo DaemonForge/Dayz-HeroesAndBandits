@@ -30,17 +30,3 @@ class habDeathType
 	
 	static int ToxicZone = 14;
 };
-
-class habConstant
-{
-	static string Directory = "$profile:HeroesAndBandits";
-	
-	static string PlayerDB =  Directory + "\\PlayerDB";
-	static string ZoneDB =  Directory + "\\ZoneDB";
-	
-	static string SettingsPATH = Directory + "\\settings.json";
-	static string ActionsPATH = Directory + "\\actions.json";
-	static string ZonesPATH = Directory + "\\zones.json";
-	static string ConfigPATH = Directory + "\\simple.json";
-	static string LevelsPATH = Directory + "\\levels.json";
-};
