@@ -31,8 +31,11 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if(m_Stats) delete m_Stats; 
 		if(m_DailyGain) delete m_DailyGain;
 	}
-	
+		
 	void InitDailyGains(){
+		if (!U().IsOnline()){
+			Print("[HaB] [Error] InitDailyGains Universal Framework is offline, or not configured correctly");
+		}
 		int Date = UUtil.GetDateInt();
 		m_LastDailyCall = HABDailyDataHandler.Query(new UDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
 		
@@ -51,13 +54,16 @@ class HeroesAndBanditsPlayerBase extends Managed
 			}
 			array<autoptr HeroesAndBanditsDaily> dataarray;
 			Class.CastTo(dataarray,data.GetResults());
+			Print("[UF] LoadDailyArray found " + data.Count() + " Daily count objects");
 			for (int i = 0; i< dataarray.Count(); i++){
 				HeroesAndBanditsDaily daily = HeroesAndBanditsDaily.Cast(dataarray.Get(i));
-				m_DailyGain.Set(daily.GetAction(),daily);
+				m_DailyGain.Set(daily.GetAction(), daily);
 			}
 		} else if (status == UF_EMPTY){
+			Print("[UF] LoadDailyArray found zero Daily count objects");
 			m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		}
+		Print("[UF] CBLoadDailyArray Completed");
 	}
 	void CBLoadDaily(int cid, int status, string oid, HeroesAndBanditsDaily data){
 		if (status == UF_SUCCESS){
@@ -138,13 +144,14 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if (!m_DailyGain.Find(action,daily) || daily.GetDate() != date){
 			daily = new HeroesAndBanditsDaily(GUID, action, date, value);
 			HABDailyDataHandler.Save(daily.OID(), daily, this, "CBLoadDaily");
+			Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value + " New Daily Limit Created");
 			m_DailyGain.Set(action,daily);
 			return (value <= max || max == -1);
 		}
 		value = daily.Increment();
 		if (daily.OID() != "NewObject")
 			HABDailyDataHandler.Transaction(daily.OID(), "Value", 1);
-		//Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value);
+		Print("[HAB] Incerment Action: " + action + " Max: " + max + " Value: " + value + " Daily Limit OID: " + daily.OID());
 		return (value <= max || max == -1);
 	}
 	

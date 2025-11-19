@@ -65,6 +65,24 @@ modded class PlayerBase extends ManBase
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();
+		if (g_Game.IsServer()){ //If it's a server don't wait
+			InitHaBPlayerData();
+		} else {
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData,100,false);
+		}
+	}
+	
+	protected int m_HaBDataInitRetries = 1;
+	void InitHaBPlayerData(){
+		
+		if (!U().IsOnline() && m_HaBDataInitRetries < 15){
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData, ((++m_HaBDataInitRetries) * 100), false);
+			Print("[HaB] [Warn] InitHaBPlayerData Universal Framework is offline, or player has not yet recieved token, try again in " + m_HaBDataInitRetries + "00 miliseconds");
+			return;
+		}
+		if (!U().IsOnline()){
+			Print("[HaB] [Error] InitHaBPlayerData Universal Framework is offline, or not configured correctly");
+		}
 		if ( GetIdentity() ){ 
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();

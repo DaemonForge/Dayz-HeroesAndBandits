@@ -62,7 +62,7 @@ class HaBActionBase extends Managed {
 				}else if (curHumanity > 0){
 					return Value();
 				} else {
-					return 0;
+					return Value();
 				}
 			break;
 			case HaBActionType.SUB:

@@ -1,9 +1,13 @@
 modded class AnimalBase
 {
+	
+	protected int m_HeroesAndBandits_LastBleedingSourceType = -1;
+	protected string m_HeroesAndBandits_LastBleedingSourceID;
+	
 	override void EEKilled(Object killer)
     {
 
-        super.EEKilled(killer);
+		Print(ClassName() + " killed by " + killer.ClassName());
 		if (g_Game.IsServer()){
 			PlayerBase sourcePlayer;
 			if (killer.IsMan()) {
@@ -21,31 +25,31 @@ modded class AnimalBase
 						sourcePlayer = PlayerBase.Cast(vehicle.CrewMember( 0 ));
 					}
 				}
-			} else {
-				return;
+			} else if (m_HeroesAndBandits_LastBleedingSourceType == habDeathType.Bambi && m_HeroesAndBandits_LastBleedingSourceID != ""){
+				sourcePlayer = PlayerBase.Cast(UUtil.FindPlayer(m_HeroesAndBandits_LastBleedingSourceID));
 			}
 			
 			if (sourcePlayer && sourcePlayer.GetIdentity()){
 				if (IsInherited(Animal_UrsusArctos)){
 					sourcePlayer.NewHABAction("huntbear",this);
-					return;
-				}
-				if (IsInherited(Animal_CanisLupus)){
+				} else if (IsInherited(Animal_CanisLupus)){
 					sourcePlayer.NewHABAction("huntwolf",this);
-					return;
-				}
-				if (IsInherited(Animal_GallusGallusDomesticus)){
+				} else if (IsInherited(Animal_GallusGallusDomesticus)){
 					sourcePlayer.NewHABAction("huntchicken",this);
-					return;
+				} else {
+					sourcePlayer.NewHABAction("huntanimal",this);
 				}
-				sourcePlayer.NewHABAction("huntanimal",this);
 			}
 		}
+        super.EEKilled(killer);
     }
+	
+	
+	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
+		Print(ClassName() + " hit by " + source.ClassName());
 		PlayerBase sourcePlayer;
 		string sourcePlayerID;
-		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 		if (g_Game.IsServer()){
 			if (source.IsMan())	{
 				sourcePlayer = PlayerBase.Cast(source);
@@ -62,6 +66,7 @@ modded class AnimalBase
 				}
 			}
 		}
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 
 };
