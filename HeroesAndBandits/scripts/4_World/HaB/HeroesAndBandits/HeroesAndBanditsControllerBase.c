@@ -14,6 +14,7 @@ class HeroesAndBanditsControllerBase extends Managed {
 	private bool m_isAwaitingDelayedInit = false;
 	
 	protected autoptr TStringArray BLOCKEDITEMS = {};
+	protected autoptr TStringArray BLOCKEDRECIPES = {};
 	
 	void HeroesAndBanditsControllerBase(PlayerBase player){
 		Class.CastTo(m_player,player);
@@ -224,7 +225,19 @@ class HeroesAndBanditsControllerBase extends Managed {
 		}
 		return true;
 	}
+	
+	bool CanCraft(RecipeBase recipe){
+		foreach (string listitem : BLOCKEDRECIPES){
+			if (listitem && listitem.ToType() && recipe.IsInherited(listitem.ToType())){
+				UUtil.SendNotificationEx("Crafting Restriction", "You are not able to " + recipe.GetName() + " as a " + Name(),  GetPlayer().GetIdentity());
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }
+
 class BambiController extends HeroesAndBanditsControllerBase {
 	
 	
@@ -234,7 +247,8 @@ class BambiController extends HeroesAndBanditsControllerBase {
 		super.OnInit();
 		Print("Init BambiController");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BAMBI",Actions);
-		BLOCKEDITEMS = {"Shemagh_Bandit_ColorBase", "Shemagh_Scarf_ColorBase", "Shemagh_Facemask_ColorBase"};
+		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.BambiBlockedItems);
+		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.BambiBlockedRecipes);
 	}
 	
 	override void DelayedInit(){
@@ -307,7 +321,8 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(8,"set:hab_newicons image:herolv8");
 		m_Icons.Set(9,"set:hab_newicons image:herolv9");
 		m_Icons.Set(10,"set:hab_newicons image:herolv10");
-		BLOCKEDITEMS = {"Shemagh_Bandit_ColorBase", "Shemagh_Facemask_ColorBase"};
+		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.HeroBlockedItems);
+		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.HeroBlockedRecipes);
 	}
 	
 	override void DelayedInit(){
@@ -371,7 +386,8 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
 		m_Icons.Set(10,"set:hab_newicons image:banditlv10");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
-		BLOCKEDITEMS = {"Shemagh_Scarf_ColorBase"};
+		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.BanditBlockedItems);
+		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.BanditBlockedRecipes);
 	}
 	
 	override void DelayedInit(){

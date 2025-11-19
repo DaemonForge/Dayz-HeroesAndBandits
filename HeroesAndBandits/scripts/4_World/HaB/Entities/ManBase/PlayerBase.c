@@ -582,6 +582,11 @@ modded class PlayerBase extends ManBase
 	{
 		return super.CanReceiveAttachment(attachment, slotId) && (!HABContoller() || HABContoller().CanEquipItem(attachment));
 	}
+	
+	
+	bool HaBCanCraft(RecipeBase recipe){
+		return (!HABContoller() || HABContoller().CanCraft(recipe));
+	}
 
 	
 	void SendHABNotification(string text){

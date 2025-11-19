@@ -16,6 +16,9 @@ class HaBGeneralConfig extends Managed
 	ref TStringArray BambiBlockedItems = {"Shemagh_Bandit_ColorBase", "Shemagh_Scarf_ColorBase", "Shemagh_Facemask_ColorBase"};
 	ref TStringArray HeroBlockedItems = {"Shemagh_Bandit_ColorBase", "Shemagh_Facemask_ColorBase"};
 	ref TStringArray BanditBlockedItems = {"Shemagh_Scarf_ColorBase"};
+	ref TStringArray BambiBlockedRecipes = {"CraftWoodenCrate", "CraftWatchtowerKit", "MakePipeBomb", "MakePipeBombShell", "MakeBBFuse"};
+	ref TStringArray HeroBlockedRecipes = {"MakePipeBomb", "MakePipeBombShell", "MakeBBFuse"};
+	ref TStringArray BanditBlockedRecipes = {"CraftBloodBagIV"};
     
     void HaBGeneralConfig()
     {
