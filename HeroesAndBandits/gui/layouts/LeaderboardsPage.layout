@@ -7,41 +7,29 @@ FrameWidgetClass rootFrame {
  hexactsize 0
  vexactsize 0
  {
-  FrameWidgetClass Heroes {
+  FrameWidgetClass LeaderboardContainer {
    ignorepointer 1
    position 0 15
-   size 0.498 600
-   halign right_ref
-   valign center_ref
-   hexactpos 1
+   size 0.96 0.96
+   halign center_ref
+   hexactpos 0
    vexactpos 1
    hexactsize 0
-   vexactsize 1
+   vexactsize 0
    {
-    TextWidgetClass HeroTitle {
+    FrameWidgetClass Heroes {
      ignorepointer 1
-     size 450 48
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "Heroes"
-     "text halign" center
-     "text valign" center
-    }
-    FrameWidgetClass HeroBoardFrame {
-     ignorepointer 1
-     position 0 48
-     size 1 550
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
+     position 0 0
+     size 0.49 1
+     halign right_ref
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
      {
-      ScrollWidgetClass HeroScroll {
+      PanelWidgetClass HeroContainer {
        ignorepointer 1
+       color 0.1 0.11 0.14 0.95
        position 0 0
        size 1 1
        halign center_ref
@@ -49,61 +37,99 @@ FrameWidgetClass rootFrame {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       style Colorable
-       "Scrollbar V Left" 1
+       style rover_sim_colorable
+      }
+      PanelWidgetClass HeroAccent {
+       ignorepointer 1
+       color 0.2 0.45 0.8 1
+       position 0 0
+       size 1 4
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+      }
+      FrameWidgetClass HeroHeader {
+       ignorepointer 1
+       position 0 8
+       size 1 44
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
        {
-        GridSpacerWidgetClass HeroGrid {
+        TextWidgetClass HeroTitle {
          ignorepointer 1
-         size 1 48
-         halign center_ref
+         color 0.2 0.45 0.8 1
+         position 15 0
+         size 0.9 1
+         valign center_ref
          hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 0
-         vexactsize 1
-         "Size To Content V" 1
-         Columns 1
-         Rows 100
+         vexactsize 0
+         text "#HAB_HEROES"
+         font "gui/fonts/sdf_MetronLight48"
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass HeroBoardFrame {
+       ignorepointer 1
+       position 0 56
+       size 1 0.86
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        ScrollWidgetClass HeroScroll {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         "Scrollbar V" 1
+         {
+          GridSpacerWidgetClass HeroGrid {
+           ignorepointer 1
+           size 0.96 1
+           halign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           Padding 3
+           Margin 6
+           "Size To Content V" 1
+           Columns 1
+           Rows 100
+          }
+         }
         }
        }
       }
      }
     }
-   }
-  }
-  FrameWidgetClass Bandits {
-   ignorepointer 1
-   position 0 15
-   size 0.498 600
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   {
-    TextWidgetClass BanditTitle {
+    FrameWidgetClass Bandits {
      ignorepointer 1
-     size 450 48
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "Bandits"
-     "text halign" center
-     "text valign" center
-    }
-    FrameWidgetClass BanditBoardFrame {
-     ignorepointer 1
-     position 0 48
-     size 1 550
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
+     position 0 0
+     size 0.49 1
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
      {
-      ScrollWidgetClass BanditScroll {
+      PanelWidgetClass BanditContainer {
        ignorepointer 1
+       color 0.1 0.11 0.14 0.95
        position 0 0
        size 1 1
        halign center_ref
@@ -111,70 +137,88 @@ FrameWidgetClass rootFrame {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       style Colorable
-       "Scrollbar V" 1
+       style rover_sim_colorable
+      }
+      PanelWidgetClass BanditAccent {
+       ignorepointer 1
+       color 0.8 0.25 0.2 1
+       position 0 0
+       size 1 4
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+      }
+      FrameWidgetClass BanditHeader {
+       ignorepointer 1
+       position 0 8
+       size 1 44
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
        {
-        GridSpacerWidgetClass BanditGrid {
+        TextWidgetClass BanditTitle {
          ignorepointer 1
-         size 1 48
-         halign center_ref
+         color 0.8 0.25 0.2 1
+         position 15 0
+         size 0.9 1
+         valign center_ref
          hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 0
-         vexactsize 1
-         Padding 1
-         Margin 3
-         "Size To Content V" 1
-         Columns 1
-         Rows 100
+         vexactsize 0
+         text "#HAB_BANDITS"
+         font "gui/fonts/sdf_MetronLight48"
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass BanditBoardFrame {
+       ignorepointer 1
+       position 0 56
+       size 1 0.86
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        ScrollWidgetClass BanditScroll {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         "Scrollbar V" 1
+         {
+          GridSpacerWidgetClass BanditGrid {
+           ignorepointer 1
+           size 0.96 1
+           halign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           Padding 3
+           Margin 6
+           "Size To Content V" 1
+           Columns 1
+           Rows 100
+          }
+         }
         }
        }
       }
      }
     }
    }
-  }
-  TextWidgetClass Footer {
-   ignorepointer 1
-   size 0.8 24
-   halign center_ref
-   valign bottom_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   text "#HAB_TITLE Mod - Made By DaemonForge Developments"
-   font "gui/fonts/amorserifpro"
-   "text color" 0.6431 0.6431 0.6431 0.3176
-   "size to text h" 0
-   "size to text v" 0
-   "text halign" center
-   "text valign" center
-  }
-  TextWidgetClass Title {
-   ignorepointer 1
-   size 900 64
-   halign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   text "#HAB_TITLE"
-   "text halign" center
-   "text valign" center
-  }
-  PanelWidgetClass MiddleBoard {
-   ignorepointer 1
-   color 0.9765 1 1 1
-   size 1 575
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   priority 5
-   style rover_sim_colorable
   }
  }
 }

@@ -1,58 +1,74 @@
 FrameWidgetClass rootFrame {
- size 475 42
+ size 1 36
  halign center_ref
- hexactpos 1
+ hexactpos 0
  vexactpos 1
- hexactsize 1
+ hexactsize 0
  vexactsize 1
  {
   PanelWidgetClass Frame {
    ignorepointer 1
-   color 0 0.2196 0.8784 0.2157
-   size 475 42
+   color 0.08 0.09 0.11 0.95
+   position 0 2
+   size 1 32
    halign center_ref
-   hexactpos 1
+   hexactpos 0
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    style rover_sim_colorable
    {
+    PanelWidgetClass RankBG {
+     ignorepointer 1
+     color 0.5 0.8 0.85 0.15
+     size 32 1
+     hexactpos 1
+     vexactpos 0
+     hexactsize 1
+     vexactsize 0
+     style rover_sim_colorable
+    }
     TextWidgetClass Rank {
      ignorepointer 1
-     size 46 40
+     color 0.5 0.8 0.85 1
+     size 32 1
      valign center_ref
      hexactpos 1
-     vexactpos 1
+     vexactpos 0
      hexactsize 1
-     vexactsize 1
-     text "1."
+     vexactsize 0
+     text "1"
+     font "gui/fonts/sdf_MetronLight18"
+     "text halign" center
      "text valign" center
     }
     TextWidgetClass PlayerName {
      ignorepointer 1
-     position 55 0
-     size 350 38
+     color 1 1 1 0.95
+     position 40 0
+     size 0.55 1
      valign center_ref
      hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
      text "PlayerName"
-     "size to text h" 1
+     font "gui/fonts/sdf_MetronLight18"
+     "text valign" center
     }
     TextWidgetClass Humanity {
      ignorepointer 1
-     position 5 0
-     size 175 32
+     color 0.75 0.75 0.75 1
+     position 8 0
+     size 0.4 1
      halign right_ref
      valign center_ref
      hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "1000"
-     "size to text h" 1
-     "size to text v" 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text "-1000"
+     font "gui/fonts/sdf_MetronLight18"
      "text halign" right
      "text valign" center
     }

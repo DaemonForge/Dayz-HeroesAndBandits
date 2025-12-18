@@ -1,7 +1,7 @@
 FrameWidgetClass rootFrame {
  clipchildren 0
  position 0 0
- size 1000 700
+ size 1000 680
  halign center_ref
  valign center_ref
  hexactpos 0
@@ -9,9 +9,9 @@ FrameWidgetClass rootFrame {
  hexactsize 1
  vexactsize 1
  {
-  PanelWidgetClass Page {
+  PanelWidgetClass BackgroundOverlay {
    ignorepointer 1
-   color 0.3529 0.3098 0.3961 0.7843
+   color 0 0 0 0.75
    position 0 0
    size 1 1
    halign center_ref
@@ -22,243 +22,246 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    style rover_sim_colorable
   }
-  GridSpacerWidgetClass Menu {
+  PanelWidgetClass MainContainer {
    ignorepointer 1
-   position 0 -63
-   size 900 64
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   "Size To Content H" 1
-   content_halign center
-   content_valign bottom
-   Columns 99
-   Rows 1
+   color 0.08 0.09 0.12 0.98
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style rover_sim_colorable
    {
-    FrameWidgetClass StatsFrame {
-     clipchildren 0
+    PanelWidgetClass HeaderBar {
      ignorepointer 1
-     size 164 48
-     valign center_ref
+     color 0.12 0.13 0.18 1
+     position 5 0
+     size 1 60
+     halign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      PanelWidgetClass HeaderAccent {
+       ignorepointer 1
+       color 0.85 0.65 0.3 1
+       position 0 0
+       size 1 3
+       halign center_ref
+       valign bottom_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+      }
+      TextWidgetClass TitleText {
+       ignorepointer 1
+       color 1 1 1 1
+       size 1 0.95
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "#HAB_TITLE"
+       font "gui/fonts/sdf_MetronLight72"
+       "text valign" center
+      }
+     }
+    }
+    FrameWidgetClass TabContainer {
+     ignorepointer 1
+     position 0 60
+     size 1 48
+     halign center_ref
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
      vexactsize 1
      {
-      ButtonWidgetClass StatsButton {
-       clipchildren 0
-       color 0.3529 0.3098 0.3961 0.7843
+      PanelWidgetClass TabBackground {
+       ignorepointer 1
+       color 0.06 0.07 0.09 1
        position 0 0
        size 1 1
        halign center_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
+       hexactpos 0
+       vexactpos 0
        hexactsize 0
        vexactsize 0
-       style Colorable
+       style rover_sim_colorable
+      }
+      FrameWidgetClass Menu {
+       ignorepointer 1
+       position 5 0
+       size 550 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 1
+       vexactsize 0
        {
-        TextWidgetClass StatsButton_Label {
-         ignorepointer 1
-         size 0.95 0.98
-         halign center_ref
+        ButtonWidgetClass StatsButton {
+         color 0 0 0 0
+         position 0 0
+         size 120 36
          valign center_ref
          hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         text "Stats"
-         font "gui/fonts/metronblack22"
-         "text halign" center
-         "text valign" center
-        }
-        PanelWidgetClass Top0 {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 1 2
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-        }
-        PanelWidgetClass Bottom0 {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 1 2
-         halign center_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-        }
-        PanelWidgetClass Right0 {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 2 1
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 1
-         vexactsize 0
-         style rover_sim_colorable
+         vexactsize 1
+         style Colorable
+         {
+          PanelWidgetClass StatsButton_Active {
+           ignorepointer 1
+           color 0.85 0.65 0.3 1
+           position 0 0
+           size 1 3
+           halign center_ref
+           valign bottom_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+          }
+          TextWidgetClass StatsButton_Label {
+           ignorepointer 1
+           color 1 1 1 0.9
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_STATS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text halign" center
+           "text valign" center
+          }
+         }
         }
-        PanelWidgetClass Left0 {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 2 1
+        ButtonWidgetClass LeaderboardsButton {
+         color 0 0 0 0
+         position 126 0
+         size 284 36
          valign center_ref
          hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 1
-         vexactsize 0
-         style rover_sim_colorable
+         vexactsize 1
+         style Colorable
+         {
+          PanelWidgetClass LeaderboardsButton_Active {
+           visible 0
+           ignorepointer 1
+           color 0.85 0.65 0.3 1
+           position 0 0
+           size 1 3
+           halign center_ref
+           valign bottom_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+          }
+          TextWidgetClass LeaderboardsButton_Label {
+           ignorepointer 1
+           color 1 1 1 0.5
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_LEADERBOARDS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        ButtonWidgetClass InfoButton {
+         color 0 0 0 0
+         position 418 0
+         size 110 36
+         valign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         style Colorable
+         {
+          PanelWidgetClass InfoButton_Active {
+           visible 0
+           ignorepointer 1
+           color 0.85 0.65 0.3 1
+           position 0 0
+           size 1 3
+           halign center_ref
+           valign bottom_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+          }
+          TextWidgetClass InfoButton_Label {
+           ignorepointer 1
+           color 1 1 1 0.5
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_INFO"
+           font "gui/fonts/sdf_MetronLight24"
+           "text halign" center
+           "text valign" center
+          }
+         }
         }
        }
       }
      }
     }
-    FrameWidgetClass LeaderboardsFrame {
-     clipchildren 0
+    FrameWidgetClass Page {
      ignorepointer 1
-     size 236 48
-     valign center_ref
-     hexactpos 1
+     position 0 108
+     size 1 0.8
+     halign center_ref
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
+     vexactsize 0
+    }
+    TextWidgetClass Footer {
+     ignorepointer 1
+     color 0.5 0.5 0.5 0.35
+     size 0.9 28
+     halign center_ref
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
      vexactsize 1
-     {
-      ButtonWidgetClass LeaderboardsButton {
-       clipchildren 0
-       inheritalpha 0
-       ignorepointer 0
-       color 0.3529 0.3098 0.3961 0.7843
-       position 0 0
-       size 0.999 0.999
-       halign center_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style Colorable
-       {
-        TextWidgetClass LeaderboardsButton_Label {
-         ignorepointer 1
-         size 0.98 0.98
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         text "Leaderboards"
-         font "gui/fonts/metronblack22"
-         "text halign" center
-         "text valign" center
-        }
-        PanelWidgetClass Top {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 1 2
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-        }
-        PanelWidgetClass Bottom {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 1 2
-         halign center_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-        }
-        PanelWidgetClass Right {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 2 1
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-         style rover_sim_colorable
-        }
-        PanelWidgetClass Left {
-         ignorepointer 1
-         color 0.9961 0.9961 0.9961 1
-         size 2 1
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-         style rover_sim_colorable
-        }
-       }
-      }
-     }
+     text "#HAB_TITLE Mod - Made By DaemonForge Developments"
+     font "gui/fonts/sdf_MetronLight24"
+     "text halign" center
+     "text valign" center
     }
    }
-  }
-  PanelWidgetClass Top1 {
-   ignorepointer 1
-   color 0.9961 0.9961 0.9961 1
-   size 1 2
-   halign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   style rover_sim_colorable
-  }
-  PanelWidgetClass Bottom1 {
-   ignorepointer 1
-   color 0.9961 0.9961 0.9961 1
-   size 1 2
-   halign center_ref
-   valign bottom_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   style rover_sim_colorable
-  }
-  PanelWidgetClass Right1 {
-   ignorepointer 1
-   color 0.9961 0.9961 0.9961 1
-   size 2 1
-   halign right_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-   style rover_sim_colorable
-  }
-  PanelWidgetClass Left1 {
-   ignorepointer 1
-   color 0.9961 0.9961 0.9961 1
-   size 2 1
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-   style rover_sim_colorable
   }
  }
 }

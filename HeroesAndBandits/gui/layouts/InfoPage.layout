@@ -1,0 +1,163 @@
+FrameWidgetClass rootFrame {
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ {
+  FrameWidgetClass MainPage {
+   position 0 0
+   size 1 1
+   halign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   {
+    FrameWidgetClass InfoRoot {
+     position 0 0
+     size 1 1
+     halign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     {
+      PanelWidgetClass InfoBackground {
+       ignorepointer 1
+       color 0.1 0.11 0.14 0.95
+       position 0 0
+       size 1 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style rover_sim_colorable
+      }
+      PanelWidgetClass InfoAccent {
+       ignorepointer 1
+       color 0.85 0.65 0.3 1
+       position 0 0
+       size 4 1
+       hexactpos 1
+       vexactpos 0
+       hexactsize 1
+       vexactsize 0
+       style rover_sim_colorable
+      }
+      FrameWidgetClass HeaderFrame {
+       ignorepointer 1
+       position 0.02 0.02
+       size 0.96 0.08
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        TextWidgetClass InfoTitle {
+         ignorepointer 1
+         color 0.85 0.65 0.3 1
+         position 0 0
+         size 0.6 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "#HAB_SERVER_INFO"
+         font "gui/fonts/sdf_MetronLight36"
+         "text valign" center
+        }
+        ButtonWidgetClass DiscordButton {
+         position -10 0
+         size 200 62
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass DiscordBG {
+           ignorepointer 1
+           color 0.35 0.4 0.95 0.9
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          ImageWidgetClass DiscordIcon {
+           ignorepointer 1
+           color 1 1 1 1
+           position 18 0
+           size 44 32
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+           fixaspect none
+           image0 ""
+           imageTexture "{523F5015B82F5B49}HeroesAndBandits/gui/images/discord.edds"
+           mode blend
+           "src alpha" 1
+           "stretch mode" fit_h
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           nocache 0
+          }
+          TextWidgetClass DiscordText {
+           ignorepointer 1
+           color 1 1 1 1
+           position 92 0
+           size 0.6 0.8
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scaled 1
+           text "#HAB_DISCORD"
+           font "gui/fonts/sdf_MetronMedium20"
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass SectionsScroll {
+       position 0.02 0.12
+       size 0.96 0.86
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style blank
+       "Scrollbar H" 0
+       "Scrollbar V" 1
+       {
+        GridSpacerWidgetClass SectionsGrid {
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         Padding 3
+         Margin 0
+         "Size To Content V" 1
+         Columns 1
+         Rows 99
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

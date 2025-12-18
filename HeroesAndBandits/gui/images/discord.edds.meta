@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{523F5015B82F5B49}HeroesAndBandits/gui/images/discord.edds"
+ Author "laptop-a1dsa5nh"
+ ChangeDate -495209588
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "discord.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}

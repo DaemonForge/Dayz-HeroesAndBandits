@@ -9,11 +9,24 @@ FrameWidgetClass rootFrame {
  hexactsize 0
  vexactsize 0
  {
+  PanelWidgetClass BackgroundOverlay {
+   ignorepointer 1
+   color 0 0 0 0.7
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style rover_sim_colorable
+  }
   PanelWidgetClass PanelWidget {
    ignorepointer 0
-   color 0.6863 0.5843 0.4627 0.6941
-   position 0 -0.05
-   size 700 348
+   color 0.08 0.09 0.12 0.98
+   position 0 0
+   size 750 420
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -22,291 +35,422 @@ FrameWidgetClass rootFrame {
    vexactsize 1
    scaled 1
    draggable 0
-   style UIDefaultPanel
+   style rover_sim_colorable
    {
-    ImageWidgetClass LevelImage {
+    PanelWidgetClass HeaderAccent {
      ignorepointer 1
-     position 50 62
-     size 164 164
-     hexactpos 1
+     color 0.75 0.25 0.25 1
+     position 0 0
+     size 1 4
+     halign center_ref
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
-     image0 "set:hab_icons image:bambi"
-     mode blend
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
+     style rover_sim_colorable
     }
     RichTextWidgetClass Heading {
      ignorepointer 1
-     color 0 0 0 1
-     position 0 5
-     size 600 58
+     color 1 1 1 1
+     position 0 20
+     size 1 50
      halign center_ref
-     hexactpos 1
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      scaled 1
-     style DayZBold
      text "#HAB_TITLE"
-     "text color" 0 0 0 1
-     "exact text" 1
+     font "gui/fonts/sdf_MetronLight72"
+     "text color" 1 1 1 1
      "text halign" center
      "text valign" center
     }
-    FrameWidgetClass AffinityFrame {
+    FrameWidgetClass PlayerCard {
      ignorepointer 1
-     position 220 -65
-     size 220 56
-     halign right_ref
-     valign center_ref
-     hexactpos 1
+     position 0 80
+     size 0.95 180
+     halign center_ref
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      {
-      RichTextWidgetClass Affinity {
+      PanelWidgetClass CardBackground {
        ignorepointer 1
-       color 0 0 0 1
+       color 0.1 0.11 0.14 0.9
+       position 0 0
        size 1 1
        halign center_ref
-       valign center_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       text "#HAB_BAMBI"
-       font "gui/fonts/Metron-Bold28"
-       "text color" 0 0 0 1
-       "exact text" 1
+       style rover_sim_colorable
+      }
+      PanelWidgetClass CardAccentLeft {
+       ignorepointer 1
+       color 0.75 0.25 0.25 1
+       position 0 0
+       size 4 1
+       hexactpos 1
+       vexactpos 0
+       hexactsize 1
+       vexactsize 0
+       style rover_sim_colorable
+      }
+      FrameWidgetClass IconContainer {
+       ignorepointer 1
+       position 25 0
+       size 140 140
+       valign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass IconBorder {
+         ignorepointer 1
+         color 0.75 0.25 0.25 0.3
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         style rover_sim_colorable
+        }
+        ImageWidgetClass LevelImage {
+         ignorepointer 1
+         position 0 0
+         size 124 124
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         image0 "set:hab_icons image:bambi"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_h
+        }
+       }
+      }
+      FrameWidgetClass InfoContainer {
+       ignorepointer 1
+       position 185 0
+       size 0.55 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       {
+        FrameWidgetClass AffinityFrame {
+         ignorepointer 1
+         position 0 20
+         size 1 36
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         {
+          RichTextWidgetClass Affinity {
+           ignorepointer 1
+           color 1 1 1 1
+           size 1 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_BAMBI"
+           font "gui/fonts/sdf_MetronLight72"
+           "text color" 1 1 1 1
+          }
+         }
+        }
+        RichTextWidgetClass LevelName {
+         ignorepointer 1
+         color 0.7 0.7 0.7 1
+         position 0 60
+         size 1 28
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "#HAB_LEVEL"
+         font "gui/fonts/sdf_MetronLight24"
+         "text color" 0.7 0.7 0.7 1
+        }
+        RichTextWidgetClass Humanity {
+         ignorepointer 1
+         color 0.75 0.25 0.25 1
+         position 0 100
+         size 1 28
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "#HAB_HUMANITY: 0"
+         font "gui/fonts/sdf_MetronLight24"
+         "text color" 0.75 0.25 0.25 1
+        }
+       }
       }
      }
-    }
-    RichTextWidgetClass LevelName {
-     ignorepointer 1
-     color 0 0 0 1
-     position 20 -65
-     size 200 56
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     text "#HAB_LEVEL"
-     font "gui/fonts/Metron-Bold28"
-     "text color" 0 0 0 1
-     "exact text" 1
-    }
-    RichTextWidgetClass Humanity {
-     ignorepointer 1
-     color 0 0 0 1
-     position 25 -5
-     size 415 46
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "#HAB_HUMANITY: 0"
-     font "gui/fonts/Metron-Bold28"
-     "text color" 0 0 0 1
-     "exact text" 1
     }
     FrameWidgetClass Stats {
      inheritalpha 0
      ignorepointer 1
-     color 0.2863 0.2549 0.2118 0.3412
-     position 0 12
-     size 650 98
+     position 0 20
+     size 0.95 110
      halign center_ref
      valign bottom_ref
-     hexactpos 1
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      {
-      FrameWidgetClass PlayerKillsFrame {
+      PanelWidgetClass StatsBackground {
        ignorepointer 1
-       color 0 0 0 0.0392
-       position 0.525 0
-       size 0.47 0.31
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        RichTextWidgetClass PlayerKills {
-         ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#HAB_PLAYERKILLS"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass DeathsFrame {
-       ignorepointer 1
-       color 0 0 0 0.0353
-       position 0.525 0.66
-       size 0.47 0.31
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        RichTextWidgetClass Deaths {
-         ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#HAB_DEATHS"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass HuntFrame {
-       ignorepointer 1
-       color 0 0 0 0.0353
-       position 0 0.66
-       size 0.52 0.31
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        RichTextWidgetClass Hunt {
-         ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         text "#HAB_HUNTS"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass RaidFrame {
-       ignorepointer 1
-       color 0 0 0 0.0353
-       position 0.525 0.33
-       size 0.47 0.31
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        RichTextWidgetClass Raid {
-         ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#HAB_RAID"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass MedicFrame {
-       ignorepointer 1
-       color 0 0 0 0.0353
-       position 0 0.33
-       size 0.52 0.31
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        RichTextWidgetClass Medic {
-         ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#HAB_MEDIC_ACTIONS"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass ZombieKillsFrame {
-       ignorepointer 1
-       color 0 0 0 0.0588
+       color 0.1 0.11 0.14 0.9
        position 0 0
-       size 0.52 0.31
+       size 1 1
+       halign center_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       style rover_sim_colorable
+      }
+      GridSpacerWidgetClass StatsGridContainer {
+       ignorepointer 1
+       position 0 8
+       size 0.98 0.9
+       halign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       Padding 5
+       Margin 5
+       Columns 3
+       Rows 2
        {
-        RichTextWidgetClass ZombieKills {
+        FrameWidgetClass PlayerKillsFrame {
          ignorepointer 1
-         color 0 0 0 1
-         position 0 0
-         size 1 1
+         size 0.32 0.45
          hexactpos 0
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "#HAB_ZOMBIEKILLS"
-         font "gui/fonts/Metron-Bold22"
-         "text color" 0 0 0 1
-         "exact text" 1
-         "exact text size" 18
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
+         {
+          PanelWidgetClass PKillBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass PlayerKills {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_PLAYERKILLS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
+        }
+        FrameWidgetClass ZombieKillsFrame {
+         ignorepointer 1
+         size 0.32 0.45
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass ZKillBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass ZombieKills {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_ZOMBIEKILLS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
+        }
+        FrameWidgetClass DeathsFrame {
+         ignorepointer 1
+         size 0.32 0.45
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass DeathsBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass Deaths {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_DEATHS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
+        }
+        FrameWidgetClass HuntFrame {
+         ignorepointer 1
+         size 0.32 0.45
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass HuntBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass Hunt {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_HUNTS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
+        }
+        FrameWidgetClass RaidFrame {
+         ignorepointer 1
+         size 0.32 0.45
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass RaidBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass Raid {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_RAID"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
+        }
+        FrameWidgetClass MedicFrame {
+         ignorepointer 1
+         size 0.32 0.45
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass MedicBG {
+           ignorepointer 1
+           color 0.12 0.13 0.17 0.8
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          RichTextWidgetClass Medic {
+           ignorepointer 1
+           color 0.85 0.85 0.85 1
+           position 12 0
+           size 0.9 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#HAB_MEDIC_ACTIONS"
+           font "gui/fonts/sdf_MetronLight24"
+           "text color" 0.85 0.85 0.85 1
+           "text valign" center
+          }
+         }
         }
        }
       }

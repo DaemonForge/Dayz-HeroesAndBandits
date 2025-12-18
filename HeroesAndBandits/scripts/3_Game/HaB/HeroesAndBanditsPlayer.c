@@ -36,6 +36,10 @@ class HeroesAndBanditsPlayerBase extends Managed
 		if (!U().IsOnline()){
 			Print("[HaB] [Error] InitDailyGains Universal Framework is offline, or not configured correctly");
 		}
+		if (g_Game.IsClient()){
+			Print("[HaB] [Warn] InitDailyGains on client doesn't need be run");
+			return;
+		}
 		int Date = UUtil.GetDateInt();
 		m_LastDailyCall = HABDailyDataHandler.Query(new UDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
 		
@@ -157,6 +161,10 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	bool GetStat(string action, out int stat){
 		return m_Stats.Find(action,stat);
+	}
+	
+	array<autoptr HeroesAndBanditsStats> GetAllStats(){
+		return Stats;
 	}
 }
 
