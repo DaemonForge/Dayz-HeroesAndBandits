@@ -13,9 +13,6 @@ class HeroesAndBanditsControllerBase extends Managed {
 	
 	private bool m_isAwaitingDelayedInit = false;
 	
-	protected autoptr TStringArray BLOCKEDITEMS = {};
-	protected autoptr TStringArray BLOCKEDRECIPES = {};
-	
 	void HeroesAndBanditsControllerBase(PlayerBase player){
 		Class.CastTo(m_player,player);
 		Actions = new map<string,autoptr HaBActionBase>;
@@ -218,21 +215,32 @@ class HeroesAndBanditsControllerBase extends Managed {
 
 	
 	bool CanEquipItem(EntityAI item){
-		foreach (string listitem : BLOCKEDITEMS){
-			if (listitem && listitem.ToType() && item.IsInherited(listitem.ToType())){
-				return false;
+		// Check block rules
+		if (m_HaBGeneralConfig && m_HaBGeneralConfig.IsItemBlocked(item.GetType(), GetPlayer().Humanity()))
+		{
+			string reason = m_HaBGeneralConfig.GetItemBlockReason(item.GetType(), GetPlayer().Humanity());
+			if (reason != "")
+			{
+				HABBlockNotify.SendIfAllowed("Equipment Restriction", reason, GetPlayer().GetIdentity(), HABBlockType.Equip);
 			}
+			return false;
 		}
+		
 		return true;
 	}
 	
 	bool CanCraft(RecipeBase recipe){
-		foreach (string listitem : BLOCKEDRECIPES){
-			if (listitem && listitem.ToType() && recipe.IsInherited(listitem.ToType())){
-				UUtil.SendNotificationEx("Crafting Restriction", "You are not able to " + recipe.GetName() + " as a " + Name(),  GetPlayer().GetIdentity());
-				return false;
+		// Check block rules
+		if (m_HaBGeneralConfig && m_HaBGeneralConfig.IsRecipeBlocked(recipe.ClassName(), GetPlayer().Humanity()))
+		{
+			string reason = m_HaBGeneralConfig.GetRecipeBlockReason(recipe.ClassName(), GetPlayer().Humanity());
+			if (reason != "")
+			{
+				HABBlockNotify.SendIfAllowed("Crafting Restriction", reason, GetPlayer().GetIdentity(), HABBlockType.Recipe);
 			}
+			return false;
 		}
+		
 		return true;
 	}
 	
@@ -247,8 +255,6 @@ class BambiController extends HeroesAndBanditsControllerBase {
 		super.OnInit();
 		Print("Init BambiController");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BAMBI",Actions);
-		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.BambiBlockedItems);
-		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.BambiBlockedRecipes);
 	}
 	
 	override void DelayedInit(){
@@ -321,8 +327,6 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(8,"set:hab_newicons image:herolv8");
 		m_Icons.Set(9,"set:hab_newicons image:herolv9");
 		m_Icons.Set(10,"set:hab_newicons image:herolv10");
-		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.HeroBlockedItems);
-		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.HeroBlockedRecipes);
 	}
 	
 	override void DelayedInit(){
@@ -386,8 +390,6 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		m_Icons.Set(9,"set:hab_newicons image:banditlv9");
 		m_Icons.Set(10,"set:hab_newicons image:banditlv10");
 		HABActionConfigs.UpdateActionMap("HAB_ACTIONS_BANDIT", Actions);
-		BLOCKEDITEMS.Copy(m_HaBGeneralConfig.BanditBlockedItems);
-		BLOCKEDRECIPES.Copy(m_HaBGeneralConfig.BanditBlockedRecipes);
 	}
 	
 	override void DelayedInit(){

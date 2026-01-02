@@ -41,8 +41,12 @@ modded class DayZPlayerImplement extends DayZPlayer
 	}
 	
 	int HABAffinity(){
-		if (!HABContoller()) return HAB_BAMBI;
-		return HABContoller().Affinity();
+		// Server: use controller if available
+		if (HABContoller())
+			return HABContoller().Affinity();
+		
+		// Client or no controller: calculate from synced humanity value
+		return HeroesAndBandits.GetAffinity(Humanity());
 	}
 	
 	HeroesAndBanditsControllerBase HABContoller(){

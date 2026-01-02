@@ -8,6 +8,12 @@ modded class MissionServer extends MissionBase
 	override void OnInit()
 	{
 		super.OnInit();
+		
+		#ifdef UniversalComms
+		// Register Heroes and Bandits chat channels
+		UCChannelRegistry.Register(new HAB_HeroChannel());
+		UCChannelRegistry.Register(new HAB_BanditChannel());
+		#endif
 	}
 	
 	override void UFrameworkReady(){

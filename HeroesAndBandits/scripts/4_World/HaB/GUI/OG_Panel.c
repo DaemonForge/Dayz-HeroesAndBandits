@@ -74,7 +74,7 @@ class HAB_OG_Panel extends UIScriptedMenu {
 		UpdateMedic();
 	}
 	
-	autoptr TStringArray m_DeathActions = {"zombiedeath","toxicdeath","hungerdeath","playerdeath","death","sucide"};
+	autoptr TStringArray m_DeathActions = {"zombiedeath","toxicdeath","hungerdeath","playerdeath","death","suicide"};
 	void UpdateDeaths(){
 		int statTotal = 0;
 		foreach (string action: m_DeathActions){

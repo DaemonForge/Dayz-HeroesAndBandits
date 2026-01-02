@@ -28,6 +28,10 @@ class HeroesAndBandits extends Managed
 	}
 	
 	static int GetAffinity(float humanity){
+		// Safety check - if Levels not yet initialized, return Bambi
+		if (!Levels || Levels.Count() == 0)
+			return HAB_BAMBI;
+		
 		if (humanity >= Levels[0]){
 			return HAB_HERO;
 		}

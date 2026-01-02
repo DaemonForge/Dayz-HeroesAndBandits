@@ -38,7 +38,9 @@ FrameWidgetClass rootFrame {
      hexactsize 1
      vexactsize 0
      text "1"
-     font "gui/fonts/sdf_MetronLight18"
+     font "gui/fonts/sdf_MetronLight72"
+     "exact text" 1
+     "exact text size" 18
      "text halign" center
      "text valign" center
     }
@@ -53,7 +55,9 @@ FrameWidgetClass rootFrame {
      hexactsize 0
      vexactsize 0
      text "PlayerName"
-     font "gui/fonts/sdf_MetronLight18"
+     font "gui/fonts/sdf_MetronLight72"
+     "exact text" 1
+     "exact text size" 18
      "text valign" center
     }
     TextWidgetClass Humanity {
@@ -68,7 +72,9 @@ FrameWidgetClass rootFrame {
      hexactsize 0
      vexactsize 0
      text "-1000"
-     font "gui/fonts/sdf_MetronLight18"
+     font "gui/fonts/sdf_MetronLight72"
+     "exact text" 1
+     "exact text size" 18
      "text halign" right
      "text valign" center
     }

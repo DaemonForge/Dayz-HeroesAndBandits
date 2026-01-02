@@ -65,7 +65,7 @@ FrameWidgetClass rootFrame {
          ignorepointer 1
          color 0.2 0.45 0.8 1
          position 15 0
-         size 0.9 1
+         size 0.5 1
          valign center_ref
          hexactpos 1
          vexactpos 0
@@ -73,6 +73,22 @@ FrameWidgetClass rootFrame {
          vexactsize 0
          text "#HAB_HEROES"
          font "gui/fonts/sdf_MetronLight48"
+         "text valign" center
+        }
+        TextWidgetClass HeroRankText {
+         ignorepointer 1
+         color 0.2 0.45 0.8 0.8
+         position -15 0
+         size 0.45 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text ""
+         font "gui/fonts/sdf_MetronLight24"
+         "text halign" right
          "text valign" center
         }
        }
@@ -165,7 +181,7 @@ FrameWidgetClass rootFrame {
          ignorepointer 1
          color 0.8 0.25 0.2 1
          position 15 0
-         size 0.9 1
+         size 0.5 1
          valign center_ref
          hexactpos 1
          vexactpos 0
@@ -173,6 +189,22 @@ FrameWidgetClass rootFrame {
          vexactsize 0
          text "#HAB_BANDITS"
          font "gui/fonts/sdf_MetronLight48"
+         "text valign" center
+        }
+        TextWidgetClass BanditRankText {
+         ignorepointer 1
+         color 0.8 0.25 0.2 0.8
+         position -15 0
+         size 0.45 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text ""
+         font "gui/fonts/sdf_MetronLight24"
+         "text halign" right
          "text valign" center
         }
        }

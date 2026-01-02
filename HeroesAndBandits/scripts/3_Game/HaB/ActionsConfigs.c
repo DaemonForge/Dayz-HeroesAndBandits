@@ -106,7 +106,7 @@ class HABActionConfigs extends Managed {
 			defaultActions.Insert(new HaBActionBase("playerdeath", "Died To Player", 0.03, true, HaBActionType.MULTIPLESUB));
 			defaultActions.Insert(new HaBActionBase("hungerdeath", "Died", 0.1, true, HaBActionType.MULTIPLESUB));
 			defaultActions.Insert(new HaBActionBase("toxicdeath", "Died to Contamination Zone", 0.05, true, HaBActionType.MULTIPLESUB));
-			defaultActions.Insert(new HaBActionBase("sucide", "Sucided", 0.2, true, HaBActionType.MULTIPLESUB));
+			defaultActions.Insert(new HaBActionBase("suicide", "Sucided", 0.2, true, HaBActionType.MULTIPLESUB));
 			defaultActions.Insert(new HaBActionBase("zombiedeath", "Died To Zombies", 0.07, true, HaBActionType.MULTIPLESUB));
 		}
 		if (action == "HAB_ACTIONS_HERO"){

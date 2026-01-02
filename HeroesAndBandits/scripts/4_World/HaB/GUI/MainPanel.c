@@ -127,7 +127,7 @@ class HAB_MainPanel extends UIScriptedMenu {
 }
 
 class HAB_PageBase extends ScriptedWidgetEventHandler {
-	HAB_MainPanel m_panel
+	HAB_MainPanel m_panel;
 	protected PlayerBase m_player;
 	protected Widget layoutRoot;
 	void HAB_PageBase(Widget parent, HAB_MainPanel panel, PlayerBase player){
@@ -163,7 +163,7 @@ class HAB_StatsPage extends HAB_PageBase {
 	protected ImageWidget m_Icon;
 	protected Widget m_IconBackground;
 	protected TextWidget m_LevelText;
-	protected TextWidget m_HumanityText
+	protected TextWidget m_HumanityText;
 	
 	protected TextWidget m_LowText;
 	protected TextWidget m_HighText;
@@ -187,6 +187,9 @@ class HAB_StatsPage extends HAB_PageBase {
 		m_panel = panel;
 		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
 		Class.CastTo(m_player,player);
+		
+		// Initialize stat widgets array
+		m_StatWidgets = new array<autoptr HAB_StatWidget>;
 		
 		m_Icon = ImageWidget.Cast(layoutRoot.FindAnyWidget("Icon"));
 		m_IconBackground = layoutRoot.FindAnyWidget("IconBackground");
@@ -232,11 +235,13 @@ class HAB_StatsPage extends HAB_PageBase {
 	}
 	
 	protected float m_time;
+	protected static const float UPDATE_INTERVAL = 2.5; // Seconds between UI updates
+	
 	override void MyUpdate(float timeslice){
 		super.MyUpdate(timeslice);
-		m_time+= timeslice;
+		m_time += timeslice;
 		
-		if (m_time > 0.7){
+		if (m_time > UPDATE_INTERVAL){
 			m_time = 0;
 			UpdateData();
 		}
@@ -413,6 +418,11 @@ class HAB_StatsPage extends HAB_PageBase {
 		if (m_PathAccent) m_PathAccent.SetColor(ARGB(255, 255, 200, 80));
 		if (m_PathDiscordBtn) m_PathDiscordBtn.Show(true);
 	}
+	void ~HAB_StatsPage(){
+		if (m_StatWidgets){
+			m_StatWidgets.Clear();
+		}
+	}
 }
 
 class HAB_LeaderboardsPage extends HAB_PageBase {
@@ -420,11 +430,16 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	
 	protected Widget m_HeroGrid;
 	protected Widget m_BanditGrid;
+	protected TextWidget m_HeroRankText;
+	protected TextWidget m_BanditRankText;
 	
 	protected int m_HEROLeaderboardID;
 	protected int m_BANDITLeaderboardID;
 	
 	protected autoptr array<autoptr HAB_LBWidget> m_lbwidgets;
+	
+	// Leaderboard query limit - players beyond this won't show their exact rank
+	protected static const int LEADERBOARD_LIMIT = 100;
 	
 	void HAB_LeaderboardsPage(Widget parent, HAB_MainPanel panel, PlayerBase player){
 		m_panel = panel;
@@ -433,10 +448,45 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		
 		m_HeroGrid = Widget.Cast(layoutRoot.FindAnyWidget("HeroGrid"));
 		m_BanditGrid = Widget.Cast(layoutRoot.FindAnyWidget("BanditGrid"));
-		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, 100), this, "CBLoadData");
-		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, 100), this, "CBLoadData");
+		m_HeroRankText = TextWidget.Cast(layoutRoot.FindAnyWidget("HeroRankText"));
+		m_BanditRankText = TextWidget.Cast(layoutRoot.FindAnyWidget("BanditRankText"));
+		
+		// Initialize rank text based on player's current affinity
+		InitializeRankDisplay();
+		
+		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
+		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
 	
 		layoutRoot.SetHandler(this);
+	}
+	
+	protected void InitializeRankDisplay(){
+		// Get player's current affinity
+		int playerAffinity = HAB_BAMBI;
+		if (m_player)
+			playerAffinity = m_player.HABAffinity();
+		
+		// Hero rank text - only relevant for heroes
+		if (m_HeroRankText){
+			if (playerAffinity == HAB_HERO){
+				m_HeroRankText.SetText("#HAB_LOADING");
+				m_HeroRankText.SetColor(ARGB(255, 138, 138, 138));
+			} else {
+				// Bambis and Bandits don't show on hero leaderboard
+				m_HeroRankText.SetText("");
+			}
+		}
+		
+		// Bandit rank text - only relevant for bandits
+		if (m_BanditRankText){
+			if (playerAffinity == HAB_BANDIT){
+				m_BanditRankText.SetText("#HAB_LOADING");
+				m_BanditRankText.SetColor(ARGB(255, 138, 138, 138));
+			} else {
+				// Bambis and Heroes don't show on bandit leaderboard
+				m_BanditRankText.SetText("");
+			}
+		}
 	}
 	
 	void CBLoadData(int cid, int status, string oid, UDBQueryResultHABPlayer data){
@@ -444,17 +494,65 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 			array<autoptr HeroesAndBanditsPlayerBase> dataarray;
 			Class.CastTo( dataarray, data.GetResults() );
 			Widget grid;
+			TextWidget rankText;
+			bool isHeroBoard = false;
+			
 			if (cid == m_HEROLeaderboardID){
 				Class.CastTo(grid,m_HeroGrid);
+				rankText = m_HeroRankText;
+				isHeroBoard = true;
 			}
 			if (cid == m_BANDITLeaderboardID){
 				Class.CastTo(grid,m_BanditGrid);
+				rankText = m_BanditRankText;
+				isHeroBoard = false;
 			}
 			if (!grid) return;
 			if (!m_lbwidgets) m_lbwidgets = new array<autoptr HAB_LBWidget>;
-			for (int i = 0; i< dataarray.Count(); i++){
+			
+			// Get the current player's GUID and affinity for comparison
+			string playerGUID = "";
+			int playerAffinity = HAB_BAMBI;
+			if (m_player){
+				playerGUID = m_player.GetHABGUIDCache();
+				playerAffinity = m_player.HABAffinity();
+			}
+			
+			int playerRank = -1;
+			int totalResults = dataarray.Count();
+			
+			for (int i = 0; i < totalResults; i++){
 				HeroesAndBanditsPlayerBase player = HeroesAndBanditsPlayerBase.Cast(dataarray.Get(i));
-				m_lbwidgets.Insert(new HAB_LBWidget(grid,player, (i + 1)));
+				m_lbwidgets.Insert(new HAB_LBWidget(grid, player, (i + 1)));
+				
+				// Check if this is the current player
+				if (playerGUID != "" && player.GetGUID() == playerGUID){
+					playerRank = i + 1;
+				}
+			}
+			
+			// Update the rank display based on affinity relevance
+			if (rankText){
+				// Only show rank info if this leaderboard is relevant to the player
+				bool isRelevantBoard = (isHeroBoard && playerAffinity == HAB_HERO) || (!isHeroBoard && playerAffinity == HAB_BANDIT);
+				
+				if (!isRelevantBoard){
+					// Player is Bambi, or viewing the opposite affinity board - hide rank text
+					rankText.SetText("");
+				}
+				else if (playerRank > 0){
+					// Player found in top results
+					rankText.SetText("#HAB_YOUR_RANK: #" + playerRank.ToString());
+					if (isHeroBoard)
+						rankText.SetColor(ARGB(255, 51, 115, 204)); // Hero blue
+					else
+						rankText.SetColor(ARGB(255, 204, 64, 51)); // Bandit red
+				}
+				else {
+					// Player not in top results - they're ranked beyond the limit
+					rankText.SetText("#HAB_RANK_BEYOND " + LEADERBOARD_LIMIT.ToString());
+					rankText.SetColor(ARGB(255, 138, 138, 138)); // Muted gray
+				}
 			}
 		}
 	}
@@ -462,6 +560,9 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	void ~HAB_LeaderboardsPage(){
 		U().RequestCallCancel(m_HEROLeaderboardID);
 		U().RequestCallCancel(m_BANDITLeaderboardID);
+		if (m_lbwidgets){
+			m_lbwidgets.Clear();
+		}
 	}
 	
 }
@@ -500,7 +601,7 @@ class HAB_StatWidget extends ScriptedWidgetEventHandler {
 		if (action == "bambikill") return "Bambi Kills";
 		if (action == "playerdeath") return "Player Deaths";
 		if (action == "death") return "Deaths";
-		if (action == "sucide") return "Suicides";
+		if (action == "suicide") return "Suicides";
 		if (action == "hungerdeath") return "Hunger Deaths";
 		if (action == "toxicdeath") return "Toxic Deaths";
 		if (action == "huntanimal") return "Animals Hunted";
@@ -647,7 +748,7 @@ class HAB_InfoPage extends HAB_PageBase {
 		}
 	}
 	
-	void RefreshLayout(){
+	void RefreshSectionsGrid(){
 		// Called when a section is collapsed/expanded to refresh the grid
 	}
 	
@@ -671,7 +772,6 @@ class HAB_CollapsibleSection extends ScriptedWidgetEventHandler {
 	
 	protected HAB_InfoPage m_Page;
 	protected bool m_IsExpanded;
-	protected int m_ContentHeight;
 	
 	protected autoptr array<Widget> m_ContentLines;
 	
@@ -698,42 +798,40 @@ class HAB_CollapsibleSection extends ScriptedWidgetEventHandler {
 		
 		// Add content lines
 		if (section.Content){
-			m_ContentHeight = 16 + (section.Content.Count() * 28);
-			
 			for (int i = 0; i < section.Content.Count(); i++){
 				string lineText = section.Content.Get(i);
-				Widget lineWidget = g_Game.GetWorkspace().CreateWidgets(m_ContentLinePath, m_ContentGrid);
-				TextWidget textWidget = TextWidget.Cast(lineWidget.FindAnyWidget("ContentText"));
-				if (textWidget)
-					textWidget.SetText(lineText);
-				m_ContentLines.Insert(lineWidget);
+				TextWidget lineWidget = TextWidget.Cast(g_Game.GetWorkspace().CreateWidgets(m_ContentLinePath, m_ContentGrid));
+				if (lineWidget){
+					lineWidget.SetText(lineText);
+					m_ContentLines.Insert(lineWidget);
+				}
 			}
-			
-			UpdateContentSize();
 		}
 		
+		// Deferred update to let layout calculate sizes after text is set
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(UpdateExpandState, 10, false);
 		layoutRoot.SetHandler(this);
 	}
 	
-	void UpdateContentSize(){
+	void UpdateExpandState(){
+		// With GridSpacer "Size To Content V", just show/hide content and layout auto-sizes
 		if (m_IsExpanded){
 			m_CollapseIcon.SetText("-");
 			m_ContentFrame.Show(true);
-			// Set the root frame height to include header + content
-			float rootHeight = 50 + m_ContentHeight;
-			layoutRoot.SetSize(1, rootHeight);
-			m_ContentFrame.SetSize(1, m_ContentHeight);
 		} else {
 			m_CollapseIcon.SetText("+");
 			m_ContentFrame.Show(false);
-			layoutRoot.SetSize(1, 50);
 		}
+		
+		// Force layout update on parent grid
+		if (m_Page)
+			m_Page.RefreshSectionsGrid();
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button){
 		if (w == m_Header){
 			m_IsExpanded = !m_IsExpanded;
-			UpdateContentSize();
+			UpdateExpandState();
 			return true;
 		}
 		return false;

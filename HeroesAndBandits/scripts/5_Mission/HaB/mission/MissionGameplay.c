@@ -6,6 +6,12 @@ modded class MissionGameplay extends MissionBase
         super.OnMissionStart();
 		Print("OnMissionStart - Creating HABStatusBarIconWidget");
 		m_HABStatusBarIconWidget = new HABStatusBarIconWidget;
+		
+		#ifdef UniversalComms
+		// Register Heroes and Bandits chat channels
+		UCChannelRegistry.Register(new HAB_HeroChannel());
+		UCChannelRegistry.Register(new HAB_BanditChannel());
+		#endif
     }
 	
 	override void OnMissionFinish()

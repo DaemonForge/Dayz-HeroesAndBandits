@@ -236,7 +236,7 @@ modded class PlayerBase extends ManBase
 		switch (DeathType){
 			case habDeathType.Sucide:
 				Print("[HAB] On Death: Sucide");
-				NewHABAction("sucide",other);
+				NewHABAction("suicide",other);
 			break;
 			case habDeathType.Bambi:
 				Print("[HAB] On Death: Bambi");

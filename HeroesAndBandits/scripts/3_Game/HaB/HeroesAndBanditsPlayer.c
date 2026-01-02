@@ -91,6 +91,10 @@ class HeroesAndBanditsPlayerBase extends Managed
 		return Name;
 	}
 	
+	string GetGUID(){
+		return GUID;
+	}
+	
 	void UpdateName(string name){
 		if (Name != name){
 			HABPlayerDataHandler.Update(GUID,"Name",name);
