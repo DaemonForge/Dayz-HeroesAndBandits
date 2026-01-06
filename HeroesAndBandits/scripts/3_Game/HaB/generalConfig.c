@@ -36,6 +36,10 @@ class HaBGeneralConfig extends Managed
 	ref TIntArray Levels = {1000,2500,5000,10000,20000,40000,80000,200000,500000,1000000};
 	ref TStringArray FlexActions = {"zombiekill", "huntanimal", "catchfish", "mineore" };
 	
+	// Leaderboard Settings
+	// Array of player GUIDs (Bohemia Interactive ID from GetIdentity().GetId()) to exclude from leaderboards
+	ref TStringArray LeaderboardBlacklist = {"ABC123def456GHI789jkl012MNO345pqr678STU901"};
+	
 	// UniversalComms Settings
 	bool UCRequireRadio = false; // If true, players must have a working radio to use Hero/Bandit chat channels
 	

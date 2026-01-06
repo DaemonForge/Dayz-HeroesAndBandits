@@ -125,15 +125,26 @@ FrameWidgetClass rootFrame {
         }
         FrameWidgetClass PathContainer {
          position 0 76
-         size 1 24
+         size 1 38
          hexactpos 0
          vexactpos 1
          hexactsize 0
          vexactsize 1
          {
+          PanelWidgetClass PathGlow {
+           ignorepointer 1
+           color 0.85 0.65 0.3 0.15
+           position -8 -6
+           size 1.04 50
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+          }
           PanelWidgetClass PathBG {
            ignorepointer 1
-           color 0.12 0.14 0.18 0.95
+           color 0.08 0.09 0.12 0.98
            position 0 0
            size 1 1
            hexactpos 0
@@ -146,7 +157,7 @@ FrameWidgetClass rootFrame {
            ignorepointer 1
            color 0.85 0.65 0.3 1
            position 0 0
-           size 3 1
+           size 5 1
            hexactpos 1
            vexactpos 0
            hexactsize 1
@@ -156,15 +167,17 @@ FrameWidgetClass rootFrame {
           TextWidgetClass PathText {
            ignorepointer 1
            color 1 1 1 1
-           position 10 0
-           size 150 1
+           position 14 0
+           size 200 1
            valign center_ref
            hexactpos 1
            vexactpos 0
            hexactsize 1
            vexactsize 0
            text ""
-           font "gui/fonts/sdf_MetronLight20"
+           font "gui/fonts/sdf_MetronLight72"
+           "exact text" 1
+           "exact text size" 26
            "text valign" center
           }
           ButtonWidgetClass PathDiscordBtn {
@@ -223,7 +236,7 @@ FrameWidgetClass rootFrame {
         }
         FrameWidgetClass ProgressFrame {
          ignorepointer 1
-         position 0 102
+         position 0 116
          size 0.9 55
          hexactpos 0
          vexactpos 1

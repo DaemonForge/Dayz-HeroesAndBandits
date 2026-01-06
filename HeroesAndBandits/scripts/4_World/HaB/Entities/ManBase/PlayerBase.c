@@ -72,32 +72,111 @@ modded class PlayerBase extends ManBase
 		}
 	}
 	
-	protected int m_HaBDataInitRetries = 1;
+	protected int m_HaBDataInitRetries = 0;
+	protected bool m_HaBDataInitFailed = false;
+	protected bool m_HaBDataInitInProgress = false;
+	protected bool m_HaBDataInitComplete = false;
+	
+	// Constants for retry logic
+	protected static const int HAB_INIT_MAX_RETRIES = 15;
+	protected static const int HAB_INIT_RETRY_BASE_DELAY = 100; // milliseconds
+	protected static const int HAB_INIT_RECOVERY_DELAY = 30000; // 30 seconds for recovery attempts
+	
 	void InitHaBPlayerData(){
-		
-		if (!U().IsOnline() && m_HaBDataInitRetries < 15){
-			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData, ((++m_HaBDataInitRetries) * 100), false);
-			Print("[HaB] [Warn] InitHaBPlayerData Universal Framework is offline, or player has not yet recieved token, try again in " + m_HaBDataInitRetries + "00 miliseconds");
+		// Guard against double initialization
+		if (m_HaBDataInitComplete){
 			return;
 		}
-		if (!U().IsOnline()){
-			Print("[HaB] [Error] InitHaBPlayerData Universal Framework is offline, or not configured correctly");
+		
+		// Mark as in progress to prevent concurrent calls
+		if (m_HaBDataInitInProgress){
+			return;
 		}
-		if ( GetIdentity() ){ 
+		m_HaBDataInitInProgress = true;
+		
+		// Check if UFramework is online
+		if (!U() || !U().IsOnline()){
+			m_HaBDataInitRetries++;
+			
+			if (m_HaBDataInitRetries <= HAB_INIT_MAX_RETRIES){
+				int nextDelay = m_HaBDataInitRetries * HAB_INIT_RETRY_BASE_DELAY;
+				Print("[HaB] [Warn] InitHaBPlayerData - UFramework offline, retry " + m_HaBDataInitRetries + "/" + HAB_INIT_MAX_RETRIES + " in " + nextDelay + "ms");
+				m_HaBDataInitInProgress = false;
+				g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData, nextDelay, false);
+				return;
+			}
+			
+			// Max retries reached - schedule a recovery attempt for later
+			Print("[HaB] [Error] InitHaBPlayerData failed after " + HAB_INIT_MAX_RETRIES + " retries - scheduling recovery in " + (HAB_INIT_RECOVERY_DELAY / 1000) + "s");
+			m_HaBDataInitFailed = true;
+			m_HaBDataInitInProgress = false;
+			// Schedule a recovery attempt - UFramework might come online later
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.AttemptHaBDataRecovery, HAB_INIT_RECOVERY_DELAY, false);
+			SetSynchDirty();
+			return;
+		}
+		
+		// Reset failure state if we recovered
+		if (m_HaBDataInitFailed){
+			Print("[HaB] [Info] UFramework recovered - proceeding with initialization");
+			m_HaBDataInitFailed = false;
+		}
+		
+		// UFramework is online - proceed with initialization
+		if (GetIdentity()){ 
 			m_HABGUIDCache = GetIdentity().GetId();
 			m_HABNameCache = GetIdentity().GetName();
-			m_hab_LastDataCall = HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData", new HeroesAndBanditsPlayerBase(m_HABGUIDCache));
+			
+			// Create default player data object in case Load returns empty
+			HeroesAndBanditsPlayerBase defaultData = new HeroesAndBanditsPlayerBase(m_HABGUIDCache);
+			m_hab_LastDataCall = HABPlayerDataHandler.Load(m_HABGUIDCache, this, "CBHABData", defaultData);
+			
 			RefreshDiscordData();
+			m_HaBDataInitComplete = true;
+			Print("[HaB] [Info] Player data initialization started for " + m_HABNameCache);
+		} else {
+			// No identity yet - retry
+			Print("[HaB] [Warn] InitHaBPlayerData - No player identity, retrying...");
+			m_HaBDataInitInProgress = false;
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData, 500, false);
+			return;
 		}
+		
+		m_HaBDataInitInProgress = false;
 		SetSynchDirty();
+		
 		if (g_Game.IsClient()){
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(this.habSyncIcon); 
 		}
 	}
 	
+	// Recovery attempt if initial initialization failed
+	void AttemptHaBDataRecovery(){
+		if (m_HaBDataInitComplete){
+			return; // Already initialized successfully
+		}
+		
+		if (U() && U().IsOnline()){
+			Print("[HaB] [Info] AttemptHaBDataRecovery - UFramework is now online, retrying initialization");
+			m_HaBDataInitRetries = 0; // Reset retry counter
+			m_HaBDataInitFailed = false;
+			InitHaBPlayerData();
+		} else {
+			// Still offline - schedule another recovery attempt
+			Print("[HaB] [Warn] AttemptHaBDataRecovery - UFramework still offline, will retry in " + (HAB_INIT_RECOVERY_DELAY / 1000) + "s");
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.AttemptHaBDataRecovery, HAB_INIT_RECOVERY_DELAY, false);
+		}
+	}
+	
 	void RefreshHABData(){
-		if ( GetIdentity() ){ 
-			HABPlayerDataHandler.Load(GetHABGUIDCache(),this,"CBHABData");
+		// Guard against offline UFramework
+		if (!U() || !U().IsOnline()){
+			Print("[HaB] [Warn] RefreshHABData skipped - UFramework is offline");
+			return;
+		}
+		
+		if (GetIdentity()){ 
+			HABPlayerDataHandler.Load(GetHABGUIDCache(), this, "CBHABData");
 		}
 	}
 	
@@ -151,8 +230,9 @@ modded class PlayerBase extends ManBase
 				InitHABController();
 			}
 		} else if (status == UF_EMPTY && GetIdentity()){
-			Print("[HAB] Data Empty UF_EMPTY");
+			Print("[HAB] Data Empty UF_EMPTY - Creating new player data");
 			m_HABData = new HeroesAndBanditsPlayerBase( GetIdentity().GetId() );
+			m_HABData.InitDailyGains();
 			if (g_Game.IsDedicatedServer()){
 				m_HABData.UpdateName(GetIdentity().GetName());
 				InitHABController();
@@ -160,6 +240,8 @@ modded class PlayerBase extends ManBase
 				SetSynchDirty();
 				Print("[HAB] Saving New Player");
 			}
+		} else {
+			Print("[HAB] [Error] CBHABData failed with status: " + status);
 		}
 	}
 	

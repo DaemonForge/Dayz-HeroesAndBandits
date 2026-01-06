@@ -36,6 +36,11 @@ modded class DayZPlayerImplement extends DayZPlayer
 	
 	void SaveHABData(){
 		if (g_Game.IsDedicatedServer() && HABData()){
+			// Guard against offline UFramework
+			if (!U() || !U().IsOnline()){
+				Print("[HaB] [Warn] SaveHABData skipped - UFramework offline");
+				return;
+			}
 			HABPlayerDataHandler.Save(GetHABGUIDCache(), HABData());
 		}
 	}

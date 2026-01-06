@@ -174,6 +174,7 @@ class HAB_StatsPage extends HAB_PageBase {
 	
 	protected Widget m_PathContainer;
 	protected Widget m_PathAccent;
+	protected Widget m_PathGlow;
 	protected TextWidget m_PathText;
 	protected ButtonWidget m_PathDiscordBtn;
 	protected int m_PathState; // 0=hidden, 1=no discord, 2=no path, 3=hero, 4=bandit
@@ -205,6 +206,7 @@ class HAB_StatsPage extends HAB_PageBase {
 		
 		m_PathContainer = layoutRoot.FindAnyWidget("PathContainer");
 		m_PathAccent = layoutRoot.FindAnyWidget("PathAccent");
+		m_PathGlow = layoutRoot.FindAnyWidget("PathGlow");
 		m_PathText = TextWidget.Cast(layoutRoot.FindAnyWidget("PathText"));
 		m_PathDiscordBtn = ButtonWidget.Cast(layoutRoot.FindAnyWidget("PathDiscordBtn"));
 		
@@ -386,6 +388,7 @@ class HAB_StatsPage extends HAB_PageBase {
 			m_PathText.SetText("#HAB_PATH_CONNECT_DISCORD");
 			m_PathText.SetColor(ARGB(255, 230, 180, 80));
 			if (m_PathAccent) m_PathAccent.SetColor(ARGB(255, 230, 180, 80));
+			if (m_PathGlow) m_PathGlow.SetColor(ARGB(40, 230, 180, 80));
 			if (m_PathDiscordBtn) m_PathDiscordBtn.Show(true);
 			return;
 		}
@@ -397,6 +400,7 @@ class HAB_StatsPage extends HAB_PageBase {
 			m_PathText.SetText("#HAB_PATH_HERO");
 			m_PathText.SetColor(ARGB(255, 80, 140, 220));
 			if (m_PathAccent) m_PathAccent.SetColor(ARGB(255, 80, 140, 220));
+			if (m_PathGlow) m_PathGlow.SetColor(ARGB(50, 80, 140, 220));
 			if (m_PathDiscordBtn) m_PathDiscordBtn.Show(false);
 			return;
 		}
@@ -407,6 +411,7 @@ class HAB_StatsPage extends HAB_PageBase {
 			m_PathText.SetText("#HAB_PATH_BANDIT");
 			m_PathText.SetColor(ARGB(255, 220, 80, 70));
 			if (m_PathAccent) m_PathAccent.SetColor(ARGB(255, 220, 80, 70));
+			if (m_PathGlow) m_PathGlow.SetColor(ARGB(50, 220, 80, 70));
 			if (m_PathDiscordBtn) m_PathDiscordBtn.Show(false);
 			return;
 		}
@@ -416,6 +421,7 @@ class HAB_StatsPage extends HAB_PageBase {
 		m_PathText.SetText("#HAB_PATH_NONE");
 		m_PathText.SetColor(ARGB(255, 255, 200, 80));
 		if (m_PathAccent) m_PathAccent.SetColor(ARGB(255, 255, 200, 80));
+		if (m_PathGlow) m_PathGlow.SetColor(ARGB(40, 255, 200, 80));
 		if (m_PathDiscordBtn) m_PathDiscordBtn.Show(true);
 	}
 	void ~HAB_StatsPage(){
@@ -441,6 +447,43 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	// Leaderboard query limit - players beyond this won't show their exact rank
 	protected static const int LEADERBOARD_LIMIT = 100;
 	
+	// Build the leaderboard query with optional blacklist filter
+	// isHero: true for hero leaderboard (humanity > 1000), false for bandit (humanity < -1000)
+	protected string BuildLeaderboardQuery(bool isHero)
+	{
+		string query;
+		
+		// Check if blacklist exists and has entries
+		if (m_HaBGeneralConfig && m_HaBGeneralConfig.LeaderboardBlacklist && m_HaBGeneralConfig.LeaderboardBlacklist.Count() > 0)
+		{
+			// Build the $nin array for blacklisted GUIDs
+			string blacklistArray = "[";
+			for (int i = 0; i < m_HaBGeneralConfig.LeaderboardBlacklist.Count(); i++)
+			{
+				if (i > 0)
+					blacklistArray += ",";
+				blacklistArray += "\"" + m_HaBGeneralConfig.LeaderboardBlacklist.Get(i) + "\"";
+			}
+			blacklistArray += "]";
+			
+			// Build query with both humanity filter and blacklist
+			if (isHero)
+				query = "{ \"Humanity\": {\"$gt\": 1000 }, \"GUID\": {\"$nin\": " + blacklistArray + "} }";
+			else
+				query = "{ \"Humanity\": {\"$lt\": -1000 }, \"GUID\": {\"$nin\": " + blacklistArray + "} }";
+		}
+		else
+		{
+			// No blacklist, use simple query
+			if (isHero)
+				query = "{ \"Humanity\": {\"$gt\": 1000 } }";
+			else
+				query = "{ \"Humanity\": {\"$lt\": -1000 } }";
+		}
+		
+		return query;
+	}
+	
 	void HAB_LeaderboardsPage(Widget parent, HAB_MainPanel panel, PlayerBase player){
 		m_panel = panel;
 		layoutRoot = Widget.Cast(g_Game.GetWorkspace().CreateWidgets(m_LayoutPath,parent));
@@ -454,8 +497,21 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		// Initialize rank text based on player's current affinity
 		InitializeRankDisplay();
 		
-		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$gt\": 1000 } }","{ \"Humanity\": -1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
-		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery("{ \"Humanity\": {\"$lt\": -1000 } }","{ \"Humanity\": 1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
+		// Guard against offline UFramework
+		if (!U() || !U().IsOnline()){
+			Print("[HaB] [Warn] Leaderboard queries skipped - UFramework is offline");
+			if (m_HeroRankText) m_HeroRankText.SetText("#HAB_UNAVAILABLE");
+			if (m_BanditRankText) m_BanditRankText.SetText("#HAB_UNAVAILABLE");
+			layoutRoot.SetHandler(this);
+			return;
+		}
+		
+		// Build queries with blacklist filter if configured
+		string heroQuery = BuildLeaderboardQuery(true);
+		string banditQuery = BuildLeaderboardQuery(false);
+		
+		m_HEROLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery(heroQuery,"{ \"Humanity\": -1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
+		m_BANDITLeaderboardID = HABPlayerDataHandler.Query(new UDBQuery(banditQuery,"{ \"Humanity\": 1 }",true, LEADERBOARD_LIMIT), this, "CBLoadData");
 	
 		layoutRoot.SetHandler(this);
 	}

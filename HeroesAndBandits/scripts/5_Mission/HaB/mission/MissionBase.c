@@ -19,9 +19,22 @@ modded class MissionBase extends MissionBaseWorld
 	
 	override void UFrameworkReady(){
 		Print("[HAB] UFrameworkReady called - loading configs...");
+		// Defer config loading slightly to ensure UFramework endpoints are fully initialized
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.LoadHaBConfigs, 500, false);
+		super.UFrameworkReady();
+	}
+	
+	void LoadHaBConfigs(){
+		// Guard against UFramework not being ready
+		if (!U()){
+			Print("[HAB] [Warn] LoadHaBConfigs - U() is null, retrying in 1s...");
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.LoadHaBConfigs, 1000, false);
+			return;
+		}
+		
+		Print("[HAB] Loading configs from UFramework...");
 		m_HaBGeneralConfigHandler.Load(this, "CBLoadHaBGeneralConfig");
 		m_HABPanelConfigHandler.Load(this, "CBLoadHABPanelConfig");
-		super.UFrameworkReady();
 	}
 	
 	void CBLoadHABPanelConfig(int cid, int status, string oid, HABPanelConfig data){

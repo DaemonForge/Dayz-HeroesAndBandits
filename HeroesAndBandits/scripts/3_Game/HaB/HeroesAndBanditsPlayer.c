@@ -23,7 +23,7 @@ class HeroesAndBanditsPlayerBase extends Managed
         GUID = guid;
 		m_Stats = new map<string, int>;
 		m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
-		InitDailyGains();
+		// Don't call InitDailyGains here - it will be called after data is loaded from DB
     }
 	
 	void ~HeroesAndBanditsPlayerBase(){
@@ -33,21 +33,36 @@ class HeroesAndBanditsPlayerBase extends Managed
 	}
 		
 	void InitDailyGains(){
-		if (!U().IsOnline()){
-			Print("[HaB] [Error] InitDailyGains Universal Framework is offline, or not configured correctly");
-		}
+		// Guard against client-side calls
 		if (g_Game.IsClient()){
-			Print("[HaB] [Warn] InitDailyGains on client doesn't need be run");
 			return;
 		}
+		
+		// Guard against offline UFramework - check both U() and IsOnline()
+		if (!U() || !U().IsOnline()){
+			Print("[HaB] [Warn] InitDailyGains skipped - Universal Framework is offline");
+			return;
+		}
+		
+		// Guard against empty GUID
+		if (GUID == ""){
+			Print("[HaB] [Warn] InitDailyGains skipped - GUID is empty");
+			return;
+		}
+		
 		int Date = UUtil.GetDateInt();
 		m_LastDailyCall = HABDailyDataHandler.Query(new UDBQuery("{ \"GUID\": \""+ GUID +"\", \"DateStamp\": "+ Date +" }"), this,"CBLoadDailyArray");
 		
-		m_Stats = new map<string, int>;
+		// Initialize stats map from stored Stats array
+		if (!m_Stats){
+			m_Stats = new map<string, int>;
+		}
 		if (!Stats) return; //Stats not set yet
 		for (int i = 0; i< Stats.Count(); i++){
 			HeroesAndBanditsStats stat = HeroesAndBanditsStats.Cast(Stats.Get(i));
-			m_Stats.Set(stat.m_Stat,stat.m_Value);
+			if (stat){
+				m_Stats.Set(stat.m_Stat, stat.m_Value);
+			}
 		}
 	}
 	
@@ -80,6 +95,11 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	void UpdateHumanity(float humanity){
 		Humanity = humanity;
+		// Guard against offline UFramework
+		if (!U() || !U().IsOnline()){
+			Print("[HaB] [Warn] UpdateHumanity skipped DB write - UFramework offline");
+			return;
+		}
 		HABPlayerDataHandler.Update(GUID,"Humanity", humanity.ToString());
 	}
 		
@@ -97,20 +117,35 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	void UpdateName(string name){
 		if (Name != name){
-			HABPlayerDataHandler.Update(GUID,"Name",name);
+			// Guard against offline UFramework
+			if (U() && U().IsOnline()){
+				HABPlayerDataHandler.Update(GUID,"Name",name);
+			} else {
+				Print("[HaB] [Warn] UpdateName skipped DB write - UFramework offline");
+			}
 			Name = name;
 		}
 	}
 	
 	int UpdateLevel(int newLevel){
+		// Guard against offline UFramework
+		bool uOnline = U() && U().IsOnline();
 		if (newLevel > MaxLevel){
 			MaxLevel = newLevel;
-			HABPlayerDataHandler.Update(GUID,"MaxLevel",MaxLevel.ToString());
+			if (uOnline){
+				HABPlayerDataHandler.Update(GUID,"MaxLevel",MaxLevel.ToString());
+			} else {
+				Print("[HaB] [Warn] UpdateLevel MaxLevel skipped DB write - UFramework offline");
+			}
 			return 1;
 		}
 		if (newLevel < MinLevel){
 			MinLevel = newLevel;
-			HABPlayerDataHandler.Update(GUID,"MinLevel",MinLevel.ToString());
+			if (uOnline){
+				HABPlayerDataHandler.Update(GUID,"MinLevel",MinLevel.ToString());
+			} else {
+				Print("[HaB] [Warn] UpdateLevel MinLevel skipped DB write - UFramework offline");
+			}
 			return -1;
 		}
 		return 0;
@@ -124,6 +159,13 @@ class HeroesAndBanditsPlayerBase extends Managed
 	}
 	
 	bool IncermentAction(string action, int max, bool doStat = true){
+		// Guard against offline UFramework
+		bool uOnline = U() && U().IsOnline();
+		if (!uOnline){
+			Print("[HaB] [Warn] IncermentAction skipped - UFramework offline");
+			return true; // Allow action when offline (fail-open)
+		}
+		
 		if (!m_DailyGain){
 			m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		}
