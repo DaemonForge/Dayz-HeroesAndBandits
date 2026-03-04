@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heroes &amp; Bandits — Configuration Wizard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#1e1e1e;color:#f0f0f0;line-height:1.5;font-size:14px}
+
+/* Shell */
+.shell{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:210px;min-width:210px;background:#181818;border-right:1px solid #2a2a2a;display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-brand{padding:12px 14px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:10px}
+.sidebar-brand .logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#3370cc,#cc4033);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.sidebar-brand .name{font-weight:600;font-size:15px}
+.sidebar-brand .ver{font-size:11px;color:#666}
+.sidebar-hdr{padding:14px 14px 6px;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#555;font-weight:600}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;border:none;background:none;color:#bbb;font-size:13px;width:100%;text-align:left;transition:background .12s,color .12s;border-left:3px solid transparent}
+.nav-btn:hover{background:#252526;color:#f0f0f0}
+.nav-btn.active{background:#252526;color:#f0f0f0;border-left-color:#0e639c}
+.nav-btn .icon{font-size:16px;width:22px;text-align:center}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:10px 24px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:12px;min-height:48px;background:#1e1e1e}
+.topbar h1{font-size:17px;margin:0;font-weight:600}
+.topbar .sub{font-size:12px;color:#888}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+
+/* Status */
+.status-bar{padding:9px 14px;border-radius:5px;margin-bottom:14px;font-size:13px;display:none;position:relative}
+.status-bar .close-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:inherit;cursor:pointer;font-size:16px;opacity:.7}
+.status-bar .close-x:hover{opacity:1}
+.status-bar.success{display:block;background:#1b3a1b;color:#4caf50;border:1px solid #2e5c2e}
+.status-bar.error{display:block;background:#3a1b1b;color:#f44336;border:1px solid #5c2e2e}
+.status-bar.info{display:block;background:#1b2a3a;color:#64b5f6;border:1px solid #2e4a5c}
+.status-bar.warn{display:block;background:#3a3117;color:#ff9800;border:1px solid #5c4d1f}
+
+/* Cards */
+.card{background:#252526;border:1px solid #333;border-radius:8px;padding:20px;margin-bottom:16px}
+.card .desc{font-size:12px;color:#888;margin:0 0 14px}
+
+/* Form */
+label{display:block;font-size:12px;color:#aaa;margin-bottom:2px}
+label.inline{display:inline-flex;align-items:center;gap:5px;cursor:pointer;margin-bottom:6px;font-size:12px}
+input[type="text"],input[type="number"],input[type="color"],textarea,select{width:100%;padding:6px 9px;border:1px solid #3a3a3a;background:#2a2a2a;color:#f0f0f0;border-radius:4px;font-size:13px;margin-bottom:8px}
+input[type="color"]{height:34px;padding:2px;cursor:pointer}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#0e639c}
+textarea{resize:vertical;min-height:55px;font-family:'Consolas','Courier New',monospace;font-size:12px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.col{flex:1;min-width:170px}
+
+/* Buttons */
+button{font-family:inherit}
+.btn{padding:6px 16px;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-weight:500;transition:background .12s}
+.btn-primary{background:#0e639c;color:#fff}.btn-primary:hover{background:#1177bb}
+.btn-secondary{background:#3a3d41;color:#ddd}.btn-secondary:hover{background:#4a4d51}
+.btn-danger{background:#a1260d;color:#fff}.btn-danger:hover{background:#c02f11}
+.btn-sm{padding:3px 9px;font-size:12px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* Tags */
+.tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:3px;font-weight:600;vertical-align:middle}
+.tag-hero{background:#1a3352;color:#5b9bd5}
+.tag-bandit{background:#3a1a1a;color:#e05a4f}
+.tag-bambi{background:#1a3320;color:#5bb55b}
+.tag-all{background:#2a2a3a;color:#aaa}
+.tag-flex{background:#3a2e1a;color:#e0a64d}
+
+/* Tabs */
+.tabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid #333}
+.tab-btn{padding:7px 14px;cursor:pointer;background:none;border:none;color:#888;font-size:13px;border-bottom:2px solid transparent;transition:color .12s,border-color .12s}
+.tab-btn:hover{color:#f0f0f0}
+.tab-btn.active{color:#f0f0f0;border-bottom-color:#0e639c}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:6px 8px;color:#aaa;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #333}
+td{padding:5px 8px;border-bottom:1px solid #2a2a2a;vertical-align:middle}
+tr:hover td{background:#2a2a2a}
+
+/* Action cards (compact) */
+.act-card{background:#252526;border:1px solid #333;border-radius:6px;margin-bottom:6px;overflow:hidden}
+.act-head{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#252526;transition:background .1s}
+.act-head:hover{background:#2a2a2a}
+.act-name{font-weight:600;font-size:13px;white-space:nowrap}
+.act-id{font-size:11px;color:#666;font-family:'Consolas',monospace}
+.act-body{padding:8px 12px;border-top:1px solid #2a2a2a;background:#232323}
+.act-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.act-row label{font-size:11px;color:#888;margin:0;min-width:28px}
+.act-row input[type="number"]{width:80px;margin:0;padding:4px 6px;font-size:12px}
+.act-row select{margin:0;padding:4px 6px;font-size:12px}
+.act-row .w-type{width:140px}
+.act-row .w-lim{width:65px}
+.act-row .w-val{width:80px}
+.act-overrides{margin-top:6px;padding-top:6px;border-top:1px solid #2a2a2a}
+.act-override-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.act-override-row label{font-size:11px;color:#888;margin:0;min-width:28px}
+.act-override-row input[type="number"]{width:70px;margin:0;padding:3px 5px;font-size:12px}
+.act-override-row select{margin:0;padding:3px 5px;font-size:12px}
+
+/* Block rule cards */
+.rule-card{background:#252526;border:1px solid #333;border-radius:6px;padding:12px;margin-bottom:8px}
+.rule-row{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.rule-row label{font-size:11px;color:#aaa;margin:0;min-width:60px}
+.rule-row select,.rule-row input{margin:0}
+.rule-preview{font-size:12px;padding:5px 10px;background:#1e1e1e;border-radius:4px;color:#888;margin-top:2px}
+.rule-preview strong{color:#ccc}
+
+/* Panel line editor */
+.sec-card{background:#2a2a2a;border:1px solid #333;border-radius:6px;padding:12px;margin-bottom:8px}
+.sec-head{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.sec-head input{flex:1;margin:0;font-weight:600}
+.line-row{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+.line-row input{flex:1;margin:0;padding:4px 8px;font-size:12px}
+.line-num{min-width:22px;text-align:right;font-size:10px;color:#555}
+.line-len{font-size:10px;color:#555;min-width:30px;text-align:right}
+.line-len.over{color:#ff9800}
+
+/* Color preview */
+.color-preview{width:36px;height:36px;border-radius:6px;border:2px solid #555;display:inline-block;vertical-align:middle}
+
+/* Misc */
+.help{font-size:11px;color:#666;margin-top:-4px;margin-bottom:8px}
+.divider{border:none;border-top:1px solid #333;margin:14px 0}
+.empty-state{text-align:center;padding:20px;color:#555;font-size:13px}
+.hidden{display:none!important}
+.mono{font-family:'Consolas','Courier New',monospace}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;background:#1e1e1e;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999}
+.spinner{width:30px;height:30px;border:3px solid #333;border-top-color:#0e639c;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#1e1e1e}::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#555}
+
+/* Tooltip helper */
+.tip{position:relative;display:inline-block;width:14px;height:14px;line-height:14px;text-align:center;border-radius:50%;background:#333;color:#888;font-size:10px;cursor:help;vertical-align:middle;margin-left:2px}
+
+/* Blacklist list */
+.bl-item{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:4px;margin-bottom:4px;font-family:'Consolas',monospace;font-size:12px}
+.bl-item .bl-warn{color:#ff9800;font-size:11px;white-space:nowrap}
+.bl-input-row{display:flex;gap:6px;align-items:center}
+.bl-input-row input{flex:1;margin:0}
+
+/* Help icon */
+.help-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#333;color:#888;font-size:10px;cursor:help;vertical-align:middle;margin-left:4px;font-style:normal}
+.help-icon:hover{background:#0e639c;color:#fff}
+
+/* Toggle switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2a2a2a;border-radius:6px;margin-bottom:8px;border:1px solid #333}
+.toggle-row .toggle-label{font-size:14px}
+.toggle-row .toggle-desc{font-size:11px;color:#888;margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#444;border-radius:24px;transition:.2s}
+.toggle .slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#888;border-radius:50%;transition:.2s}
+.toggle input:checked+.slider{background:#0e639c}
+.toggle input:checked+.slider::before{transform:translateX(20px);background:#fff}
+
+/* Card header */
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-header h3{font-size:15px;color:#e0e0e0;margin:0;display:flex;align-items:center;gap:8px}
+.card-header .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#333;color:#aaa}
+
+/* Quick Preset Cards */
+.preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.preset-card{padding:14px;border:1px solid #333;border-radius:8px;cursor:pointer;background:#2a2a2a;transition:all .15s;text-align:center}
+.preset-card:hover{border-color:#0e639c;background:#1a2c3d;transform:translateY(-1px)}
+.preset-card h4{font-size:14px;margin:0 0 4px;color:#e0e0e0}
+.preset-card p{font-size:11px;color:#888;margin:0}
+
+/* Save footer */
+.save-footer{position:fixed;bottom:0;left:210px;right:0;background:#1a1a1a;border-top:1px solid #333;padding:12px 32px;display:flex;align-items:center;gap:12px;z-index:99;transform:translateY(100%);transition:transform .25s}
+.save-footer.show{transform:translateY(0)}
+.save-footer .unsaved-text{font-size:13px;color:#ff9800}
+.save-footer .btn-row{margin-top:0;margin-left:auto}
+.btn-ghost{padding:6px 16px;border:1px solid #555;border-radius:4px;background:transparent;color:#ccc;cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;transition:background .12s,border-color .12s}
+.btn-ghost:hover{background:#333;border-color:#888}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);padding:10px 20px;border-radius:6px;font-size:13px;z-index:100;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:#1b3a1b;color:#4caf50;border:1px solid #2e5c2e}
+.toast.info{background:#1b2a3a;color:#64b5f6;border:1px solid #2e4a5c}
+.toast.error{background:#3a1b1b;color:#f44336;border:1px solid #5c2e2e}
+.toast.warn{background:#3a3117;color:#ff9800;border:1px solid #5c4d1f}
+
+@media(max-width:700px){
+  .sidebar{width:48px;min-width:48px}.sidebar-brand .name,.sidebar-brand .ver,.nav-btn span:not(.icon),.sidebar-hdr{display:none}.nav-btn{justify-content:center;padding:10px}
+  .save-footer{left:48px}
+}
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <div style="color:#888;font-size:13px;">Loading Heroes &amp; Bandits settings&hellip;</div>
+</div>
+
+<div class="shell" id="appShell" style="display:none;">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">HB</div>
+      <div><div class="name">H&amp;B Config</div><div class="ver">Wizard</div></div>
+    </div>
+    <div class="sidebar-hdr">Sections</div>
+    <button class="nav-btn active" data-page="general"><span class="icon">&#9881;</span><span>General</span></button>
+    <button class="nav-btn" data-page="levels"><span class="icon">&#9733;</span><span>Levels</span></button>
+    <button class="nav-btn" data-page="actions"><span class="icon">&#9876;</span><span>Actions</span></button>
+    <button class="nav-btn" data-page="blocks"><span class="icon">&#128274;</span><span>Block Rules</span></button>
+    <button class="nav-btn" data-page="panel"><span class="icon">&#128196;</span><span>Info Panel</span></button>
+    <div style="flex:1"></div>
+    <div style="margin-top:auto;padding:12px 14px;border-top:1px solid #2a2a2a">
+      <a href="https://discord.gg/SkUkPv4" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#2a2a2a;border:1px solid #333;border-radius:6px;color:#7289da;text-decoration:none;font-size:12px;transition:all .15s;margin-bottom:6px" onmouseover="this.style.borderColor='#7289da';this.style.background='#2d2d40'" onmouseout="this.style.borderColor='#333';this.style.background='#2a2a2a'">
+        <span style="font-size:16px">&#128172;</span>
+        <span><strong>Need Help?</strong><br><span style="color:#888;font-size:11px">Join our Discord</span></span>
+      </a>
+      <a href="https://github.com/sponsors/DaemonF0rge" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#2a2a2a;border:1px solid #333;border-radius:6px;color:#db61a2;text-decoration:none;font-size:12px;transition:all .15s" onmouseover="this.style.borderColor='#db61a2';this.style.background='#2d2030'" onmouseout="this.style.borderColor='#333';this.style.background='#2a2a2a'">
+        <span style="font-size:16px">&#10084;</span>
+        <span><strong>Support the Mod</strong><br><span style="color:#888;font-size:11px">Sponsor on GitHub</span></span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="pageTitle">General Settings</h1>
+      <span class="sub" id="pageSubtitle">Core mod configuration</span>
+      <div style="flex:1"></div>
+    </div>
+
+    <div class="content">
+      <div id="statusBar" class="status-bar">
+        <span id="statusText"></span>
+        <button class="close-x" onclick="hideStatus()">&times;</button>
+      </div>
+
+      <!-- ════════ GENERAL ════════ -->
+      <div class="page active" id="page-general">
+        <div class="card">
+          <div class="card-header"><h3>&#127919; Discord Role Integration</h3><i class="help-icon" title="How to get a Role ID:&#10;1. Open Discord &rarr; Settings &rarr; Advanced &rarr; Enable Developer Mode&#10;2. Go to Server Settings &rarr; Roles&#10;3. Right-click the role &rarr; Copy Role ID">?</i></div>
+          <p class="desc">Link Discord roles to affinities. Players with linked Discord accounts receive these roles automatically via UFramework.</p>
+          <div class="row">
+            <div class="col"><label for="heroRole">Hero Discord Role ID</label><input type="text" id="heroRole" placeholder="e.g. 1234567890" onchange="markDirty()"><p class="help">Role assigned when player reaches Hero status</p></div>
+            <div class="col"><label for="banditRole">Bandit Discord Role ID</label><input type="text" id="banditRole" placeholder="e.g. 1234567890" onchange="markDirty()"><p class="help">Role assigned when player reaches Bandit status</p></div>
+          </div>
+          <div class="row">
+            <div class="col"><label for="pathHeroRole">Path Hero Discord Role ID</label><input type="text" id="pathHeroRole" placeholder="e.g. 1234567890" onchange="markDirty()"><p class="help">Role for players on the Hero path (positive humanity). Used by <span class="tag tag-flex">Flex</span> actions.</p></div>
+            <div class="col"><label for="pathBanditRole">Path Bandit Discord Role ID</label><input type="text" id="pathBanditRole" placeholder="e.g. 1234567890" onchange="markDirty()"><p class="help">Role for players on the Bandit path (negative humanity). Used by <span class="tag tag-flex">Flex</span> actions.</p></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#128227; UniversalComms Settings</h3></div>
+          <p class="desc">Configure the integrated chat channel behavior.</p>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Require Working Radio</div>
+              <div class="toggle-desc">Players must have a powered radio in inventory to use Hero/Bandit chat channels</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="ucRequireRadio" onchange="markDirty()"><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#128683; Leaderboard Blacklist</h3></div>
+          <p class="desc">Player GUIDs (Bohemia Interactive IDs) to exclude from leaderboards. GUIDs are 44-character base64 strings &mdash; <strong>not</strong> Steam IDs (17-digit numbers starting with 76561).</p>
+          <div id="blacklistEntries"></div>
+          <div class="bl-input-row" style="margin-top:6px">
+            <input type="text" id="blacklistInput" placeholder="Enter a player GUID (44-char BI ID)" style="margin:0" onkeydown="if(event.key==='Enter')addBlacklistEntry()">
+            <button class="btn btn-secondary btn-sm" onclick="addBlacklistEntry()">+ Add</button>
+          </div>
+          <p id="blacklistWarn" class="help" style="color:#ff9800;display:none;margin-top:4px"></p>
+        </div>
+      </div>
+
+      <!-- ════════ LEVELS ════════ -->
+      <div class="page" id="page-levels" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <h3>&#9889; Quick Presets</h3>
+            <span class="badge">Click to apply</span>
+          </div>
+          <div class="preset-grid">
+            <div class="preset-card" onclick="applyLevelPreset('simple')">
+              <h4>&#127793; Simple</h4>
+              <p>3 easy tiers for casual servers</p>
+            </div>
+            <div class="preset-card" onclick="applyLevelPreset('standard')">
+              <h4>&#9878; Standard</h4>
+              <p>10-level default progression</p>
+            </div>
+            <div class="preset-card" onclick="applyLevelPreset('casual')">
+              <h4>&#127774; Casual</h4>
+              <p>5 levels, lower thresholds</p>
+            </div>
+            <div class="preset-card" onclick="applyLevelPreset('competitive')">
+              <h4>&#9876; Competitive</h4>
+              <p>5 levels, much harder to rank</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#9733; Humanity Level Thresholds</h3></div>
+          <p class="desc">Define the humanity thresholds for each level (max 10). Level 1 is reached at the first threshold. Same values apply symmetrically for Heroes (+) and Bandits (-).</p>
+          <table>
+            <thead><tr><th style="width:70px">Level</th><th>Humanity Required</th><th style="width:70px"></th></tr></thead>
+            <tbody id="levelsBody"></tbody>
+          </table>
+          <div class="btn-row">
+            <button class="btn btn-secondary btn-sm" id="addLevelBtn" onclick="addLevel()">+ Add Level</button>
+            <span id="levelCount" style="font-size:12px;color:#888;line-height:28px;margin-left:8px;"></span>
+          </div>
+          <p class="help" style="margin-top:8px;">Example: Level 1 = 1,000 means a player needs |1,000| humanity for Level 1. Values are auto-sorted on save.</p>
+          <p id="levelWarn" class="help" style="color:#f44336;display:none;margin-top:4px">&#9888; Each level threshold must be greater than the previous one.</p>
+          <div class="btn-row" style="margin-top:8px">
+            <button class="btn btn-secondary btn-sm" onclick="resetLevelsToDefault()">Reset to Defaults</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ ACTIONS ════════ -->
+      <div class="page" id="page-actions" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <h3>&#9889; Quick Presets</h3>
+            <span class="badge">Click to apply</span>
+          </div>
+          <div class="preset-grid">
+            <div class="preset-card" onclick="applyActionPreset('balanced')">
+              <h4>&#9878; Balanced</h4>
+              <p>Default action values</p>
+            </div>
+            <div class="preset-card" onclick="applyActionPreset('pvp')">
+              <h4>&#9876; PvP Heavy</h4>
+              <p>Higher kill impact, tighter limits</p>
+            </div>
+            <div class="preset-card" onclick="applyActionPreset('medic')">
+              <h4>&#128138; Medic RP</h4>
+              <p>Boosted medical values</p>
+            </div>
+            <div class="preset-card" onclick="applyActionPreset('hardcore')">
+              <h4>&#128128; Hardcore</h4>
+              <p>Harsh penalties, strict limits</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#9876; Action Configuration</h3></div>
+          <p class="desc">
+            Each action has a <strong>base</strong> definition (applies to all players) and optional <strong>affinity overrides</strong>.
+            When an override exists for the player's current affinity, it replaces the base values.
+            <span class="tag tag-flex">Flex</span> actions redirect humanity gain for Bambis based on their Discord Path Role (requires UFramework Discord integration).
+            Path Hero role &rarr; positive gain, Path Bandit role &rarr; negative gain. Best used with <strong>EXACT</strong> or <strong>ADD</strong> action types.
+          </p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:11px;color:#777;">
+            <span title="Fixed value added to humanity"><strong>EXACT</strong> — Fixed value</span>
+            <span title="Adds toward current path direction (+ for heroes, - for bandits)"><strong>ADD</strong> — Toward path</span>
+            <span title="Subtracts from current path, moves toward zero"><strong>SUB</strong> — Against path</span>
+            <span title="Multiplies current humanity by value (e.g. 0.9 = lose 10%)"><strong>MULTIPLE</strong> — Multiply</span>
+            <span title="Multiplies toward positive direction"><strong>MULTIPLEADD</strong> — Multiply +</span>
+            <span title="Multiplies toward zero, used for death penalties"><strong>MULTIPLESUB</strong> — Multiply toward 0</span>
+          </div>
+          <div id="actionsList"></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" onclick="addNewAction()">+ Add New Action</button>
+            <button class="btn btn-secondary btn-sm" onclick="resetActionsToDefault()">Reset to Defaults</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ BLOCK RULES ════════ -->
+      <div class="page" id="page-blocks" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <h3>&#9889; Quick Presets</h3>
+            <span class="badge">Click to apply</span>
+          </div>
+          <div class="preset-grid">
+            <div class="preset-card" onclick="applyBlockPreset('windstrider')">
+              <h4>&#129506; Windstrider's Clothing</h4>
+              <p>Shemaghs restricted by affinity</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#128274; Block Rules</h3></div>
+          <p class="desc">
+            Restrict items, recipes, weapons, or building based on Humanity. Choose a restriction type and level — the wizard generates the condition for you.
+            You can also write custom conditions for advanced use.
+          </p>
+          <div id="blockRulesList"></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" onclick="addBlockRule()">+ Add Block Rule</button>
+            <button class="btn btn-secondary btn-sm" onclick="clearBlockRules()">Clear All Rules</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ PANEL ════════ -->
+      <div class="page" id="page-panel" style="display:none;">
+        <div class="card">
+          <div class="card-header"><h3>&#127912; Panel Appearance</h3></div>
+          <p class="desc">Customize the in-game H&amp;B panel look and Discord integration.</p>
+          <div class="btn-row" style="margin-top:0;margin-bottom:12px">
+            <button class="btn btn-secondary btn-sm" onclick="resetPanelToDefault()">Reset Panel to Defaults</button>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label>Accent Color</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" id="accentColor" style="width:70px;" value="#d9a64d">
+                <div class="color-preview" id="accentPreview"></div>
+                <span id="accentInfo" style="font-size:11px;color:#aaa;"></span>
+              </div>
+              <p class="help" style="margin-top:4px">Stored as RGB floats 0.0–1.0 for the game engine.</p>
+            </div>
+            <div class="col">
+              <label for="discordLink">Discord Invite Link</label>
+              <input type="text" id="discordLink" placeholder="https://discord.gg/yourserver" onchange="markDirty()">
+              <p class="help">Leave empty to hide the Discord button in-game.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>&#128196; Info Sections</h3></div>
+          <p class="desc">
+            Configure the collapsible info sections per affinity. Each line in a section maps to one entry in the Content array.
+            Lines over <strong>50 characters</strong> are highlighted — keep them short for good in-game display.
+          </p>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="panelBambi" onclick="switchPanelTab(this)">&#127795; Bambi</button>
+            <button class="tab-btn" data-tab="panelHero" onclick="switchPanelTab(this)">&#128737; Hero</button>
+            <button class="tab-btn" data-tab="panelBandit" onclick="switchPanelTab(this)">&#128128; Bandit</button>
+          </div>
+          <div class="tab-content active" id="tab-panelBambi">
+            <div id="panelBambiSections"></div>
+            <div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="addPanelSection('Bambi')">+ Add Section</button></div>
+          </div>
+          <div class="tab-content" id="tab-panelHero">
+            <div id="panelHeroSections"></div>
+            <div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="addPanelSection('Hero')">+ Add Section</button></div>
+          </div>
+          <div class="tab-content" id="tab-panelBandit">
+            <div id="panelBanditSections"></div>
+            <div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="addPanelSection('Bandit')">+ Add Section</button></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="save-footer" id="saveFooter">
+  <span class="unsaved-text">&#9888; You have unsaved changes</span>
+  <div class="btn-row">
+    <button class="btn-ghost" onclick="discardChanges()">Discard</button>
+    <button class="btn-primary" id="saveAllBtn" onclick="saveAll()">&#128190; Save</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   CONSTANTS & STATE
+   ═══════════════════════════════════════════════════════════════════ */
+var GLOBALS = {
+  GENERAL:        'HAB_GENERAL',
+  PANEL:          'HAB_PANEL',
+  ACTIONS_ALL:    'HAB_ACTIONS',
+  ACTIONS_HERO:   'HAB_ACTIONS_HERO',
+  ACTIONS_BANDIT: 'HAB_ACTIONS_BANDIT',
+  ACTIONS_BAMBI:  'HAB_ACTIONS_BAMBI'
+};
+var MAX_LEVELS = 10;
+var WARN_LINE_LEN = 50;
+
+var generalCfg = null;
+var panelCfg   = null;
+var unified    = [];
+var blockRules = [];
+var levelsArr  = [];
+var blacklistArr = [];
+var dirty = false;
+
+var ACTION_TYPES = [
+  { v:0, label:'EXACT',       tip:'Fixed value added to humanity' },
+  { v:1, label:'MULTIPLE',    tip:'Multiplies current humanity (e.g. 0.9 = lose 10%)' },
+  { v:2, label:'ADD',         tip:'Adds toward current path direction' },
+  { v:3, label:'SUB',         tip:'Subtracts from current path (toward zero)' },
+  { v:4, label:'MULTIPLEADD', tip:'Multiplies toward positive direction' },
+  { v:5, label:'MULTIPLESUB', tip:'Multiplies toward zero (death penalties)' }
+];
+
+var BLOCK_TYPES = [
+  { v:0, label:'Equip',  tip:'Block equipping/wearing' },
+  { v:1, label:'Recipe', tip:'Block crafting' },
+  { v:2, label:'Weapon', tip:'Block firing' },
+  { v:3, label:'Build',  tip:'Block placing/building' }
+];
+
+var RESTRICTION_MODES = [
+  { v:'reqLevel',     label:'Requires Level (any path)',     needsLevel:true,  needsValue:false },
+  { v:'reqHumanity',  label:'Requires min Humanity (custom)',needsLevel:false, needsValue:true  },
+  { v:'heroOnly',     label:'Hero only (Level)',             needsLevel:true,  needsValue:false },
+  { v:'banditOnly',   label:'Bandit only (Level)',           needsLevel:true,  needsValue:false },
+  { v:'blockHeroes',  label:'Block Heroes (Level)',          needsLevel:true,  needsValue:false },
+  { v:'blockBandits', label:'Block Bandits (Level)',         needsLevel:true,  needsValue:false },
+  { v:'custom',       label:'Custom condition',              needsLevel:false, needsValue:false }
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════════════ */
+var pageMeta = {
+  general:['General Settings','Core mod configuration'],
+  levels: ['Level Thresholds','Define humanity levels (max 10)'],
+  actions:['Actions','Configure humanity gain/loss per action'],
+  blocks: ['Block Rules','Restrict items by humanity'],
+  panel:  ['Info Panel','In-game panel content & style']
+};
+document.querySelectorAll('.nav-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var pg = btn.dataset.page;
+    document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
+    btn.classList.add('active');
+    document.querySelectorAll('.page').forEach(function(p){p.style.display='none'});
+    document.getElementById('page-'+pg).style.display='block';
+    document.getElementById('pageTitle').textContent=pageMeta[pg][0];
+    document.getElementById('pageSubtitle').textContent=pageMeta[pg][1];
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+   STATUS / HELPERS
+   ═══════════════════════════════════════════════════════════════════ */
+function showStatus(t,m){var b=document.getElementById('statusBar');b.className='status-bar '+t;document.getElementById('statusText').textContent=m;if(t==='success')setTimeout(function(){b.className='status-bar'},4000)}
+function hideStatus(){document.getElementById('statusBar').className='status-bar'}
+function markDirty(){if(!dirty){dirty=true;document.getElementById('saveFooter').classList.add('show')}}
+function showToast(type,msg){var t=document.getElementById('toast');t.className='toast '+type;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},type==='success'?3000:5000)}
+function discardChanges(){dirty=false;document.getElementById('saveFooter').classList.remove('show');loadAll();showToast('info','Changes discarded')}
+function escapeHtml(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function deepClone(o){return JSON.parse(JSON.stringify(o))}
+function boolInt(v){return v?1:0}
+function isTruthy(v){return v===true||v===1||v==='1'}
+
+/* Blacklist helpers */
+function isSteamId(v){return /^7656\d{13}$/.test(v.trim())}
+function isBIGuid(v){return /^[A-Za-z0-9+/\-_]{43}=?$/.test(v.trim())}
+function isPlainNumber(v){return /^\d{5,}$/.test(v.trim())}
+function isSteamVanityUrl(v){return /^https?:\/\/steamcommunity\.com\//i.test(v.trim())}
+function isPlayerName(v){var t=v.trim();return t.length>0&&t.length<44&&!isBIGuid(t)&&!isPlainNumber(t)&&!isSteamId(t)&&/\s/.test(t)}
+
+function classifyEntry(v){
+  var t=v.trim();
+  if(isBIGuid(t))       return {type:'guid',   cls:'',           icon:'',     tip:''};
+  if(isSteamId(t))      return {type:'steam',   cls:'bl-warn',    icon:'\u26A0 Steam ID',  tip:'This is a Steam ID (76561...), not a BI GUID. Find the GUID in your server logs or DayZ profile files.'};
+  if(isSteamVanityUrl(t))return{type:'url',     cls:'bl-warn',    icon:'\u26A0 Steam URL', tip:'This is a Steam profile URL. You need the 44-character Bohemia Interactive GUID instead.'};
+  if(isPlayerName(t))   return {type:'name',    cls:'bl-warn',    icon:'\u26A0 Player name?',tip:'This looks like a player name. The blacklist requires the Bohemia Interactive GUID (44-char base64 string from server logs).'};
+  if(isPlainNumber(t)&&t.length<17)return{type:'number',cls:'bl-warn',icon:'\u26A0 Unknown ID',tip:'This number doesn\'t match any known ID format. BI GUIDs are 44-character base64 strings like: 6cXrICfG6hBNtJ2_yhVOlN9lHcUrJQXFe0d3VpVM0kM='};
+  if(isPlainNumber(t))  return {type:'longnum', cls:'bl-warn',    icon:'\u26A0 Not a GUID',tip:'This is a long number but not a valid BI GUID. GUIDs are 44-character base64 strings, not numeric.'};
+  if(t.length<10)       return {type:'short',   cls:'bl-warn',    icon:'\u26A0 Too short', tip:'BI GUIDs are 44 characters long. This entry seems too short.'};
+  return                        {type:'unknown', cls:'',           icon:'',     tip:''};
+}
+
+function renderBlacklist(){
+  var c=document.getElementById('blacklistEntries');c.innerHTML='';
+  if(!blacklistArr.length){c.innerHTML='<div class="empty-state" style="padding:8px">No players blacklisted.</div>';return}
+  for(var i=0;i<blacklistArr.length;i++){
+    var d=document.createElement('div');d.className='bl-item';
+    var info=classifyEntry(blacklistArr[i]);
+    var warnHtml=info.icon?'<span class="'+info.cls+'" title="'+escapeHtml(info.tip)+'">'+info.icon+'</span>':'';
+    if(info.type==='guid'){warnHtml='<span style="color:#4caf50;font-size:11px;white-space:nowrap" title="Valid Bohemia Interactive GUID format">\u2714 GUID</span>'}
+    d.innerHTML='<span style="flex:1;word-break:break-all">'+escapeHtml(blacklistArr[i])+'</span>'+warnHtml+'<button class="btn btn-danger btn-sm" onclick="removeBlacklistEntry('+i+')" style="padding:2px 6px">&#10005;</button>';
+    c.appendChild(d);
+  }
+}
+function addBlacklistEntry(){
+  var inp=document.getElementById('blacklistInput');var val=inp.value.trim();if(!val)return;
+  var warnEl=document.getElementById('blacklistWarn');warnEl.style.display='none';
+  var entries=val.split(/[\r\n]+/).map(function(s){return s.trim()}).filter(Boolean);
+  var warnings=[];
+  entries.forEach(function(e){
+    if(blacklistArr.indexOf(e)===-1)blacklistArr.push(e);
+    var info=classifyEntry(e);
+    if(info.type==='steam')  warnings.push('\u26A0 "'+e.substring(0,20)+'..." looks like a Steam ID, not a GUID.');
+    if(info.type==='url')    warnings.push('\u26A0 Steam profile URLs are not GUIDs.');
+    if(info.type==='name')   warnings.push('\u26A0 "'+e+'" looks like a player name, not a GUID.');
+    if(info.type==='short')  warnings.push('\u26A0 "'+e+'" is too short to be a valid GUID.');
+    if(info.type==='number') warnings.push('\u26A0 "'+e+'" is a number but not a recognized ID format.');
+    if(info.type==='longnum')warnings.push('\u26A0 "'+e.substring(0,20)+'..." is a long number but not a GUID.');
+  });
+  if(warnings.length){warnEl.innerHTML=warnings.join('<br>')+'<br><span style="color:#aaa">DayZ uses Bohemia Interactive GUIDs \u2014 44-character base64 strings like: <code style="background:#333;padding:2px 4px;border-radius:3px">6cXrICfG6hBNtJ2_yhVOlN9lHcUrJQXFe0d3VpVM0kM=</code><br>Find them in your server logs (search for the player name).</span>';warnEl.style.display='block'}
+  inp.value='';renderBlacklist();markDirty();
+}
+function removeBlacklistEntry(i){blacklistArr.splice(i,1);renderBlacklist();markDirty()}
+
+/* Level validation */
+function validateLevels(){
+  var inputs=document.querySelectorAll('.lv-inp');var valid=true;
+  for(var i=0;i<levelsArr.length;i++){var inp=inputs[i];if(!inp)continue;
+    if(i>0&&levelsArr[i]<=levelsArr[i-1]){inp.style.borderColor='#f44336';inp.title='Must be greater than Level '+i+' ('+levelsArr[i-1].toLocaleString()+')';valid=false}
+    else if(levelsArr[i]<1){inp.style.borderColor='#f44336';inp.title='Must be at least 1';valid=false}
+    else{inp.style.borderColor='';inp.title=''}
+  }
+  var w=document.getElementById('levelWarn');if(w){w.style.display=valid?'none':'block'}
+  return valid;
+}
+
+function actionTypeLabel(v){for(var i=0;i<ACTION_TYPES.length;i++){if(ACTION_TYPES[i].v===v)return ACTION_TYPES[i].label}return'EXACT'}
+function actionTypeOpts(id,sel){
+  var h='<select id="'+id+'" class="w-type" style="margin:0">';
+  ACTION_TYPES.forEach(function(t){h+='<option value="'+t.v+'" title="'+escapeHtml(t.tip)+'"'+(t.v===sel?' selected':'')+'>'+t.label+'</option>'});
+  return h+'</select>';
+}
+function blockTypeOpts(id,sel){
+  var h='<select id="'+id+'" style="margin:0;width:100px">';
+  BLOCK_TYPES.forEach(function(t){h+='<option value="'+t.v+'" title="'+escapeHtml(t.tip)+'"'+(t.v===sel?' selected':'')+'>'+t.label+'</option>'});
+  return h+'</select>';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BLOCK RULE CONDITION HELPERS
+   ═══════════════════════════════════════════════════════════════════ */
+function levelForThreshold(val){
+  for(var i=0;i<levelsArr.length;i++){if(levelsArr[i]===val)return i+1}
+  return 0;
+}
+
+function generateCondition(mode, param){
+  switch(mode){
+    case 'reqLevel':     return '<'+levelsArr[param-1];
+    case 'reqHumanity':  return '<'+param;
+    case 'heroOnly':     return '<+'+levelsArr[param-1];
+    case 'banditOnly':   return '>-'+levelsArr[param-1];
+    case 'blockHeroes':  return '>+'+(levelsArr[param-1]-1);
+    case 'blockBandits': return '<-'+(levelsArr[param-1]-1);
+    case 'custom':       return String(param);
+    default:             return '<1000';
+  }
+}
+
+function parseBlockCondition(cond){
+  if(!cond||cond.length<2) return {mode:'custom',level:0,value:0,raw:cond||''};
+  var op=cond[0], rest=cond.slice(1), sign='';
+  if(rest[0]==='+'||rest[0]==='-'){sign=rest[0];rest=rest.slice(1)}
+  var num=parseFloat(rest);
+  if(isNaN(num)) return {mode:'custom',level:0,value:0,raw:cond};
+
+  if(op==='<'&&sign===''){
+    var lv=levelForThreshold(num);
+    if(lv>0) return {mode:'reqLevel',level:lv,value:num,raw:cond};
+    return {mode:'reqHumanity',level:0,value:num,raw:cond};
+  }
+  if(op==='<'&&sign==='+'){var lv=levelForThreshold(num);if(lv>0)return{mode:'heroOnly',level:lv,value:num,raw:cond};return{mode:'custom',level:0,value:num,raw:cond}}
+  if(op==='>'&&sign==='-'){var lv=levelForThreshold(num);if(lv>0)return{mode:'banditOnly',level:lv,value:num,raw:cond};return{mode:'custom',level:0,value:num,raw:cond}}
+  if(op==='>'&&sign==='+'){var lv=levelForThreshold(num+1);if(lv>0)return{mode:'blockHeroes',level:lv,value:num,raw:cond};return{mode:'custom',level:0,value:num,raw:cond}}
+  if(op==='<'&&sign==='-'){var lv=levelForThreshold(num+1);if(lv>0)return{mode:'blockBandits',level:lv,value:num,raw:cond};return{mode:'custom',level:0,value:num,raw:cond}}
+  return {mode:'custom',level:0,value:num,raw:cond};
+}
+
+function conditionDesc(cond){
+  var p=parseBlockCondition(cond);
+  switch(p.mode){
+    case 'reqLevel':    return 'Requires Level '+p.level+'+ of any path (|humanity| >= '+p.value+')';
+    case 'reqHumanity': return 'Requires '+p.value+'+ absolute humanity';
+    case 'heroOnly':    return 'Hero only \u2014 requires Level '+p.level+'+ Hero (humanity >= +'+p.value+')';
+    case 'banditOnly':  return 'Bandit only \u2014 requires Level '+p.level+'+ Bandit (humanity <= -'+p.value+')';
+    case 'blockHeroes': return 'Blocks Heroes at Level '+p.level+'+ (humanity > +'+p.value+')';
+    case 'blockBandits':return 'Blocks Bandits at Level '+p.level+'+ (humanity < -'+p.value+')';
+    case 'custom':      return 'Custom: '+cond;
+    default:            return cond||'(none)';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DEFAULTS  (match Enforce Script LoadDefaults exactly)
+   ═══════════════════════════════════════════════════════════════════ */
+var DEFAULT_GENERAL = {
+  ConfigVersion:"1", BanditRole:"DISCORDROLEID", HeroRole:"DISCORDROLEID",
+  PathHeroRole:"DISCORDROLEID", PathBanditRole:"DISCORDROLEID",
+  Levels:[1000,2500,5000,10000,20000,40000,80000,200000,500000,1000000],
+  FlexActions:["zombiekill","huntanimal","catchfish","mineore"],
+  LeaderboardBlacklist:[], UCRequireRadio:0, BlockRules:[]
+};
+
+var DEFAULT_PANEL = {
+  AccentColorR:0.85, AccentColorG:0.65, AccentColorB:0.3, DiscordLink:"",
+  Bambi:{Sections:[
+    {Title:"Welcome",Content:["Welcome to the Heroes and Bandits system!","You are currently a Bambi - a neutral survivor.","Every action you take affects your Humanity score.","Positive actions lead to the Hero path.","Negative actions lead to the Bandit path."]},
+    {Title:"How It Works",Content:["Your Humanity starts at 0 as a fresh spawn.","Helping players: +Humanity","Killing zombies: Small +Humanity gain","Hunting animals: Small +Humanity gain","Killing innocent players: Large -Humanity loss","Killing Heroes: Very large -Humanity loss","Killing Bandits: +Humanity gain (justice!)"]},
+    {Title:"Tips",Content:["Check the Stats tab to see your current Humanity","The Leaderboards show top Heroes and Bandits","Some items and recipes are locked by affinity","Your path affects how other players see you","Link your Discord for special roles!"]}
+  ]},
+  Hero:{Sections:[
+    {Title:"Hero Status",Content:["Congratulations, Hero!","You have proven yourself a protector.","Your positive Humanity reflects your good deeds.","Continue helping others to maintain your status."]},
+    {Title:"Hero Perks",Content:["Access to Hero-exclusive items and clothing","Hero-only crafting recipes unlocked","Bonus Humanity for medical actions","Recognized as a trusted survivor","Special Hero Discord role (if linked)"]},
+    {Title:"Hero Actions",Content:["Bandage wounded players: +Humanity","Give blood transfusions: +Humanity","Perform CPR: +Humanity","Defend players from Bandits: +Humanity","Kill Bandits: +Humanity (bringing justice)"]},
+    {Title:"Warning",Content:["Killing innocent players will cost you!","Friendly fire causes major Humanity loss.","You can fall back to Bambi or even Bandit.","Stay true to the Hero path!"]}
+  ]},
+  Bandit:{Sections:[
+    {Title:"Bandit Status",Content:["You have embraced the Bandit path.","Your actions earned you a fearsome reputation.","Other survivors will be wary of you.","The wasteland is yours to dominate."]},
+    {Title:"Bandit Perks",Content:["Access to Bandit-exclusive items and gear","Bandit-only crafting recipes unlocked","Feared by other players","Special Bandit Discord role (if linked)"]},
+    {Title:"Consequences",Content:["Heroes may hunt you for justice","Some helpful items are restricted","Other Bandits may see you as competition","Your reputation precedes you everywhere"]},
+    {Title:"Path to Redemption",Content:["Redemption is possible, but difficult.","Help other players to slowly regain Humanity.","Medical actions provide Humanity bonuses.","It takes many good deeds to undo the bad.","The choice is yours: darkness or redemption?"]}
+  ]}
+};
+
+var DEFAULT_ACTIONS_ALL = [
+  {name:"herokill",displayName:"Killed Hero",value:-350,notify:0,adjustmentType:0,dailyLimit:5},
+  {name:"banditkill",displayName:"Killed Bandit",value:350,notify:0,adjustmentType:0,dailyLimit:5},
+  {name:"bambikill",displayName:"Killed Bambi",value:-300,notify:0,adjustmentType:0,dailyLimit:5},
+  {name:"zombiekill",displayName:"Killed A Zombie",value:5,notify:1,adjustmentType:0,dailyLimit:-1},
+  {name:"fencepartraid",displayName:"Raided A Fence",value:-50,notify:1,adjustmentType:0,dailyLimit:-1},
+  {name:"watchtowerpartraid",displayName:"Raided A Watchtower",value:-30,notify:1,adjustmentType:0,dailyLimit:-1},
+  {name:"medicbandageplayer",displayName:"Bandage Player",value:25,notify:1,adjustmentType:0,dailyLimit:50},
+  {name:"medicgiveblood",displayName:"Give Blood",value:25,notify:1,adjustmentType:0,dailyLimit:15},
+  {name:"medicgivesaline",displayName:"Give Saline",value:25,notify:1,adjustmentType:0,dailyLimit:15},
+  {name:"medicgivecpr",displayName:"Give CPR",value:75,notify:1,adjustmentType:0,dailyLimit:15},
+  {name:"medicfeedtetracycline",displayName:"Give Tetracycline",value:15,notify:1,adjustmentType:0,dailyLimit:25},
+  {name:"medicfeedpainkiller",displayName:"Give Painkiller",value:15,notify:1,adjustmentType:0,dailyLimit:25},
+  {name:"medicfeedcharcoal",displayName:"Give Charcoal",value:15,notify:1,adjustmentType:0,dailyLimit:25},
+  {name:"medicfeedvitamin",displayName:"Give Vitamin",value:15,notify:1,adjustmentType:0,dailyLimit:25},
+  {name:"medicsplintplayer",displayName:"Applied Splint",value:15,notify:1,adjustmentType:0,dailyLimit:25},
+  {name:"huntanimal",displayName:"Hunted Animal",value:10,notify:1,adjustmentType:2,dailyLimit:25},
+  {name:"death",displayName:"Died",value:0.1,notify:1,adjustmentType:5,dailyLimit:-1},
+  {name:"playerdeath",displayName:"Died To Player",value:0.03,notify:1,adjustmentType:5,dailyLimit:-1},
+  {name:"hungerdeath",displayName:"Died",value:0.1,notify:1,adjustmentType:5,dailyLimit:-1},
+  {name:"toxicdeath",displayName:"Died to Contamination Zone",value:0.05,notify:1,adjustmentType:5,dailyLimit:-1},
+  {name:"suicide",displayName:"Sucided",value:0.2,notify:1,adjustmentType:5,dailyLimit:-1},
+  {name:"zombiedeath",displayName:"Died To Zombies",value:0.07,notify:1,adjustmentType:5,dailyLimit:-1}
+];
+var DEFAULT_ACTIONS_HERO = [
+  {name:"killhero",displayName:"Killed Hero",value:-1000,notify:1,adjustmentType:0,dailyLimit:10},
+  {name:"killbandit",displayName:"Killed Bandit",value:400,notify:1,adjustmentType:0,dailyLimit:10},
+  {name:"killbambi",displayName:"Killed Bambi",value:-200,notify:1,adjustmentType:0,dailyLimit:10}
+];
+var DEFAULT_ACTIONS_BANDIT = [
+  {name:"killhero",displayName:"Killed Hero",value:-350,notify:1,adjustmentType:0,dailyLimit:-1},
+  {name:"killbandit",displayName:"Killed Bandit",value:-250,notify:1,adjustmentType:0,dailyLimit:-1},
+  {name:"killbambi",displayName:"Killed Bambi",value:-200,notify:1,adjustmentType:0,dailyLimit:-1}
+];
+var DEFAULT_ACTIONS_BAMBI = [];
+
+/* ═══════════════════════════════════════════════════════════════════
+   LEVEL PRESETS
+   ═══════════════════════════════════════════════════════════════════ */
+var LEVEL_PRESETS = {
+  simple:      [1000, 5000, 20000],
+  standard:    [1000, 2500, 5000, 10000, 20000, 40000, 80000, 200000, 500000, 1000000],
+  casual:      [500, 1500, 3000, 7500, 15000],
+  competitive: [2500, 10000, 50000, 200000, 500000]
+};
+
+function applyLevelPreset(key){
+  var p=LEVEL_PRESETS[key];
+  if(!p) return;
+  levelsArr=p.slice();
+  renderLevels();
+  markDirty();
+  showToast('info','Level preset "'+key+'" applied');
+}
+
+function resetLevelsToDefault(){
+  levelsArr=deepClone(DEFAULT_GENERAL.Levels);
+  renderLevels();
+  markDirty();
+  showToast('info','Levels reset to defaults');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACTION PRESETS
+   ═══════════════════════════════════════════════════════════════════ */
+var ACTION_PRESETS = {
+  balanced: {
+    all:    deepClone(DEFAULT_ACTIONS_ALL),
+    hero:   deepClone(DEFAULT_ACTIONS_HERO),
+    bandit: deepClone(DEFAULT_ACTIONS_BANDIT),
+    bambi:  deepClone(DEFAULT_ACTIONS_BAMBI)
+  },
+  pvp: {
+    all: [
+      {name:"herokill",displayName:"Killed Hero",value:-500,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"banditkill",displayName:"Killed Bandit",value:500,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"bambikill",displayName:"Killed Bambi",value:-400,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"zombiekill",displayName:"Killed A Zombie",value:3,notify:0,adjustmentType:0,dailyLimit:-1},
+      {name:"fencepartraid",displayName:"Raided A Fence",value:-75,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"watchtowerpartraid",displayName:"Raided A Watchtower",value:-50,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicbandageplayer",displayName:"Bandage Player",value:20,notify:1,adjustmentType:0,dailyLimit:30},
+      {name:"medicgiveblood",displayName:"Give Blood",value:20,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicgivesaline",displayName:"Give Saline",value:20,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicgivecpr",displayName:"Give CPR",value:60,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicfeedtetracycline",displayName:"Give Tetracycline",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedpainkiller",displayName:"Give Painkiller",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedcharcoal",displayName:"Give Charcoal",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedvitamin",displayName:"Give Vitamin",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicsplintplayer",displayName:"Applied Splint",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"huntanimal",displayName:"Hunted Animal",value:5,notify:0,adjustmentType:2,dailyLimit:15},
+      {name:"death",displayName:"Died",value:0.15,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"playerdeath",displayName:"Died To Player",value:0.05,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"hungerdeath",displayName:"Died",value:0.15,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"toxicdeath",displayName:"Died to Contamination Zone",value:0.08,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"suicide",displayName:"Sucided",value:0.25,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"zombiedeath",displayName:"Died To Zombies",value:0.1,notify:1,adjustmentType:5,dailyLimit:-1}
+    ],
+    hero: [
+      {name:"killhero",displayName:"Killed Hero",value:-1500,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"killbandit",displayName:"Killed Bandit",value:600,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"killbambi",displayName:"Killed Bambi",value:-350,notify:1,adjustmentType:0,dailyLimit:5}
+    ],
+    bandit: [
+      {name:"killhero",displayName:"Killed Hero",value:-500,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"killbandit",displayName:"Killed Bandit",value:-350,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"killbambi",displayName:"Killed Bambi",value:-300,notify:1,adjustmentType:0,dailyLimit:-1}
+    ],
+    bambi: []
+  },
+  medic: {
+    all: [
+      {name:"herokill",displayName:"Killed Hero",value:-250,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"banditkill",displayName:"Killed Bandit",value:250,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"bambikill",displayName:"Killed Bambi",value:-200,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"zombiekill",displayName:"Killed A Zombie",value:5,notify:0,adjustmentType:0,dailyLimit:-1},
+      {name:"fencepartraid",displayName:"Raided A Fence",value:-50,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"watchtowerpartraid",displayName:"Raided A Watchtower",value:-30,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicbandageplayer",displayName:"Bandage Player",value:50,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicgiveblood",displayName:"Give Blood",value:60,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicgivesaline",displayName:"Give Saline",value:50,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicgivecpr",displayName:"Give CPR",value:150,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicfeedtetracycline",displayName:"Give Tetracycline",value:30,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicfeedpainkiller",displayName:"Give Painkiller",value:30,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicfeedcharcoal",displayName:"Give Charcoal",value:30,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicfeedvitamin",displayName:"Give Vitamin",value:30,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicsplintplayer",displayName:"Applied Splint",value:40,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"huntanimal",displayName:"Hunted Animal",value:10,notify:1,adjustmentType:2,dailyLimit:25},
+      {name:"death",displayName:"Died",value:0.05,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"playerdeath",displayName:"Died To Player",value:0.02,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"hungerdeath",displayName:"Died",value:0.05,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"toxicdeath",displayName:"Died to Contamination Zone",value:0.03,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"suicide",displayName:"Sucided",value:0.1,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"zombiedeath",displayName:"Died To Zombies",value:0.05,notify:1,adjustmentType:5,dailyLimit:-1}
+    ],
+    hero: deepClone(DEFAULT_ACTIONS_HERO),
+    bandit: deepClone(DEFAULT_ACTIONS_BANDIT),
+    bambi: []
+  },
+  hardcore: {
+    all: [
+      {name:"herokill",displayName:"Killed Hero",value:-500,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"banditkill",displayName:"Killed Bandit",value:500,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"bambikill",displayName:"Killed Bambi",value:-450,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"zombiekill",displayName:"Killed A Zombie",value:3,notify:0,adjustmentType:0,dailyLimit:50},
+      {name:"fencepartraid",displayName:"Raided A Fence",value:-100,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"watchtowerpartraid",displayName:"Raided A Watchtower",value:-60,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"medicbandageplayer",displayName:"Bandage Player",value:15,notify:1,adjustmentType:0,dailyLimit:20},
+      {name:"medicgiveblood",displayName:"Give Blood",value:15,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicgivesaline",displayName:"Give Saline",value:15,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicgivecpr",displayName:"Give CPR",value:50,notify:1,adjustmentType:0,dailyLimit:10},
+      {name:"medicfeedtetracycline",displayName:"Give Tetracycline",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedpainkiller",displayName:"Give Painkiller",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedcharcoal",displayName:"Give Charcoal",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicfeedvitamin",displayName:"Give Vitamin",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"medicsplintplayer",displayName:"Applied Splint",value:10,notify:0,adjustmentType:0,dailyLimit:15},
+      {name:"huntanimal",displayName:"Hunted Animal",value:5,notify:0,adjustmentType:2,dailyLimit:15},
+      {name:"death",displayName:"Died",value:0.2,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"playerdeath",displayName:"Died To Player",value:0.08,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"hungerdeath",displayName:"Died",value:0.2,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"toxicdeath",displayName:"Died to Contamination Zone",value:0.1,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"suicide",displayName:"Sucided",value:0.35,notify:1,adjustmentType:5,dailyLimit:-1},
+      {name:"zombiedeath",displayName:"Died To Zombies",value:0.12,notify:1,adjustmentType:5,dailyLimit:-1}
+    ],
+    hero: [
+      {name:"killhero",displayName:"Killed Hero",value:-2000,notify:1,adjustmentType:0,dailyLimit:3},
+      {name:"killbandit",displayName:"Killed Bandit",value:500,notify:1,adjustmentType:0,dailyLimit:5},
+      {name:"killbambi",displayName:"Killed Bambi",value:-400,notify:1,adjustmentType:0,dailyLimit:3}
+    ],
+    bandit: [
+      {name:"killhero",displayName:"Killed Hero",value:-500,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"killbandit",displayName:"Killed Bandit",value:-400,notify:1,adjustmentType:0,dailyLimit:-1},
+      {name:"killbambi",displayName:"Killed Bambi",value:-350,notify:1,adjustmentType:0,dailyLimit:-1}
+    ],
+    bambi: []
+  }
+};
+
+function applyActionPreset(key){
+  var p=ACTION_PRESETS[key];
+  if(!p) return;
+  var flexList=[];
+  unified.forEach(function(u){if(u.flex) flexList.push(u.name)});
+  unified=unifyActions(deepClone(p.all),deepClone(p.hero),deepClone(p.bandit),deepClone(p.bambi));
+  unified.forEach(function(u){u.flex=flexList.indexOf(u.name)>=0});
+  expandedActions={};
+  renderActions();
+  markDirty();
+  showToast('info','Action preset "'+key+'" applied');
+}
+
+function resetActionsToDefault(){
+  var flexList=[];
+  unified.forEach(function(u){if(u.flex) flexList.push(u.name)});
+  unified=unifyActions(deepClone(DEFAULT_ACTIONS_ALL),deepClone(DEFAULT_ACTIONS_HERO),deepClone(DEFAULT_ACTIONS_BANDIT),deepClone(DEFAULT_ACTIONS_BAMBI));
+  unified.forEach(function(u){u.flex=flexList.indexOf(u.name)>=0});
+  expandedActions={};
+  renderActions();
+  markDirty();
+  showToast('info','Actions reset to defaults');
+}
+
+function clearBlockRules(){
+  blockRules=[];
+  renderBlockRules();
+  markDirty();
+  showToast('info','All block rules cleared');
+}
+
+var BLOCK_PRESETS = {
+  windstrider: [
+    {Type:0, Target:'Shemagh_Bandit_ColorBase',   Condition:'>-1000', BlockMessage:'Bandit gear only'},
+    {Type:0, Target:'Shemagh_Facemask_ColorBase',  Condition:'>-1000', BlockMessage:'Bandit gear only'},
+    {Type:0, Target:'Shemagh_Scarf_ColorBase',     Condition:'<+1000', BlockMessage:'Hero gear only'}
+  ]
+};
+
+function applyBlockPreset(key){
+  var p=BLOCK_PRESETS[key];
+  if(!p) return;
+  var added=0;
+  p.forEach(function(rule){
+    var exists=blockRules.some(function(r){return r.Type===rule.Type&&r.Target===rule.Target&&r.Condition===rule.Condition});
+    if(!exists){blockRules.push(deepClone(rule));added++}
+  });
+  renderBlockRules();
+  markDirty();
+  if(added>0) showToast('info','Added '+added+' block rule'+(added>1?'s':'')+' from "'+key+'" preset');
+  else showToast('info','All rules from this preset already exist');
+}
+
+function resetPanelToDefault(){
+  panelCfg=deepClone(DEFAULT_PANEL);
+  populatePanel();
+  markDirty();
+  showToast('info','Panel reset to defaults');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOAD ALL
+   ═══════════════════════════════════════════════════════════════════ */
+async function loadAll(){
+  try{
+    var r = await Promise.all([
+      UF.loadGlobal(GLOBALS.GENERAL),
+      UF.loadGlobal(GLOBALS.PANEL),
+      UF.loadGlobal(GLOBALS.ACTIONS_ALL),
+      UF.loadGlobal(GLOBALS.ACTIONS_HERO),
+      UF.loadGlobal(GLOBALS.ACTIONS_BANDIT),
+      UF.loadGlobal(GLOBALS.ACTIONS_BAMBI)
+    ]);
+    generalCfg = (r[0]&&typeof r[0]==='object') ? r[0] : deepClone(DEFAULT_GENERAL);
+    panelCfg   = (r[1]&&typeof r[1]==='object') ? r[1] : deepClone(DEFAULT_PANEL);
+    var aAll = r[2], aH = r[3], aB = r[4], aBm = r[5];
+    if(!Array.isArray(aAll))  aAll  = deepClone(DEFAULT_ACTIONS_ALL);
+    if(!Array.isArray(aH))    aH    = deepClone(DEFAULT_ACTIONS_HERO);
+    if(!Array.isArray(aB))    aB    = deepClone(DEFAULT_ACTIONS_BANDIT);
+    if(!Array.isArray(aBm))   aBm   = deepClone(DEFAULT_ACTIONS_BAMBI);
+
+    levelsArr  = (generalCfg.Levels && Array.isArray(generalCfg.Levels)) ? generalCfg.Levels.slice() : deepClone(DEFAULT_GENERAL.Levels);
+    blockRules = (generalCfg.BlockRules && Array.isArray(generalCfg.BlockRules)) ? deepClone(generalCfg.BlockRules) : [];
+    unified    = unifyActions(aAll, aH, aB, aBm);
+
+    /* Apply flex flags from general config */
+    var flexList = (generalCfg.FlexActions||[]).map(function(s){return s.toLowerCase()});
+    unified.forEach(function(u){u.flex = flexList.indexOf(u.name)>=0});
+
+    populateAll();
+    dirty=false;var sf=document.getElementById('saveFooter');if(sf)sf.classList.remove('show');
+    showStatus('success','Settings loaded successfully');
+  } catch(err){
+    generalCfg = deepClone(DEFAULT_GENERAL);
+    panelCfg   = deepClone(DEFAULT_PANEL);
+    levelsArr  = deepClone(DEFAULT_GENERAL.Levels);
+    blockRules = [];
+    unified    = unifyActions(deepClone(DEFAULT_ACTIONS_ALL),deepClone(DEFAULT_ACTIONS_HERO),deepClone(DEFAULT_ACTIONS_BANDIT),deepClone(DEFAULT_ACTIONS_BAMBI));
+    var flexList = DEFAULT_GENERAL.FlexActions.map(function(s){return s.toLowerCase()});
+    unified.forEach(function(u){u.flex = flexList.indexOf(u.name)>=0});
+    populateAll();
+    dirty=false;var sf=document.getElementById('saveFooter');if(sf)sf.classList.remove('show');
+    showStatus('warn','Could not load from database \u2014 defaults shown. ('+err.message+')');
+  }
+  document.getElementById('loadingOverlay').style.display='none';
+  document.getElementById('appShell').style.display='flex';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   UNIFY / SPLIT ACTIONS
+   ═══════════════════════════════════════════════════════════════════ */
+function unifyActions(all,hero,bandit,bambi){
+  var map={}, order=[];
+  function add(list,scope){
+    if(!list)return;
+    for(var i=0;i<list.length;i++){
+      var a=list[i], k=(a.name||'').toLowerCase();
+      if(!k)continue;
+      if(!map[k]){map[k]={name:k,displayName:a.displayName||k,base:null,hero:null,bandit:null,bambi:null,flex:false};order.push(k)}
+      var e={value:a.value||0,notify:isTruthy(a.notify)?1:0,adjustmentType:a.adjustmentType||0,dailyLimit:(a.dailyLimit===undefined||a.dailyLimit===null)?-1:a.dailyLimit};
+      if(scope==='all'){map[k].base=e;map[k].displayName=a.displayName||map[k].displayName}
+      if(scope==='hero')map[k].hero=e;
+      if(scope==='bandit')map[k].bandit=e;
+      if(scope==='bambi')map[k].bambi=e;
+    }
+  }
+  add(all,'all');add(hero,'hero');add(bandit,'bandit');add(bambi,'bambi');
+  var res=[];for(var i=0;i<order.length;i++)res.push(map[order[i]]);
+  return res;
+}
+
+function splitActions(){
+  var all=[],hero=[],bandit=[],bambi=[];
+  for(var i=0;i<unified.length;i++){
+    var u=unified[i];
+    if(u.base)   all.push(makeActObj(u.name,u.displayName,u.base));
+    if(u.hero)   hero.push(makeActObj(u.name,u.displayName,u.hero));
+    if(u.bandit) bandit.push(makeActObj(u.name,u.displayName,u.bandit));
+    if(u.bambi)  bambi.push(makeActObj(u.name,u.displayName,u.bambi));
+  }
+  return {all:all,hero:hero,bandit:bandit,bambi:bambi};
+}
+
+function makeActObj(name,dn,s){
+  return {name:name,displayName:dn,value:s.value,notify:s.notify?1:0,adjustmentType:s.adjustmentType,dailyLimit:s.dailyLimit};
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   POPULATE ALL
+   ═══════════════════════════════════════════════════════════════════ */
+function populateAll(){
+  document.getElementById('heroRole').value       = generalCfg.HeroRole||'';
+  document.getElementById('banditRole').value      = generalCfg.BanditRole||'';
+  document.getElementById('pathHeroRole').value    = generalCfg.PathHeroRole||'';
+  document.getElementById('pathBanditRole').value  = generalCfg.PathBanditRole||'';
+  document.getElementById('ucRequireRadio').checked= isTruthy(generalCfg.UCRequireRadio);
+  blacklistArr = (generalCfg.LeaderboardBlacklist||[]).slice();
+  renderBlacklist();
+  renderLevels();
+  renderActions();
+  renderBlockRules();
+  populatePanel();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LEVELS (max 10)
+   ═══════════════════════════════════════════════════════════════════ */
+function renderLevels(){
+  var body=document.getElementById('levelsBody');
+  body.innerHTML='';
+  for(var i=0;i<levelsArr.length;i++){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><span class="tag tag-all">Level '+(i+1)+'</span></td>'+
+      '<td><input type="number" class="lv-inp" data-idx="'+i+'" value="'+levelsArr[i]+'" min="1" style="width:150px;margin:0"></td>'+
+      '<td><button class="btn btn-danger btn-sm" onclick="removeLevel('+i+')">&#10005;</button></td>';
+    body.appendChild(tr);
+  }
+  body.querySelectorAll('.lv-inp').forEach(function(inp){
+    inp.addEventListener('change',function(){levelsArr[parseInt(inp.dataset.idx)]=parseInt(inp.value)||1000;validateLevels();markDirty()});
+  });
+  var cnt=document.getElementById('levelCount');
+  cnt.textContent=levelsArr.length+' / '+MAX_LEVELS;
+  document.getElementById('addLevelBtn').disabled=(levelsArr.length>=MAX_LEVELS);
+  validateLevels();
+}
+function addLevel(){
+  if(levelsArr.length>=MAX_LEVELS)return;
+  var last=levelsArr.length>0?levelsArr[levelsArr.length-1]:500;
+  levelsArr.push(last*2);
+  renderLevels();
+  markDirty();
+}
+function removeLevel(i){levelsArr.splice(i,1);renderLevels();markDirty()}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACTIONS (compact cards with expandable overrides)
+   ═══════════════════════════════════════════════════════════════════ */
+var expandedActions = {};
+
+function renderActions(){
+  var c=document.getElementById('actionsList');
+  c.innerHTML='';
+  if(!unified.length){c.innerHTML='<div class="empty-state">No actions configured.</div>';return}
+  for(var i=0;i<unified.length;i++) c.appendChild(buildActCard(i));
+}
+
+function buildActCard(idx){
+  var u=unified[idx];
+  var card=document.createElement('div');
+  card.className='act-card';
+  card.id='ac-'+idx;
+
+  /* Header */
+  var h='<div class="act-head" onclick="toggleExpand('+idx+')" style="cursor:pointer">';
+  h+='<span style="font-size:12px;color:#666;min-width:16px">'+(expandedActions[idx]?'\u25BE':'\u25B8')+'</span>';
+  h+='<span class="act-name">'+escapeHtml(u.displayName)+'</span>';
+  h+='<span class="act-id">('+escapeHtml(u.name)+')</span>';
+  h+='<span style="flex:1"></span>';
+  /* Scope badges */
+  if(u.base)  h+='<span class="tag tag-all">All</span> ';
+  if(u.hero)  h+='<span class="tag tag-hero">Hero</span> ';
+  if(u.bandit)h+='<span class="tag tag-bandit">Bandit</span> ';
+  if(u.bambi) h+='<span class="tag tag-bambi">Bambi</span> ';
+  if(u.flex)  h+='<span class="tag tag-flex">Flex</span> ';
+  h+='<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();removeAction('+idx+')" title="Remove action">&#10005;</button>';
+  h+='</div>';
+
+  /* Body (collapsible) */
+  var b='<div class="act-body" style="display:'+(expandedActions[idx]?'block':'none')+'">';
+
+  /* Display name + flex */
+  b+='<div class="act-row" style="margin-bottom:8px">';
+  b+='<label style="min-width:70px">Display Name</label>';
+  b+='<input type="text" id="adn_'+idx+'" value="'+escapeHtml(u.displayName)+'" style="flex:1;margin:0" onchange="unified['+idx+'].displayName=this.value.trim();renderActions();markDirty()">';
+  b+='<label class="toggle" style="margin:0" title="Flex: Redirects gain for Bambis based on Discord Path Role. Path Hero = positive gain, Path Bandit = negative. Best with EXACT or ADD types."><input type="checkbox" id="afx_'+idx+'"'+(u.flex?' checked':'')+' onchange="unified['+idx+'].flex=this.checked;markDirty()"><span class="slider"></span></label> <span class="tag tag-flex" style="margin-left:4px">Flex</span>';
+  b+='</div>';
+
+  /* Base row */
+  if(u.base){
+    b+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px"><span class="tag tag-all" style="min-width:60px;text-align:center">Base</span></div>';
+    b+=buildValRow(idx,'base',u.base);
+  } else {
+    b+='<div class="act-row"><span class="tag tag-all">Base</span> <em style="color:#555;font-size:12px">No base defined</em> <button class="btn btn-secondary btn-sm" onclick="addScope('+idx+',\'base\')">+ Add Base</button></div>';
+  }
+
+  /* Override rows */
+  b+='<div class="act-overrides">';
+  b+='<div style="font-size:11px;color:#666;margin-bottom:4px">Affinity Overrides:</div>';
+  var scopes=[['hero','Hero','tag-hero'],['bandit','Bandit','tag-bandit'],['bambi','Bambi','tag-bambi']];
+  for(var s=0;s<scopes.length;s++){
+    var sk=scopes[s][0],sl=scopes[s][1],sc=scopes[s][2];
+    if(u[sk]){
+      b+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px"><span class="tag '+sc+'" style="min-width:60px;text-align:center">'+sl+'</span><button class="btn btn-danger btn-sm" onclick="removeScope('+idx+',\''+sk+'\')" style="margin-left:auto" title="Remove '+sl+' override">&#10005;</button></div>';
+      b+=buildValRow(idx,sk,u[sk]);
+    } else {
+      b+='<div class="act-row"><span class="tag '+sc+'" style="min-width:60px;text-align:center;opacity:.5">'+sl+'</span> <button class="btn btn-secondary btn-sm" onclick="addScope('+idx+',\''+sk+'\')">+ Override</button></div>';
+    }
+  }
+  b+='</div>';
+  b+='</div>';
+
+  card.innerHTML=h+b;
+  setTimeout(function(){bindActInputs(card,idx)},0);
+  return card;
+}
+
+function buildValRow(idx,scope,data){
+  var p='a_'+idx+'_'+scope;
+  var h='<div class="act-row" style="padding-left:68px;margin-bottom:6px">';
+  h+='<label style="margin:0;min-width:40px" title="Humanity change value">Value</label>';
+  h+='<input type="number" id="'+p+'_v" class="w-val" value="'+data.value+'" step="any" style="margin:0">';
+  h+='<label style="margin:0;min-width:36px">Type</label>';
+  h+=actionTypeOpts(p+'_t',data.adjustmentType);
+  h+='<label style="margin:0;min-width:36px" title="Daily limit (-1 = unlimited)">Limit</label>';
+  h+='<input type="number" id="'+p+'_l" class="w-lim" value="'+data.dailyLimit+'" min="-1" style="margin:0" title="-1 = unlimited">';
+  h+='<label class="toggle" style="margin:0" title="Show notification to player"><input type="checkbox" id="'+p+'_n"'+(isTruthy(data.notify)?' checked':'')+' ><span class="slider"></span></label> <span style="font-size:11px;color:#888;margin-left:4px">Notify</span>';
+  h+='</div>';
+  return h;
+}
+
+function bindActInputs(card,idx){
+  ['base','hero','bandit','bambi'].forEach(function(scope){
+    var p='a_'+idx+'_'+scope;
+    var vEl=card.querySelector('#'+p+'_v');
+    if(!vEl)return;
+    var tEl=card.querySelector('#'+p+'_t'),lEl=card.querySelector('#'+p+'_l'),nEl=card.querySelector('#'+p+'_n');
+    function sync(){
+      var tgt=unified[idx][scope];if(!tgt)return;
+      tgt.value=parseFloat(vEl.value)||0;
+      tgt.adjustmentType=parseInt(tEl.value)||0;
+      tgt.dailyLimit=parseInt(lEl.value);if(isNaN(tgt.dailyLimit))tgt.dailyLimit=-1;
+      tgt.notify=nEl.checked?1:0;
+      markDirty();
+    }
+    vEl.addEventListener('change',sync);tEl.addEventListener('change',sync);lEl.addEventListener('change',sync);nEl.addEventListener('change',sync);
+  });
+}
+
+function toggleExpand(idx){expandedActions[idx]=!expandedActions[idx];renderActions()}
+function addScope(idx,scope){
+  var base=unified[idx].base||{value:0,notify:1,adjustmentType:0,dailyLimit:-1};
+  unified[idx][scope]=deepClone(base);
+  expandedActions[idx]=true;
+  renderActions();
+  markDirty();
+}
+function removeScope(idx,scope){unified[idx][scope]=null;renderActions();markDirty()}
+function removeAction(idx){
+  delete expandedActions[idx];
+  unified.splice(idx,1);
+  /* Re-key expanded map */
+  var newExp={};
+  Object.keys(expandedActions).forEach(function(k){var n=parseInt(k);if(n>idx)newExp[n-1]=expandedActions[k];else newExp[n]=expandedActions[k]});
+  expandedActions=newExp;
+  renderActions();
+  markDirty();
+}
+function addNewAction(){
+  var name=prompt('Action Name (lowercase, no spaces):','');
+  if(!name)return;
+  name=name.toLowerCase().replace(/[^a-z0-9_]/g,'');
+  if(!name)return;
+  var dn=prompt('Display Name:',name);
+  unified.push({name:name,displayName:dn||name,base:{value:0,notify:1,adjustmentType:0,dailyLimit:-1},hero:null,bandit:null,bambi:null,flex:false});
+  expandedActions[unified.length-1]=true;
+  renderActions();
+  markDirty();
+  var last=document.getElementById('ac-'+(unified.length-1));
+  if(last)last.scrollIntoView({behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BLOCK RULES (intuitive, level-aware)
+   ═══════════════════════════════════════════════════════════════════ */
+function renderBlockRules(){
+  var c=document.getElementById('blockRulesList');
+  c.innerHTML='';
+  if(!blockRules.length){c.innerHTML='<div class="empty-state">No block rules. Click "+ Add Block Rule" to begin.</div>';return}
+  for(var i=0;i<blockRules.length;i++){
+    c.appendChild(buildRuleCard(i));
+  }
+}
+
+function buildRuleCard(idx){
+  var r=blockRules[idx];
+  var parsed=parseBlockCondition(r.Condition);
+  var card=document.createElement('div');
+  card.className='rule-card';
+  card.id='br-'+idx;
+
+  var h='';
+
+  /* Row 1: Type + Target + delete */
+  h+='<div class="rule-row">';
+  h+='<label>Type</label>'+blockTypeOpts('brt_'+idx,r.Type);
+  h+='<label style="margin-left:6px">Target</label><input type="text" id="brtar_'+idx+'" value="'+escapeHtml(r.Target)+'" style="margin:0;flex:1;min-width:150px" placeholder="ClassName or RecipeName">';
+  h+='<button class="btn btn-danger btn-sm" onclick="removeBlockRule('+idx+')" title="Remove rule">&#10005;</button>';
+  h+='</div>';
+
+  /* Row 2: Restriction mode + level/value */
+  h+='<div class="rule-row">';
+  h+='<label>Restriction</label><select id="brm_'+idx+'" style="margin:0;width:220px" onchange="onRuleModeChange('+idx+')">';
+  RESTRICTION_MODES.forEach(function(m){h+='<option value="'+m.v+'"'+(m.v===parsed.mode?' selected':'')+'>'+m.label+'</option>'});
+  h+='</select>';
+
+  /* Level picker */
+  var modeObj=RESTRICTION_MODES.find(function(m){return m.v===parsed.mode});
+  var showLevel = modeObj && modeObj.needsLevel;
+  var showValue = modeObj && modeObj.needsValue;
+  var showCustom = (parsed.mode==='custom');
+
+  h+='<span id="brls_'+idx+'" style="display:'+(showLevel?'inline-flex':'none')+';align-items:center;gap:4px">';
+  h+='<label style="margin:0">Level</label><select id="brl_'+idx+'" style="margin:0;width:170px" onchange="onRuleParamChange('+idx+')">';
+  for(var lv=1;lv<=levelsArr.length;lv++){
+    h+='<option value="'+lv+'"'+(lv===parsed.level?' selected':'')+'>Level '+lv+' ('+levelsArr[lv-1].toLocaleString()+' humanity)</option>';
+  }
+  h+='</select></span>';
+
+  h+='<span id="brvs_'+idx+'" style="display:'+(showValue?'inline-flex':'none')+';align-items:center;gap:4px">';
+  h+='<label style="margin:0">Value</label><input type="number" id="brv_'+idx+'" value="'+(parsed.value||1000)+'" min="1" style="margin:0;width:110px" onchange="onRuleParamChange('+idx+')">';
+  h+='</span>';
+
+  h+='<span id="brcs_'+idx+'" style="display:'+(showCustom?'inline-flex':'none')+';align-items:center;gap:4px">';
+  h+='<label style="margin:0">Condition</label><input type="text" id="brc_'+idx+'" value="'+escapeHtml(showCustom?r.Condition:'')+'" style="margin:0;width:120px" placeholder="e.g. <1000" onchange="onRuleParamChange('+idx+')">';
+  h+='</span>';
+  h+='</div>';
+
+  /* Row 3: Message */
+  h+='<div class="rule-row">';
+  h+='<label>Message</label><input type="text" id="brmsg_'+idx+'" value="'+escapeHtml(r.BlockMessage||'')+'" style="margin:0;flex:1" placeholder="Optional message shown to blocked player">';
+  h+='</div>';
+
+  /* Preview */
+  h+='<div class="rule-preview" id="brprev_'+idx+'"><strong>Condition:</strong> <span class="mono">'+escapeHtml(r.Condition)+'</span> &mdash; '+escapeHtml(conditionDesc(r.Condition))+'</div>';
+
+  card.innerHTML=h;
+
+  /* Bind sync for type + target + message */
+  setTimeout(function(){
+    var typeEl=card.querySelector('#brt_'+idx);
+    var tarEl=card.querySelector('#brtar_'+idx);
+    var msgEl=card.querySelector('#brmsg_'+idx);
+    function syncBasic(){
+      blockRules[idx].Type=parseInt(typeEl.value);
+      blockRules[idx].Target=tarEl.value.trim();
+      blockRules[idx].BlockMessage=msgEl.value.trim();
+      markDirty();
+    }
+    typeEl.addEventListener('change',syncBasic);
+    tarEl.addEventListener('change',syncBasic);
+    tarEl.addEventListener('input',syncBasic);
+    msgEl.addEventListener('change',syncBasic);
+    msgEl.addEventListener('input',syncBasic);
+  },0);
+
+  return card;
+}
+
+function onRuleModeChange(idx){
+  var modeVal=document.getElementById('brm_'+idx).value;
+  var modeObj=RESTRICTION_MODES.find(function(m){return m.v===modeVal});
+
+  document.getElementById('brls_'+idx).style.display=modeObj.needsLevel?'inline-flex':'none';
+  document.getElementById('brvs_'+idx).style.display=modeObj.needsValue?'inline-flex':'none';
+  document.getElementById('brcs_'+idx).style.display=(modeVal==='custom')?'inline-flex':'none';
+
+  onRuleParamChange(idx);
+}
+
+function onRuleParamChange(idx){
+  var mode=document.getElementById('brm_'+idx).value;
+  var cond='';
+
+  if(mode==='custom'){
+    cond=document.getElementById('brc_'+idx).value.trim()||'<1000';
+  } else if(mode==='reqHumanity'){
+    var val=parseInt(document.getElementById('brv_'+idx).value)||1000;
+    cond=generateCondition(mode,val);
+  } else {
+    var lv=parseInt(document.getElementById('brl_'+idx).value)||1;
+    cond=generateCondition(mode,lv);
+  }
+
+  blockRules[idx].Condition=cond;
+  var prev=document.getElementById('brprev_'+idx);
+  prev.innerHTML='<strong>Condition:</strong> <span class="mono">'+escapeHtml(cond)+'</span> &mdash; '+escapeHtml(conditionDesc(cond));
+  markDirty();
+}
+
+function addBlockRule(){
+  blockRules.push({Type:0,Target:'',Condition:'<1000',BlockMessage:''});
+  renderBlockRules();
+  markDirty();
+}
+function removeBlockRule(i){blockRules.splice(i,1);renderBlockRules();markDirty()}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PANEL (line-by-line editor)
+   ═══════════════════════════════════════════════════════════════════ */
+function populatePanel(){
+  /* Accent color: float → hex */
+  var rr=Math.round((panelCfg.AccentColorR||0.85)*255);
+  var gg=Math.round((panelCfg.AccentColorG||0.65)*255);
+  var bb=Math.round((panelCfg.AccentColorB||0.3)*255);
+  var hex='#'+('0'+rr.toString(16)).slice(-2)+('0'+gg.toString(16)).slice(-2)+('0'+bb.toString(16)).slice(-2);
+  document.getElementById('accentColor').value=hex;
+  updateAccentPreview();
+  document.getElementById('discordLink').value=panelCfg.DiscordLink||'';
+  document.getElementById('accentColor').addEventListener('input',function(){updateAccentPreview();markDirty()});
+  renderPanelSections('Bambi');
+  renderPanelSections('Hero');
+  renderPanelSections('Bandit');
+}
+
+function updateAccentPreview(){
+  var hex=document.getElementById('accentColor').value;
+  document.getElementById('accentPreview').style.background=hex;
+  var big=parseInt(hex.slice(1),16);
+  var r=((big>>16)&255)/255, g=((big>>8)&255)/255, b=(big&255)/255;
+  document.getElementById('accentInfo').textContent=hex+' \u2192 R:'+r.toFixed(2)+' G:'+g.toFixed(2)+' B:'+b.toFixed(2);
+}
+
+function renderPanelSections(aff){
+  var cfg=panelCfg[aff];
+  if(!cfg||!cfg.Sections){cfg={Sections:[]};panelCfg[aff]=cfg}
+  var container=document.getElementById('panel'+aff+'Sections');
+  container.innerHTML='';
+  if(!cfg.Sections.length){container.innerHTML='<div class="empty-state">No info sections. Click "+ Add Section" below.</div>';return}
+
+  for(var i=0;i<cfg.Sections.length;i++){
+    var sec=cfg.Sections[i];
+    if(!sec.Content) sec.Content=[];
+    var card=document.createElement('div');
+    card.className='sec-card';
+    card.id='ps_'+aff+'_'+i;
+
+    var h='<div class="sec-head">';
+    h+='<input type="text" value="'+escapeHtml(sec.Title)+'" placeholder="Section Title" data-aff="'+aff+'" data-si="'+i+'" class="ps-title" style="font-weight:600">';
+    if(i>0) h+='<button class="btn btn-secondary btn-sm" onclick="movePanelSection(\''+aff+'\','+i+',-1)" title="Move up">&uarr;</button>';
+    if(i<cfg.Sections.length-1) h+='<button class="btn btn-secondary btn-sm" onclick="movePanelSection(\''+aff+'\','+i+',1)" title="Move down">&darr;</button>';
+    h+='<button class="btn btn-danger btn-sm" onclick="removePanelSection(\''+aff+'\','+i+')" title="Remove section">&#10005;</button>';
+    h+='</div>';
+
+    /* Lines */
+    h+='<div class="ps-lines" id="psl_'+aff+'_'+i+'">';
+    for(var li=0;li<sec.Content.length;li++){
+      h+=buildLineRow(aff,i,li,sec.Content[li]);
+    }
+    if(!sec.Content.length) h+='<div class="empty-state" style="padding:8px">No lines yet.</div>';
+    h+='</div>';
+    h+='<div style="margin-top:4px"><button class="btn btn-secondary btn-sm" onclick="addPanelLine(\''+aff+'\','+i+')">+ Add Line</button></div>';
+
+    card.innerHTML=h;
+    container.appendChild(card);
+  }
+
+  /* Bind title changes */
+  container.querySelectorAll('.ps-title').forEach(function(inp){
+    inp.addEventListener('change',function(){
+      panelCfg[inp.dataset.aff].Sections[parseInt(inp.dataset.si)].Title=inp.value.trim();
+      markDirty();
+    });
+  });
+
+  /* Bind line changes */
+  container.querySelectorAll('.ps-line-inp').forEach(function(inp){
+    inp.addEventListener('input',function(){
+      var a=inp.dataset.aff, si=parseInt(inp.dataset.si), li=parseInt(inp.dataset.li);
+      panelCfg[a].Sections[si].Content[li]=inp.value;
+      /* Update char count */
+      var lenEl=inp.parentNode.querySelector('.line-len');
+      if(lenEl){
+        var len=inp.value.length;
+        lenEl.textContent=len;
+        lenEl.className='line-len'+(len>WARN_LINE_LEN?' over':'');
+      }
+      markDirty();
+    });
+  });
+}
+
+function buildLineRow(aff,secIdx,lineIdx,text){
+  var len=text.length;
+  var h='<div class="line-row">';
+  h+='<span class="line-num">'+(lineIdx+1)+'</span>';
+  h+='<input type="text" class="ps-line-inp" data-aff="'+aff+'" data-si="'+secIdx+'" data-li="'+lineIdx+'" value="'+escapeHtml(text)+'">';
+  h+='<span class="line-len'+(len>WARN_LINE_LEN?' over':'')+'">'+len+'</span>';
+  h+='<button class="btn btn-danger btn-sm" onclick="removePanelLine(\''+aff+'\','+secIdx+','+lineIdx+')" title="Remove line" style="padding:2px 6px">&#10005;</button>';
+  h+='</div>';
+  return h;
+}
+
+function addPanelSection(aff){
+  if(!panelCfg[aff])panelCfg[aff]={Sections:[]};
+  if(!panelCfg[aff].Sections)panelCfg[aff].Sections=[];
+  panelCfg[aff].Sections.push({Title:'New Section',Content:[]});
+  renderPanelSections(aff);
+  markDirty();
+}
+function removePanelSection(aff,i){panelCfg[aff].Sections.splice(i,1);renderPanelSections(aff);markDirty()}
+function movePanelSection(aff,i,dir){
+  var arr=panelCfg[aff].Sections,ni=i+dir;
+  if(ni<0||ni>=arr.length)return;
+  var tmp=arr[i];arr[i]=arr[ni];arr[ni]=tmp;
+  renderPanelSections(aff);
+  markDirty();
+}
+function addPanelLine(aff,secIdx){
+  panelCfg[aff].Sections[secIdx].Content.push('');
+  renderPanelSections(aff);
+  markDirty();
+  /* Focus the new input */
+  var lines=panelCfg[aff].Sections[secIdx].Content;
+  var inp=document.querySelector('.ps-line-inp[data-aff="'+aff+'"][data-si="'+secIdx+'"][data-li="'+(lines.length-1)+'"]');
+  if(inp)inp.focus();
+}
+function removePanelLine(aff,secIdx,lineIdx){
+  panelCfg[aff].Sections[secIdx].Content.splice(lineIdx,1);
+  renderPanelSections(aff);
+  markDirty();
+}
+function switchPanelTab(btn){
+  var tab=btn.dataset.tab;
+  btn.closest('.card').querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  btn.closest('.card').querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   READ FORMS → STATE
+   ═══════════════════════════════════════════════════════════════════ */
+function readGeneralForm(){
+  generalCfg.HeroRole       = document.getElementById('heroRole').value.trim();
+  generalCfg.BanditRole     = document.getElementById('banditRole').value.trim();
+  generalCfg.PathHeroRole   = document.getElementById('pathHeroRole').value.trim();
+  generalCfg.PathBanditRole = document.getElementById('pathBanditRole').value.trim();
+  generalCfg.UCRequireRadio = boolInt(document.getElementById('ucRequireRadio').checked);
+
+  generalCfg.LeaderboardBlacklist = blacklistArr.slice();
+
+  generalCfg.Levels = levelsArr.slice().sort(function(a,b){return a-b});
+  generalCfg.BlockRules = deepClone(blockRules);
+
+  /* Build FlexActions from unified action checkboxes */
+  generalCfg.FlexActions = [];
+  unified.forEach(function(u){if(u.flex)generalCfg.FlexActions.push(u.name)});
+}
+
+function readPanelForm(){
+  var hex=document.getElementById('accentColor').value;
+  var big=parseInt(hex.slice(1),16);
+  panelCfg.AccentColorR = ((big>>16)&255)/255;
+  panelCfg.AccentColorG = ((big>>8)&255)/255;
+  panelCfg.AccentColorB = (big&255)/255;
+  panelCfg.DiscordLink  = document.getElementById('discordLink').value.trim();
+  /* Panel section Content arrays are already kept in sync via input handlers */
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SAVE ALL
+   ═══════════════════════════════════════════════════════════════════ */
+async function saveAll(){
+  var btn=document.getElementById('saveAllBtn');
+  btn.disabled=true;btn.textContent='Saving\u2026';
+  readGeneralForm();
+  readPanelForm();
+  var sp=splitActions();
+
+  var saves=[
+    {name:'HAB_GENERAL',        data:generalCfg},
+    {name:'HAB_PANEL',          data:panelCfg},
+    {name:'HAB_ACTIONS',        data:sp.all},
+    {name:'HAB_ACTIONS_HERO',   data:sp.hero},
+    {name:'HAB_ACTIONS_BANDIT', data:sp.bandit},
+    {name:'HAB_ACTIONS_BAMBI',  data:sp.bambi}
+  ];
+
+  var ok=0, fail=0, errors=[], cancelled=false;
+  var results = await Promise.allSettled(saves.map(function(s){return UF.saveGlobal(s.name, s.data)}));
+  for(var i=0;i<results.length;i++){
+    if(results[i].status==='fulfilled'){ok++}
+    else{
+      var e=results[i].reason;
+      if(e&&e.message==='Save cancelled by operator'){cancelled=true}
+      else{fail++;errors.push(saves[i].name+': '+(e&&e.message||'Unknown error'))}
+    }
+  }
+  if(cancelled){
+    showToast('info','Save cancelled by server operator');
+  }else if(fail===0){
+    dirty=false;document.getElementById('saveFooter').classList.remove('show');
+    showToast('success','All settings saved!');
+  }else if(ok>0){
+    showStatus('warn','Saved '+ok+'/'+saves.length+' globals. Failed: '+errors.join('; '));
+  }else{
+    showStatus('error','All saves failed: '+errors.join('; '));
+  }
+  btn.disabled=false;btn.innerHTML='&#128190; Save';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════════ */
+loadAll();
+</script>
+</body>
+</html>
