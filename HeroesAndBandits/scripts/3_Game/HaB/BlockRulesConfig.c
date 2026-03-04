@@ -161,12 +161,12 @@ class HABBlockRuleHelper
 			if (op == "<")
 			{
 				// Blocked if humanity < threshold
-				return humanity < threshold;
+				return (humanity < threshold);
 			}
 			else if (op == ">")
 			{
 				// Blocked if humanity > threshold
-				return humanity > threshold;
+				return (humanity > threshold);
 			}
 		}
 		else
@@ -177,12 +177,12 @@ class HABBlockRuleHelper
 			if (op == "<")
 			{
 				// Blocked if |humanity| < threshold
-				return absHumanity < threshold;
+				return (absHumanity < threshold);
 			}
 			else if (op == ">")
 			{
 				// Blocked if |humanity| > threshold
-				return absHumanity > threshold;
+				return (absHumanity > threshold);
 			}
 		}
 		

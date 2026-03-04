@@ -1,9 +1,13 @@
+typedef array<autoptr HaBActionBase> HaBActionArray;
+
+typedef UDBGlobalHandler<HaBActionArray> HABActionLoaderHandler;
+
 class HABActionConfigs extends Managed {
-	static protected autoptr map<string, autoptr UDBGlobalHandler<array<autoptr HaBActionBase>>> UFHABActionLoaders;
+	static protected autoptr map<string, autoptr HABActionLoaderHandler> UFHABActionLoaders;
 
 	static protected ref HABActionConfigs Instance;
 	
-	static protected ref map<string, autoptr array<autoptr HaBActionBase>> Configs;
+	static protected ref map<string, autoptr HaBActionArray> Configs;
 	
 	protected bool AlreadyIsRetrying = false;
 	
@@ -18,15 +22,15 @@ class HABActionConfigs extends Managed {
 	}
 	
 	void OnLoad(){
-		array<UDBGlobalHandler<array<autoptr HaBActionBase>>> loaders = UFHABActionLoaders.GetValueArray();
-		foreach (auto loader : loaders){
+		array<HABActionLoaderHandler> loaders = UFHABActionLoaders.GetValueArray();
+		foreach (HABActionLoaderHandler loader : loaders){
 			if (loader){
 				loader.Load(this, "CBLoadActions");
 			}
 		}
 	}
 	
-	static bool GetActionArray(string affinity, out array<autoptr HaBActionBase> actions){
+	static bool GetActionArray(string affinity, out HaBActionArray actions){
 		return Configs.Find(affinity,actions);
 	}
 	
@@ -34,7 +38,7 @@ class HABActionConfigs extends Managed {
 		if (!actions){ 
 			actions = new map<string, autoptr HaBActionBase>;
 		}
-		array<autoptr HaBActionBase> actionsArray;
+		HaBActionArray actionsArray;
 		if (GetActionArray(affinity,actionsArray)){
 			foreach (HaBActionBase action :  actionsArray){
 				if (action){
@@ -55,9 +59,9 @@ class HABActionConfigs extends Managed {
 	
 	static void AddNewLoader(string name){
 		if (!UFHABActionLoaders) {
-			UFHABActionLoaders = new map<string, autoptr UDBGlobalHandler<array<autoptr HaBActionBase>>>;
+			UFHABActionLoaders = new map<string, autoptr HABActionLoaderHandler>;
 		}
-		UFHABActionLoaders.Set(name, new UDBGlobalHandler<array<autoptr HaBActionBase>>(name));
+		UFHABActionLoaders.Set(name, new UDBGlobalHandler<HaBActionArray>(name));
 	}
 	
 	void OnInit(){
@@ -65,10 +69,10 @@ class HABActionConfigs extends Managed {
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.OnLoad);
 	}
 	
-	void CBLoadActions(int cid, int status, string action, array<autoptr HaBActionBase> actions){
+	void CBLoadActions(int cid, int status, string action, HaBActionArray actions){
 		if (status == UF_SUCCESS){
 			if (!Configs){
-				Configs = new map<string, autoptr array<autoptr HaBActionBase>>;
+				Configs = new map<string, autoptr HaBActionArray>;
 			}
 			Configs.Set(action,actions);
 		} else if (status == UF_EMPTY){
@@ -79,9 +83,9 @@ class HABActionConfigs extends Managed {
 	}
 	
 	void LoadDefaults(string action){
-		array<autoptr HaBActionBase> defaultActions = new array<autoptr HaBActionBase>;
+		HaBActionArray defaultActions = new HaBActionArray;
 		if (!Configs ){
-			Configs = new map<string, autoptr array<autoptr HaBActionBase>>;
+			Configs = new map<string, autoptr HaBActionArray>;
 		}
 		if (action == "HAB_ACTIONS"){
 			defaultActions.Insert(new HaBActionBase("herokill", "Killed Hero", -350, false, HaBActionType.EXACT,5));

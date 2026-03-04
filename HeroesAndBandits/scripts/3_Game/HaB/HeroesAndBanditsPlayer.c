@@ -24,7 +24,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 		m_Stats = new map<string, int>;
 		m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		// Don't call InitDailyGains here - it will be called after data is loaded from DB
-    }
+    } 
 	
 	void ~HeroesAndBanditsPlayerBase(){
 		if(Stats) delete Stats;
@@ -129,7 +129,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	int UpdateLevel(int newLevel){
 		// Guard against offline UFramework
-		bool uOnline = U() && U().IsOnline();
+		bool uOnline = (U()) && U().IsOnline();
 		if (newLevel > MaxLevel){
 			MaxLevel = newLevel;
 			if (uOnline){
@@ -160,7 +160,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	bool IncermentAction(string action, int max, bool doStat = true){
 		// Guard against offline UFramework
-		bool uOnline = U() && U().IsOnline();
+		bool uOnline = (U()) && U().IsOnline();
 		if (!uOnline){
 			Print("[HaB] [Warn] IncermentAction skipped - UFramework offline");
 			return true; // Allow action when offline (fail-open)
@@ -216,7 +216,8 @@ class HeroesAndBanditsPlayerBase extends Managed
 
 class HeroesAndBanditsStats extends Managed {
 	string m_Stat;
-	int m_Value;
+	int m_Value; 
+	
 	void HeroesAndBanditsStats(string stat, int value){
 		m_Stat = stat;
 		m_Value = value;

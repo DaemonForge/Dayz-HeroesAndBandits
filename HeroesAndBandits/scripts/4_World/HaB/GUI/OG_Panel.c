@@ -133,9 +133,5 @@ class HAB_OG_Panel extends UIScriptedMenu {
     	PPEffects.SetBlurInventory(0);
 	}
 	
-	override bool OnKeyPress(Widget w,int x, int y, int key){
-		
-		
-	}
 	
 }
