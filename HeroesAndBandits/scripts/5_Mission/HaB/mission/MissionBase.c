@@ -35,7 +35,52 @@ modded class MissionBase extends MissionBaseWorld
 		Print("[HAB] Loading configs from UFramework...");
 		m_HaBGeneralConfigHandler.Load(this, "CBLoadHaBGeneralConfig");
 		m_HABPanelConfigHandler.Load(this, "CBLoadHABPanelConfig");
+		
+		// Register Mod Settings wizard with UFramework
+		if (GetGame().IsServer())
+		{
+			RegisterHABModSettings();
+		}
 	}
+	
+	void RegisterHABModSettings()
+	{
+		string html = "";
+		string line;
+		
+		FileHandle file = OpenFile("HeroesAndBandits/data/hab-settings.html", FileMode.READ);
+		if (file)
+		{
+			while (FGets(file, line) >= 0)
+			{
+				if (html.Length() > 0)
+				{
+					html = html + "\n";
+				}
+				html = html + line;
+			}
+			CloseFile(file);
+		}
+		
+		if (html == "")
+		{
+			Print("[HAB] [Warn] Could not load hab-settings.html from mod data folder");
+			return;
+		}
+		
+		autoptr TStringArray globals = new TStringArray;
+		globals.Insert("HAB_GENERAL");
+		globals.Insert("HAB_PANEL");
+		globals.Insert("HAB_ACTIONS");
+		globals.Insert("HAB_ACTIONS_HERO");
+		globals.Insert("HAB_ACTIONS_BANDIT");
+		globals.Insert("HAB_ACTIONS_BAMBI");
+		
+		U().Settings().Register("heroes-and-bandits", "Heroes & Bandits", "DaemonForge", html, globals);
+		
+		Print("[HAB] Mod Settings wizard registration requested");
+	}
+	
 	
 	void CBLoadHABPanelConfig(int cid, int status, string oid, HABPanelConfig data){
 		Print("[HAB] Panel config callback - status: " + status.ToString());
