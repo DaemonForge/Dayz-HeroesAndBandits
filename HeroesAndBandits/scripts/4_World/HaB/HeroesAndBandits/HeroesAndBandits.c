@@ -110,12 +110,12 @@ class HeroesAndBandits extends Managed
 			}
 		}
 		return NULL;
-	}
+	} 
 	
 	static void NotifyPlayer(PlayerBase player, string image ,string message, string heading = "#HAB_HUMANITY_CHANGEHEADING")
 	{
 		if (player && player.GetIdentity()){
-			NotificationSystem.CreateNotification(new StringLocaliser(heading), new StringLocaliser(message), image, ARGB(255,255,255,255), 4, player.GetIdentity());
+			UUtil.SendNotification(heading, message, player.GetIdentity(), image);
 		}
 	}
 	

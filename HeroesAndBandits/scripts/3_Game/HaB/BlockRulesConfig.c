@@ -75,8 +75,8 @@ class HABBlockNotify
 		
 		s_LastNotifyTime.Set(key, currentTime);
 		
-		// Use NotificationSystem for client-side notification
-		NotificationSystem.AddNotificationExtended(4.0, title, message, "set:dayz_gui image:tutorial_lockpicking");
+		// Use UFramework notification system
+		UUtil.SendNotificationEx(title, message, NULL, "set:dayz_gui image:tutorial_lockpicking");
 	}
 }
 
