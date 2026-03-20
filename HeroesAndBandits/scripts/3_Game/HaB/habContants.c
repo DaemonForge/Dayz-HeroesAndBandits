@@ -2,7 +2,7 @@ class habDeathType
 {
 	static int Unknown = -1;
 	
-	static int Sucide = 0;
+	static int Suicide = 0;
 	
 	static int Bambi = 1;
 	static int Hero = 2;

@@ -24,7 +24,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 		m_Stats = new map<string, int>;
 		m_DailyGain = new map<string, autoptr HeroesAndBanditsDaily>;
 		// Don't call InitDailyGains here - it will be called after data is loaded from DB
-    } 
+    }
 	
 	void ~HeroesAndBanditsPlayerBase(){
 		if(Stats) delete Stats;

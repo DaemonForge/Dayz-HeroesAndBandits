@@ -143,7 +143,7 @@ class HeroesAndBandits extends Managed
 
 	}
 	
-	static void TriggerSucideFeed(PlayerBase sourcePlayer){
+	static void TriggerSuicideFeed(PlayerBase sourcePlayer){
 		
 	}
 	

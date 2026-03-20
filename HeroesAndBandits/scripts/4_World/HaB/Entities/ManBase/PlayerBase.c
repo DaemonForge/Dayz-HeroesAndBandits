@@ -304,8 +304,8 @@ modded class PlayerBase extends ManBase
 	}
 	
 	void OnHABDeath(int DeathType = habDeathType.Unknown, EntityAI other = NULL){
-		#ifdef MAPLINK
-			if (IsBeingTransfered()) return;
+		#ifdef MapLink
+			if (IsBeingTransferred()) return;
 		#endif
 		if (DeathType == habDeathType.Unknown){
 			if (GetStatEnergy().Get() < 1 || GetStatWater().Get() < 1){
@@ -316,8 +316,8 @@ modded class PlayerBase extends ManBase
 			}
 		}
 		switch (DeathType){
-			case habDeathType.Sucide:
-				Print("[HAB] On Death: Sucide");
+			case habDeathType.Suicide:
+				Print("[HAB] On Death: Suicide");
 				NewHABAction("suicide",other);
 			break;
 			case habDeathType.Bambi:
@@ -474,7 +474,7 @@ modded class PlayerBase extends ManBase
 				}
 			}
 			if (m_Suicide){
-				deathType = habDeathType.Sucide;
+				deathType = habDeathType.Suicide;
 			}
 			OnHABDeath(deathType,sourcePlayer);
 		}
@@ -507,7 +507,7 @@ modded class PlayerBase extends ManBase
 				int deathType = habDeathType.Unknown;
 				if ( sourcePlayerID != "null" && sourcePlayerID != "") {
 					if (sourcePlayerID == targetPlayerID) {
-						OnHABDeath(habDeathType.Sucide);
+						OnHABDeath(habDeathType.Suicide);
 					} else if (sourcePlayerID != targetPlayerID) {
 						deathType = habDeathType.Bambi;
 						sourcePlayer = PlayerBase.Cast( UUtil.FindPlayer( sourcePlayerID ));
@@ -580,7 +580,7 @@ modded class PlayerBase extends ManBase
 					hitByAffinity = GetHeroesAndBandits().GetPlayerAffinity(sourcePlayerID);
 				}
 				if (sourcePlayerID == targetPlayerID){
-					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Sucide;
+					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Suicide;
 					m_HeroesAndBandits_LastBleedingSourceID = sourcePlayerID;
 				} else {
 					m_HeroesAndBandits_LastBleedingSourceType = habDeathType.Bambi;
