@@ -168,11 +168,11 @@ FrameWidgetClass rootFrame {
            ignorepointer 1
            color 1 1 1 1
            position 14 0
-           size 200 1
+           size 0.55 1
            valign center_ref
            hexactpos 1
            vexactpos 0
-           hexactsize 1
+           hexactsize 0
            vexactsize 0
            text ""
            font "gui/fonts/sdf_MetronLight72"
@@ -182,10 +182,12 @@ FrameWidgetClass rootFrame {
           }
           ButtonWidgetClass PathDiscordBtn {
            visible 1
-           position 170 2
-           size 84 20
+           position -8 0
+           size 84 22
+           halign right_ref
+           valign center_ref
            hexactpos 1
-           vexactpos 1
+           vexactpos 0
            hexactsize 1
            vexactsize 1
            {
@@ -203,8 +205,8 @@ FrameWidgetClass rootFrame {
             ImageWidgetClass DiscordBtnIcon {
              ignorepointer 1
              color 1 1 1 1
-             position 4 0
-             size 23 16
+             position 6 0
+             size 16 16
              valign center_ref
              hexactpos 1
              vexactpos 0
@@ -219,15 +221,15 @@ FrameWidgetClass rootFrame {
             TextWidgetClass DiscordBtnText {
              ignorepointer 1
              color 1 1 1 1
-             position 28 0
-             size 50 1
+             position 26 0
+             size 52 1
              valign center_ref
              hexactpos 1
              vexactpos 0
              hexactsize 1
              vexactsize 0
              text "Join"
-             font "gui/fonts/sdf_MetronLight14"
+             font "gui/fonts/sdf_MetronLight24"
              "text valign" center
             }
            }

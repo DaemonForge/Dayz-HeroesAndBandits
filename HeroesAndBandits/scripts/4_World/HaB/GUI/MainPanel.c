@@ -250,7 +250,11 @@ class HAB_StatsPage extends HAB_PageBase {
 	}
 	
 	void UpdateData(){
-		m_Icon.LoadImageFile(0,m_player.GetClientIcon());
+		string clientIcon = m_player.GetClientIcon();
+		if (clientIcon != "")
+		{
+			m_Icon.LoadImageFile(0, clientIcon);
+		}
 		if (Math.AbsInt(m_player.HABLevel()) > 0){
 			m_LevelText.SetText(m_player.GetClientAffinityName() + " #HAB_LEVEL " + Math.AbsInt(m_player.HABLevel()).ToString());
 		} else {
