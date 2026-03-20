@@ -388,6 +388,10 @@ tr:hover td{background:#2a2a2a}
               <h4>&#129506; Windstrider's Clothing</h4>
               <p>Shemaghs restricted by affinity</p>
             </div>
+            <div class="preset-card" onclick="applyBlockPreset('undergroundbases')">
+              <h4>&#127959; Underground Bases</h4>
+              <p>Lv1&#8594;Any 1, Lv2&#8594;Any 3, Lv3&#8594;Hero 5 / Bandit 6</p>
+            </div>
           </div>
         </div>
 
@@ -396,6 +400,13 @@ tr:hover td{background:#2a2a2a}
           <p class="desc">
             Restrict items, recipes, weapons, or building based on Humanity. Choose a restriction type and level — the wizard generates the condition for you.
             You can also write custom conditions for advanced use.
+            <br><br>
+            <strong>&#128161; Smart Notifications:</strong> In-game block messages automatically adapt to the player's affinity.
+            For example, a "Requires Level 5" rule will show <em>"Requires Hero Level 5"</em> to heroes and <em>"Requires Bandit Level 5"</em> to bandits.
+            Leave the <strong>Message</strong> field empty to use smart auto-messages, or set a custom message to override.
+            <br><br>
+            <strong>&#127919; Range Blocking:</strong> Use <em>"Blocked in Range"</em> to block players whose Humanity falls between two values.
+            For example, <code>-1000~5000</code> blocks anyone with Humanity from -1000 to 5000 — they must be above 5000 (Hero) or below -1000 (Bandit) to use it.
           </p>
           <div id="blockRulesList"></div>
           <div class="btn-row">
@@ -511,13 +522,14 @@ var BLOCK_TYPES = [
 ];
 
 var RESTRICTION_MODES = [
-  { v:'reqLevel',     label:'Requires Level (any path)',     needsLevel:true,  needsValue:false },
-  { v:'reqHumanity',  label:'Requires min Humanity (custom)',needsLevel:false, needsValue:true  },
-  { v:'heroOnly',     label:'Hero only (Level)',             needsLevel:true,  needsValue:false },
-  { v:'banditOnly',   label:'Bandit only (Level)',           needsLevel:true,  needsValue:false },
-  { v:'blockHeroes',  label:'Block Heroes (Level)',          needsLevel:true,  needsValue:false },
-  { v:'blockBandits', label:'Block Bandits (Level)',         needsLevel:true,  needsValue:false },
-  { v:'custom',       label:'Custom condition',              needsLevel:false, needsValue:false }
+  { v:'reqLevel',     label:'Requires Level (any path)',     needsLevel:true,  needsValue:false, needsRange:false },
+  { v:'reqHumanity',  label:'Requires min Humanity (custom)',needsLevel:false, needsValue:true,  needsRange:false },
+  { v:'heroOnly',     label:'Hero only (Level)',             needsLevel:true,  needsValue:false, needsRange:false },
+  { v:'banditOnly',   label:'Bandit only (Level)',           needsLevel:true,  needsValue:false, needsRange:false },
+  { v:'blockHeroes',  label:'Block Heroes (Level)',          needsLevel:true,  needsValue:false, needsRange:false },
+  { v:'blockBandits', label:'Block Bandits (Level)',         needsLevel:true,  needsValue:false, needsRange:false },
+  { v:'range',        label:'Blocked in Range (min~max)',    needsLevel:false, needsValue:false, needsRange:true  },
+  { v:'custom',       label:'Custom condition',              needsLevel:false, needsValue:false, needsRange:false }
 ];
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -646,6 +658,7 @@ function generateCondition(mode, param){
     case 'banditOnly':   return '>-'+levelsArr[param-1];
     case 'blockHeroes':  return '>+'+(levelsArr[param-1]-1);
     case 'blockBandits': return '<-'+(levelsArr[param-1]-1);
+    case 'range':        var rA=param.min,rB=param.max;if(rA>rB){var t=rA;rA=rB;rB=t;}return rA+'~'+rB;
     case 'custom':       return String(param);
     default:             return '<1000';
   }
@@ -653,6 +666,17 @@ function generateCondition(mode, param){
 
 function parseBlockCondition(cond){
   if(!cond||cond.length<2) return {mode:'custom',level:0,value:0,raw:cond||''};
+  // Check for range condition (MIN~MAX)
+  var tildeIdx=cond.indexOf('~');
+  if(tildeIdx>0){
+    var minVal=parseFloat(cond.slice(0,tildeIdx));
+    var maxVal=parseFloat(cond.slice(tildeIdx+1));
+    if(!isNaN(minVal)&&!isNaN(maxVal)){
+      // Normalize: swap if entered in wrong order
+      if(minVal>maxVal){var t=minVal;minVal=maxVal;maxVal=t;}
+      return {mode:'range',level:0,value:0,rangeMin:minVal,rangeMax:maxVal,raw:cond};
+    }
+  }
   var op=cond[0], rest=cond.slice(1), sign='';
   if(rest[0]==='+'||rest[0]==='-'){sign=rest[0];rest=rest.slice(1)}
   var num=parseFloat(rest);
@@ -679,6 +703,7 @@ function conditionDesc(cond){
     case 'banditOnly':  return 'Bandit only \u2014 requires Level '+p.level+'+ Bandit (humanity <= -'+p.value+')';
     case 'blockHeroes': return 'Blocks Heroes at Level '+p.level+'+ (humanity > +'+p.value+')';
     case 'blockBandits':return 'Blocks Bandits at Level '+p.level+'+ (humanity < -'+p.value+')';
+    case 'range':       return 'Blocked if Humanity between '+p.rangeMin+' and '+p.rangeMax+' (values can be negative) \u2014 must be outside range to use';
     case 'custom':      return 'Custom: '+cond;
     default:            return cond||'(none)';
   }
@@ -929,6 +954,11 @@ var BLOCK_PRESETS = {
     {Type:0, Target:'Shemagh_Bandit_ColorBase',   Condition:'>-1000', BlockMessage:'Bandit gear only'},
     {Type:0, Target:'Shemagh_Facemask_ColorBase',  Condition:'>-1000', BlockMessage:'Bandit gear only'},
     {Type:0, Target:'Shemagh_Scarf_ColorBase',     Condition:'<+1000', BlockMessage:'Hero gear only'}
+  ],
+  undergroundbases: [
+    {Type:3, Target:'UndergroundBaseLv1', Condition:'<1000',  BlockMessage:''},
+    {Type:3, Target:'UndergroundBaseLv2', Condition:'<5000',  BlockMessage:''},
+    {Type:3, Target:'UndergroundBaseLv3', Condition:'<20000', BlockMessage:''}
   ]
 };
 
@@ -1262,6 +1292,7 @@ function buildRuleCard(idx){
   var modeObj=RESTRICTION_MODES.find(function(m){return m.v===parsed.mode});
   var showLevel = modeObj && modeObj.needsLevel;
   var showValue = modeObj && modeObj.needsValue;
+  var showRange = modeObj && modeObj.needsRange;
   var showCustom = (parsed.mode==='custom');
 
   h+='<span id="brls_'+idx+'" style="display:'+(showLevel?'inline-flex':'none')+';align-items:center;gap:4px">';
@@ -1318,6 +1349,7 @@ function onRuleModeChange(idx){
   document.getElementById('brls_'+idx).style.display=modeObj.needsLevel?'inline-flex':'none';
   document.getElementById('brvs_'+idx).style.display=modeObj.needsValue?'inline-flex':'none';
   document.getElementById('brcs_'+idx).style.display=(modeVal==='custom')?'inline-flex':'none';
+  document.getElementById('brrs_'+idx).style.display=modeObj.needsRange?'inline-flex':'none';
 
   onRuleParamChange(idx);
 }
@@ -1328,6 +1360,10 @@ function onRuleParamChange(idx){
 
   if(mode==='custom'){
     cond=document.getElementById('brc_'+idx).value.trim()||'<1000';
+  } else if(mode==='range'){
+    var rMin=parseInt(document.getElementById('brrmin_'+idx).value)||0;
+    var rMax=parseInt(document.getElementById('brrmax_'+idx).value)||0;
+    cond=generateCondition(mode,{min:rMin,max:rMax});
   } else if(mode==='reqHumanity'){
     var val=parseInt(document.getElementById('brv_'+idx).value)||1000;
     cond=generateCondition(mode,val);

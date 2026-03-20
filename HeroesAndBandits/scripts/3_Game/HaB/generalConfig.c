@@ -11,12 +11,17 @@
  *   - + prefix (e.g., +1000): Compares against positive humanity (hero-specific)
  *   - - prefix (e.g., -1000): Compares against negative humanity (bandit-specific)
  *   
+ *   "MIN~MAX" range format:
+ *   - Blocked if humanity is between MIN and MAX inclusive
+ *   - e.g., "-1000~5000" = Blocked if -1000 <= humanity <= 5000
+ *   
  * Examples:
- *   - "<1000"   = Blocked if |humanity| < 1000 (Bambis can't use, requires Hero 1 OR Bandit 1)
- *   - ">+999"   = Blocked if humanity > 999 (Heroes can't use)
- *   - "<-999"   = Blocked if humanity < -999 (Bandits can't use)
- *   - "<+1000"  = Blocked if humanity < +1000 (only Heroes with 1000+ humanity can use)
- *   - ">-1000"  = Blocked if humanity > -1000 (only Bandits with -1000 or less can use)
+ *   - "<1000"      = Blocked if |humanity| < 1000 (Bambis can't use, requires Hero 1 OR Bandit 1)
+ *   - ">+999"      = Blocked if humanity > 999 (Heroes can't use)
+ *   - "<-999"      = Blocked if humanity < -999 (Bandits can't use)
+ *   - "<+1000"     = Blocked if humanity < +1000 (only Heroes with 1000+ humanity can use)
+ *   - ">-1000"     = Blocked if humanity > -1000 (only Bandits with -1000 or less can use)
+ *   - "-1000~5000" = Blocked if humanity between -1000 and 5000 (must be Hero 3+ or Bandit 1+)
  *   
  * Block Types (Type field):
  *   - 0 (Equip): Blocks equipping/wearing the item
@@ -77,6 +82,11 @@ class HaBGeneralConfig extends Managed
         
         // Blocked for bandits only (bambis and heroes can craft)
         AddDefaultRule(HABBlockType.Recipe, "CraftBloodBagIV", "<-999", "Bandits cannot craft medical supplies");
+        
+        // Underground Bases - build blocks by level (no custom message = smart auto-message)
+        AddDefaultRule(HABBlockType.Build, "UndergroundBaseLv1", "<1000");
+        AddDefaultRule(HABBlockType.Build, "UndergroundBaseLv2", "<5000");
+        AddDefaultRule(HABBlockType.Build, "UndergroundBaseLv3", "<20000");
     }
     
     private void AddDefaultRule(HABBlockType type, string target, string condition, string message = "")
