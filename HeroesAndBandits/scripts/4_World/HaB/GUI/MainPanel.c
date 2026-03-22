@@ -502,7 +502,7 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 		InitializeRankDisplay();
 		
 		// Guard against offline UFramework
-		if (!U() || !U().IsOnline()){
+		if (!UF() || !UF().IsOnline()){
 			Print("[HaB] [Warn] Leaderboard queries skipped - UFramework is offline");
 			if (m_HeroRankText) m_HeroRankText.SetText("#HAB_UNAVAILABLE");
 			if (m_BanditRankText) m_BanditRankText.SetText("#HAB_UNAVAILABLE");
@@ -618,8 +618,8 @@ class HAB_LeaderboardsPage extends HAB_PageBase {
 	}
 	
 	void ~HAB_LeaderboardsPage(){
-		U().RequestCallCancel(m_HEROLeaderboardID);
-		U().RequestCallCancel(m_BANDITLeaderboardID);
+		UF().RequestCallCancel(m_HEROLeaderboardID);
+		UF().RequestCallCancel(m_BANDITLeaderboardID);
 		if (m_lbwidgets){
 			m_lbwidgets.Clear();
 		}

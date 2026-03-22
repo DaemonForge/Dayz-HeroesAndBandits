@@ -26,8 +26,8 @@ modded class MissionBase extends MissionBaseWorld
 	
 	void LoadHaBConfigs(){
 		// Guard against UFramework not being ready
-		if (!U()){
-			Print("[HAB] [Warn] LoadHaBConfigs - U() is null, retrying in 1s...");
+		if (!UF()){
+			Print("[HAB] [Warn] LoadHaBConfigs - UF() is null, retrying in 1s...");
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.LoadHaBConfigs, 1000, false);
 			return;
 		}
@@ -76,7 +76,7 @@ modded class MissionBase extends MissionBaseWorld
 		globals.Insert("HAB_ACTIONS_BANDIT");
 		globals.Insert("HAB_ACTIONS_BAMBI");
 		
-		U().Settings().Register("heroes-and-bandits", "Heroes & Bandits", "DaemonForge", html, globals);
+		UF().Settings().Register("heroes-and-bandits", "Heroes & Bandits", "DaemonForge", html, globals);
 		
 		Print("[HAB] Mod Settings wizard registration requested");
 	}

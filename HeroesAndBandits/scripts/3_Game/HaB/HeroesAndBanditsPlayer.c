@@ -38,8 +38,8 @@ class HeroesAndBanditsPlayerBase extends Managed
 			return;
 		}
 		
-		// Guard against offline UFramework - check both U() and IsOnline()
-		if (!U() || !U().IsOnline()){
+		// Guard against offline UFramework - check both UF() and IsOnline()
+		if (!UF() || !UF().IsOnline()){
 			Print("[HaB] [Warn] InitDailyGains skipped - Universal Framework is offline");
 			return;
 		}
@@ -96,7 +96,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	void UpdateHumanity(float humanity){
 		Humanity = humanity;
 		// Guard against offline UFramework
-		if (!U() || !U().IsOnline()){
+		if (!UF() || !UF().IsOnline()){
 			Print("[HaB] [Warn] UpdateHumanity skipped DB write - UFramework offline");
 			return;
 		}
@@ -118,7 +118,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	void UpdateName(string name){
 		if (Name != name){
 			// Guard against offline UFramework
-			if (U() && U().IsOnline()){
+			if (UF() && UF().IsOnline()){
 				HABPlayerDataHandler.Update(GUID,"Name",name);
 			} else {
 				Print("[HaB] [Warn] UpdateName skipped DB write - UFramework offline");
@@ -129,7 +129,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	int UpdateLevel(int newLevel){
 		// Guard against offline UFramework
-		bool uOnline = (U()) && U().IsOnline();
+		bool uOnline = (UF()) && UF().IsOnline();
 		if (newLevel > MaxLevel){
 			MaxLevel = newLevel;
 			if (uOnline){
@@ -160,7 +160,7 @@ class HeroesAndBanditsPlayerBase extends Managed
 	
 	bool IncermentAction(string action, int max, bool doStat = true){
 		// Guard against offline UFramework
-		bool uOnline = (U()) && U().IsOnline();
+		bool uOnline = (UF()) && UF().IsOnline();
 		if (!uOnline){
 			Print("[HaB] [Warn] IncermentAction skipped - UFramework offline");
 			return true; // Allow action when offline (fail-open)

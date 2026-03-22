@@ -20,7 +20,7 @@ modded class PlayerBase extends ManBase
 			HABPlayerDataHandler.Cancel(m_hab_LastDataCall);
 		}
 		if (g_Game && g_Game.IsDedicatedServer()){
-			U().RequestCallCancel(m_last_discord_cid);
+			UF().RequestCallCancel(m_last_discord_cid);
 		}
 	}
 	override void OnStoreSave(ParamsWriteContext ctx)
@@ -62,9 +62,24 @@ modded class PlayerBase extends ManBase
 	}
 	
 	
+	bool IsAIPlayer()
+	{
+		int instanceType = GetInstanceType();
+		if (instanceType == DayZPlayerInstanceType.INSTANCETYPE_AI_SERVER)
+			return true;
+		if (instanceType == DayZPlayerInstanceType.INSTANCETYPE_AI_REMOTE)
+			return true;
+		if (instanceType == DayZPlayerInstanceType.INSTANCETYPE_AI_SINGLEPLAYER)
+			return true;
+		return false;
+	}
+	
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();
+		if (IsAIPlayer()){
+			return; // AI entities don't have player identity or HAB data
+		}
 		if (g_Game.IsServer()){ //If it's a server don't wait
 			InitHaBPlayerData();
 		} else {
@@ -73,12 +88,14 @@ modded class PlayerBase extends ManBase
 	}
 	
 	protected int m_HaBDataInitRetries = 0;
+	protected int m_HaBIdentityRetries = 0;
 	protected bool m_HaBDataInitFailed = false;
 	protected bool m_HaBDataInitInProgress = false;
 	protected bool m_HaBDataInitComplete = false;
 	
 	// Constants for retry logic
 	protected static const int HAB_INIT_MAX_RETRIES = 15;
+	protected static const int HAB_INIT_MAX_IDENTITY_RETRIES = 10;
 	protected static const int HAB_INIT_RETRY_BASE_DELAY = 100; // milliseconds
 	protected static const int HAB_INIT_RECOVERY_DELAY = 30000; // 30 seconds for recovery attempts
 	
@@ -95,7 +112,7 @@ modded class PlayerBase extends ManBase
 		m_HaBDataInitInProgress = true;
 		
 		// Check if UFramework is online
-		if (!U() || !U().IsOnline()){
+		if (!UF() || !UF().IsOnline()){
 			m_HaBDataInitRetries++;
 			
 			if (m_HaBDataInitRetries <= HAB_INIT_MAX_RETRIES){
@@ -135,8 +152,14 @@ modded class PlayerBase extends ManBase
 			m_HaBDataInitComplete = true;
 			Print("[HaB] [Info] Player data initialization started for " + m_HABNameCache);
 		} else {
-			// No identity yet - retry
-			Print("[HaB] [Warn] InitHaBPlayerData - No player identity, retrying...");
+			// No identity yet - retry with limit
+			m_HaBIdentityRetries++;
+			if (m_HaBIdentityRetries > HAB_INIT_MAX_IDENTITY_RETRIES){
+				Print("[HaB] [Error] InitHaBPlayerData - No player identity after " + HAB_INIT_MAX_IDENTITY_RETRIES + " retries, giving up (likely an AI entity)");
+				m_HaBDataInitInProgress = false;
+				return;
+			}
+			Print("[HaB] [Warn] InitHaBPlayerData - No player identity, retry " + m_HaBIdentityRetries + "/" + HAB_INIT_MAX_IDENTITY_RETRIES);
 			m_HaBDataInitInProgress = false;
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.InitHaBPlayerData, 500, false);
 			return;
@@ -156,7 +179,7 @@ modded class PlayerBase extends ManBase
 			return; // Already initialized successfully
 		}
 		
-		if (U() && U().IsOnline()){
+		if (UF() && UF().IsOnline()){
 			Print("[HaB] [Info] AttemptHaBDataRecovery - UFramework is now online, retrying initialization");
 			m_HaBDataInitRetries = 0; // Reset retry counter
 			m_HaBDataInitFailed = false;
@@ -170,7 +193,7 @@ modded class PlayerBase extends ManBase
 	
 	void RefreshHABData(){
 		// Guard against offline UFramework
-		if (!U() || !U().IsOnline()){
+		if (!UF() || !UF().IsOnline()){
 			Print("[HaB] [Warn] RefreshHABData skipped - UFramework is offline");
 			return;
 		}
@@ -205,7 +228,7 @@ modded class PlayerBase extends ManBase
 	
 	void RefreshDiscordData(){
 		if (g_Game.IsClient() && g_Game.GetPlayer() != this) return;
-		m_last_discord_cid = U().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
+		m_last_discord_cid = UF().ds().GetUser(GetIdentity().GetId(), this, "CBLoadDiscordUser");	
 	}
 	
 	void CBLoadDiscordUser(int cid, int status, string guid, UDiscordUser data){	

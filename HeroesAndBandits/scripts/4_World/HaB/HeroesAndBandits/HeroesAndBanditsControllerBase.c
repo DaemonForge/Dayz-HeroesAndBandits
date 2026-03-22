@@ -262,10 +262,10 @@ class BambiController extends HeroesAndBanditsControllerBase {
 		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
-				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				UF().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (dsuser.HasRole(BANDITROLE)){
-				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				UF().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}
@@ -333,10 +333,10 @@ class HeroController extends HeroesAndBanditsControllerBase {
 		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (!dsuser.HasRole(HEROROLE)){
-				U().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				UF().ds().AddRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (dsuser.HasRole(BANDITROLE)){
-				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				UF().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}
@@ -396,10 +396,10 @@ class BanditController extends HeroesAndBanditsControllerBase {
 		UDiscordUser dsuser;
 		if (Class.CastTo(dsuser, GetPlayer().DiscordUser()) && g_Game.IsDedicatedServer()){
 			if (dsuser.HasRole(HEROROLE)){
-				U().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
+				UF().ds().RemoveRole(GetPlayer().GetHABGUIDCache(), HEROROLE);
 			}
 			if (!dsuser.HasRole(BANDITROLE)){
-				U().ds().AddRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
+				UF().ds().AddRole(GetPlayer().GetHABGUIDCache(), BANDITROLE);
 			}
 		}
 	}
